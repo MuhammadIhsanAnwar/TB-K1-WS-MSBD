@@ -5,20 +5,20 @@
 @endphp
 <div class="mv-asisten-widget tidak-dicetak" data-ui data-asisten-widget
     data-url="{{ route('tanya.jawab') }}"
-    data-maskot-menyapa="{{ asset('images/maskot/mascot-menyapa.png') }}"
-    data-maskot-mendengarkan="{{ asset('images/maskot/mascot-mendengarkan.png') }}"
-    data-maskot-berpikir="{{ asset('images/maskot/mascot-berpikir.png') }}"
-    data-maskot-membantu="{{ asset('images/maskot/mascot-membantu.png') }}"
-    data-maskot-bingung="{{ asset('images/maskot/mascot-bingung.png') }}"
-    data-maskot-sukses="{{ asset('images/maskot/mascot-sukses.png') }}"
+    data-maskot-menyapa="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}"
+    data-maskot-mendengarkan="{{ asset('storage/maskotAIAgent/mascot-mendengarkan.png') }}"
+    data-maskot-berpikir="{{ asset('storage/maskotAIAgent/mascot-berpikir.png') }}"
+    data-maskot-membantu="{{ asset('storage/maskotAIAgent/mascot-membantu.png') }}"
+    data-maskot-bingung="{{ asset('storage/maskotAIAgent/mascot-bingung.png') }}"
+    data-maskot-sukses="{{ asset('storage/maskotAIAgent/mascot-sukses.png') }}"
 >
     <button class="mv-asisten-widget__pemicu" type="button" data-buka-asisten aria-expanded="false" aria-controls="panel-asisten-melayang">
         <!-- Maskot Mas Nonov berada tepat di atas tombol sebelum chatbox dibuka -->
         <span class="mv-asisten-widget__maskot-atas" aria-hidden="true">
-            <img src="{{ asset('images/maskot/mascot-menyapa.png') }}" alt="" class="mv-maskot-atas-img">
+            <img src="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}" alt="" class="mv-maskot-atas-img">
         </span>
         <span class="mv-asisten-widget__pemicu-avatar" aria-hidden="true">
-            <img src="{{ asset('images/maskot/mascot-menyapa.png') }}" alt="Mas Nonov" width="36" height="36" data-pemicu-maskot>
+            <img src="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}" alt="Mas Nonov" width="36" height="36" data-pemicu-maskot>
         </span>
         <span>Tanya Mas Nonov</span>
     </button>
@@ -26,13 +26,13 @@
     <div class="mv-asisten-panel" id="panel-asisten-melayang" role="dialog" aria-label="Mas Nonov - Asisten Wisata MedanVisit" hidden>
         <!-- Maskot Mas Nonov muncul di samping miring chatbox -->
         <div class="mv-asisten-panel__maskot-samping" aria-hidden="true">
-            <img src="{{ asset('images/maskot/mascot-menyapa.png') }}" alt="" class="mv-maskot-samping-img" data-maskot-samping>
+            <img src="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}" alt="" class="mv-maskot-samping-img" data-maskot-samping>
         </div>
 
         <header class="mv-asisten-panel__kepala">
             <div class="mv-asisten-panel__identitas">
                 <span class="mv-asisten-panel__avatar" aria-hidden="true">
-                    <img src="{{ asset('images/maskot/mascot-menyapa.png') }}" alt="Mas Nonov - Maskot Asisten MedanVisit" width="46" height="46" data-panel-maskot>
+                    <img src="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}" alt="Mas Nonov - Maskot Asisten MedanVisit" width="46" height="46" data-panel-maskot>
                 </span>
                 <div>
                     <b>Mas Nonov</b>

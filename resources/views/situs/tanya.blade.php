@@ -7,17 +7,17 @@
 <div class="mv-tanya-ruang" data-tanya
     data-url="{{ route('tanya.jawab') }}"
     data-awal="{{ $awal }}"
-    data-maskot-menyapa="{{ asset('images/maskot/mascot-menyapa.png') }}"
-    data-maskot-mendengarkan="{{ asset('images/maskot/mascot-mendengarkan.png') }}"
-    data-maskot-berpikir="{{ asset('images/maskot/mascot-berpikir.png') }}"
-    data-maskot-membantu="{{ asset('images/maskot/mascot-membantu.png') }}"
-    data-maskot-bingung="{{ asset('images/maskot/mascot-bingung.png') }}"
-    data-maskot-sukses="{{ asset('images/maskot/mascot-sukses.png') }}"
+    data-maskot-menyapa="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}"
+    data-maskot-mendengarkan="{{ asset('storage/maskotAIAgent/mascot-mendengarkan.png') }}"
+    data-maskot-berpikir="{{ asset('storage/maskotAIAgent/mascot-berpikir.png') }}"
+    data-maskot-membantu="{{ asset('storage/maskotAIAgent/mascot-membantu.png') }}"
+    data-maskot-bingung="{{ asset('storage/maskotAIAgent/mascot-bingung.png') }}"
+    data-maskot-sukses="{{ asset('storage/maskotAIAgent/mascot-sukses.png') }}"
 >
     <aside class="mv-tanya-samping" aria-label="Topik dan cakupan asisten">
         <div class="mv-tanya-maskot-kartu">
             <div class="mv-tanya-maskot-bingkai">
-                <img src="{{ asset('images/maskot/mascot-menyapa.png') }}" alt="Mas Nonov" class="mv-tanya-maskot-gambar" data-tanya-maskot>
+                <img src="{{ asset('storage/maskotAIAgent/mascot-menyapa.png') }}" alt="Mas Nonov" class="mv-tanya-maskot-gambar" data-tanya-maskot>
             </div>
             <div class="mv-tanya-maskot-info">
                 <span class="mv-tanya-maskot-lencana" data-tanya-lencana>Siap Membantu</span>
