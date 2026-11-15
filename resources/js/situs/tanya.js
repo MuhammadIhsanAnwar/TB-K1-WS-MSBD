@@ -10,12 +10,12 @@ const token = document.querySelector('meta[name="csrf-token"]')?.content;
 
 // Maskot interaktif halaman tanya
 const maskot = {
-    menyapa: akar.dataset.maskotMenyapa || '/images/maskot/mascot-menyapa.png',
-    mendengarkan: akar.dataset.maskotMendengarkan || '/images/maskot/mascot-mendengarkan.png',
-    berpikir: akar.dataset.maskotBerpikir || '/images/maskot/mascot-berpikir.png',
-    membantu: akar.dataset.maskotMembantu || '/images/maskot/mascot-membantu.png',
-    bingung: akar.dataset.maskotBingung || '/images/maskot/mascot-bingung.png',
-    sukses: akar.dataset.maskotSukses || '/images/maskot/mascot-sukses.png',
+    menyapa: akar.dataset.maskotMenyapa || '/storage/maskotAIAgent/mascot-menyapa.png',
+    mendengarkan: akar.dataset.maskotMendengarkan || '/storage/maskotAIAgent/mascot-mendengarkan.png',
+    berpikir: akar.dataset.maskotBerpikir || '/storage/maskotAIAgent/mascot-berpikir.png',
+    membantu: akar.dataset.maskotMembantu || '/storage/maskotAIAgent/mascot-membantu.png',
+    bingung: akar.dataset.maskotBingung || '/storage/maskotAIAgent/mascot-bingung.png',
+    sukses: akar.dataset.maskotSukses || '/storage/maskotAIAgent/mascot-sukses.png',
 };
 
 const maskotImg = akar.querySelector('[data-tanya-maskot]');

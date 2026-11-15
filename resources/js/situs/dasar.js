@@ -278,12 +278,12 @@ if (widget) {
 
     // Maskot interaktif asisten
     const maskot = {
-        menyapa: widget.dataset.maskotMenyapa || '/images/maskot/mascot-menyapa.png',
-        mendengarkan: widget.dataset.maskotMendengarkan || '/images/maskot/mascot-mendengarkan.png',
-        berpikir: widget.dataset.maskotBerpikir || '/images/maskot/mascot-berpikir.png',
-        membantu: widget.dataset.maskotMembantu || '/images/maskot/mascot-membantu.png',
-        bingung: widget.dataset.maskotBingung || '/images/maskot/mascot-bingung.png',
-        sukses: widget.dataset.maskotSukses || '/images/maskot/mascot-sukses.png',
+        menyapa: widget.dataset.maskotMenyapa || '/storage/maskotAIAgent/mascot-menyapa.png',
+        mendengarkan: widget.dataset.maskotMendengarkan || '/storage/maskotAIAgent/mascot-mendengarkan.png',
+        berpikir: widget.dataset.maskotBerpikir || '/storage/maskotAIAgent/mascot-berpikir.png',
+        membantu: widget.dataset.maskotMembantu || '/storage/maskotAIAgent/mascot-membantu.png',
+        bingung: widget.dataset.maskotBingung || '/storage/maskotAIAgent/mascot-bingung.png',
+        sukses: widget.dataset.maskotSukses || '/storage/maskotAIAgent/mascot-sukses.png',
     };
 
     const maskotPanelImg = panel?.querySelector('[data-panel-maskot]');
