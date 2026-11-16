@@ -26,7 +26,7 @@ class SupabaseApi
 
     public function users(): array
     {
-        return $this->semua('users', 'id,name,email,peran,tempat_slug,tanggal_lahir,no_hp,email_verified_at,created_at');
+        return $this->semua('users', 'id,name,email,peran,tempat_slug,tanggal_lahir,no_hp,email_verified_at,created_at,ditangguhkan_pada,alasan_tangguh');
     }
 
     public function createUser(array $user): array
