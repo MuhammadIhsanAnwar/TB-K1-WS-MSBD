@@ -38,6 +38,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .ps { display: grid; grid-template-columns: 228px minmax(0, 1fr); grid-template-rows: 48px minmax(0, 1fr); min-height: 100svh; }
 .ps__samping { grid-row: 1 / -1; position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; gap: 2px; padding: 12px 12px 16px; overflow: auto; }
 .ps__merek { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px; margin-bottom: 12px; }
+.ps__merek > a { display: flex; align-items: center; }
 .ps__merek img { width: 132px; height: auto; }
 .ps__lingkup { display: grid; gap: 2px; padding: 10px 8px 14px; margin-bottom: 6px; }
 .ps__lingkup span { font-size: 12px; color: var(--p-muted); }
@@ -49,9 +50,6 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .ps__nav a[aria-current="page"] { background: var(--p-active); color: var(--p-text); font-weight: 600; }
 .ps__nav .hitung { margin-left: auto; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--p-text); }
 .ps__bawah { margin-top: auto; display: grid; gap: 8px; padding: 12px 8px 0; }
-.ps__tautan-situs { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 8px; border-radius: 8px; color: var(--p-muted); }
-.ps__tautan-situs:hover { background: rgba(255, 255, 255, 0.6); color: var(--p-text); }
-.ps__tautan-situs svg { width: 16px; height: 16px; flex: none; }
 .ps__pengguna { display: flex; align-items: center; gap: 10px; }
 .ps__inisial { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #dbe7e0; color: #12392c; font-weight: 700; font-size: 12px; }
 .ps__atas { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; }

@@ -60,7 +60,7 @@ class AkunController extends Controller
         $this->simpanSesiPengguna($request, $user);
 
         return redirect($this->aman($request->input('kembali')) ?? $this->tujuan($user['peran']))
-            ->with('pesan', 'Halo, '.$user['name'].'.');
+            ->with('sambutan', $user['name']);
     }
 
     public function lupaPassword()

@@ -11,7 +11,6 @@
     $menu = [
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('jalur'), 'Jalur & Rute', ['jalur*', 'rencana', 'rencana.bagikan']],
-        [route('tanya'), 'Tanya', ['tanya', 'cari']],
         [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];
     $tiketAktif = ($u && $u['peran'] === 'wisatawan')
@@ -32,7 +31,6 @@
 
         <div class="mv-kepala__aksi">
             <a class="mv-kepala__cepat-ponsel" href="{{ route('peta') }}" @if (request()->routeIs('peta')) aria-current="page" @endif>Peta</a>
-            <a class="mv-kepala__cepat-ponsel" href="{{ route('tanya') }}" @if (request()->routeIs('tanya')) aria-current="page" @endif>Tanya</a>
 
             <button class="mv-kepala__cari" type="button" data-buka-cari aria-haspopup="dialog" aria-controls="dialog-cari" aria-label="Cari tempat, tokoh, atau kuliner">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>

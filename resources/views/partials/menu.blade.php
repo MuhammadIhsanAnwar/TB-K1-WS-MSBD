@@ -5,7 +5,6 @@
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('jalur'), 'Jalur tematik', ['jalur*']],
         [route('rencana'), 'Perencana rute', ['rencana', 'rencana.bagikan']],
-        [route('tanya'), 'Tanya asisten', ['tanya', 'cari']],
     ];
 @endphp
 <dialog class="lembar-menu" id="lembar-menu" data-ui aria-label="Menu navigasi">
