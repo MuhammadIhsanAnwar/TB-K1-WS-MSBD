@@ -83,9 +83,9 @@
 
                 <form class="p-form" method="post" action="{{ route('admin.akun.ubah', $user['id']) }}" style="max-width:none">
                     @csrf @method('PATCH')
-                    <div class="p-dua">
+                    <div class="p-dua" style="align-items:start">
                         <div class="p-field"><label for="password-{{ $user['id'] }}">Kata sandi admin baru</label><input id="password-{{ $user['id'] }}" type="password" name="password" required autocomplete="new-password"><span class="bantu">Minimal 8 karakter: huruf kecil, kapital, angka, dan simbol.</span></div>
-                        <div class="p-field"><label for="password-confirm-{{ $user['id'] }}">Ulangi kata sandi baru</label><input id="password-confirm-{{ $user['id'] }}" type="password" name="password_confirmation" required autocomplete="new-password"></div>
+                        <div class="p-field"><label for="password-confirm-{{ $user['id'] }}">Ulangi kata sandi baru</label><input id="password-confirm-{{ $user['id'] }}" type="password" name="password_confirmation" required autocomplete="new-password"><span class="bantu">&nbsp;</span></div>
                     </div>
                     <div><button class="p-btn p-btn--utama" type="submit">Ubah kata sandi admin</button></div>
                 </form>
