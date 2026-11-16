@@ -11,9 +11,6 @@
 @if (session('galat'))
     <div class="p-pesan p-pesan--galat" role="alert">{{ session('galat') }}</div>
 @endif
-@if (session('pesan'))
-    <div class="p-pesan" role="status">{{ session('pesan') }}</div>
-@endif
 
 <nav class="p-alat" aria-label="Filter peran akun" style="margin-bottom:16px">
     <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin']) }}"
