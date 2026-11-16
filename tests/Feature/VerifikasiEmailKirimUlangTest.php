@@ -48,17 +48,19 @@ class VerifikasiEmailKirimUlangTest extends TestCase
     public function test_resend_message_is_below_the_button_and_cooldown_expires_after_60_seconds(): void
     {
         $this->post(route('verifikasi.kirim'), ['email' => self::EMAIL])
-            ->assertRedirect(route('verifikasi', ['email' => self::EMAIL]));
+            ->assertRedirect(route('verifikasi', ['email' => self::EMAIL]))
+            ->assertSessionHas('pesan_sukses', 'Email berhasil dikirim ulang.');
 
         Mail::assertSent(VerifikasiEmail::class, 1);
         $response = $this->get(route('verifikasi', ['email' => self::EMAIL]))->assertOk();
         $html = $response->getContent();
         $tombol = strpos($html, 'Kirim ulang email verifikasi</button>');
-        $pesan = strpos($html, 'class="mv-otentik__pesan" role="status"');
+        $pesan = strpos($html, 'class="mv-otentik__pesan mv-otentik__pesan--sukses" role="status"');
 
         $this->assertNotFalse($tombol);
         $this->assertNotFalse($pesan);
         $this->assertGreaterThan($tombol, $pesan);
+        $this->assertStringContainsString('Email berhasil dikirim ulang.', $html);
         $this->assertStringContainsString('data-verifikasi-kirim disabled', $html);
         $this->assertMatchesRegularExpression('/data-verifikasi-hitung[^>]*data-sisa="[1-6]?[0-9]"/', $html);
 

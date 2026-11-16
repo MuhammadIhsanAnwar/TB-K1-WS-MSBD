@@ -37,7 +37,7 @@ class SambutanLoginTest extends TestCase
 
     public function test_verification_flash_message_is_displayed_inside_the_verification_panel(): void
     {
-        $message = 'Jika akun ditemukan dan belum terverifikasi, link baru sudah dikirim.';
+        $message = 'Email belum dikonfirmasi. Kami mengirimkan link verifikasi baru.';
         config(['services.sparql.endpoint' => 'https://sparql.test/query']);
         Katalog::forgetCache();
         Http::fake(['*' => Http::response([
