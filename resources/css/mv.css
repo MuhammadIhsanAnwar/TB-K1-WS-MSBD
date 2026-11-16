@@ -2583,6 +2583,11 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   font-size: var(--mv-s-ui);
   line-height: 1.55;
 }
+.mv-otentik__hitung-mundur {
+  margin: 10px 0 0;
+  color: var(--mv-redup);
+  font-size: var(--mv-s-ui);
+}
 .mv-otentik .isian__bantuan,
 .mv-otentik .isian__galat {
   font-size: var(--mv-s-ui);
