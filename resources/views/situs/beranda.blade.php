@@ -59,7 +59,7 @@
 
     <div class="mv-hero__isi">
         <div class="mv-hero__utama">
-            <h1 id="judul-utama" data-naik style="--i:0">Jelajahi Medan lewat ceritanya</h1>
+            <h1 id="judul-utama" data-naik style="--i:0">Jelajahi Kota Medan</h1>
             <p class="mv-hero__sub" data-naik style="--i:1">Panduan wisata Kota Medan yang menautkan tempat, tokoh sejarah, budaya, dan kuliner khas. Cari tujuan dan pesan tiket masuk dengan mudah.</p>
 
             <div class="mv-hero__cari-bungkus" data-naik style="--i:2">
@@ -160,80 +160,6 @@
     </div>
 </section>
 
-{{-- 3. SHOWCASE: Square plate, spare text (Benang merah kota) --}}
-<section class="mv-benang" data-benang aria-labelledby="judul-benang">
-    <div class="mv-wadah">
-        <div class="mv-benang__grid">
-            <figure class="mv-benang__plat">
-                <x-foto berkas="peta-medan-1930-kota-lama.jpg" alt="Peta historis kawasan Medan" />
-                @foreach ($benang as $i => $b)
-                    @php
-                        $titik = collect($b['langkah'])->flatMap(fn ($l) => [$l['dari'], $l['ke']])->unique()
-                            ->map(fn ($s) => Katalog::get($s))->filter(fn ($e) => $e['jenis'] === 'tempat' && Katalog::posisiKotaLama($e))
-                            ->map(fn ($e) => ['e' => $e, 'p' => Katalog::posisiKotaLama($e)])->values();
-                        $d = $titik->map(fn ($x, $j) => ($j ? 'L' : 'M').$x['p']['x'].' '.$x['p']['y'])->implode(' ');
-                    @endphp
-                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" data-panel-benang="{{ $i }}" @if ($i) hidden @endif aria-hidden="true">
-                        <path class="utas-alas" d="{{ $d }}" pathLength="220"/>
-                        <path class="utas" d="{{ $d }}" pathLength="220"/>
-                        @foreach ($titik as $x)
-                            <circle class="simpul" cx="{{ $x['p']['x'] }}" cy="{{ $x['p']['y'] }}" r="1.9"/>
-                            @php $lw = mb_strlen($x['e']['nama']) * 1.75 + 3; $kiri = $x['p']['x'] > 62; @endphp
-                            <g class="nama-simpul" transform="translate({{ $kiri ? $x['p']['x'] - 3 - $lw : $x['p']['x'] + 3 }} {{ $x['p']['y'] - 2.6 }})">
-                                <rect width="{{ $lw }}" height="5.2"/>
-                                <text x="1.5" y="3.9">{{ $x['e']['nama'] }}</text>
-                            </g>
-                        @endforeach
-                    </svg>
-                @endforeach
-                <figcaption>Jejaring cerita tempat di Medan</figcaption>
-            </figure>
-
-            <div class="mv-benang__sisi">
-                <div>
-                    <h2 id="judul-benang" data-muncul>Benang merah kota</h2>
-                    <p style="margin-top:12px;color:var(--mv-redup)" data-muncul style="--i:1">Setiap tempat di Medan saling bertaut lewat tokoh pendiri, kawasan sejarah, dan tradisi kulinernya. Pilih pasangan tempat untuk melihat jejak hubungannya.</p>
-                </div>
-
-                <div class="mv-benang__tab" role="tablist" aria-label="Pasangan tempat bersejarah">
-                    @foreach ($benang as $i => $b)
-                        <button type="button" role="tab" id="tab-benang-{{ $i }}" aria-controls="panel-benang-{{ $i }}" aria-selected="{{ $i ? 'false' : 'true' }}" tabindex="{{ $i ? '-1' : '0' }}" data-tab-benang="{{ $i }}">
-                            {{ $b['dari']['nama'] }} &amp; {{ \Illuminate\Support\Str::of($b['ke']['nama'])->replace(' Al-Mashun', '') }}
-                        </button>
-                    @endforeach
-                </div>
-
-                @foreach ($benang as $i => $b)
-                    <div class="mv-benang__panel" role="tabpanel" id="panel-benang-{{ $i }}" aria-labelledby="tab-benang-{{ $i }}" data-panel-benang="{{ $i }}" @if ($i) hidden @endif>
-                        <p class="mv-benang__tanya">Bagaimana {{ $b['dari']['nama'] }} terhubung dengan {{ $b['ke']['nama'] }}?</p>
-                        {{-- rantai digambar sebagai benang yang melewati manik-manik, sama dengan panel di /jelajah --}}
-                        <ol class="mv-rantai mv-benang__rantai">
-                            @foreach ($b['langkah'] as $j => $l)
-                                @php $simpul = Katalog::get($l['dari']); @endphp
-                                <li>
-                                    <a href="{{ \App\Http\Controllers\SitusController::urlEntitas($simpul) ?? route('jelajah', ['dari' => $l['dari']]) }}"><span class="mv-graf__titik" data-kelas="{{ $simpul['jenis'] }}"></span>{{ $simpul['nama'] }}</a>
-                                    <span class="mv-rantai__kata">{{ Katalog::labelRelasi($l['relasi'], $l['dari']) }}</span>
-                                </li>
-                            @endforeach
-                            @php $akhir = Katalog::get(end($b['langkah'])['ke']); @endphp
-                            <li>
-                                <a href="{{ \App\Http\Controllers\SitusController::urlEntitas($akhir) ?? route('jelajah') }}"><span class="mv-graf__titik" data-kelas="{{ $akhir['jenis'] }}"></span>{{ $akhir['nama'] }}</a>
-                            </li>
-                        </ol>
-                    </div>
-                @endforeach
-
-                <div class="mv-benang__aksi">
-                    @foreach ($benang as $i => $b)
-                        <a class="mv-btn mv-btn--hijau" href="{{ route('jelajah', ['dari' => $b['dari']['slug'], 'ke' => $b['ke']['slug']]) }}" data-panel-benang="{{ $i }}" @if ($i) hidden @endif>Buka di jelajah graf</a>
-                    @endforeach
-                    <a class="mv-btn mv-btn--garis" href="{{ route('jelajah') }}">Hubungkan dua tempat lain</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 {{-- 4. PRICING: Prices like a menu (Tiket tanpa antre) --}}
 <section class="mv-seksi-tiket" id="tiket" aria-labelledby="judul-tiket">
     <div class="mv-wadah">
@@ -275,7 +201,7 @@
     <div class="mv-wadah">
         <div class="mv-kepala-seksi">
             <h2 id="judul-jalur">Jalur siap jalan</h2>
-            <p>Tiga rute bertema yang dirangkai dari kedekatan lokasi dan benang cerita di lapangan, lengkap dengan jarak tempuh serta waktu singgah.</p>
+            <p>Tiga rute bertema yang dirangkai dari kedekatan lokasi dan sejarah setempat, lengkap dengan jarak tempuh serta waktu singgah.</p>
         </div>
 
         <div class="mv-jalur-daftar">
@@ -373,14 +299,6 @@
                     <details>
                         <summary>Apakah e-tiket tetap bisa dibuka saat sinyal lemah?</summary>
                         <p>Bisa. Pada halaman e-tiket, tekan tombol <strong>Simpan PDF</strong> sebelum berangkat agar kode QR tersimpan di ponsel dan siap dipindai tanpa koneksi internet.</p>
-                    </details>
-                    <details>
-                        <summary>Cerita wisata tersedia dalam bahasa apa saja?</summary>
-                        <p>Seluruh cerita saat ini ditulis dalam bahasa Indonesia. Terjemahan bahasa Inggris, Mandarin, dan Melayu sedang disiapkan secara bertahap oleh tim kurator.</p>
-                    </details>
-                    <details>
-                        <summary>Dari mana asal foto arsip dan rujukan sejarahnya?</summary>
-                        <p>Rujukan hubungan sejarah dapat diperiksa pada halaman tempat terkait.</p>
                     </details>
                 </div>
 

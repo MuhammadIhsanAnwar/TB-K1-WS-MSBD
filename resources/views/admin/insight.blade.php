@@ -4,7 +4,7 @@
     use App\Support\Penyimpanan;
     $maksimumHarian = max($kunjungan['harian'] ?: [0]) ?: 1;
     $totalLunas = $pesanan->where('status', 'lunas');
-    $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'jalur' => 'Jalur', 'jelajah' => 'Jelajah', 'tanya' => 'Tanya'];
+    $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'jalur' => 'Jalur', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
     $rating = $fokus ? (Penyimpanan::ringkasanUlasan()[$fokus] ?? null) : null;
     $dikunjungi = $kunjunganTempat->where('jumlah', '>', 0);
@@ -19,7 +19,7 @@
     <div>
         <h1>{{ $namaFokus ? 'Insight '.$namaFokus : 'Insight' }}</h1>
         <p class="sub">
-            Kunjungan adalah tayangan halaman, bukan pengunjung unik. Riwayat kunjungan disimpan dalam cache aplikasi.
+            Dihitung dari pembukaan halaman HTML yang berhasil, di luar panel admin. Angka ini adalah tayangan halaman, bukan jumlah orang unik.
             @if ($fokus && ! $admin)<a class="p-tautan-kartu" href="{{ route('admin.insight', ['periode' => $periode]) }}">Kembali ke semua tempat</a>@endif
         </p>
     </div>
@@ -30,16 +30,16 @@
 
 <div class="p-kpi">
     @if ($fokus)
-        <div><div class="label">Kunjungan halaman tempat</div><div class="nilai">{{ number_format($kunjungan['total'], 0, ',', '.') }}</div><div class="ket">tayangan halaman {{ $namaFokus }} dalam {{ $periode }} hari</div></div>
+        <div><div class="label">Tayangan halaman tempat</div><div class="nilai">{{ number_format($kunjungan['total'], 0, ',', '.') }}</div><div class="ket">pembukaan halaman {{ $namaFokus }} yang berhasil dalam {{ $periode }} hari</div></div>
     @else
-        <div><div class="label">Kunjungan website</div><div class="nilai">{{ number_format($kunjungan['total'], 0, ',', '.') }}</div><div class="ket">tayangan halaman dalam {{ $periode }} hari</div></div>
+        <div><div class="label">Kunjungan website</div><div class="nilai">{{ number_format($kunjungan['total'], 0, ',', '.') }}</div><div class="ket">pembukaan halaman publik yang berhasil dalam {{ $periode }} hari</div></div>
     @endif
     <div><div class="label">Tiket terjual</div><div class="nilai">{{ number_format($totalLunas->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))), 0, ',', '.') }}</div><div class="ket">dari {{ $totalLunas->count() }} pesanan lunas</div></div>
     <div><div class="label">Pendapatan tiket</div><div class="nilai">{{ Katalog::rupiah($totalLunas->sum('total')) }}</div><div class="ket">berdasarkan pesanan lunas</div></div>
     @if ($fokus)
         <div><div class="label">Rating ulasan</div><div class="nilai">{{ $rating && $rating['jumlahUlasan'] ? number_format($rating['rating'], 1, ',', '.') : '-' }}</div><div class="ket">{{ $rating['jumlahUlasan'] ?? 0 }} ulasan tayang</div></div>
     @else
-        <div><div class="label">Akun terdaftar</div><div class="nilai">{{ number_format(($akun['admin'] ?? 0) + ($akun['wisatawan'] ?? 0) + ($akun['superadmin'] ?? 0), 0, ',', '.') }}</div><div class="ket">{{ $akun['admin'] ?? 0 }} admin · {{ $akun['wisatawan'] ?? 0 }} wisatawan</div></div>
+        <div><div class="label">Akun terdaftar</div><div class="nilai">{{ number_format(($akun['admin'] ?? 0) + ($akun['wisatawan'] ?? 0) + ($akun['superadmin'] ?? 0), 0, ',', '.') }}</div><div class="ket">{{ $akun['admin'] ?? 0 }} admin · {{ $akun['superadmin'] ?? 0 }} superadmin · {{ $akun['wisatawan'] ?? 0 }} wisatawan</div></div>
     @endif
 </div>
 

@@ -26,7 +26,7 @@ class SupabaseApi
 
     public function users(): array
     {
-        return $this->semua('users', 'id,name,email,peran,tanggal_lahir,no_hp,email_verified_at,created_at');
+        return $this->semua('users', 'id,name,email,peran,tempat_slug,tanggal_lahir,no_hp,email_verified_at,created_at');
     }
 
     public function createUser(array $user): array
@@ -53,6 +53,46 @@ class SupabaseApi
             ->throw();
         if (! $response->json()) {
             throw new RuntimeException('Supabase tidak menemukan akun untuk dihapus.');
+        }
+    }
+
+    public function adminTempat(): array
+    {
+        return $this->getRows('admin_tempat', ['select' => 'id_admin,tempat_slug', 'order' => 'id_admin.asc,tempat_slug.asc']);
+    }
+
+    public function tempatAdmin(int|string $id): array
+    {
+        return array_column($this->getRows('admin_tempat', [
+            'select' => 'tempat_slug',
+            'id_admin' => 'eq.'.$id,
+            'order' => 'tempat_slug.asc',
+        ]), 'tempat_slug');
+    }
+
+    public function assignTempatAdmin(int|string $id, string $slug): void
+    {
+        $waktu = now('Asia/Jakarta')->toDateTimeString();
+        $this->insert('admin_tempat', [
+            'id_admin' => $id,
+            'tempat_slug' => $slug,
+            'created_at' => $waktu,
+            'updated_at' => $waktu,
+        ]);
+    }
+
+    public function hapusTempatAdmin(int|string $id, string $slug): void
+    {
+        $rows = $this->request()
+            ->withHeaders(['Prefer' => 'return=representation'])
+            ->delete($this->url('admin_tempat').'?'.http_build_query([
+                'id_admin' => 'eq.'.$id,
+                'tempat_slug' => 'eq.'.$slug,
+            ]))
+            ->throw()
+            ->json();
+        if (! $rows) {
+            throw new RuntimeException('Supabase tidak menemukan hubungan admin-tempat untuk dihapus.');
         }
     }
 
@@ -178,15 +218,16 @@ class SupabaseApi
         return $this->insert('ulasan', $data);
     }
 
-    public function moderasiUlasan(int $id, string $status): void
+    public function hapusUlasan(int $id): void
     {
-        $this->request()
-            ->withHeaders(['Prefer' => 'return=minimal'])
-            ->patch($this->url('ulasan').'?'.http_build_query(['id_ulasan' => 'eq.'.$id]), [
-                'status' => $status,
-                'updated_at' => now()->toIso8601String(),
-            ])
-            ->throw();
+        $rows = $this->request()
+            ->withHeaders(['Prefer' => 'return=representation'])
+            ->delete($this->url('ulasan').'?'.http_build_query(['id_ulasan' => 'eq.'.$id]))
+            ->throw()
+            ->json();
+        if (! $rows) {
+            throw new RuntimeException('Supabase tidak menemukan ulasan untuk dihapus.');
+        }
     }
 
     public function catatCari(string $kataKunci, int $jumlahHasil): void

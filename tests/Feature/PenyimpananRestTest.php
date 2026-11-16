@@ -106,4 +106,33 @@ class PenyimpananRestTest extends TestCase
         $this->assertSame([], Penyimpanan::pesanan(aman: true));
         $this->assertSame([], Penyimpanan::ringkasanUlasan());
     }
+
+    public function test_reviews_are_published_immediately_and_can_be_deleted(): void
+    {
+        Http::fake(function (Request $request) {
+            if ($request->method() === 'POST') {
+                return Http::response([['id_ulasan' => 42]], 201);
+            }
+
+            return Http::response([['id_ulasan' => 42]], 200);
+        });
+
+        $ulasan = Penyimpanan::tulisUlasan([
+            'id_pengguna' => 7,
+            'tempat' => 'istana-maimun',
+            'nama' => 'Rina',
+            'email' => 'rina@example.test',
+            'bintang' => 5,
+            'teks' => 'Tempatnya menarik dan informasinya berguna.',
+        ]);
+        Penyimpanan::hapusUlasan($ulasan['id']);
+
+        $this->assertSame('42', $ulasan['id']);
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_ends_with($request->url(), '/ulasan')
+            && $request['status'] === 'tayang');
+        Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
+            && str_contains($request->url(), '/ulasan?')
+            && str_contains($request->url(), 'id_ulasan=eq.42'));
+    }
 }

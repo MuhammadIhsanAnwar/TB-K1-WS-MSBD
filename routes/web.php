@@ -16,8 +16,6 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
     Route::post('/tempat/{slug}/sukai', 'sukai')->name('tempat.sukai');
-    Route::get('/jelajah', 'jelajah')->name('jelajah');
-    Route::get('/jelajah/graf.json', 'graf')->name('jelajah.graf');
     Route::get('/jalur', 'jalur')->name('jalur');
     Route::get('/jalur/{slug}', 'jalurDetail')->name('jalur.detail');
     Route::get('/rencana', 'rencana')->name('rencana');
@@ -75,13 +73,14 @@ Route::controller(AdminController::class)->middleware('peran:admin,superadmin')-
     Route::post('/entitas/{slug}', 'simpanEntitas');
     Route::get('/relasi', 'relasi')->name('relasi');
     Route::post('/relasi', 'tambahRelasi');
-    Route::get('/cerita', 'cerita')->name('cerita');
-    Route::post('/cerita', 'simpanCerita');
     Route::get('/ulasan', 'ulasan')->name('ulasan');
-    Route::post('/ulasan/{id}', 'moderasi')->name('ulasan.moderasi');
+    Route::delete('/ulasan/{id}', 'hapusUlasan')->name('ulasan.hapus');
     Route::get('/tiket', 'tiket')->name('tiket');
     Route::post('/tiket/validasi', 'validasi')->name('tiket.validasi');
     Route::get('/sinkronisasi', 'sinkronisasi')->name('sinkronisasi');
+    Route::get('/tempat/baru', 'buatTempat')->name('tempat.baru');
+    Route::post('/tempat', 'simpanTempat')->name('tempat.simpan');
+    Route::delete('/tempat/{slug}', 'hapusTempat')->name('tempat.hapus');
 });
 
 Route::controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
@@ -90,10 +89,8 @@ Route::controller(AdminController::class)->prefix('admin')->name('admin.')->grou
     Route::get('/akun', 'akunAdmin')->name('akun');
     Route::post('/akun', 'buatAkun')->name('akun.buat');
     Route::patch('/akun/{id}', 'ubahAkun')->name('akun.ubah');
-    Route::delete('/akun/{id}', 'hapusAkun')->name('akun.hapus');
+    Route::post('/akun/{id}/tempat', 'tautkanTempat')->name('akun.tempat.tautkan');
+    Route::delete('/akun/{id}/tempat/{slug}', 'lepasTempat')->name('akun.tempat.lepas');
     Route::get('/tempat', 'entitas')->defaults('jenis', 'tempat')->name('tempat.daftar');
-    Route::get('/tempat/baru', 'buatTempat')->name('tempat.baru');
-    Route::post('/tempat', 'simpanTempat')->name('tempat.simpan');
-    Route::delete('/tempat/{slug}', 'hapusTempat')->name('tempat.hapus');
     });
 });

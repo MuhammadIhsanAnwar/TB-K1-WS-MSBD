@@ -403,12 +403,12 @@
 </form>
 
 {{-- HAPUS TEMPAT --}}
-@if ($e['jenis'] === 'tempat' && session('pengguna.peran') === 'superadmin')
+@if ($e['jenis'] === 'tempat' && in_array(session('pengguna.peran'), ['admin', 'superadmin'], true))
 
     <form method="post"
           action="{{ route('admin.tempat.hapus', $e['slug']) }}"
           style="margin-top:16px"
-          onsubmit="return confirm('Hapus tempat ini dari katalog SPARQL? Tindakan ini tidak dapat dibatalkan.')">
+          onsubmit="return confirm('Hapus tempat ini dari katalog SPARQL? Admin harus tetap memiliki tempat wisata lain yang ditautkan.')">
 
         @csrf
         @method('DELETE')

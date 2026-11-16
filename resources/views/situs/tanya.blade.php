@@ -100,7 +100,7 @@
                 <textarea id="pesan-tanya" name="pesan" rows="1" maxlength="300" placeholder="Tulis pertanyaan soal Medan, lalu tekan Enter…" required></textarea>
                 <button class="mv-btn mv-btn--utama" type="submit">Kirim</button>
             </form>
-            <p class="tanya__catatan" style="margin-top:8px">Jawaban disusun dari katalog MedanVisit menggunakan pencocokan kata kunci dan jaringan cerita. Periksa kembali jam buka serta harga bertanda contoh sebelum berangkat.</p>
+            <p class="tanya__catatan" style="margin-top:8px">Jawaban disusun dari katalog MedanVisit. Periksa kembali jam buka serta harga bertanda contoh sebelum berangkat.</p>
         </div>
     </div>
 </div>

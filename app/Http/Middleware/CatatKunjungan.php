@@ -19,6 +19,7 @@ class CatatKunjungan
             && $request->accepts('text/html')
             && $response->isSuccessful()
             && $rute?->getName()
+            && ! str_starts_with($rute->getName(), 'admin.')
         ) {
             Kunjungan::catat(
                 $rute->getName(),

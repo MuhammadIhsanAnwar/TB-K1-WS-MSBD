@@ -7,12 +7,11 @@
                 <a href="{{ route('peta') }}">Tempat &amp; peta</a>
                 <a href="{{ route('jalur') }}">Jalur tematik</a>
                 <a href="{{ route('rencana') }}">Perencana rute</a>
-                <a href="{{ route('jelajah') }}">Cerita Medan (Graf)</a>
                 <a href="{{ route('tanya') }}">Tanya asisten</a>
                 <a href="{{ route('ketentuan') }}">Ketentuan &amp; privasi</a>
             </nav>
             <div class="mv-kaki__catatan">
-                <p>Jelajahi Medan, bawa pulang ceritanya. Panduan wisata berbasis jaringan cerita yang menautkan tempat, tokoh, budaya, dan kuliner Kota Medan.</p>
+                <p>Panduan wisata Kota Medan untuk membantu menemukan tempat, menyusun rute, dan merencanakan kunjungan.</p>
                 <p><a href="mailto:administrator@medanvisit.neoverse.my.id">administrator@medanvisit.neoverse.my.id</a></p>
             </div>
         </div>

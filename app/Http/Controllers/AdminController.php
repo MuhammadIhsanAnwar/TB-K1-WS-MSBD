@@ -26,6 +26,10 @@ class AdminController extends Controller
         $periode = (int) $request->query('periode', 30);
         $periode = in_array($periode, [7, 30, 90], true) ? $periode : 30;
         $sejak = now('Asia/Jakarta')->subDays($periode)->toIso8601String();
+        $ulasanTerbaru = collect(Penyimpanan::ulasan(null, 'tayang', aman: true));
+        if ($milik = $this->slugsKelolaan($request)) {
+            $ulasanTerbaru = $ulasanTerbaru->filter(fn ($ulasan) => in_array($ulasan['tempat'], $milik, true));
+        }
 
         $lunas = collect(Penyimpanan::pesanan())->filter(fn ($p) => $p['status'] === 'lunas' && ($p['dibayar'] ?? '') >= $sejak);
         $tanpaSumber = collect(Katalog::relasi())->filter(fn ($r) => str_contains($r['sumber'], 'perlu verifikasi'));
@@ -36,7 +40,7 @@ class AdminController extends Controller
             'jumlahTempat' => count(Katalog::tempat()),
             'tiket' => $lunas->sum(fn ($p) => array_sum(array_column($p['item'], 'jumlah'))),
             'pendapatan' => $lunas->sum('total'),
-            'ulasanMenunggu' => Penyimpanan::ulasan(null, 'menunggu'),
+            'ulasanTerbaru' => $ulasanTerbaru->values()->all(),
             'celah' => Penyimpanan::celahKonten(),
             'jumlahCari' => Penyimpanan::jumlahCari(),
             'tanpaSumber' => $tanpaSumber,
@@ -52,13 +56,16 @@ class AdminController extends Controller
         $kunjungan = Kunjungan::ringkasan($periode);
         $sejak = now('Asia/Jakarta')->subDays($periode)->toIso8601String();
 
-        // admin tempat hanya melihat tempatnya sendiri; superadmin bisa memilih satu tempat lewat ?tempat=
-        $milik = $this->slugKelolaan($request);
+        $admin = $request->session()->get('pengguna.peran') === 'admin';
+        $tempatMilik = $this->slugsKelolaan($request) ?? [];
         $pilihan = $request->query('tempat');
-        $fokus = $milik ?? (is_string($pilihan) && (Katalog::get($pilihan)['jenis'] ?? null) === 'tempat' ? $pilihan : null);
+        $fokus = $admin
+            ? (in_array($pilihan, $tempatMilik, true) ? $pilihan : ($tempatMilik[0] ?? null))
+            : (is_string($pilihan) && (Katalog::get($pilihan)['jenis'] ?? null) === 'tempat' ? $pilihan : null);
 
         $pesanan = collect(Penyimpanan::pesanan(aman: true))->filter(
-            fn ($pesanan) => ($pesanan['waktu'] ?? '') >= $sejak && ($fokus === null || $pesanan['tempat'] === $fokus)
+            fn ($pesanan) => ($pesanan['waktu'] ?? '') >= $sejak
+                && ($admin ? in_array($pesanan['tempat'], $tempatMilik, true) : ($fokus === null || $pesanan['tempat'] === $fokus))
         );
         $transaksi = $pesanan->groupBy('tempat')->map(fn ($baris) => [
             'pesanan' => $baris->count(),
@@ -69,6 +76,7 @@ class AdminController extends Controller
 
         // semua tempat wisata dengan jumlah kunjungan halamannya (termasuk yang belum dikunjungi)
         $kunjunganTempat = collect(Katalog::tempat())
+            ->when($admin, fn ($tempat) => $tempat->filter(fn ($t) => in_array($t['slug'], $tempatMilik, true)))
             ->map(fn ($t) => ['slug' => $t['slug'], 'nama' => $t['nama'], 'jumlah' => (int) ($kunjungan['tempat'][$t['slug']] ?? 0)])
             ->sortBy([['jumlah', 'desc'], ['nama', 'asc']])->values();
 
@@ -81,8 +89,8 @@ class AdminController extends Controller
             'periode' => $periode,
             'kunjungan' => $kunjungan,
             'fokus' => $fokus,
-            'admin' => $milik !== null,
-            'akun' => $milik === null ? collect((new SupabaseApi)->users())->countBy('peran')->all() : [],
+            'admin' => $admin,
+            'akun' => $admin ? [] : collect((new SupabaseApi)->users())->countBy('peran')->all(),
             'kunjunganTempat' => $kunjunganTempat,
             'transaksi' => $transaksi,
             'pesanan' => $pesanan,
@@ -91,24 +99,27 @@ class AdminController extends Controller
 
     public function akunAdmin(Request $request)
     {
-        $q = mb_strtolower(trim((string) $request->query('q', '')));
-        $peran = $request->query('peran');
-        abort_if($peran && ! in_array($peran, ['admin', 'wisatawan'], true), 404);
-        $semuaAkun = (new SupabaseApi)->users();
-        $akun = collect($semuaAkun)
-            ->filter(fn ($user) => in_array($user['peran'], ['admin', 'wisatawan'], true))
-            ->when($peran, fn ($rows) => $rows->where('peran', $peran))
-            ->when($q !== '', fn ($rows) => $rows->filter(fn ($user) =>
-                str_contains(mb_strtolower($user['name']), $q)
-                || str_contains(mb_strtolower($user['email']), $q)
-            ))
-            ->values();
+        $api = new SupabaseApi;
+        $semuaAkun = collect($api->users());
+        $tempat = collect(Katalog::tempat())->keyBy('slug');
+        $semuaRelasi = $api->adminTempat();
+        $relasiTempat = collect($semuaRelasi)->groupBy('id_admin');
+        $akun = $semuaAkun->where('peran', 'admin')->map(function (array $user) use ($relasiTempat, $tempat) {
+            $user['tempat'] = ($relasiTempat->get($user['id'], collect()))
+                ->map(fn ($relasi) => $tempat->get($relasi['tempat_slug']) ?? [
+                    'slug' => $relasi['tempat_slug'],
+                    'nama' => $relasi['tempat_slug'],
+                ])->values();
+
+            return $user;
+        })->values();
+        $tempatTerhubung = collect($semuaRelasi)->pluck('tempat_slug')->all();
+        $tersedia = $tempat->reject(fn ($t) => in_array($t['slug'], $tempatTerhubung, true))->values();
 
         return view('admin.akun', [
             'akun' => $akun,
-            'q' => $q,
-            'peran' => $peran,
-            'jumlah' => collect($semuaAkun)->countBy('peran')->all(),
+            'tempatTersedia' => $tersedia,
+            'jumlah' => $semuaAkun->countBy('peran')->all(),
         ]);
     }
 
@@ -117,97 +128,129 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:60'],
             'email' => ['required', 'email:rfc', 'max:120'],
-            'peran' => ['required', 'in:admin,wisatawan'],
+            'tempat_slug' => ['required', 'string', 'max:120'],
             'password' => ['required', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/'],
-        ], ['password.regex' => 'Password minimal 8 karakter dan harus memiliki huruf kecil, huruf kapital, angka, dan simbol.']);
+        ], [
+            'password.regex' => 'Password minimal 8 karakter dan harus memiliki huruf kecil, huruf kapital, angka, dan simbol.',
+            'tempat_slug.required' => 'Setiap akun admin harus terhubung ke tempat wisata.',
+        ]);
         $api = new SupabaseApi;
+        $tempat = Katalog::get($data['tempat_slug']);
+        if (! $tempat || $tempat['jenis'] !== 'tempat') {
+            throw ValidationException::withMessages(['tempat_slug' => 'Pilih tempat wisata yang valid.']);
+        }
+        $relasiTempat = collect($api->adminTempat());
+        if ($relasiTempat->contains('tempat_slug', $data['tempat_slug'])) {
+            throw ValidationException::withMessages(['tempat_slug' => 'Tempat wisata tersebut sudah dikelola akun admin lain.']);
+        }
         if ($api->findUserByEmail($data['email'])) {
             throw ValidationException::withMessages(['email' => 'Email sudah digunakan.']);
         }
         $waktu = now('Asia/Jakarta')->toDateTimeString();
-        $api->createUser([
+        $user = $api->createUser([
             'name' => $data['nama'],
             'email' => strtolower($data['email']),
-            'peran' => $data['peran'],
+            'peran' => 'admin',
+            'tempat_slug' => $data['tempat_slug'],
             'password' => Hash::make($data['password']),
             'email_verified_at' => $waktu,
             'created_at' => $waktu,
             'updated_at' => $waktu,
         ]);
+        $api->assignTempatAdmin($user['id'], $data['tempat_slug']);
 
-        return redirect()->route('admin.akun')->with('pesan', 'Akun '.$data['peran'].' berhasil dibuat.');
+        return redirect()->route('admin.akun')->with('pesan', 'Akun admin '.$data['nama'].' berhasil dibuat dan terhubung ke '.$tempat['nama'].'.');
     }
 
     public function ubahAkun(Request $request, string $id)
     {
         $api = new SupabaseApi;
         $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
-        abort_unless($user && in_array($user['peran'], ['admin', 'wisatawan'], true), 404);
+        abort_unless($user && $user['peran'] === 'admin', 404);
         $data = $request->validate([
-            'nama' => ['required', 'string', 'max:60'],
-            'email' => ['required', 'email:rfc', 'max:120'],
-            'peran' => ['required', 'in:admin,wisatawan'],
-            'password' => ['nullable', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/'],
+            'password' => ['required', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/'],
         ], ['password.regex' => 'Password minimal 8 karakter dan harus memiliki huruf kecil, huruf kapital, angka, dan simbol.']);
-        $emailLama = $api->findUserByEmail($data['email']);
-        if ($emailLama && (string) $emailLama['id'] !== $id) {
-            throw ValidationException::withMessages(['email' => 'Email sudah digunakan akun lain.']);
-        }
-
-        $atribut = [
-            'name' => $data['nama'],
-            'email' => strtolower($data['email']),
-            'peran' => $data['peran'],
+        $api->updateUser($id, [
+            'password' => Hash::make($data['password']),
             'updated_at' => now('Asia/Jakarta')->toDateTimeString(),
-        ];
-        if ($data['password'] !== null && $data['password'] !== '') {
-            $atribut['password'] = Hash::make($data['password']);
-        }
-        $api->updateUser($id, $atribut);
+        ]);
 
-        return redirect()->route('admin.akun')->with('pesan', 'Akun berhasil diperbarui.');
+        return redirect()->route('admin.akun')->with('pesan', 'Kata sandi admin '.$user['email'].' berhasil diperbarui.');
     }
 
-    public function hapusAkun(Request $request, string $id)
+    public function tautkanTempat(Request $request, string $id)
     {
-        abort_if((string) $request->session()->get('pengguna.id') === $id, 422, 'Akun yang sedang digunakan tidak dapat dihapus.');
-        $user = collect((new SupabaseApi)->users())->first(fn ($user) => (string) $user['id'] === $id);
-        abort_unless($user && in_array($user['peran'], ['admin', 'wisatawan'], true), 404);
-        (new SupabaseApi)->deleteUser($id);
+        $api = new SupabaseApi;
+        $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
+        abort_unless($user && $user['peran'] === 'admin', 404);
+        $data = $request->validate(['tempat_slug' => ['required', 'string', 'max:120']]);
+        $tempat = Katalog::get($data['tempat_slug']);
+        if (! $tempat || $tempat['jenis'] !== 'tempat') {
+            throw ValidationException::withMessages(['tempat_slug' => 'Pilih tempat wisata yang valid.']);
+        }
+        $relasiTempat = collect($api->adminTempat());
+        if ($relasiTempat->contains(fn ($relasi) => $relasi['tempat_slug'] === $data['tempat_slug'] && (string) $relasi['id_admin'] !== $id)) {
+            throw ValidationException::withMessages(['tempat_slug' => 'Tempat wisata tersebut sudah dikelola akun admin lain.']);
+        }
+        if (in_array($data['tempat_slug'], $api->tempatAdmin($id), true)) {
+            throw ValidationException::withMessages(['tempat_slug' => 'Tempat wisata ini sudah ditautkan ke akun tersebut.']);
+        }
+        $api->assignTempatAdmin($id, $data['tempat_slug']);
+        if (empty($user['tempat_slug'])) {
+            $api->updateUser($id, ['tempat_slug' => $data['tempat_slug']]);
+        }
 
-        return redirect()->route('admin.akun')->with('pesan', 'Akun '.$user['email'].' berhasil dihapus.');
+        return redirect()->route('admin.akun')->with('pesan', $tempat['nama'].' ditautkan ke akun '.$user['email'].'.');
     }
 
-    /**
-     * Slug tempat yang boleh dikelola akun ini. null = tidak dibatasi
-     * (superadmin, dan admin lama yang belum ditautkan ke tempat).
-     */
-    private function slugKelolaan(Request $request): ?string
+    public function lepasTempat(Request $request, string $id, string $slug)
+    {
+        $api = new SupabaseApi;
+        $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
+        abort_unless($user && $user['peran'] === 'admin', 404);
+        $tempatAdmin = $api->tempatAdmin($id);
+        abort_unless(in_array($slug, $tempatAdmin, true), 404);
+        abort_if(count($tempatAdmin) <= 1, 422, 'Setiap akun admin harus tetap memiliki minimal satu tempat wisata.');
+
+        $pengganti = collect($tempatAdmin)->first(fn ($tempat) => $tempat !== $slug);
+        if (($user['tempat_slug'] ?? null) === $slug) {
+            $api->updateUser($id, ['tempat_slug' => $pengganti]);
+        }
+        $api->hapusTempatAdmin($id, $slug);
+
+        return redirect()->route('admin.akun')->with('pesan', 'Tempat wisata berhasil dilepas dari akun '.$user['email'].'.');
+    }
+
+    private function slugsKelolaan(Request $request): ?array
     {
         $pengguna = $request->session()->get('pengguna', []);
         if (($pengguna['peran'] ?? null) !== 'admin') {
             return null;
         }
 
-        return $pengguna['tempat_slug'] ?? null;
+        return $pengguna['tempat_slugs'] ?? (new SupabaseApi)->tempatAdmin($pengguna['id']);
     }
 
     private function pastikanBolehKelola(Request $request, string $slug): void
     {
-        $milik = $this->slugKelolaan($request);
-        abort_if($milik !== null && $milik !== $slug, 403, 'Akun ini hanya boleh mengelola tempatnya sendiri.');
+        $milik = $this->slugsKelolaan($request);
+        abort_if($milik !== null && ! in_array($slug, $milik, true), 403, 'Akun ini hanya boleh mengelola tempat yang ditautkan kepadanya.');
     }
 
     public function entitas(Request $request)
     {
         $jenis = $request->query('jenis', $request->route('jenis'));
         $q = mb_strtolower((string) $request->query('q', ''));
+        $milik = $this->slugsKelolaan($request);
+        if ($milik !== null) {
+            $jenis = 'tempat';
+        }
         $data = collect(Katalog::entitas())->reject(fn ($e) => $e['jenis'] === 'wilayah')
             ->filter(fn ($e) => (! $jenis || $e['jenis'] === $jenis) && ($q === '' || str_contains(mb_strtolower($e['nama']), $q)))
             ->sortBy('nama');
 
-        if ($milik = $this->slugKelolaan($request)) {
-            $data = $data->filter(fn ($e) => $e['slug'] === $milik);
+        if ($milik !== null) {
+            $data = $data->filter(fn ($e) => in_array($e['slug'], $milik, true));
         }
 
         return view('admin.entitas', [
@@ -315,15 +358,42 @@ class AdminController extends Controller
         $data['foto'] = (string) ($data['foto'] ?? '');
         $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');
         Database3CatalogWriter::create($slug, $data, $harga);
+        $pengguna = $request->session()->get('pengguna', []);
+        if (($pengguna['peran'] ?? null) === 'admin') {
+            $api = new SupabaseApi;
+            $api->assignTempatAdmin($pengguna['id'], $slug);
+            if (empty($pengguna['tempat_slug'])) {
+                $api->updateUser($pengguna['id'], ['tempat_slug' => $slug]);
+            }
+        }
 
-        return redirect()->route('admin.entitas.ubah', $slug)->with('pesan', 'Tempat wisata berhasil dibuat di Database 3.');
+        return redirect()->route('admin.entitas.ubah', $slug)->with('pesan', 'Tempat wisata berhasil dibuat dan ditautkan ke akun pengelola.');
     }
 
-    public function hapusTempat(string $slug)
+    public function hapusTempat(Request $request, string $slug)
     {
         $tempat = Katalog::get($slug);
         abort_unless($tempat && $tempat['jenis'] === 'tempat', 404);
+        $this->pastikanBolehKelola($request, $slug);
+        $api = new SupabaseApi;
+        $pemilik = collect($api->adminTempat())->first(fn ($relasi) => $relasi['tempat_slug'] === $slug);
+        $tempatPemilik = $pemilik ? $api->tempatAdmin($pemilik['id_admin']) : [];
+        abort_if(
+            $pemilik && count($tempatPemilik) <= 1,
+            422,
+            'Akun admin harus tetap memiliki minimal satu tempat wisata. Tautkan tempat lain sebelum menghapus yang ini.'
+        );
+
         Database3CatalogWriter::delete($slug);
+        if ($pemilik) {
+            $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === (string) $pemilik['id_admin']);
+            if (($user['tempat_slug'] ?? null) === $slug) {
+                $api->updateUser($pemilik['id_admin'], [
+                    'tempat_slug' => collect($tempatPemilik)->first(fn ($tempat) => $tempat !== $slug),
+                ]);
+            }
+            $api->hapusTempatAdmin($pemilik['id_admin'], $slug);
+        }
 
         return redirect()->route('admin.entitas', ['jenis' => 'tempat'])->with('pesan', 'Tempat wisata '.$tempat['nama'].' berhasil dihapus dari Database 3.');
     }
@@ -354,49 +424,29 @@ class AdminController extends Controller
         return back()->with('pesan', 'Usulan relasi tersimpan: '.Katalog::get($data['subjek'])['nama'].' '.Katalog::LABEL_RELASI[$data['predikat']].' '.Katalog::get($data['objek'])['nama'].'.');
     }
 
-    public function cerita(Request $request)
-    {
-        $slug = $request->query('tempat', array_key_first(Katalog::tempat()) ?? '');
-        $t = Katalog::get($slug);
-        abort_unless($t && $t['jenis'] === 'tempat', 404);
-        $bahasa = $request->query('bahasa', 'id');
-        $draf = Cache::get("medanvisit.cerita.$slug.$bahasa");
-
-        return view('admin.cerita', [
-            't' => $t, 'bahasa' => in_array($bahasa, ['id', 'en', 'zh', 'ms'], true) ? $bahasa : 'id', 'draf' => $draf,
-            'tempat' => Katalog::tempat(),
-            'status' => collect(['id', 'en', 'zh', 'ms'])->mapWithKeys(fn ($b) => [$b => $b === 'id' || Cache::has("medanvisit.cerita.$slug.$b")])->all(),
-        ]);
-    }
-
-    public function simpanCerita(Request $request)
-    {
-        $data = $request->validate([
-            'tempat' => ['required', 'string'], 'bahasa' => ['required', 'in:id,en,zh,ms'],
-            'judul' => ['required', 'string', 'max:120'], 'isi' => ['required', 'string', 'min:40'],
-        ], ['isi.min' => 'Cerita minimal 40 karakter.']);
-        Cache::forever("medanvisit.cerita.{$data['tempat']}.{$data['bahasa']}", $data + ['waktu' => now('Asia/Jakarta')->toIso8601String()]);
-
-        return redirect()->route('admin.cerita', ['tempat' => $data['tempat'], 'bahasa' => $data['bahasa']])->with('pesan', 'Draf cerita tersimpan.');
-    }
-
     public function ulasan(Request $request)
     {
-        $tab = $request->query('tab', 'menunggu');
+        $tab = $request->query('tab', 'tayang');
+        $semuaUlasan = collect(Penyimpanan::ulasan());
+        if ($milik = $this->slugsKelolaan($request)) {
+            $semuaUlasan = $semuaUlasan->filter(fn ($ulasan) => in_array($ulasan['tempat'], $milik, true));
+        }
 
         return view('admin.ulasan', [
             'tab' => in_array($tab, ['menunggu', 'tayang', 'ditolak'], true) ? $tab : 'menunggu',
-            'jumlah' => collect(Penyimpanan::ulasan())->countBy('status')->all(),
-            'ulasan' => Penyimpanan::ulasan(null, in_array($tab, ['menunggu', 'tayang', 'ditolak'], true) ? $tab : 'menunggu'),
+            'jumlah' => $semuaUlasan->countBy('status')->all(),
+            'ulasan' => $semuaUlasan->where('status', in_array($tab, ['menunggu', 'tayang', 'ditolak'], true) ? $tab : 'menunggu')->values(),
         ]);
     }
 
-    public function moderasi(Request $request, string $id)
+    public function hapusUlasan(Request $request, string $id)
     {
-        $data = $request->validate(['keputusan' => ['required', 'in:tayang,ditolak']]);
-        Penyimpanan::moderasi($id, $data['keputusan']);
+        $ulasan = collect(Penyimpanan::ulasan())->first(fn ($ulasan) => $ulasan['id'] === $id);
+        abort_unless($ulasan, 404);
+        $this->pastikanBolehKelola($request, $ulasan['tempat']);
+        Penyimpanan::hapusUlasan($id);
 
-        return back()->with('pesan', $data['keputusan'] === 'tayang' ? 'Ulasan ditayangkan.' : 'Ulasan ditolak.');
+        return back()->with('pesan', 'Ulasan berhasil dihapus.');
     }
 
     public function tiket(Request $request)

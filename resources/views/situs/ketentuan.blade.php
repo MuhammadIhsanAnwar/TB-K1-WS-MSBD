@@ -25,7 +25,7 @@
             <ul>
                 <li>Nama dan email dipakai untuk ulasan dan pengiriman e-tiket.</li>
                 <li>Nomor HP hanya dipakai untuk pesanan tiket.</li>
-                <li>Ulasan tayang setelah diperiksa kurator, dengan nama yang kamu isi.</li>
+                <li>Ulasan langsung ditayangkan dengan nama akunmu. Admin dan superadmin dapat menghapus ulasan yang melanggar ketentuan.</li>
                 <li>Kata kunci pencarian yang tidak menemukan hasil dicatat tanpa identitas, supaya kurator tahu tempat apa yang perlu ditambahkan.</li>
             </ul>
         </section>

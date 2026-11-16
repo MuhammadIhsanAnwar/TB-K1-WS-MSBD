@@ -33,13 +33,6 @@
                     <div>
                         <h2 style="font-size:1.75rem"><a href="{{ route('tempat', $s['tempat']['slug']) }}">{{ $s['tempat']['nama'] }}</a></h2>
                         <p class="redup kecil" style="margin-top:4px">Singgah {{ $s['tempat']['singgah'] }} menit, <x-harga :tempat="$s['tempat']" /></p>
-                        <p style="margin-top:10px">{{ $s['tempat']['cerita'][0] }}</p>
-                        @if ($i > 0)
-                            @php $rantai = Katalog::benangMerah($singgah[$i - 1]['tempat']['slug'], $s['tempat']['slug']); @endphp
-                            @if ($rantai && count($rantai) <= 3)
-                                <p class="alasan" style="margin-top:10px;color:var(--gold-text)">{{ collect($rantai)->pluck('kalimat')->implode(' ') }}</p>
-                            @endif
-                        @endif
                         @if ($s['tempat']['foto'])<x-foto :berkas="$s['tempat']['foto']" :alt="$s['tempat']['nama']" />@endif
                     </div>
                 </li>

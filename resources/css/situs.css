@@ -1,6 +1,6 @@
 /* ==========================================================================
    MedanVisit, halaman publik. Arah: "split stage" (tasteskill, seed 869743988).
-   Ide: peta Medan 1930 menjadi panggung tetap; tempat menyala dan benang merah ditarik di atasnya.
+   Ide: peta Medan 1930 menjadi panggung tetap bagi lokasi bersejarah.
    Warna dan font dari panduan logo (public/storage/logo_app). Satu radius (0), satu aksen (Kuning Deli),
    lima ukuran huruf, tanpa garis tipis, bayangan, atau gradien.
    ========================================================================== */
@@ -13,7 +13,7 @@
   --green: #0f3b2e;          /* Hijau Deli: judul, bidang gelap, tombol kedua */
   --green-hover: #1e5a47;
   --muted: #4a6359;          /* Abu hijau: teks sekunder, 5,2:1 atau lebih di semua kertas */
-  --accent: #e3a51c;         /* Kuning Deli: satu aksen, tombol utama dan benang di peta */
+  --accent: #e3a51c;         /* Kuning Deli: satu aksen, tombol utama dan penanda peta */
   --accent-hover: #edb43a;
   --accent-ink: #0f3b2e;
   --gold-text: #7a5300;      /* teks emas di kertas, 6:1 */
@@ -229,37 +229,6 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .baris-tempat .harga { font-weight: 600; text-align: right; }
 .baris-tempat .redup { font-size: var(--s-small); grid-column: 1 / -1; }
 
-/* benang merah: plat persegi + teks hemat */
-.benang { display: grid; grid-template-columns: 1fr 1fr; min-height: 88svh; background: var(--paper-deep); }
-.benang__plat { position: relative; align-self: center; margin: 40px; aspect-ratio: 1; overflow: hidden; background: #d9dcd8; }
-.benang__plat img { width: 100%; height: 100%; object-fit: cover; }
-.benang__plat svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.benang__plat .utas { fill: none; stroke: var(--accent); stroke-width: 1.2; stroke-linecap: round; stroke-dasharray: 220; stroke-dashoffset: 220; transition: stroke-dashoffset 1400ms var(--ease-in-out); }
-.benang__plat .utas.tergambar { stroke-dashoffset: 0; }
-.benang__plat .utas-alas { fill: none; stroke: var(--green); stroke-width: 2.6; stroke-linecap: round; opacity: 0.55; stroke-dasharray: 220; stroke-dashoffset: 220; transition: stroke-dashoffset 1400ms var(--ease-in-out); }
-.benang__plat .utas-alas.tergambar { stroke-dashoffset: 0; }
-.benang__plat .simpul { fill: var(--accent); stroke: var(--green); stroke-width: 0.7; }
-.benang__plat .nama-simpul rect { fill: var(--paper); }
-.benang__plat .nama-simpul text { font: 600 3.1px var(--font-text); fill: var(--green); }
-.benang__plat figcaption { position: absolute; left: 0; top: 0; padding: 8px 12px; background: var(--paper); font-size: var(--s-small); }
-.benang__sisi { display: flex; flex-direction: column; gap: 40px; padding: 40px clamp(20px, 3.4vw, 56px) 40px 0; }
-.tab-benang { display: flex; flex-wrap: wrap; gap: 8px 28px; }
-.tab-benang button { min-height: 44px; padding: 0; background: none; border: 0; font: 500 1.125rem var(--font-text); color: var(--muted); text-align: left; position: relative; }
-.tab-benang button[aria-selected="true"] { color: var(--ink); font-weight: 700; }
-.tab-benang button[aria-selected="true"]::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 3px; background: var(--accent); }
-.benang__tengah { display: grid; gap: 20px; margin-block: auto; }
-.benang__tengah .tab-benang { margin-bottom: 12px; }
-.benang__pasangan { font-size: var(--s-lead); line-height: 1.3; font-family: var(--font-display); color: var(--green); font-weight: 400; }
-.benang__langkah { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; max-width: 46ch; list-style: decimal; }
-.benang__langkah li::marker { font-weight: 700; color: var(--gold-text); }
-.benang__aksi { display: grid; grid-template-columns: 1fr 1fr; }
-.benang__aksi a { display: flex; align-items: center; min-height: 72px; padding: 0 22px; text-decoration: none; font-weight: 600; transition: background-color var(--t-hover) ease; }
-.benang__aksi a:first-child { background: var(--green); color: var(--on-green); }
-.benang__aksi a:first-child:hover { background: var(--green-hover); }
-.benang__aksi a:last-child { background: var(--paper); color: var(--green); }
-.benang__aksi a:last-child:hover { background: var(--white); }
-[data-panel-benang][hidden] { display: none; }
-
 /* jalur: indeks kecil, gambar besar (dipin) */
 .jalur-pin { position: relative; }
 .jalur-pin__panggung { position: sticky; top: 0; height: 100svh; display: grid; grid-template-columns: 38fr 62fr; overflow: hidden; background: var(--paper); }
@@ -388,25 +357,11 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .ramai__judul { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
 .ramai__trek { height: 8px; background: var(--white); }
 .ramai__isi { height: 100%; background: var(--green); }
-.cerita p { font-size: 1.125rem; }
-.cerita blockquote { margin: 28px 0; font: 400 1.5rem/1.4 var(--font-display); color: var(--green); max-width: 30ch; }
-.graf-mini { position: relative; background: var(--paper-deep); aspect-ratio: 16 / 10; overflow: hidden; }
-.graf-mini svg { width: 100%; height: 100%; }
-.graf-mini .sisi { stroke: #8e9c95; stroke-width: 1.4; }
-.graf-mini .sisi--jarak { stroke: var(--accent); stroke-dasharray: 5 4; stroke-width: 2; }
-.graf-mini a text, .graf-mini text { font: 600 13px var(--font-text); fill: var(--ink); }
-.graf-mini a:hover text { text-decoration: underline; }
-.graf-mini a:focus-visible circle { stroke: var(--accent); stroke-width: 4; }
-.relasi-teks { display: grid; gap: 10px; margin-top: 20px; padding-left: 0; list-style: none; max-width: 64ch; }
-.relasi-teks li { display: flex; gap: 12px; align-items: baseline; }
-.relasi-teks li::before { content: ''; width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--k, var(--muted)); transform: translateY(-2px); }
-.relasi-teks a { color: var(--green); font-weight: 600; }
 .rekomendasi { display: grid; gap: 4px; }
 .rekomendasi a { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; padding: 10px 0; text-decoration: none; }
 .rekomendasi img, .rekomendasi .tanpa-foto { width: 96px; height: 72px; object-fit: cover; background: var(--paper-deep); }
 .rekomendasi b { display: block; font-weight: 600; }
 .rekomendasi a:hover b { text-decoration: underline; text-underline-offset: 0.2em; }
-.rekomendasi .alasan { display: block; color: var(--gold-text); font-size: 1rem; }
 .rekomendasi .redup { display: block; font-size: var(--s-small); }
 .ulasan-daftar { display: grid; gap: 28px; margin-top: 8px; }
 .ulasan-daftar article p { margin-top: 8px; }
@@ -424,8 +379,6 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .lorong__geser:focus-visible + .lorong__pegangan::after { outline: 3px solid var(--paper); outline-offset: 2px; }
 
 /* gambar pengganti untuk entitas tanpa foto: graf besar */
-.layar-graf { position: absolute; inset: 0; background: var(--paper-deep); }
-.layar-graf svg { width: 100%; height: 100%; }
 
 /* ==========================================================================
    HALAMAN DALAM UMUM
@@ -572,11 +525,6 @@ button:disabled, input:disabled { cursor: not-allowed; }
   .sampul__logo img { width: 46vw; max-width: 200px; }
   .sampul__isi { margin-top: 40px; }
   .sampul h1 { font-size: clamp(2.125rem, 9vw, 2.75rem); }
-  .benang { grid-template-columns: 1fr; min-height: 0; }
-  .benang__plat { margin: 16px; }
-  .benang__sisi { padding: 8px 16px 32px; gap: 28px; }
-  .benang__aksi { grid-template-columns: 1fr; }
-  .benang__aksi a { min-height: 60px; }
   .jalur-pin__panggung { position: relative; height: auto; grid-template-columns: 1fr; }
   .jalur-pin__kiri { padding: 88px var(--margin) 16px; gap: 28px; }
   .jalur-pin__indeks a { grid-template-columns: 1fr; gap: 2px; }
@@ -655,9 +603,6 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .strip-foto figcaption { margin-top: 10px; font-size: var(--s-small); line-height: 1.35; }
 .strip-foto figcaption b { display: block; color: var(--ink); font-weight: 600; }
 .strip-foto a:hover b { text-decoration: underline; text-underline-offset: 0.2em; }
-.cerita__arsip { margin: 28px 0 0; }
-.cerita__arsip img { display: block; width: 100%; height: auto; }
-.cerita__arsip figcaption { margin-top: 10px; font-size: var(--s-small); max-width: 60ch; }
 .kosong-relasi { margin-top: 16px; max-width: 60ch; }
 .sumber-relasi { margin-top: 24px; font-size: var(--s-small); color: var(--muted); max-width: 64ch; }
 .sumber-relasi a { color: var(--muted); }

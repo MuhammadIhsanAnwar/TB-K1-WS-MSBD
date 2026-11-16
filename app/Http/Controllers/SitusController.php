@@ -14,29 +14,12 @@ class SitusController extends Controller
     public function beranda()
     {
         $tempat = Katalog::tempat();
-        $benang = [];
-        foreach (Katalog::relasi() as $relasi) {
-            $dari = Katalog::get($relasi[0]);
-            $ke = Katalog::get($relasi[2]);
-            if (! $dari || ! $ke || $dari['jenis'] !== 'tempat' || $ke['jenis'] !== 'tempat') {
-                continue;
-            }
-            $langkah = Katalog::benangMerah($dari['slug'], $ke['slug']);
-            if ($langkah) {
-                $benang[] = ['dari' => $dari, 'ke' => $ke, 'langkah' => $langkah];
-            }
-            if (count($benang) === 3) {
-                break;
-            }
-        }
-
         $kategori = [];
         foreach (Katalog::KATEGORI as $k => $label) {
             $kategori[$k] = ['label' => $label, 'tempat' => Katalog::tempat($k)];
         }
 
         return view('situs.beranda', [
-            'benang' => $benang,
             'kategori' => $kategori,
             'jalur' => Katalog::jalurTematik(),
             'bertiket' => Katalog::bertiket(),
@@ -172,37 +155,7 @@ class SitusController extends Controller
         $e = Katalog::get($slug);
         abort_unless($e && $e['jenis'] === $jenis, 404);
 
-        return view('situs.entitas', $this->dataEntitas($e));
-    }
-
-    private function dataEntitas(array $e): array
-    {
-        $tetangga = Katalog::tetangga($e['slug'], false);
-        $kelompok = collect($tetangga)->groupBy(fn ($t) => Katalog::get($t['lawan'])['jenis'])->all();
-
-        return [
-            'e' => $e,
-            'tetangga' => $tetangga,
-            'kelompok' => $kelompok,
-            'grafMini' => $this->grafMini($e['slug']),
-        ];
-    }
-
-    /** Tetangga 1–2 langkah, tanpa wilayah, untuk graf mini. */
-    private function grafMini(string $slug): array
-    {
-        $simpul = [$slug => 0];
-        $sisi = [];
-        foreach ([1, 2] as $tingkat) {
-            foreach (array_keys(array_filter($simpul, fn ($d) => $d === $tingkat - 1)) as $asal) {
-                foreach (Katalog::tetangga($asal, false) as $t) {
-                    $sisi[$t['id']] = $t['relasi'];
-                    $simpul[$t['lawan']] ??= $tingkat;
-                }
-            }
-        }
-
-        return ['simpul' => $simpul, 'sisi' => array_values($sisi)];
+        return view('situs.entitas', ['e' => $e]);
     }
 
     private function terdekat(array $t, int $n): array
@@ -212,42 +165,6 @@ class SitusController extends Controller
         usort($hasil, fn ($a, $b) => $a['jarak'] <=> $b['jarak']);
 
         return array_slice($hasil, 0, $n);
-    }
-
-    public function jelajah(Request $request)
-    {
-        $entitas = collect(Katalog::entitas())->reject(fn ($e) => $e['jenis'] === 'wilayah')->sortBy('nama');
-        $defaultDari = $entitas->keys()->first();
-        $defaultKe = $entitas->keys()->skip(1)->first() ?? $defaultDari;
-        $dari = $request->query('dari', $defaultDari);
-        $ke = $request->query('ke', $defaultKe);
-        $pilihan = collect(Katalog::entitas())->reject(fn ($e) => $e['jenis'] === 'wilayah')->sortBy('nama')->all();
-
-        return view('situs.jelajah', [
-            'dari' => Katalog::get($dari) ? $dari : $defaultDari,
-            'ke' => Katalog::get($ke) ? $ke : $defaultKe,
-            'langkah' => Katalog::benangMerah($dari, $ke),
-            'pilihan' => $pilihan,
-            'jumlah' => collect(Katalog::entitas())->countBy('jenis')->all(),
-        ]);
-    }
-
-    public function graf()
-    {
-        $nodes = [];
-        foreach (Katalog::entitas() as $slug => $e) {
-            $nodes[] = ['data' => ['id' => $slug, 'label' => $e['nama'], 'jenis' => $e['jenis'], 'ringkas' => $e['ringkas'] ?? '', 'url' => self::urlEntitas($e)]];
-        }
-        $edges = [];
-        foreach (Katalog::relasi() as $i => $r) {
-            $edges[] = ['data' => [
-                'id' => 'r'.$i, 'source' => $r[0], 'target' => $r[2], 'predikat' => $r[1],
-                'label' => Katalog::labelRelasi($r, $r[0]), 'label_balik' => Katalog::labelRelasi($r, $r[2]),
-                'kalimat' => Katalog::kalimat($r, $r[0]), 'sumber' => $r['sumber'],
-            ]];
-        }
-
-        return response()->json(['nodes' => $nodes, 'edges' => $edges]);
     }
 
     public static function urlEntitas(array $e): ?string

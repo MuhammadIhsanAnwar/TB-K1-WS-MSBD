@@ -4,20 +4,22 @@
 
 @section('isi')
 <div class="p-judul">
-    <div><h1>Entitas</h1><p class="sub">Tempat, tokoh, peristiwa, budaya, dan kuliner yang menjadi simpul graf.</p></div>
-    @if (session('pengguna.peran') === 'superadmin')
-        <div class="p-judul__aksi">
+    <div><h1>{{ session('pengguna.peran') === 'admin' ? 'Tempat wisata yang dikelola' : 'Entitas' }}</h1><p class="sub">{{ session('pengguna.peran') === 'admin' ? 'Daftar hanya memuat tempat wisata yang ditautkan ke akunmu.' : 'Tempat wisata, tokoh, peristiwa, budaya, dan kuliner Medan.' }}</p></div>
+    <div class="p-judul__aksi">
+        @if (session('pengguna.peran') === 'superadmin')
             <a class="p-btn" href="{{ route('admin.tempat.daftar') }}">Kelola tempat</a>
-            <a class="p-btn p-btn--utama" href="{{ route('admin.tempat.baru') }}">Tambah tempat wisata</a>
-        </div>
-    @endif
+        @endif
+        <a class="p-btn p-btn--utama" href="{{ route('admin.tempat.baru') }}">Tambah tempat wisata</a>
+    </div>
 </div>
+@unless (session('pengguna.peran') === 'admin')
 <nav class="p-tabs" aria-label="Jenis entitas">
     <a href="{{ route('admin.entitas', ['q' => $q]) }}" @if (! $jenis) aria-current="true" @endif>Semua<span class="n">{{ array_sum($perJenis) }}</span></a>
     @foreach ($perJenis as $j => $n)
         <a href="{{ route('admin.entitas', ['jenis' => $j, 'q' => $q]) }}" @if ($jenis === $j) aria-current="true" @endif>{{ Katalog::KELAS[$j] }}<span class="n">{{ $n }}</span></a>
     @endforeach
 </nav>
+@endunless
 <form class="p-alat" action="{{ route('admin.entitas') }}" method="get" role="search">
     @if ($jenis)<input type="hidden" name="jenis" value="{{ $jenis }}">@endif
     <label class="sr-only" for="q">Cari nama</label>

@@ -182,9 +182,9 @@ class Penyimpanan
         return ['id' => (string) $row['id_ulasan']] + $data;
     }
 
-    public static function moderasi(string $id, string $status): void
+    public static function hapusUlasan(string $id): void
     {
-        self::api()->moderasiUlasan((int) $id, $status);
+        self::api()->hapusUlasan((int) $id);
     }
 
     // ---------- log pencarian ----------
