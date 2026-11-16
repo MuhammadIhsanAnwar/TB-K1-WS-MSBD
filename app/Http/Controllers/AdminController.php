@@ -210,6 +210,22 @@ class AdminController extends Controller
         return redirect()->route('admin.akun')->with('pesan', 'Kata sandi admin '.$user['email'].' berhasil diperbarui.');
     }
 
+    public function hapusAkun(Request $request, string $id)
+    {
+        $api = new SupabaseApi;
+        $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
+        abort_unless($user && $user['peran'] === 'admin', 404);
+
+        $tempatKelolaan = $api->tempatAdmin($id);
+        $api->deleteUser($id);
+
+        return redirect()->route('admin.akun')->with(
+            'pesan',
+            'Akun admin '.$user['email'].' berhasil dihapus.'
+                .($tempatKelolaan === [] ? '' : ' Tempat yang dilepas: '.implode(', ', $tempatKelolaan).'.')
+        );
+    }
+
     public function tautkanTempat(Request $request, string $id)
     {
         $api = new SupabaseApi;
