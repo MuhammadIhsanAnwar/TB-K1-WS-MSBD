@@ -30,13 +30,13 @@
     $bertiket = $hasil ? collect($hasil['singgah'])->pluck('tempat')->filter(fn ($t) => ! empty($t['tiket'])) : collect();
 @endphp
 
-@section('judul', $dibagikan ? $judulRute : 'Perencana rute')
+@section('judul', $dibagikan ? $judulRute : 'Rencana')
 @section('foto-kaki', $fotoRute['foto'] ?? 'peta-medan-1930-kota-lama.jpg')
 
 @section('isi')
 <div class="rencana">
     <form class="rencana__form" action="{{ route('rencana') }}" method="get" novalidate>
-        <h1 style="font-size:var(--s-head);margin-bottom:12px">Perencana rute</h1>
+        <h1 style="font-size:var(--s-head);margin-bottom:12px">Rencana perjalanan</h1>
         <p style="margin-bottom:32px">Pilih minat, lama waktu, dan cara berpindah. Rute disusun dari tempat terdekat ke tempat berikutnya, dengan jarak dan ongkos becak dihitung dari letaknya.</p>
 
         @if ($errors->any())
@@ -85,7 +85,7 @@
         @if ($hasil)
             <h2 id="judul-hasil" style="font-size:2.25rem">{{ $judulRute }}</h2>
 
-            <dl class="mv-jalur-spek nums" style="margin:14px 0 24px;max-width:560px">
+            <dl class="mv-rencana-spek nums" style="margin:14px 0 24px;max-width:560px">
                 <div>
                     <dd>{{ count($hasil['singgah']) }} tempat</dd>
                     <dt>{{ collect($minat)->map(fn ($m) => Katalog::KATEGORI[$m])->implode(', ') }}</dt>

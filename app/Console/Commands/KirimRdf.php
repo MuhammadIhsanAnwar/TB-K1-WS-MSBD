@@ -62,6 +62,7 @@ class KirimRdf extends Command
 
         Cache::forget('database3.catalog.triples.v3');
         Cache::forget('database3.catalog.triples.v4');
+        Cache::forget('database3.catalog.triples.v6');
         Cache::forget('database3.unavailable');
         $this->info('Ontologi dan data RDF berhasil dikirim ke Database 3.');
 

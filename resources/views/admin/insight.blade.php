@@ -4,7 +4,7 @@
     use App\Support\Penyimpanan;
     $maksimumHarian = max($kunjungan['harian'] ?: [0]) ?: 1;
     $totalLunas = $pesanan->where('status', 'lunas');
-    $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'jalur' => 'Jalur', 'tanya' => 'Tanya'];
+    $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'rencana' => 'Rencana', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
     $rating = $fokus ? (Penyimpanan::ringkasanUlasan()[$fokus] ?? null) : null;
     $dikunjungi = $kunjunganTempat->where('jumlah', '>', 0);

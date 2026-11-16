@@ -16,4 +16,12 @@ class RemovedFeaturesTest extends TestCase
         $this->assertTrue(Route::has('admin.ulasan.hapus'));
         $this->assertTrue(Route::has('admin.tempat.simpan'));
     }
+
+    public function test_thematic_route_is_removed_and_rencana_remains_available(): void
+    {
+        $this->assertFalse(Route::has('jalur'));
+        $this->assertFalse(Route::has('jalur.detail'));
+        $this->assertTrue(Route::has('rencana'));
+        $this->assertTrue(Route::has('rencana.bagikan'));
+    }
 }

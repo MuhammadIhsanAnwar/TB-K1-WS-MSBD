@@ -21,7 +21,6 @@ class SitusController extends Controller
 
         return view('situs.beranda', [
             'kategori' => $kategori,
-            'jalur' => Katalog::jalurTematik(),
             'bertiket' => Katalog::bertiket(),
             'petaTempat' => array_values($tempat),
         ]);
@@ -174,26 +173,6 @@ class SitusController extends Controller
             'wilayah' => null,
             default => route('entitas', [$e['jenis'], $e['slug']]),
         };
-    }
-
-    public function jalur()
-    {
-        return view('situs.jalur', ['jalur' => Katalog::jalurTematik()]);
-    }
-
-    public function jalurDetail(string $slug)
-    {
-        $semua = Katalog::jalurTematik();
-        abort_unless(isset($semua[$slug]), 404);
-        $j = $semua[$slug];
-        $singgah = [];
-        foreach ($j['singgah'] as $i => $s) {
-            $t = Katalog::get($s);
-            $singgah[] = ['tempat' => $t, 'pindah' => $i ? Katalog::perpindahan(Katalog::get($j['singgah'][$i - 1]), $t, ['jalan', 'becak']) : null];
-        }
-        $tiket = array_filter(array_column($singgah, 'tempat'), fn ($t) => ! empty($t['tiket']));
-
-        return view('situs.jalur-detail', ['j' => $j, 'singgah' => $singgah, 'tiket' => $tiket, 'lain' => array_diff_key($semua, [$slug => 1])]);
     }
 
     public function rencana(Request $request)

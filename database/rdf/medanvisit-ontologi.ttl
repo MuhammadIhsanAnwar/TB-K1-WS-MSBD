@@ -100,14 +100,6 @@ mv:Kecamatan a owl:Class ;
     rdfs:subClassOf mv:Entitas, schema:AdministrativeArea ;
     rdfs:label "Kecamatan"@id .
 
-mv:JalurTematik a owl:Class ;
-    rdfs:subClassOf schema:TouristTrip ;
-    rdfs:label "Jalur tematik"@id .
-
-mv:Persinggahan a owl:Class ;
-    rdfs:label "Persinggahan"@id ;
-    rdfs:comment "Satu titik singgah dalam jalur tematik, beserta urutannya."@id .
-
 mv:Kedekatan a owl:Class ;
     rdfs:label "Kedekatan dua tempat"@id ;
     rdfs:comment "Dua tempat yang berdekatan beserta jaraknya dalam meter, dihitung dari koordinat."@id .
@@ -180,15 +172,7 @@ mv:dekatDengan a owl:ObjectProperty, owl:SymmetricProperty ;
 mv:berkaitanDengan a owl:ObjectProperty, owl:SymmetricProperty ;
     rdfs:label "berkaitan dengan"@id .
 
-# properti pendukung jalur tematik dan kedekatan
-mv:persinggahan a owl:ObjectProperty ;
-    rdfs:label "persinggahan"@id ;
-    rdfs:domain mv:JalurTematik ; rdfs:range mv:Persinggahan .
-
-mv:tempatSinggah a owl:ObjectProperty ;
-    rdfs:label "tempat singgah"@id ;
-    rdfs:domain mv:Persinggahan ; rdfs:range mv:TempatWisata .
-
+# properti pendukung kedekatan
 mv:antara a owl:ObjectProperty ;
     rdfs:label "antara"@id ;
     rdfs:domain mv:Kedekatan ; rdfs:range mv:TempatWisata .
@@ -239,9 +223,6 @@ mv:hargaContoh a owl:DatatypeProperty ;
 
 mv:masa a owl:DatatypeProperty ;
     rdfs:label "masa"@id ; rdfs:range xsd:string .
-
-mv:urutan a owl:DatatypeProperty ;
-    rdfs:label "urutan"@id ; rdfs:domain mv:Persinggahan ; rdfs:range xsd:positiveInteger .
 
 mv:jarakMeter a owl:DatatypeProperty ;
     rdfs:label "jarak (meter)"@id ; rdfs:range xsd:integer .

@@ -10,7 +10,7 @@
     $adalahBeranda = request()->routeIs('beranda');
     $menu = [
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
-        [route('jalur'), 'Jalur & Rute', ['jalur*', 'rencana', 'rencana.bagikan']],
+        [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
         [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];
     $tiketAktif = ($u && $u['peran'] === 'wisatawan')

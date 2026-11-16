@@ -1,17 +1,6 @@
 {
     "@graph": [
         {
-            "@id": "res:kesawan-tempo-dulu-singgah-3",
-            "mv:tempatSinggah": {
-                "@id": "res:soto-kesawan"
-            },
-            "mv:urutan": {
-                "@value": "3",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
             "@id": "res:soto-kesawan",
             "mv:beradaDi": {
                 "@id": "res:kec-medan-barat"
@@ -87,17 +76,6 @@
                 "@value": "08:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:kesawan-tempo-dulu-singgah-2",
-            "mv:tempatSinggah": {
-                "@id": "res:tjong-a-fie-mansion"
-            },
-            "mv:urutan": {
-                "@value": "2",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
         },
         {
             "@id": "res:tjong-a-fie-mansion",
@@ -208,17 +186,6 @@
             }
         },
         {
-            "@id": "res:kesawan-tempo-dulu-singgah-1",
-            "mv:tempatSinggah": {
-                "@id": "res:lapangan-merdeka"
-            },
-            "mv:urutan": {
-                "@value": "1",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
             "@id": "res:lapangan-merdeka",
             "mv:beradaDi": {
                 "@id": "res:kec-medan-barat"
@@ -302,43 +269,6 @@
             }
         },
         {
-            "@id": "res:kesawan-tempo-dulu",
-            "mv:persinggahan": [
-                {
-                    "@id": "res:kesawan-tempo-dulu-singgah-3"
-                },
-                {
-                    "@id": "res:kesawan-tempo-dulu-singgah-2"
-                },
-                {
-                    "@id": "res:kesawan-tempo-dulu-singgah-1"
-                }
-            ],
-            "schema:image": {
-                "@id": "https://medanvisit.neoverse.my.id/images/foto/kesawan-arsip.jpg"
-            },
-            "schema:description": {
-                "@language": "id",
-                "@value": "Esplanade, rumah saudagar, dan warung soto di jalan dagang tertua Medan."
-            },
-            "schema:name": {
-                "@language": "id",
-                "@value": "Kesawan tempo dulu"
-            },
-            "@type": "mv:JalurTematik"
-        },
-        {
-            "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-4",
-            "mv:tempatSinggah": {
-                "@id": "res:gereja-immanuel"
-            },
-            "mv:urutan": {
-                "@value": "4",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
             "@id": "res:gereja-immanuel",
             "mv:beradaDi": {
                 "@id": "res:kec-medan-polonia"
@@ -414,17 +344,6 @@
                 "@value": "08:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-3",
-            "mv:tempatSinggah": {
-                "@id": "res:kuil-shri-mariamman"
-            },
-            "mv:urutan": {
-                "@value": "3",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
         },
         {
             "@id": "res:kuil-shri-mariamman",
@@ -506,17 +425,6 @@
                 "@value": "06:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-2",
-            "mv:tempatSinggah": {
-                "@id": "res:vihara-gunung-timur"
-            },
-            "mv:urutan": {
-                "@value": "2",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
         },
         {
             "@id": "res:vihara-gunung-timur",
@@ -604,17 +512,6 @@
                 "@value": "09:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-1",
-            "mv:tempatSinggah": {
-                "@id": "res:masjid-raya-al-mashun"
-            },
-            "mv:urutan": {
-                "@value": "1",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
         },
         {
             "@id": "res:masjid-raya-al-mashun",
@@ -714,46 +611,6 @@
             }
         },
         {
-            "@id": "res:satu-kota-banyak-rumah-ibadah",
-            "mv:persinggahan": [
-                {
-                    "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-4"
-                },
-                {
-                    "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-3"
-                },
-                {
-                    "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-2"
-                },
-                {
-                    "@id": "res:satu-kota-banyak-rumah-ibadah-singgah-1"
-                }
-            ],
-            "schema:image": {
-                "@id": "https://medanvisit.neoverse.my.id/images/foto/vihara-gunung-timur.jpg"
-            },
-            "schema:description": {
-                "@language": "id",
-                "@value": "Masjid, kuil, vihara, dan gereja yang berdiri berdekatan di pusat Medan."
-            },
-            "schema:name": {
-                "@language": "id",
-                "@value": "Satu kota, banyak rumah ibadah"
-            },
-            "@type": "mv:JalurTematik"
-        },
-        {
-            "@id": "res:jejak-kesultanan-deli-singgah-4",
-            "mv:tempatSinggah": {
-                "@id": "res:taman-sri-deli"
-            },
-            "mv:urutan": {
-                "@value": "4",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
             "@id": "res:taman-sri-deli",
             "mv:beradaDi": {
                 "@id": "res:kec-medan-kota"
@@ -831,28 +688,6 @@
             }
         },
         {
-            "@id": "res:jejak-kesultanan-deli-singgah-3",
-            "mv:tempatSinggah": {
-                "@id": "res:masjid-raya-al-mashun"
-            },
-            "mv:urutan": {
-                "@value": "3",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
-            "@id": "res:jejak-kesultanan-deli-singgah-2",
-            "mv:tempatSinggah": {
-                "@id": "res:meriam-puntung"
-            },
-            "mv:urutan": {
-                "@value": "2",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
-        },
-        {
             "@id": "res:meriam-puntung",
             "mv:beradaDi": {
                 "@id": "res:kec-medan-maimun"
@@ -928,17 +763,6 @@
                 "@value": "08:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:jejak-kesultanan-deli-singgah-1",
-            "mv:tempatSinggah": {
-                "@id": "res:istana-maimun"
-            },
-            "mv:urutan": {
-                "@value": "1",
-                "@type": "xsd:positiveInteger"
-            },
-            "@type": "mv:Persinggahan"
         },
         {
             "@id": "res:istana-maimun",
@@ -1079,35 +903,6 @@
                 "@value": "08:00:00",
                 "@type": "xsd:time"
             }
-        },
-        {
-            "@id": "res:jejak-kesultanan-deli",
-            "mv:persinggahan": [
-                {
-                    "@id": "res:jejak-kesultanan-deli-singgah-4"
-                },
-                {
-                    "@id": "res:jejak-kesultanan-deli-singgah-3"
-                },
-                {
-                    "@id": "res:jejak-kesultanan-deli-singgah-2"
-                },
-                {
-                    "@id": "res:jejak-kesultanan-deli-singgah-1"
-                }
-            ],
-            "schema:image": {
-                "@id": "https://medanvisit.neoverse.my.id/images/foto/istana-maimun-1900.jpg"
-            },
-            "schema:description": {
-                "@language": "id",
-                "@value": "Istana, meriam, masjid, dan taman yang dibangun di masa Sultan Ma'moen Al Rasyid."
-            },
-            "schema:name": {
-                "@language": "id",
-                "@value": "Jejak Kesultanan Deli"
-            },
-            "@type": "mv:JalurTematik"
         },
         {
             "@id": "res:relasi-106",

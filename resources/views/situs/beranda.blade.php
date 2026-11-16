@@ -30,10 +30,8 @@
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
         'tiket' => ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
     ])->values();
-    $fmtMenit = fn ($m) => intdiv($m, 60) ? intdiv($m, 60).' jam'.($m % 60 ? ' '.($m % 60).' mnt' : '') : $m.' mnt';
     $urutTempat = collect($semuaTempat)->sortBy('nama')->values();
     $jumlahGaleri = $urutTempat->countBy('kategori');
-    $minatRute = array_values(array_unique(array_filter(array_column($semuaTempat, 'kategori'))));
     // bahan saran "Dekat denganmu": jarak dihitung di peramban dari lokasi pengunjung
     $dekatJson = collect($semuaTempat)->filter(fn ($t) => ($t['lat'] ?? 0) > 0)->map(fn ($t) => [
         'nama' => $t['nama'],
@@ -196,59 +194,15 @@
     </div>
 </section>
 
-{{-- 5. WORK: Loose scatter with pauses (Jalur siap jalan) --}}
-<section class="mv-seksi-jalur" aria-labelledby="judul-jalur">
+{{-- 5. Rencana perjalanan --}}
+<section class="mv-seksi-rencana" aria-labelledby="judul-rencana">
     <div class="mv-wadah">
-        <div class="mv-kepala-seksi">
-            <h2 id="judul-jalur">Jalur siap jalan</h2>
-            <p>Tiga rute bertema yang dirangkai dari kedekatan lokasi dan sejarah setempat, lengkap dengan jarak tempuh serta waktu singgah.</p>
-        </div>
-
-        <div class="mv-jalur-daftar">
-            @foreach (array_values($jalur) as $idx => $j)
-                <article class="mv-jalur-item {{ $idx % 2 === 1 ? 'mv-jalur-item--balik' : '' }}">
-                    <figure class="mv-jalur-item__foto">
-                        <x-foto :berkas="$j['foto']" :alt="$j['nama'].': '.$j['ringkas']" />
-                    </figure>
-                    <div class="mv-jalur-item__teks">
-                        <h3>{{ $j['nama'] }}</h3>
-                        <dl class="mv-jalur-spek nums">
-                            <div>
-                                <dd>{{ count($j['singgah']) }} tempat</dd>
-                                <dt>Perhentian</dt>
-                            </div>
-                            <div>
-                                <dd>{{ number_format($j['meter'] / 1000, 1, ',', '.') }} km</dd>
-                                <dt>Jarak rute</dt>
-                            </div>
-                            <div>
-                                <dd>{{ $fmtMenit($j['menit']) }}</dd>
-                                <dt>Durasi</dt>
-                            </div>
-                        </dl>
-                        <p>{{ $j['ringkas'] }}</p>
-                        <div class="mv-jalur-rute-kecil">
-                            <span class="mv-jalur-rute-kecil__label">Urutan singgah</span>
-                            <ol class="mv-jalur-singgah">
-                                @foreach ($j['singgah'] as $no => $s)
-                                    <li><b class="nums">{{ $no + 1 }}.</b> <span>{{ Katalog::get($s)['nama'] ?? $s }}</span></li>
-                                @endforeach
-                            </ol>
-                        </div>
-                        <div>
-                            <a class="mv-btn mv-btn--hijau mv-btn--kecil" href="{{ route('jalur.detail', $j['slug']) }}">Buka jalur ini</a>
-                        </div>
-                    </div>
-                </article>
-            @endforeach
-        </div>
-
-        <div class="mv-jalur-kaki" data-muncul>
+        <div class="mv-rencana-ajak" data-muncul>
             <div>
-                <b style="font-family:var(--font-display);font-size:1.375rem;color:var(--mv-kuning)">Ingin urutan singgah sesuai waktumu sendiri?</b>
-                <p style="margin-top:4px">Perencana Rute menyusun jadwal jalan kaki atau becak motor dari minat dan durasi kunjunganmu, lengkap dengan estimasi biaya.</p>
+                <h2 id="judul-rencana">Rencana perjalanan</h2>
+                <p>Susun rute wisata sesuai minat, waktu kunjungan, dan cara berpindahmu.</p>
             </div>
-            <a class="mv-btn mv-btn--utama" href="{{ route('rencana', ['minat' => $minatRute, 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $pusatPeta]) }}">Susun rute sendiri</a>
+            <a class="mv-btn mv-btn--utama" href="{{ route('rencana') }}">Buat rencana</a>
         </div>
     </div>
 </section>
