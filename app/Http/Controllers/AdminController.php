@@ -136,7 +136,9 @@ class AdminController extends Controller
         $tempat = collect(Katalog::tempat())->keyBy('slug');
         $semuaRelasi = $api->adminTempat();
         $relasiTempat = collect($semuaRelasi)->groupBy('id_admin');
-        $akun = $semuaAkun->where('peran', 'admin')->map(function (array $user) use ($relasiTempat, $tempat) {
+        $peran = $request->query('peran', 'admin');
+        $peran = in_array($peran, ['admin', 'wisatawan'], true) ? $peran : 'admin';
+        $akun = $semuaAkun->where('peran', $peran)->map(function (array $user) use ($relasiTempat, $tempat) {
             $user['tempat'] = ($relasiTempat->get($user['id'], collect()))
                 ->map(fn ($relasi) => $tempat->get($relasi['tempat_slug']) ?? [
                     'slug' => $relasi['tempat_slug'],
@@ -150,6 +152,7 @@ class AdminController extends Controller
 
         return view('admin.akun', [
             'akun' => $akun,
+            'peran' => $peran,
             'tempatTersedia' => $tersedia,
             'jumlah' => $semuaAkun->countBy('peran')->all(),
         ]);
