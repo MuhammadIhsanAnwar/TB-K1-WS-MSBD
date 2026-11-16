@@ -11,12 +11,17 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AkunController extends Controller
 {
+    private const JUMLAH_MAKS_KIRIM_ULANG = 3;
+    private const JEDA_KIRIM_ULANG = 60;
+    private const BLOKIR_KIRIM_ULANG = 3600;
+
     private function pengguna(Request $r): array
     {
         return $r->session()->get('pengguna', []);
@@ -227,10 +232,15 @@ class AkunController extends Controller
 
     public function verifikasi(Request $request)
     {
+        $email = $request->query('email');
+        $cooldownVerifikasi = is_string($email) ? $this->cooldownVerifikasi($request, $email) : 0;
+
         return view('akun.verifikasi', [
-            'email' => $request->query('email'),
+            'email' => $email,
             'pesan' => 'Periksa kotak masuk emailmu dan klik link konfirmasi untuk mengaktifkan akun. Periksa juga folder spam.',
             'tempatSorotan' => $this->tempatSorotan(),
+            'cooldownVerifikasi' => $cooldownVerifikasi,
+            'labelCooldownVerifikasi' => $this->labelCooldownVerifikasi($cooldownVerifikasi),
         ]);
     }
 
@@ -258,6 +268,35 @@ class AkunController extends Controller
     public function kirimUlangVerifikasi(Request $request)
     {
         $data = $request->validate(['email' => ['required', 'email']]);
+        $kunci = fn (string $jenis): string => $this->kunciRateLimitVerifikasi($request, $data['email'], $jenis);
+        $kunciBlokir = $kunci('terkunci');
+
+        if (RateLimiter::tooManyAttempts($kunciBlokir, 1)) {
+            $sisa = RateLimiter::availableIn($kunciBlokir);
+
+            return redirect()->route('verifikasi', ['email' => $data['email']])
+                ->with('pesan', "Batas percobaan tercapai. Coba lagi dalam {$sisa} detik.");
+        }
+
+        $kunciPercobaan = $kunci('percobaan');
+        if (RateLimiter::tooManyAttempts($kunciPercobaan, self::JUMLAH_MAKS_KIRIM_ULANG)) {
+            RateLimiter::hit($kunciBlokir, self::BLOKIR_KIRIM_ULANG);
+
+            return redirect()->route('verifikasi', ['email' => $data['email']])
+                ->with('pesan', 'Batas 3 percobaan tercapai. Tombol akan aktif kembali dalam 1 jam.');
+        }
+
+        $kunciJeda = $kunci('jeda');
+        if (RateLimiter::tooManyAttempts($kunciJeda, 1)) {
+            $sisa = RateLimiter::availableIn($kunciJeda);
+
+            return redirect()->route('verifikasi', ['email' => $data['email']])
+                ->with('pesan', "Tunggu {$sisa} detik sebelum meminta link baru lagi.");
+        }
+
+        RateLimiter::hit($kunciPercobaan, self::BLOKIR_KIRIM_ULANG);
+        RateLimiter::hit($kunciJeda, self::JEDA_KIRIM_ULANG);
+
         $user = (new SupabaseApi)->findUserByEmail($data['email']);
         if ($user && empty($user['email_verified_at'])) {
             $this->kirimVerifikasi($user);
@@ -265,6 +304,35 @@ class AkunController extends Controller
 
         return redirect()->route('verifikasi', ['email' => $data['email']])
             ->with('pesan', 'Jika akun ditemukan dan belum terverifikasi, link baru sudah dikirim.');
+    }
+
+    private function kunciRateLimitVerifikasi(Request $request, string $email, string $jenis): string
+    {
+        return 'verifikasi-email.'.$jenis.'.'.hash('sha256', strtolower(trim($email)).'|'.$request->ip());
+    }
+
+    private function cooldownVerifikasi(Request $request, string $email): int
+    {
+        foreach (['terkunci', 'jeda'] as $jenis) {
+            $kunci = $this->kunciRateLimitVerifikasi($request, $email, $jenis);
+            if (RateLimiter::tooManyAttempts($kunci, 1)) {
+                return RateLimiter::availableIn($kunci);
+            }
+        }
+
+        return 0;
+    }
+
+    private function labelCooldownVerifikasi(int $detik): string
+    {
+        if ($detik >= 3600) {
+            return (int) ceil($detik / 3600).' jam';
+        }
+        if ($detik >= 60) {
+            return (int) ceil($detik / 60).' menit';
+        }
+
+        return $detik.' detik';
     }
 
     private function kirimVerifikasi(array $user): void
