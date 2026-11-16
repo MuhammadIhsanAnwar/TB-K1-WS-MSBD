@@ -17,24 +17,28 @@
                 <label for="kategori-pesan">Kategori</label>
                 <select id="kategori-pesan" name="kategori" required data-hubungi-kategori>
                     <option value="">Pilih kategori pesan</option>
-                    <option value="tempat" @selected(old('kategori') === 'tempat')>Tempat</option>
+                    @if ($peran === 'wisatawan')
+                        <option value="tempat" @selected(old('kategori') === 'tempat')>Tempat</option>
+                    @endif
                     <option value="akun" @selected(old('kategori') === 'akun')>Akun</option>
                     <option value="lainnya" @selected(old('kategori') === 'lainnya')>Lainnya</option>
                 </select>
                 @error('kategori')<p class="isian__galat">{{ $message }}</p>@enderror
             </div>
 
-            <div class="isian" data-pesan-tempat @if (old('kategori') !== 'tempat') hidden @endif>
-                <label for="tempat-pesan">Tempat wisata</label>
-                <select id="tempat-pesan" name="tempat_slug" @if (old('kategori') !== 'tempat') disabled @endif data-hubungi-tempat>
-                    <option value="">Pilih tempat wisata</option>
-                    @foreach ($tempat as $item)
-                        <option value="{{ $item['slug'] }}" @selected(old('tempat_slug') === $item['slug'])>{{ $item['nama'] }}</option>
-                    @endforeach
-                </select>
-                <span class="isian__bantuan">Pertanyaan tentang tempat akan diteruskan hanya kepada admin pengelola tempat tersebut.</span>
-                @error('tempat_slug')<p class="isian__galat">{{ $message }}</p>@enderror
-            </div>
+            @if ($peran === 'wisatawan')
+                <div class="isian" data-pesan-tempat @if (old('kategori') !== 'tempat') hidden @endif>
+                    <label for="tempat-pesan">Tempat wisata</label>
+                    <select id="tempat-pesan" name="tempat_slug" @if (old('kategori') !== 'tempat') disabled @endif data-hubungi-tempat>
+                        <option value="">Pilih tempat wisata</option>
+                        @foreach ($tempat as $item)
+                            <option value="{{ $item['slug'] }}" @selected(old('tempat_slug') === $item['slug'])>{{ $item['nama'] }}</option>
+                        @endforeach
+                    </select>
+                    <span class="isian__bantuan">Pertanyaan tentang tempat akan diteruskan hanya kepada admin pengelola tempat tersebut.</span>
+                    @error('tempat_slug')<p class="isian__galat">{{ $message }}</p>@enderror
+                </div>
+            @endif
 
             <p class="mv-hubungi__tujuan" aria-live="polite" data-pesan-tujuan>Pilih kategori untuk melihat tujuan pesan.</p>
 

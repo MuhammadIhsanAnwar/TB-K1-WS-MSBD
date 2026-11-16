@@ -131,8 +131,79 @@ class AdminDataTest extends TestCase
             'peran' => 'superadmin',
         ]];
 
-        $this->withSession($session)->get('/admin/insight')->assertOk()->assertSee('Insight');
+        $this->withSession($session)->get('/admin/insight')
+            ->assertOk()
+            ->assertSee('Insight')
+            ->assertSee('data-grafik=', false)
+            ->assertDontSee('p-batang', false);
         $this->withSession($session)->get('/admin/tempat/baru')->assertOk()->assertSee('Tambah tempat wisata');
+    }
+
+    public function test_admin_insight_renders_graph_for_managed_place(): void
+    {
+        Cache::setDefaultDriver('array');
+        Cache::store('array')->flush();
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+            'services.supabase.katalog.url' => 'https://supabase.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.publishable_key' => 'test-key',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
+        ]);
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'istana-maimun']], 200);
+            }
+            if (str_contains($request->url(), 'sparql.test')) {
+                return Http::response([
+                    'head' => ['vars' => ['s', 'p', 'o']],
+                    'results' => ['bindings' => []],
+                ], 200);
+            }
+
+            return Http::response([], 200);
+        });
+
+        $this->withSession(['pengguna' => [
+            'id' => 2,
+            'nama' => 'Admin',
+            'email' => 'admin@example.test',
+            'peran' => 'admin',
+        ]])->get('/admin/insight')
+            ->assertOk()
+            ->assertSee('Grafik tayangan halaman per hari')
+            ->assertSee('data-grafik=', false)
+            ->assertDontSee('p-batang', false);
+    }
+
+    public function test_sync_page_uses_database_labels_and_omits_transaction_totals(): void
+    {
+        config([
+            'services.supabase.katalog.url' => 'https://katalog.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.publishable_key' => 'test-key',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+        ]);
+        Http::fake(['*' => Http::response([], 200)]);
+        $session = ['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]];
+
+        $this->withSession($session)->get('/admin/sinkronisasi?periksa=1')
+            ->assertOk()
+            ->assertSee('Database 1 PostgreSQL Supabase - Akun dan Konfigurasi Website')
+            ->assertSee('Database 2 PostgreSQL Supabase - Transaksi')
+            ->assertSee('Database 3 SPARQL Allegrograph - Tempat Wisata')
+            ->assertDontSee('Isi Database 2 (transaksi)')
+            ->assertDontSee('pencarian tercatat');
     }
 
     public function test_place_update_and_delete_use_the_configured_sparql_endpoint(): void

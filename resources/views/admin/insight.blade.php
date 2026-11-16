@@ -2,7 +2,14 @@
 @php
     use App\Support\Katalog;
     use App\Support\Penyimpanan;
-    $maksimumHarian = max($kunjungan['harian'] ?: [0]) ?: 1;
+    $grafikHarian = [
+        'jenis' => 'garis',
+        'label' => collect(array_keys($kunjungan['harian']))
+            ->map(fn ($tanggal) => \Illuminate\Support\Carbon::parse($tanggal)->locale('id')->translatedFormat('j M'))
+            ->values(),
+        'nama' => 'Tayangan',
+        'nilai' => array_values($kunjungan['harian']),
+    ];
     $totalLunas = $pesanan->where('status', 'lunas');
     $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'rencana' => 'Rencana', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
@@ -46,14 +53,7 @@
 <div class="p-grid">
     <section class="p-panel s12" aria-labelledby="kunjungan-harian">
         <header><h2 id="kunjungan-harian">{{ $namaFokus ? 'Kunjungan halaman '.$namaFokus.' per hari' : 'Kunjungan website per hari' }}</h2><span class="meta">{{ $periode }} hari terakhir</span></header>
-        <div class="p-batang" role="img" aria-label="Tayangan halaman per hari">
-            @foreach ($kunjungan['harian'] as $tanggal => $jumlah)
-                <div class="p-batang__baris {{ $jumlah ? '' : 'nol' }}" title="{{ $tanggal }}: {{ $jumlah }} tayangan">
-                    <span class="p-batang__isi" style="width:{{ max($jumlah ? 2 : 0, round($jumlah / $maksimumHarian * 100)) }}%"></span>
-                    <span>{{ \Illuminate\Support\Carbon::parse($tanggal)->locale('id')->translatedFormat('j M') }}</span><span>{{ number_format($jumlah, 0, ',', '.') }}</span>
-                </div>
-            @endforeach
-        </div>
+        <div class="p-grafik" data-grafik="{{ json_encode($grafikHarian) }}" aria-label="Grafik tayangan halaman per hari"></div>
     </section>
 
     @unless ($fokus)

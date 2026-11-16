@@ -12,7 +12,7 @@
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
         [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
-        [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Tiket', ['tiket.*', 'checkout', 'pesanan']],
+        [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];
     $tiketAktif = ($u && $u['peran'] === 'wisatawan')
         ? collect(Penyimpanan::pesanan((int) ($u['id'] ?? 0), aman: true))->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString())->count()

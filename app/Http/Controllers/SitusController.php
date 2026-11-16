@@ -9,6 +9,7 @@ use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SitusController extends Controller
 {
@@ -27,15 +28,24 @@ class SitusController extends Controller
         ]);
     }
 
-    public function hubungiAdmin()
+    public function hubungiAdmin(Request $request)
     {
-        return view('situs.hubungi-admin', ['tempat' => Katalog::tempat()]);
+        $peran = $request->session()->get('pengguna.peran');
+
+        return view('situs.hubungi-admin', [
+            'tempat' => $peran === 'wisatawan' ? Katalog::tempat() : [],
+            'peran' => $peran,
+        ]);
     }
 
     public function simpanPesanAdmin(Request $request)
     {
+        $pengguna = $request->session()->get('pengguna', []);
+        $kategoriDiizinkan = ($pengguna['peran'] ?? null) === 'admin'
+            ? ['akun', 'lainnya']
+            : ['tempat', 'akun', 'lainnya'];
         $data = $request->validate([
-            'kategori' => ['required', 'in:tempat,akun,lainnya'],
+            'kategori' => ['required', Rule::in($kategoriDiizinkan)],
             'tempat_slug' => ['nullable', 'required_if:kategori,tempat', 'string', 'max:120'],
             'pesan' => ['required', 'string', 'min:10', 'max:3000'],
         ], [
@@ -43,7 +53,7 @@ class SitusController extends Controller
             'pesan.min' => 'Pesan minimal 10 karakter.',
         ]);
 
-        PesanLayanan::kirim($request->session()->get('pengguna', []), $data);
+        PesanLayanan::kirim($pengguna, $data);
 
         return redirect()->route('hubungi.admin')->with('pesan', 'Pesan berhasil dikirim ke tim yang sesuai.');
     }
