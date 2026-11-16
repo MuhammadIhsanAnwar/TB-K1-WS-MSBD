@@ -52,7 +52,10 @@ class SupabaseApi
             ->delete($this->url('users').'?'.http_build_query(['id' => 'eq.'.$id]))
             ->throw();
         if (! $response->json()) {
-            throw new RuntimeException('Supabase tidak menemukan akun untuk dihapus.');
+            throw new RuntimeException(
+                'Supabase tidak menghapus akun id '.$id.'. Kemungkinan policy RLS DELETE belum aktif pada tabel users, '
+                .'atau akun masih dirujuk tabel lain (mis. pesan_pengguna.id_admin_tujuan).'
+            );
         }
     }
 
