@@ -21,6 +21,9 @@
                     </p>
                 @endif
             @endif
+            @if (session('pesan_sukses'))
+                <div class="mv-otentik__pesan mv-otentik__pesan--sukses" role="status">{{ session('pesan_sukses') }}</div>
+            @endif
             @if (session('pesan'))
                 <div class="mv-otentik__pesan" role="status">{{ session('pesan') }}</div>
             @endif

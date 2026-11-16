@@ -8,17 +8,22 @@ use Tests\TestCase;
 
 class EmailLogoTest extends TestCase
 {
-    public function test_account_emails_embed_the_logo_instead_of_relying_on_a_public_url(): void
+    public function test_account_emails_reference_the_public_logo_without_embedding_it(): void
     {
         $verification = (new VerifikasiEmail('https://medanvisit.test/verify'))->render();
         $passwordReset = (new ResetPasswordEmail('https://medanvisit.test/reset'))->render();
+        $logo = '/storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png';
 
-        $this->assertStringContainsString('src="data:image/png;base64,', $verification);
-        $this->assertStringContainsString('src="data:image/png;base64,', $passwordReset);
+        $this->assertStringContainsString($logo, $verification);
+        $this->assertStringContainsString($logo, $passwordReset);
+        $this->assertMatchesRegularExpression('/src="https?:\/\/[^"]+\/storage\/logo_app\/png\/MedanVisit_logo_horizontal_gelap\.png"/', $verification);
+        $this->assertMatchesRegularExpression('/src="https?:\/\/[^"]+\/storage\/logo_app\/png\/MedanVisit_logo_horizontal_gelap\.png"/', $passwordReset);
+        $this->assertStringNotContainsString('data:image/png;base64,', $verification);
+        $this->assertStringNotContainsString('data:image/png;base64,', $passwordReset);
+        $this->assertStringNotContainsString('cid:', $verification);
+        $this->assertStringNotContainsString('cid:', $passwordReset);
         $this->assertStringContainsString('Selamat datang di MedanVisiit', $verification);
         $this->assertStringNotContainsString('JELAJAHI KOTA MEDAN', $verification);
         $this->assertStringNotContainsString('JELAJAHI KOTA MEDAN', $passwordReset);
-        $this->assertStringNotContainsString('storage/logo_app/png/MedanVisit_logo_horizontal_terang.png', $verification);
-        $this->assertStringNotContainsString('storage/logo_app/png/MedanVisit_logo_horizontal_terang.png', $passwordReset);
     }
 }

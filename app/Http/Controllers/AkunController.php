@@ -300,10 +300,12 @@ class AkunController extends Controller
         $user = (new SupabaseApi)->findUserByEmail($data['email']);
         if ($user && empty($user['email_verified_at'])) {
             $this->kirimVerifikasi($user);
+
+            return redirect()->route('verifikasi', ['email' => $data['email']])
+                ->with('pesan_sukses', 'Email berhasil dikirim ulang.');
         }
 
-        return redirect()->route('verifikasi', ['email' => $data['email']])
-            ->with('pesan', 'Jika akun ditemukan dan belum terverifikasi, link baru sudah dikirim.');
+        return redirect()->route('verifikasi', ['email' => $data['email']]);
     }
 
     private function kunciRateLimitVerifikasi(Request $request, string $email, string $jenis): string

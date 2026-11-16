@@ -2583,6 +2583,12 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   font-size: var(--mv-s-ui);
   line-height: 1.55;
 }
+.mv-otentik__pesan--sukses {
+  border-color: #b7dcc4;
+  border-left-color: #2e8053;
+  background: #edf7f0;
+  color: #174d31;
+}
 .mv-otentik__hitung-mundur {
   margin: 10px 0 0;
   color: var(--mv-redup);
