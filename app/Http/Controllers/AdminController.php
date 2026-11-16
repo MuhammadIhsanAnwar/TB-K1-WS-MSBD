@@ -218,14 +218,22 @@ class AdminController extends Controller
     {
         $api = new SupabaseApi;
         $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
-        abort_unless($user && $user['peran'] === 'admin', 404);
+        abort_unless($user, 404);
+        abort_if($user['peran'] === 'superadmin', 403, 'Akun superadmin tidak dapat dihapus.');
+        abort_if((string) $user['id'] === (string) ($request->session()->get('pengguna.id')), 403, 'Tidak dapat menghapus akun sendiri.');
 
-        $tempatKelolaan = $api->tempatAdmin($id);
-        $api->deleteUser($id);
+        $tempatKelolaan = $user['peran'] === 'admin' ? $api->tempatAdmin($id) : [];
 
-        return redirect()->route('admin.akun')->with(
+        try {
+            $api->deleteUser($id);
+        } catch (\Throwable $exception) {
+            return redirect()->route('admin.akun', ['peran' => $user['peran']])
+                ->with('galat', 'Akun '.$user['email'].' gagal dihapus: '.$exception->getMessage());
+        }
+
+        return redirect()->route('admin.akun', ['peran' => $user['peran']])->with(
             'pesan',
-            'Akun admin '.$user['email'].' berhasil dihapus.'
+            'Akun '.$user['peran'].' '.$user['email'].' berhasil dihapus.'
                 .($tempatKelolaan === [] ? '' : ' Tempat yang dilepas: '.implode(', ', $tempatKelolaan).'.')
         );
     }
