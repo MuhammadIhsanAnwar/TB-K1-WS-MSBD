@@ -699,11 +699,11 @@ document.querySelectorAll('[data-kekuatan-sandi]').forEach((wadah) => {
 
 // ---- Kemunculan bertahap saat masuk layar ----
 const tandaiOtomatis = [
-    'main .jalur-indeks > a > *', 'main .lini > li', 'main .daftar-kredit > li > *',
+    'main .daftar-kredit > li > *',
     'main .tempat-populer > a > *', 'main .strip-foto > a', 'main .rekomendasi > a',
     'main .kepala-halaman > *', 'main .detail__kepala > *', 'main .detail__seksi > *',
     'main .tiket-blok', 'main .isi-halaman > *',
-    '.mv-kartu-tempat', '.mv-menu-harga', '.mv-jalur-item', '.mv-paspor-butir',
+    '.mv-kartu-tempat', '.mv-menu-harga', '.mv-paspor-butir',
     '.mv-faq-daftar details', '.mv-seksi-detail > *', '.mv-kepala-seksi > *',
     '.mv-tempat-kepala__teks > *', '.mv-tempat-media', '.mv-kartu-samping > *',
 ].join(', ');

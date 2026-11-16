@@ -7,8 +7,6 @@
 <div class="alat">
     <div class="alat__judul"><div><h1>Ketentuan & privasi</h1><p>Berlaku untuk pembelian tiket dan akun MedanVisit.</p></div></div>
     <div class="ketentuan p-panel">
-        <div class="pesan ketentuan__catatan" role="note">MedanVisit masih prototipe tugas besar. Pembayaran belum tersambung ke payment gateway, dan harga tiket bertanda “contoh” belum dicek ke pengelola tempat.</div>
-
         <section class="ketentuan__bagian" aria-labelledby="k-tiket">
             <h2 id="k-tiket">Pembelian tiket</h2>
             <ol>

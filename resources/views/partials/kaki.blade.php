@@ -5,8 +5,7 @@
         <div class="mv-kaki__atas">
             <nav class="mv-kaki__tautan" aria-label="Navigasi kaki halaman">
                 <a href="{{ route('peta') }}">Tempat &amp; peta</a>
-                <a href="{{ route('jalur') }}">Jalur tematik</a>
-                <a href="{{ route('rencana') }}">Perencana rute</a>
+                <a href="{{ route('rencana') }}">Rencana</a>
                 <a href="{{ route('tanya') }}">Tanya asisten</a>
                 <a href="{{ route('ketentuan') }}">Ketentuan &amp; privasi</a>
             </nav>

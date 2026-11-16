@@ -3,8 +3,7 @@
     $menuPonsel = [
         [route('beranda'), 'Beranda', ['beranda']],
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
-        [route('jalur'), 'Jalur tematik', ['jalur*']],
-        [route('rencana'), 'Perencana rute', ['rencana', 'rencana.bagikan']],
+        [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
     ];
 @endphp
 <dialog class="lembar-menu" id="lembar-menu" data-ui aria-label="Menu navigasi">

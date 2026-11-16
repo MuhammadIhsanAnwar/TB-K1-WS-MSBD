@@ -13,7 +13,6 @@ if (ada('[data-peta-koordinat]')) {
         });
 }
 if (ada('[data-panggung]')) import('./situs/panggung.js');
-if (ada('[data-jalur-pin]')) import('./situs/jalur-pin.js');
 if (ada('[data-peta]')) import('./situs/peta.js');
 if (ada('[data-dekat]')) import('./situs/dekat.js');
 if (ada('[data-tanya]')) import('./situs/tanya.js');

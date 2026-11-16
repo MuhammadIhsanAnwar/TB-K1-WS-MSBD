@@ -1907,7 +1907,6 @@ res:relasi-38 a rdf:Statement ;
     rdf:object res:kec-medan-maimun ;
     mv:kalimat "Istana Maimun berada di Kecamatan Medan Maimun."@id ;
     dcterms:source "BPS Kota Medan" .
-
 res:masjid-raya-al-mashun mv:beradaDi res:kec-medan-kota .
 res:relasi-39 a rdf:Statement ;
     rdf:subject res:masjid-raya-al-mashun ;
@@ -2451,75 +2450,3 @@ res:relasi-106 a rdf:Statement ;
     rdf:object res:kec-medan-selayang ;
     mv:kalimat "Kolam Renang Primbana berada di Kecamatan Medan Selayang."@id ;
     dcterms:source "BPS Kota Medan" .
-
-# ---------- jalur tematik ----------
-
-res:jejak-kesultanan-deli a mv:JalurTematik ;
-    schema:name "Jejak Kesultanan Deli"@id ;
-    schema:description "Istana, meriam, masjid, dan taman yang dibangun di masa Sultan Ma'moen Al Rasyid."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/istana-maimun-1900.jpg> ;
-    mv:persinggahan res:jejak-kesultanan-deli-singgah-1 ;
-    mv:persinggahan res:jejak-kesultanan-deli-singgah-2 ;
-    mv:persinggahan res:jejak-kesultanan-deli-singgah-3 ;
-    mv:persinggahan res:jejak-kesultanan-deli-singgah-4 .
-
-res:jejak-kesultanan-deli-singgah-1 a mv:Persinggahan ;
-    mv:urutan "1"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:istana-maimun .
-
-res:jejak-kesultanan-deli-singgah-2 a mv:Persinggahan ;
-    mv:urutan "2"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:meriam-puntung .
-
-res:jejak-kesultanan-deli-singgah-3 a mv:Persinggahan ;
-    mv:urutan "3"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:masjid-raya-al-mashun .
-
-res:jejak-kesultanan-deli-singgah-4 a mv:Persinggahan ;
-    mv:urutan "4"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:taman-sri-deli .
-
-res:satu-kota-banyak-rumah-ibadah a mv:JalurTematik ;
-    schema:name "Satu kota, banyak rumah ibadah"@id ;
-    schema:description "Masjid, kuil, vihara, dan gereja yang berdiri berdekatan di pusat Medan."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/vihara-gunung-timur.jpg> ;
-    mv:persinggahan res:satu-kota-banyak-rumah-ibadah-singgah-1 ;
-    mv:persinggahan res:satu-kota-banyak-rumah-ibadah-singgah-2 ;
-    mv:persinggahan res:satu-kota-banyak-rumah-ibadah-singgah-3 ;
-    mv:persinggahan res:satu-kota-banyak-rumah-ibadah-singgah-4 .
-
-res:satu-kota-banyak-rumah-ibadah-singgah-1 a mv:Persinggahan ;
-    mv:urutan "1"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:masjid-raya-al-mashun .
-
-res:satu-kota-banyak-rumah-ibadah-singgah-2 a mv:Persinggahan ;
-    mv:urutan "2"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:vihara-gunung-timur .
-
-res:satu-kota-banyak-rumah-ibadah-singgah-3 a mv:Persinggahan ;
-    mv:urutan "3"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:kuil-shri-mariamman .
-
-res:satu-kota-banyak-rumah-ibadah-singgah-4 a mv:Persinggahan ;
-    mv:urutan "4"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:gereja-immanuel .
-
-res:kesawan-tempo-dulu a mv:JalurTematik ;
-    schema:name "Kesawan tempo dulu"@id ;
-    schema:description "Esplanade, rumah saudagar, dan warung soto di jalan dagang tertua Medan."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kesawan-arsip.jpg> ;
-    mv:persinggahan res:kesawan-tempo-dulu-singgah-1 ;
-    mv:persinggahan res:kesawan-tempo-dulu-singgah-2 ;
-    mv:persinggahan res:kesawan-tempo-dulu-singgah-3 .
-
-res:kesawan-tempo-dulu-singgah-1 a mv:Persinggahan ;
-    mv:urutan "1"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:lapangan-merdeka .
-
-res:kesawan-tempo-dulu-singgah-2 a mv:Persinggahan ;
-    mv:urutan "2"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:tjong-a-fie-mansion .
-
-res:kesawan-tempo-dulu-singgah-3 a mv:Persinggahan ;
-    mv:urutan "3"^^xsd:positiveInteger ;
-    mv:tempatSinggah res:soto-kesawan .

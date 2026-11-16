@@ -34,12 +34,10 @@ final class Database3Catalog
     private static ?array $triples = null;
     private static ?array $entities = null;
     private static ?array $relations = null;
-    private static ?array $routes = null;
-
     public static function forgetCache(): void
     {
-        self::$triples = self::$entities = self::$relations = self::$routes = null;
-        Cache::forget('database3.catalog.triples.v5');
+        self::$triples = self::$entities = self::$relations = null;
+        Cache::forget('database3.catalog.triples.v6');
     }
 
     public static function entities(): array
@@ -158,52 +156,13 @@ final class Database3Catalog
         return self::$relations = $relations;
     }
 
-    public static function routes(): array
-    {
-        if (self::$routes !== null) {
-            return self::$routes;
-        }
-
-        $bySubject = [];
-        foreach (self::triples() as [$subject, $predicate, $object]) {
-            $bySubject[$subject][$predicate][] = $object;
-        }
-
-        $routes = [];
-        foreach ($bySubject as $subject => $properties) {
-            if (! in_array('mv:JalurTematik', $properties['rdf:type'] ?? [], true)) {
-                continue;
-            }
-
-            $stops = [];
-            foreach ($properties['mv:persinggahan'] ?? [] as $stop) {
-                $stopProperties = $bySubject[$stop] ?? [];
-                $place = self::first($stopProperties, 'mv:tempatSinggah', null);
-                if ($place !== null) {
-                    $stops[(int) self::first($stopProperties, 'mv:urutan', count($stops) + 1)] = substr($place, 4);
-                }
-            }
-            ksort($stops);
-            $slug = substr($subject, 4);
-            $routes[$slug] = [
-                'slug' => $slug,
-                'nama' => self::first($properties, 'schema:name', $slug),
-                'ringkas' => self::first($properties, 'schema:description', ''),
-                'foto' => self::imageName(self::first($properties, 'schema:image', null)),
-                'singgah' => array_values($stops),
-            ];
-        }
-
-        return self::$routes = $routes;
-    }
-
     private static function triples(): array
     {
         if (self::$triples !== null) {
             return self::$triples;
         }
 
-        return self::$triples = Cache::remember('database3.catalog.triples.v5', now()->addMinutes(10), function (): array {
+        return self::$triples = Cache::remember('database3.catalog.triples.v6', now()->addMinutes(10), function (): array {
             $result = SparqlService::jalankan(<<<'SPARQL'
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -225,7 +184,7 @@ final class Database3Catalog
                         schema:streetAddress, mv:cerita, mv:kelurahan, mv:keteranganJam,
                         mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
                         mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh, mv:koordinatPerkiraan,
-                        mv:masa, mv:kalimat, mv:persinggahan, mv:urutan, mv:tempatSinggah,
+                        mv:masa, mv:kalimat,
                         dcterms:source, mv:dibangunOleh, mv:memimpin, mv:terlibatDalam,
                         mv:merepresentasikan, mv:khasDari, mv:dekatDengan, mv:bergaya,
                         mv:bagianDari, mv:berkaitanDengan, mv:memilikiSejarah,

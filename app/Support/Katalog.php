@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
 /**
- * Facade katalog. Seluruh entitas, relasi, dan jalur dibaca dari Database 3 SPARQL.
+ * Facade katalog. Seluruh entitas dan relasi dibaca dari Database 3 SPARQL.
  */
 class Katalog
 {
@@ -82,11 +82,9 @@ class Katalog
 
     private static ?array $entities = null;
     private static ?array $relations = null;
-    private static ?array $routes = null;
-
     public static function forgetCache(): void
     {
-        self::$entities = self::$relations = self::$routes = null;
+        self::$entities = self::$relations = null;
         Database3Catalog::forgetCache();
     }
 
@@ -330,38 +328,6 @@ class Katalog
             ),
     ];
 }
-
-    public static function jalurTematik(): array
-    {
-        if (self::$routes !== null) {
-            return self::$routes;
-        }
-
-        $routes = Database3Catalog::routes();
-        foreach ($routes as &$route) {
-            $meter = 0;
-            $menit = 0;
-            $sebelumnya = null;
-            foreach ($route['singgah'] as $slug) {
-                $tempat = self::get($slug);
-                if (! $tempat || $tempat['jenis'] !== 'tempat') {
-                    throw new RuntimeException('Jalur SPARQL merujuk tempat yang tidak ditemukan: '.$slug);
-                }
-                $menit += (int) ($tempat['singgah'] ?? 45);
-                if ($sebelumnya !== null) {
-                    $perpindahan = self::perpindahan($sebelumnya, $tempat, ['jalan', 'becak']);
-                    $meter += $perpindahan['meter'];
-                    $menit += $perpindahan['menit'];
-                }
-                $sebelumnya = $tempat;
-            }
-            $route['meter'] = $meter;
-            $route['menit'] = $menit;
-        }
-
-        return self::$routes = $routes;
-    }
-
 
     /**
      * Susun rute satu hari dari tempat awal: setiap langkah memilih tempat terdekat yang cocok dengan minat,

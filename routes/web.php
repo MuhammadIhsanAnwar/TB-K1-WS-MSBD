@@ -16,8 +16,6 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
     Route::post('/tempat/{slug}/sukai', 'sukai')->name('tempat.sukai');
-    Route::get('/jalur', 'jalur')->name('jalur');
-    Route::get('/jalur/{slug}', 'jalurDetail')->name('jalur.detail');
     Route::get('/rencana', 'rencana')->name('rencana');
     Route::get('/r/{kode}', 'rencanaBagikan')->name('rencana.bagikan');
     Route::get('/ketentuan', 'ketentuan')->name('ketentuan');
