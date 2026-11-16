@@ -144,6 +144,7 @@ class AdminController extends Controller
                     'slug' => $relasi['tempat_slug'],
                     'nama' => $relasi['tempat_slug'],
                 ])->values();
+            $user['ditangguhkan'] = ! empty($user['ditangguhkan_pada']);
 
             return $user;
         })->values();
@@ -227,6 +228,34 @@ class AdminController extends Controller
             'Akun admin '.$user['email'].' berhasil dihapus.'
                 .($tempatKelolaan === [] ? '' : ' Tempat yang dilepas: '.implode(', ', $tempatKelolaan).'.')
         );
+    }
+
+    public function tangguhkanAkun(Request $request, string $id)
+    {
+        $api = new SupabaseApi;
+        $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === $id);
+        abort_unless($user, 404);
+        abort_if($user['peran'] === 'superadmin', 403, 'Akun superadmin tidak dapat ditangguhkan.');
+        abort_if((string) $user['id'] === (string) ($request->session()->get('pengguna.id')), 403, 'Tidak dapat menangguhkan akun sendiri.');
+
+        $data = $request->validate([
+            'alasan' => ['nullable', 'string', 'max:240'],
+        ]);
+
+        if (! empty($user['ditangguhkan_pada'])) {
+            $api->updateUser($id, ['ditangguhkan_pada' => null, 'alasan_tangguh' => null]);
+
+            return redirect()->route('admin.akun', ['peran' => $user['peran']])
+                ->with('pesan', 'Penangguhan akun '.$user['email'].' dibuka. Pengguna dapat masuk kembali.');
+        }
+
+        $api->updateUser($id, [
+            'ditangguhkan_pada' => now('Asia/Jakarta')->toDateTimeString(),
+            'alasan_tangguh' => $data['alasan'] ?? null,
+        ]);
+
+        return redirect()->route('admin.akun', ['peran' => $user['peran']])
+            ->with('pesan', 'Akun '.$user['email'].' ditangguhkan. Pengguna tidak dapat masuk sampai penangguhan dibuka.');
     }
 
     public function tautkanTempat(Request $request, string $id)

@@ -36,6 +36,17 @@ class Peran
             }
         }
 
+        if (! empty($pengguna['email'])) {
+            $akun = (new SupabaseApi)->findUserByEmail($pengguna['email']);
+            if ($akun && ! empty($akun['ditangguhkan_pada'])) {
+                $request->session()->forget('pengguna');
+                $request->session()->invalidate();
+
+                return redirect()->route('masuk')
+                    ->withErrors(['email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.']);
+            }
+        }
+
         if ($roles && ! in_array($pengguna['peran'], $roles, true)) {
             abort(403, 'Akun ini tidak memiliki akses ke halaman tersebut.');
         }

@@ -51,9 +51,24 @@
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
                 <b>{{ $user['name'] }}</b>
-                <span class="meta">{{ $user['email'] }}@if (! empty($user['email_verified_at'])) · terverifikasi @endif</span>
+                <span class="meta">{{ $user['email'] }}@if (! empty($user['email_verified_at'])) · terverifikasi @endif @if ($user['ditangguhkan']) · <b style="color:var(--p-negative)">ditangguhkan</b> @endif</span>
             </summary>
             <div style="display:grid;gap:16px;padding:16px 0">
+                @if ($user['ditangguhkan'])
+                    <div class="p-pesan p-pesan--info" role="status">
+                        Akun ditangguhkan sejak {{ \Carbon\Carbon::parse($user['ditangguhkan_pada'])->format('d/m/Y H:i') }}.
+                        @if (! empty($user['alasan_tangguh'])) Alasan: {{ $user['alasan_tangguh'] }}@endif
+                    </div>
+                @endif
+                <form method="post" action="{{ route('admin.akun.tangguhkan', $user['id']) }}" style="display:grid;gap:8px">
+                    @csrf @method('PATCH')
+                    @if (! $user['ditangguhkan'])
+                        <div class="p-field"><label for="alasan-{{ $user['id'] }}">Alasan penangguhan (opsional)</label><input id="alasan-{{ $user['id'] }}" name="alasan" maxlength="240" placeholder="Contoh: menyalahgunakan fitur ulasan"></div>
+                        <div><button class="p-btn p-btn--bahaya" type="submit" onclick="return confirm('Tangguhkan akun wisatawan {{ $user['email'] }}?')">Tangguhkan akun</button></div>
+                    @else
+                        <div><button class="p-btn p-btn--utama" type="submit">Buka penangguhan</button></div>
+                    @endif
+                </form>
                 <form method="post" action="{{ route('admin.akun.hapus', $user['id']) }}"
                       onsubmit="return confirm('Hapus akun wisatawan {{ $user['email'] }}? Tindakan ini tidak dapat dibatalkan.')">
                     @csrf @method('DELETE')
@@ -72,7 +87,7 @@
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
                 <b>{{ $user['name'] }}</b>
-                <span class="meta">{{ $user['email'] }} · {{ $user['tempat']->count() }} tempat</span>
+                <span class="meta">{{ $user['email'] }} · {{ $user['tempat']->count() }} tempat @if ($user['ditangguhkan']) · <b style="color:var(--p-negative)">ditangguhkan</b> @endif</span>
             </summary>
             <div style="display:grid;gap:16px;padding:16px 0">
                 <div>
@@ -117,6 +132,17 @@
                         <div class="p-field"><label for="password-confirm-{{ $user['id'] }}">Ulangi kata sandi baru</label><input id="password-confirm-{{ $user['id'] }}" type="password" name="password_confirmation" required autocomplete="new-password"><span class="bantu">&nbsp;</span></div>
                     </div>
                     <div><button class="p-btn p-btn--utama" type="submit">Ubah kata sandi admin</button></div>
+                </form>
+
+                <form method="post" action="{{ route('admin.akun.tangguhkan', $user['id']) }}" style="display:grid;gap:8px">
+                    @csrf @method('PATCH')
+                    @if (! $user['ditangguhkan'])
+                        <div class="p-field"><label for="alasan-admin-{{ $user['id'] }}">Alasan penangguhan (opsional)</label><input id="alasan-admin-{{ $user['id'] }}" name="alasan" maxlength="240" placeholder="Contoh: tidak aktif mengelola tempat"></div>
+                        <div><button class="p-btn p-btn--bahaya" type="submit" onclick="return confirm('Tangguhkan akun admin {{ $user['email'] }}?')">Tangguhkan akun</button></div>
+                    @else
+                        <div class="p-pesan p-pesan--info" role="status">Ditangguhkan sejak {{ \Carbon\Carbon::parse($user['ditangguhkan_pada'])->format('d/m/Y H:i') }}.@if (! empty($user['alasan_tangguh'])) Alasan: {{ $user['alasan_tangguh'] }}@endif</div>
+                        <div><button class="p-btn p-btn--utama" type="submit">Buka penangguhan</button></div>
+                    @endif
                 </form>
 
                 <form method="post" action="{{ route('admin.akun.hapus', $user['id']) }}"
