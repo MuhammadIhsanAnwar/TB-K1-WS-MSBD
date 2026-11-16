@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Support\Katalog;
 use App\Support\Database3CatalogWriter;
 use App\Support\Kunjungan;
+use App\Support\PesanLayanan;
 use App\Support\Penyimpanan;
 use App\Support\SupabaseApi;
 use Illuminate\Http\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +18,36 @@ use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
+    public function pesan(Request $request)
+    {
+        $pengguna = $request->session()->get('pengguna', []);
+
+        return view('admin.pesan', ['pesan' => PesanLayanan::daftar($pengguna)]);
+    }
+
+    public function detailPesan(Request $request, int $id)
+    {
+        $pengguna = $request->session()->get('pengguna', []);
+
+        return view('admin.pesan-detail', ['pesan' => PesanLayanan::detail($id, $pengguna)]);
+    }
+
+    public function balasPesan(Request $request, int $id)
+    {
+        $data = $request->validate([
+            'balasan' => ['required', 'string', 'min:2', 'max:3000'],
+        ], ['balasan.min' => 'Balasan minimal 2 karakter.']);
+
+        try {
+            PesanLayanan::balas($id, $request->session()->get('pengguna', []), $data['balasan']);
+        } catch (TransportExceptionInterface $exception) {
+            return redirect()->route('admin.pesan.detail', $id)
+                ->with('galat', 'Balasan sudah tersimpan, tetapi email belum berhasil dikirim. Coba kirim balasan lagi.');
+        }
+
+        return redirect()->route('admin.pesan.detail', $id)->with('pesan', 'Balasan berhasil dikirim ke email pengguna.');
+    }
+
     private function usulanRelasi(): array
     {
         return Cache::get('medanvisit.usulan_relasi', []);

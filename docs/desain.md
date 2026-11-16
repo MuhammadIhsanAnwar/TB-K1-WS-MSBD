@@ -44,7 +44,7 @@ Warna kelas entitas semantik hanya digunakan pada simpul graf, penanda peta, dan
 
 Seluruh halaman publik memakai kerangka `resources/views/layouts/situs.blade.php` dengan komponen seragam:
 
-1. **Kepala Situs (`partials/kepala.blade.php`)**: Bilah lengket Hijau Deli di semua halaman termasuk Beranda, memuat logo `tanpa-tagline-gelap.svg`, tautan utama ke tempat, peta, Perencanaan Rute, dan tiket, tautan cepat satu ketuk di layar tablet/ponsel tanpa bilah bawah yang menutupi teks bacaan, pemicu dialog pencarian cepat, serta menu akun wisatawan dengan lencana tiket aktif dan poin.
+1. **Kepala Situs (`partials/kepala.blade.php`)**: Bilah lengket Hijau Deli di semua halaman termasuk Beranda, memuat logo `tanpa-tagline-gelap.svg`, tautan utama ke tempat, peta, Perencanaan Rute, Hubungi Admin, dan tiket, tautan cepat satu ketuk di layar tablet/ponsel tanpa bilah bawah yang menutupi teks bacaan, pemicu dialog pencarian cepat, serta menu akun wisatawan dengan lencana tiket aktif dan poin.
 2. **Menu Lembar Penuh Ponsel (`partials/menu.blade.php`)**: Dialog `<dialog>` layar penuh untuk navigasi cepat di perangkat bergerak lengkap dengan kolom pencarian langsung dan akses sub-halaman akun.
 3. **Dialog Pencarian Cepat (`partials/dialog-cari.blade.php`)**: Dapat dibuka lewat tombol kepala atau tombol papan ketik `/`, menampilkan saran langsung toleran salah ketik serta tautan ke asisten percakapan.
 4. **Widget Asisten Melayang (`partials/asisten-melayang.blade.php`)**: Tombol di pojok kanan bawah layar desktop pada halaman selain `/tanya` yang membuka jendela percakapan ringkas ke `POST /tanya` lengkap dengan kartu tempat mini.
@@ -62,7 +62,7 @@ Seluruh halaman publik memakai kerangka `resources/views/layouts/situs.blade.php
 
 ## 6. Endpoint Tambahan Antarmuka
 
-Satu rute baca-saja ditambahkan untuk mendukung saran langsung (autocomplete) toleran salah ketik tanpa mengubah rute maupun kontrak formulir yang sudah ada:
-
 - **`GET /cari/saran.json?q={kata_kunci}`** (`cari.saran` pada `SitusController::saran`): Mengembalikan maksimal 6 entitas teratas hasil `Katalog::cari($q)` dalam format JSON (`{ saran: [{ nama, jenis, label_jenis, ringkas, harga, url }], tanya, semua }`) untuk ditampilkan pada kotak pencarian Beranda dan dialog pencarian cepat.
+- **`GET` dan `POST /hubungi-admin`** (`hubungi.admin` dan `hubungi.admin.kirim`): Form yang hanya dapat digunakan setelah login. Pesan kategori Tempat masuk ke admin yang ditautkan pada tempat tersebut; kategori Akun dan Lainnya masuk ke inbox superadmin. Data percakapan disimpan di DB 1.
+- **`GET /admin/pesan` dan `/admin/pesan/{id}`**: Inbox dan detail pesan dibatasi menurut peran serta admin tempat yang dituju. Balasan disimpan di DB 1 dan dikirim ke email pengguna; lingkungan produksi harus memakai konfigurasi mail/SMTP yang dapat mengirim email.
 
