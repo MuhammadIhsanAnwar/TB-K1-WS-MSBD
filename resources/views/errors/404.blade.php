@@ -11,11 +11,7 @@
     <p>Halaman yang kamu cari tidak ditemukan. Mungkin alamatnya salah ketik, atau tempatnya belum masuk MedanVisit.</p>
 </header>
 <div class="isi-halaman">
-    <form class="tanya-medan" action="{{ route('cari') }}" method="get" role="search">
-        <label><span class="sr-only">Cari tempat</span><input type="search" name="q" placeholder="Cari tempat, tokoh, atau kuliner" required></label>
-        <button class="tombol" type="submit">Cari</button>
-    </form>
-    <h2 class="judul" style="margin-top:72px;font-size:2rem">Tempat yang paling sering dibuka</h2>
+    <h2 class="judul" style="font-size:2rem">Tempat yang paling sering dibuka</h2>
     <div class="tempat-populer" style="margin-top:24px">
         @foreach ($populer as $t)
             <a href="{{ route('tempat', $t['slug']) }}">
