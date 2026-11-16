@@ -4,6 +4,7 @@
         [route('beranda'), 'Beranda', ['beranda']],
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
+        [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
     ];
 @endphp
 <dialog class="lembar-menu" id="lembar-menu" data-ui aria-label="Menu navigasi">

@@ -7,6 +7,7 @@ use App\Support\Asisten;
 use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
+use App\Support\PesanLayanan;
 use Illuminate\Http\Request;
 
 class SitusController extends Controller
@@ -24,6 +25,27 @@ class SitusController extends Controller
             'bertiket' => Katalog::bertiket(),
             'petaTempat' => array_values($tempat),
         ]);
+    }
+
+    public function hubungiAdmin()
+    {
+        return view('situs.hubungi-admin', ['tempat' => Katalog::tempat()]);
+    }
+
+    public function simpanPesanAdmin(Request $request)
+    {
+        $data = $request->validate([
+            'kategori' => ['required', 'in:tempat,akun,lainnya'],
+            'tempat_slug' => ['nullable', 'required_if:kategori,tempat', 'string', 'max:120'],
+            'pesan' => ['required', 'string', 'min:10', 'max:3000'],
+        ], [
+            'tempat_slug.required_if' => 'Pilih tempat wisata yang ingin ditanyakan.',
+            'pesan.min' => 'Pesan minimal 10 karakter.',
+        ]);
+
+        PesanLayanan::kirim($request->session()->get('pengguna', []), $data);
+
+        return redirect()->route('hubungi.admin')->with('pesan', 'Pesan berhasil dikirim ke tim yang sesuai.');
     }
 
     public function cari(Request $request)
@@ -123,7 +145,7 @@ class SitusController extends Controller
     $t = Katalog::get($slug);
     abort_unless($t && $t['jenis'] === 'tempat', 404);
 
-    return view('situs.tempat', $this->dataEntitas($t) + [
+    return view('situs.tempat', ['e' => $t] + [
         'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
         'ramai' => 0,
         'dekat' => $this->terdekat($t, 4),

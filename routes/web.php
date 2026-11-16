@@ -19,6 +19,8 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/rencana', 'rencana')->name('rencana');
     Route::get('/r/{kode}', 'rencanaBagikan')->name('rencana.bagikan');
     Route::get('/ketentuan', 'ketentuan')->name('ketentuan');
+    Route::get('/hubungi-admin', 'hubungiAdmin')->middleware('peran')->name('hubungi.admin');
+    Route::post('/hubungi-admin', 'simpanPesanAdmin')->middleware('peran')->name('hubungi.admin.kirim');
     Route::get('/{jenis}/{slug}', 'entitas')->whereIn('jenis', ['tokoh', 'budaya', 'kuliner', 'peristiwa', 'kerajaan', 'transportasi'])->name('entitas');
 });
 
@@ -71,6 +73,9 @@ Route::controller(AdminController::class)->middleware('peran:admin,superadmin')-
     Route::post('/entitas/{slug}', 'simpanEntitas');
     Route::get('/relasi', 'relasi')->name('relasi');
     Route::post('/relasi', 'tambahRelasi');
+    Route::get('/pesan', 'pesan')->name('pesan');
+    Route::get('/pesan/{id}', 'detailPesan')->whereNumber('id')->name('pesan.detail');
+    Route::post('/pesan/{id}/balas', 'balasPesan')->whereNumber('id')->name('pesan.balas');
     Route::get('/ulasan', 'ulasan')->name('ulasan');
     Route::delete('/ulasan/{id}', 'hapusUlasan')->name('ulasan.hapus');
     Route::get('/tiket', 'tiket')->name('tiket');

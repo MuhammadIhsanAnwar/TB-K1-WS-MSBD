@@ -5,6 +5,7 @@
         'entitas' => '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
         'relasi' => '<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8.3 7l7.4.6M7 8.3l2.2 7.4M16.4 10l-4.6 6.2"/>',
         'ulasan' => '<path d="M4 5h16v11H9l-5 4z"/>',
+        'pesan' => '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
         'mitra' => '<path d="M4 10l2-6h12l2 6M4 10v10h16V10M4 10h16M9 20v-5h6v5"/>',
         'tiket' => '<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/>',
         'sinkron' => '<path d="M20 8A8 8 0 0 0 5 6.5M4 16a8 8 0 0 0 15 1.5"/><path d="M20 3v5h-5M4 21v-5h5"/>',
@@ -19,6 +20,7 @@
     $menuKurator = [
         ['admin.ringkasan', 'Ringkasan', 'ringkasan', null], ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null], ['admin.relasi', 'Editor relasi', 'relasi', null],
         ['admin.ulasan', 'Ulasan', 'ulasan', $antre ?: null],
+        ['admin.pesan', 'Pesan pengguna', 'pesan', null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
     ];
         $menuKurator[] = ['admin.insight', 'Insight', 'statistik', null];

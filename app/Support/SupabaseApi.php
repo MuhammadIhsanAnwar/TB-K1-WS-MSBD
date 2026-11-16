@@ -96,6 +96,77 @@ class SupabaseApi
         }
     }
 
+    public function adminUntukTempat(string $slug): ?int
+    {
+        $rows = $this->getRows('admin_tempat', [
+            'select' => 'id_admin',
+            'tempat_slug' => 'eq.'.$slug,
+            'limit' => 1,
+        ]);
+
+        return isset($rows[0]['id_admin']) ? (int) $rows[0]['id_admin'] : null;
+    }
+
+    public function pesanPenggunaInbox(string $peran, int $idPengguna): array
+    {
+        $filters = ['order' => 'created_at.desc,id.desc', 'limit' => 500];
+        if ($peran === 'admin') {
+            $filters += ['kategori' => 'eq.tempat', 'id_admin_tujuan' => 'eq.'.$idPengguna];
+        } elseif ($peran === 'superadmin') {
+            $filters['kategori'] = 'in.(akun,lainnya)';
+        } else {
+            return [];
+        }
+
+        return $this->getRows('pesan_pengguna', $filters);
+    }
+
+    public function pesanPengguna(int $id): ?array
+    {
+        return $this->getRows('pesan_pengguna', ['id' => 'eq.'.$id])[0] ?? null;
+    }
+
+    public function buatPesanPengguna(array $data): array
+    {
+        return $this->insert('pesan_pengguna', $data);
+    }
+
+    public function balasanPesanPengguna(array $idPesan): array
+    {
+        if ($idPesan === []) {
+            return [];
+        }
+
+        $ids = implode(',', array_map('intval', $idPesan));
+
+        return $this->getRows('balasan_pesan', [
+            'pesan_id' => 'in.('.$ids.')',
+            'order' => 'created_at.asc,id.asc',
+        ]);
+    }
+
+    public function buatBalasanPesan(array $data): array
+    {
+        return $this->insert('balasan_pesan', $data);
+    }
+
+    public function ubahStatusBalasanEmail(int $id, string $status, ?string $waktuTerkirim = null): void
+    {
+        $this->ubahBaris('balasan_pesan', $id, array_filter([
+            'status_email' => $status,
+            'email_terkirim_pada' => $waktuTerkirim,
+            'updated_at' => now('Asia/Jakarta')->toDateTimeString(),
+        ], fn ($nilai) => $nilai !== null));
+    }
+
+    public function tandaiPesanDibalas(int $id): void
+    {
+        $this->ubahBaris('pesan_pengguna', $id, [
+            'status' => 'dibalas',
+            'updated_at' => now('Asia/Jakarta')->toDateTimeString(),
+        ]);
+    }
+
     public function createVerificationToken(array $token): array
     {
         return $this->insert('email_verification_tokens', $token);
@@ -326,6 +397,19 @@ class SupabaseApi
             ->json();
 
         return $rows[0] ?? throw new RuntimeException('Supabase tidak mengembalikan data yang dibuat.');
+    }
+
+    private function ubahBaris(string $table, int $id, array $attributes): void
+    {
+        $rows = $this->request()
+            ->withHeaders(['Prefer' => 'return=representation'])
+            ->patch($this->url($table).'?'.http_build_query(['id' => 'eq.'.$id]), $attributes)
+            ->throw()
+            ->json();
+
+        if (! $rows) {
+            throw new RuntimeException('Supabase tidak menemukan baris '.$table.' untuk diperbarui.');
+        }
     }
 
     private function rpc(string $fungsi, array $arg): mixed
