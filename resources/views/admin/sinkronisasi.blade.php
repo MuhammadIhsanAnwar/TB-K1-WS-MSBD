@@ -21,10 +21,9 @@
 <section class="p-panel" aria-labelledby="judul-alur">
     <header><h2 id="judul-alur">Alur data</h2></header>
     <div class="p-baris">
-        <div><span class="dua"><b>PostgreSQL 1</b><span>Atribut tempat, akun, check-in, poin, voucher</span></span></div>
-        <div><span class="dua"><b>PostgreSQL 2</b><span>Jenis tiket, pesanan, pembayaran</span></span></div>
-        <div><span class="dua"><b>Database 3</b><span>Ontologi dan relasi wisata tersimpan pada penyimpanan semantik internal.</span></span></div>
-        <div><span class="dua"><b>Penyimpanan sementara</b><span>Selama basis data belum tersambung, pesanan, check-in, dan ulasan prototipe disimpan di cache berkas</span></span></div>
+        <div><span class="dua"><b>Database 1</b><span>PostgreSQL Supabase - Akun dan Konfigurasi Website</span></span></div>
+        <div><span class="dua"><b>Database 2</b><span>PostgreSQL Supabase - Transaksi</span></span></div>
+        <div><span class="dua"><b>Database 3</b><span>SPARQL Allegrograph - Tempat Wisata</span></span></div>
     </div>
 </section>
 @endsection

@@ -512,7 +512,10 @@ class AdminController extends Controller
         $hasil = null;
         if ($request->boolean('periksa')) {
             $hasil = [];
-            foreach (['katalog' => ['users', 'Database 1 (akun, Laravel, katalog)'], 'transaksi' => ['pesanan', 'Database 2 (transaksi)']] as $koneksi => [$tabel, $label]) {
+            foreach ([
+                'katalog' => ['users', 'Database 1 PostgreSQL Supabase - Akun dan Konfigurasi Website'],
+                'transaksi' => ['pesanan', 'Database 2 PostgreSQL Supabase - Transaksi'],
+            ] as $koneksi => [$tabel, $label]) {
                 $mulai = microtime(true);
                 try {
                     (new SupabaseApi($koneksi))->ping($tabel);
@@ -523,8 +526,9 @@ class AdminController extends Controller
                 }
             }
             $endpoint = config('services.sparql.endpoint');
+            $labelDatabase3 = 'Database 3 SPARQL Allegrograph - Tempat Wisata';
             if (! $endpoint) {
-                $hasil[] = ['label' => 'Database 3 ('.config('services.sparql.driver').'/SPARQL)', 'ok' => false, 'teks' => 'SPARQL_ENDPOINT belum diisi di .env.'];
+                $hasil[] = ['label' => $labelDatabase3, 'ok' => false, 'teks' => 'SPARQL_ENDPOINT belum diisi di .env.'];
             } else {
                 try {
                     $http = Http::timeout((int) config('services.sparql.timeout', 30));
@@ -534,15 +538,10 @@ class AdminController extends Controller
                         $http = $http->withBasicAuth($username, $password);
                     }
                     $res = $http->asForm()->post($endpoint, ['query' => 'ASK { ?s ?p ?o }']);
-                    $hasil[] = ['label' => 'Database 3 ('.config('services.sparql.driver').'/SPARQL)', 'ok' => $res->successful(), 'teks' => $res->successful() ? 'Endpoint menjawab.' : 'Endpoint menjawab dengan status '.$res->status().'.'];
+                    $hasil[] = ['label' => $labelDatabase3, 'ok' => $res->successful(), 'teks' => $res->successful() ? 'Endpoint menjawab.' : 'Endpoint menjawab dengan status '.$res->status().'.'];
                 } catch (\Throwable $e) {
-                    $hasil[] = ['label' => 'Database 3 ('.config('services.sparql.driver').'/SPARQL)', 'ok' => false, 'teks' => 'Tidak bisa dihubungi: '.str($e->getMessage())->limit(120)];
+                    $hasil[] = ['label' => $labelDatabase3, 'ok' => false, 'teks' => 'Tidak bisa dihubungi: '.str($e->getMessage())->limit(120)];
                 }
-            }
-            try {
-                $hasil[] = ['label' => 'Isi Database 2 (transaksi)', 'ok' => true, 'teks' => count(Penyimpanan::pesanan()).' pesanan, '.count(Penyimpanan::ulasan()).' ulasan, '.count(Penyimpanan::rencana()).' rencana, '.Penyimpanan::jumlahCari().' pencarian tercatat.'];
-            } catch (\Throwable $e) {
-                $hasil[] = ['label' => 'Isi Database 2 (transaksi)', 'ok' => false, 'teks' => 'Tidak bisa dibaca lewat Supabase REST API: '.str($e->getMessage())->before(' (Connection:')->limit(120)];
             }
         }
 

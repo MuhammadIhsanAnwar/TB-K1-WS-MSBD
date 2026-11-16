@@ -19,8 +19,8 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/rencana', 'rencana')->name('rencana');
     Route::get('/r/{kode}', 'rencanaBagikan')->name('rencana.bagikan');
     Route::get('/ketentuan', 'ketentuan')->name('ketentuan');
-    Route::get('/hubungi-admin', 'hubungiAdmin')->middleware('peran')->name('hubungi.admin');
-    Route::post('/hubungi-admin', 'simpanPesanAdmin')->middleware('peran')->name('hubungi.admin.kirim');
+    Route::get('/hubungi-admin', 'hubungiAdmin')->middleware('peran:wisatawan,admin')->name('hubungi.admin');
+    Route::post('/hubungi-admin', 'simpanPesanAdmin')->middleware('peran:wisatawan,admin')->name('hubungi.admin.kirim');
     Route::get('/{jenis}/{slug}', 'entitas')->whereIn('jenis', ['tokoh', 'budaya', 'kuliner', 'peristiwa', 'kerajaan', 'transportasi'])->name('entitas');
 });
 

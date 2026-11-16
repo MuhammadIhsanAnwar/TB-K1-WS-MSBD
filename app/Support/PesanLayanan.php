@@ -12,6 +12,14 @@ final class PesanLayanan
 {
     public static function kirim(array $pengguna, array $data): array
     {
+        if (! in_array($pengguna['peran'] ?? null, ['wisatawan', 'admin'], true)) {
+            abort(403);
+        }
+
+        if (($pengguna['peran'] ?? null) === 'admin' && $data['kategori'] === 'tempat') {
+            throw ValidationException::withMessages(['kategori' => 'Admin tidak dapat mengirim pesan tentang tempat.']);
+        }
+
         $slugTempat = null;
         $namaTempat = null;
         $idAdminTujuan = null;
