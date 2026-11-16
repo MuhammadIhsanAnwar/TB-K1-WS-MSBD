@@ -3,11 +3,18 @@
 
 @section('isi')
 <div class="p-judul">
-    <div><h1>Kelola akun admin</h1><p class="sub">Akun admin ditautkan ke tempat wisata yang mereka kelola. Wisatawan dan superadmin tidak dapat diubah dari halaman ini.</p></div>
+    <div><h1>Kelola akun</h1><p class="sub">Akun admin ditautkan ke tempat wisata yang mereka kelola. Wisatawan hanya dapat dilihat dan dihapus.</p></div>
 </div>
 @if ($errors->any())
     <div class="p-pesan p-pesan--galat" role="alert">{{ $errors->first() }}</div>
 @endif
+
+<nav class="p-alat" aria-label="Filter peran akun" style="margin-bottom:16px">
+    <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin']) }}"
+       @if ($peran === 'admin') aria-current="page" @endif>Akun admin ({{ $jumlah['admin'] ?? 0 }})</a>
+    <a class="p-btn {{ $peran === 'wisatawan' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'wisatawan']) }}"
+       @if ($peran === 'wisatawan') aria-current="page" @endif>Akun wisatawan ({{ $jumlah['wisatawan'] ?? 0 }})</a>
+</nav>
 
 <div class="p-kpi">
     <div><div class="label">Total akun</div><div class="nilai">{{ number_format(array_sum($jumlah), 0, ',', '.') }}</div><div class="ket">seluruh peran</div></div>
@@ -26,9 +33,9 @@
                 <div class="p-field"><label for="email-baru">Email</label><input id="email-baru" type="email" name="email" value="{{ old('email') }}" required maxlength="120" autocomplete="email">@error('email')<span class="galat">{{ $message }}</span>@enderror</div>
             </div>
             <div class="p-field"><label for="tempat-baru">Tempat wisata yang dikelola</label><select id="tempat-baru" name="tempat_slug" required><option value="">Pilih tempat wisata</option>@foreach ($tempatTersedia as $tempat)<option value="{{ $tempat['slug'] }}" @selected(old('tempat_slug') === $tempat['slug'])>{{ $tempat['nama'] }}</option>@endforeach</select>@error('tempat_slug')<span class="galat">{{ $message }}</span>@enderror</div>
-            <div class="p-dua">
+            <div class="p-dua" style="align-items:start">
                 <div class="p-field"><label for="password-baru">Kata sandi sementara</label><input id="password-baru" type="password" name="password" required autocomplete="new-password"><span class="bantu">Minimal 8 karakter: huruf kecil, kapital, angka, dan simbol.</span>@error('password')<span class="galat">{{ $message }}</span>@enderror</div>
-                <div class="p-field"><label for="password-confirm">Ulangi kata sandi</label><input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"></div>
+                <div class="p-field"><label for="password-confirm">Ulangi kata sandi</label><input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"><span class="bantu">&nbsp;</span></div>
             </div>
             <div><button class="p-btn p-btn--utama" type="submit">Buat akun admin</button></div>
         </form>
@@ -37,6 +44,28 @@
     @endif
 </section>
 
+@if ($peran === 'wisatawan')
+<section class="p-panel" style="margin-top:24px" aria-labelledby="judul-daftar-wisatawan">
+    <header><h2 id="judul-daftar-wisatawan">Akun wisatawan</h2><span class="meta">{{ $akun->count() }} akun · nama dan email</span></header>
+    @forelse ($akun as $user)
+        <details class="p-baris" style="padding:12px 0">
+            <summary style="cursor:pointer">
+                <b>{{ $user['name'] }}</b>
+                <span class="meta">{{ $user['email'] }}@if (! empty($user['email_verified_at'])) · terverifikasi @endif</span>
+            </summary>
+            <div style="display:grid;gap:16px;padding:16px 0">
+                <form method="post" action="{{ route('admin.akun.hapus', $user['id']) }}"
+                      onsubmit="return confirm('Hapus akun wisatawan {{ $user['email'] }}? Tindakan ini tidak dapat dibatalkan.')">
+                    @csrf @method('DELETE')
+                    <button class="p-btn p-btn--bahaya" type="submit">Hapus akun wisatawan</button>
+                </form>
+            </div>
+        </details>
+    @empty
+        <div class="p-kosong">Belum ada akun wisatawan.</div>
+    @endforelse
+</section>
+@else
 <section class="p-panel" style="margin-top:24px" aria-labelledby="judul-daftar-admin">
     <header><h2 id="judul-daftar-admin">Akun admin</h2><span class="meta">{{ $akun->count() }} akun · nama, email, dan tempat kelolaan</span></header>
     @forelse ($akun as $user)
@@ -101,4 +130,5 @@
         <div class="p-kosong">Belum ada akun admin.</div>
     @endforelse
 </section>
+@endif
 @endsection
