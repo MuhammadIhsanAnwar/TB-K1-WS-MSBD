@@ -151,7 +151,7 @@ class AkunController extends Controller
     {
         return match ($peran) {
             'admin', 'superadmin' => route('admin.ringkasan'),
-            default => route('akun'),
+            default => route('beranda'),
         };
     }
 
@@ -261,12 +261,7 @@ class AkunController extends Controller
         $request->session()->regenerate();
         $this->simpanSesiPengguna($request, $user);
 
-        if (! empty($user['google_id'])) {
-            return redirect()->route('akun.pengaturan')
-                ->with('pesan', 'Email berhasil dikonfirmasi. Lengkapi tanggal lahir dan nomor HP akun Google kamu.');
-        }
-
-        return redirect()->route('beranda')->with('pesan', 'Email berhasil dikonfirmasi. Selamat datang di MedanVisit.');
+        return redirect()->route('beranda')->with('sambutan', $user['name']);
     }
 
     public function kirimUlangVerifikasi(Request $request)
@@ -414,12 +409,7 @@ class AkunController extends Controller
         $request->session()->regenerate();
         $this->simpanSesiPengguna($request, $user);
 
-        if ($this->profilBelumLengkap($user)) {
-            return redirect()->route('akun.pengaturan')
-                ->with('pesan', 'Lengkapi nomor HP dan tanggal lahir untuk menyelesaikan akun Google.');
-        }
-
-        return redirect($kembali ?? $this->tujuan($user['peran']))->with('pesan', 'Login Google berhasil.');
+        return redirect($kembali ?? $this->tujuan($user['peran']))->with('sambutan', $user['name']);
     }
 
     public function pengaturan(Request $request)
@@ -497,11 +487,6 @@ class AkunController extends Controller
         $this->simpanSesiPengguna($request, $updated);
 
         return redirect()->route('akun.pengaturan')->with('pesan', 'Pengaturan akun berhasil disimpan.');
-    }
-
-    private function profilBelumLengkap(array $user): bool
-    {
-        return empty($user['no_hp']) || empty($user['tanggal_lahir']);
     }
 
     public function akun(Request $request)
