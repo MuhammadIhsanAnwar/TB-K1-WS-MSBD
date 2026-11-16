@@ -112,11 +112,9 @@
 <nav class="mv-lompat-seksi tidak-dicetak" data-ui aria-label="Lompat ke bagian halaman">
     <div class="mv-wadah mv-lompat-seksi__dalam">
         <a href="#info">Info kunjungan</a>
-        <a href="#cerita">Cerita sejarah</a>
         @if ($posisi)
             <a href="#peta-1930">Peta 1930</a>
         @endif
-        <a href="#terhubung">Terhubung dengan</a>
         <a href="#dekat">Dekat dari sini</a>
         <a href="#ulasan">Ulasan</a>
     </div>
@@ -161,20 +159,6 @@
             </div>
         </section>
 
-        <section class="mv-seksi-detail cerita" id="cerita" aria-labelledby="judul-cerita">
-            <h2 id="judul-cerita">Cerita tempat ini</h2>
-            @foreach ($t['cerita'] as $p)
-                <p>{{ $p }}</p>
-            @endforeach
-            @if (! empty($t['foto_arsip']))
-                <figure class="cerita__arsip">
-                    <x-foto :berkas="$t['foto_arsip']" :alt="$t['foto_arsip_keterangan']" />
-                    <figcaption>{{ $t['foto_arsip_keterangan'] }}</figcaption>
-                </figure>
-            @endif
-            <p class="kecil redup" style="margin-top:20px">Narasi bahasa Inggris, Mandarin, dan Melayu sedang disiapkan oleh kurator.</p>
-        </section>
-
         @if ($posisi)
             @php
                 $px = $posisi['x'] / 14.22;
@@ -193,19 +177,10 @@
             </section>
         @endif
 
-        <section class="mv-seksi-detail" id="terhubung" aria-labelledby="judul-terhubung">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px">
-                <h2 id="judul-terhubung" style="margin-bottom:0">Terhubung di jaringan cerita</h2>
-                <a class="mv-tautan" href="{{ route('jelajah', ['dari' => $t['slug'], 'ke' => $dekat[0]['slug'] ?? (array_key_first(Katalog::tempat()) ?? $t['slug'])]) }}">Jelajahi graf penuh</a>
-            </div>
-            @include('partials.terhubung', ['pusat' => $t['slug']])
-        </section>
-
         <section class="mv-seksi-detail" id="dekat" aria-labelledby="judul-dekat">
             <h2 id="judul-dekat">Dekat dari sini</h2>
             <div class="rekomendasi">
                 @foreach ($dekat as $d)
-                    @php $rantai = Katalog::benangMerah($t['slug'], $d['slug']); @endphp
                     <a href="{{ route('tempat', $d['slug']) }}" style="background:var(--mv-putih);padding:14px">
                         @if ($d['foto'])
                             <x-foto :berkas="$d['foto']" :alt="$d['nama']" :kecil="true" :segera="true" />
@@ -215,11 +190,7 @@
                         <span>
                             <b>{{ $d['nama'] }}</b>
                             <span class="redup nums">{{ number_format($d['jarak'], 0, ',', '.') }} m, sekitar {{ max(1, round($d['jarak'] / 75)) }} menit jalan kaki</span>
-                            @if ($rantai && count($rantai) <= 3 && $rantai[0]['relasi'][1] !== 'beradaDi')
-                                <span class="alasan">{{ count($rantai) === 1 ? $rantai[0]['kalimat'] : end($rantai)['kalimat'] }}</span>
-                            @else
-                                <span class="alasan">{{ Katalog::KATEGORI[$d['kategori']] }} di {{ $d['kecamatan'] }}</span>
-                            @endif
+                            <span class="redup">{{ Katalog::KATEGORI[$d['kategori']] }} di {{ $d['kecamatan'] }}</span>
                         </span>
                     </a>
                 @endforeach
@@ -240,7 +211,7 @@
                 </div>
             @else
                 <div class="kosong" style="background:var(--mv-putih);padding:22px 24px">
-                    <p>Belum ada ulasan terverifikasi untuk {{ $t['nama'] }}. Ulasan pertama yang dikirim pengunjung akan tampil di sini setelah diperiksa kurator.</p>
+                    <p>Belum ada ulasan untuk {{ $t['nama'] }}. Jadilah pengunjung pertama yang membagikan pengalaman.</p>
                 </div>
             @endif
 

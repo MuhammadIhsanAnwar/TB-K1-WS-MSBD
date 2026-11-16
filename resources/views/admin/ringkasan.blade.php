@@ -1,7 +1,7 @@
 @extends('layouts.panel')
 @php
     use App\Support\Katalog;
-    $kerja = count($ulasanMenunggu) + count($celah) + $tanpaSumber->count();
+    $kerja = count($celah) + $tanpaSumber->count();
 @endphp
 @section('judul', 'Ringkasan')
 
@@ -9,13 +9,13 @@
 <div class="p-judul">
     <div>
         <h1>Ringkasan</h1>
-        <p class="sub">{{ $kerja ? $kerja.' hal menunggu kurator: '.count($ulasanMenunggu).' ulasan, '.count($celah).' kata kunci tanpa hasil, '.$tanpaSumber->count().' relasi belum terverifikasi.' : 'Tidak ada antrean. Semua ulasan dan kata kunci sudah ditangani.' }}</p>
+        <p class="sub">{{ $kerja ? $kerja.' hal perlu perhatian: '.count($celah).' kata kunci tanpa hasil dan '.$tanpaSumber->count().' relasi belum terverifikasi.' : 'Tidak ada kata kunci atau relasi yang perlu perhatian.' }}</p>
     </div>
     <div class="p-judul__aksi">
         <nav class="p-seg" aria-label="Periode">
             @foreach ([7, 30, 90] as $p)<a href="{{ route('admin.ringkasan', ['periode' => $p]) }}" @if ($periode === $p) aria-current="true" @endif>{{ $p }} hari</a>@endforeach
         </nav>
-        <a class="p-btn p-btn--utama" href="{{ route('admin.ulasan') }}">Periksa ulasan</a>
+        <a class="p-btn p-btn--utama" href="{{ route('admin.ulasan') }}">Kelola ulasan</a>
     </div>
 </div>
 
@@ -38,15 +38,15 @@
 <div class="p-grid rata">
     <section class="p-panel s7" aria-labelledby="judul-antrean">
         <header><h2 id="judul-antrean">Antrean kerja kurator</h2><span class="meta">dari penggunaan prototipe</span></header>
-        <h3 style="font-size:13px;color:var(--p-muted);font-weight:500;margin-bottom:4px">Ulasan menunggu moderasi</h3>
-        @if ($ulasanMenunggu)
+        <h3 style="font-size:13px;color:var(--p-muted);font-weight:500;margin-bottom:4px">Ulasan terbaru yang tayang</h3>
+        @if ($ulasanTerbaru)
             <div class="p-baris">
-                @foreach (array_slice($ulasanMenunggu, 0, 4) as $ul)
-                    <div><span class="dua"><b>{{ Katalog::get($ul['tempat'])['nama'] }}</b><span>{{ $ul['nama'] }}: {{ \Illuminate\Support\Str::limit($ul['teks'], 60) }}</span></span><a class="p-btn kanan" href="{{ route('admin.ulasan') }}">Periksa</a></div>
+                @foreach (array_slice($ulasanTerbaru, 0, 4) as $ul)
+                    <div><span class="dua"><b>{{ Katalog::get($ul['tempat'])['nama'] }}</b><span>{{ $ul['nama'] }}: {{ \Illuminate\Support\Str::limit($ul['teks'], 60) }}</span></span><a class="p-btn kanan" href="{{ route('admin.ulasan', ['tab' => 'tayang']) }}">Kelola</a></div>
                 @endforeach
             </div>
         @else
-            <div class="p-kosong" style="min-height:44px">Tidak ada ulasan yang menunggu.</div>
+            <div class="p-kosong" style="min-height:44px">Belum ada ulasan yang tayang.</div>
         @endif
         <h3 style="font-size:13px;color:var(--p-muted);font-weight:500;margin:20px 0 4px">Dicari tetapi tanpa hasil (dari {{ $jumlahCari }} pencarian)</h3>
         @if ($celah)

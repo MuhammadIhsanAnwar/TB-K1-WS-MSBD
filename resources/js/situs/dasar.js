@@ -20,7 +20,7 @@ if (pemuatan) {
     const cepat = typeof koneksi?.downlink === 'number' && koneksi.downlink >= 5;
     const teks = [
         [0, 'Menyiapkan beranda…'],
-        [35, 'Memuat cerita Medan…'],
+        [35, 'Menyiapkan konten Medan…'],
         [70, cepat ? 'Menghubungkan fitur wisata…' : 'Menyesuaikan dengan jaringanmu…'],
         [96, 'Beranda siap ditampilkan.'],
     ];

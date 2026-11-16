@@ -166,44 +166,6 @@ class Katalog
         return $hasil;
     }
 
-    public static function benangMerah(string $dari, string $ke): ?array
-    {
-        if (! self::get($dari) || ! self::get($ke)) {
-            return null;
-        }
-
-        $antre = [$dari];
-        $asal = [$dari => null];
-        while ($antre) {
-            $kini = array_shift($antre);
-            if ($kini === $ke) {
-                break;
-            }
-            foreach (self::tetangga($kini, false) as $tetangga) {
-                if (! array_key_exists($tetangga['lawan'], $asal)) {
-                    $asal[$tetangga['lawan']] = [$kini, $tetangga];
-                    $antre[] = $tetangga['lawan'];
-                }
-            }
-        }
-        if (! array_key_exists($ke, $asal)) {
-            return null;
-        }
-
-        $langkah = [];
-        for ($node = $ke; $asal[$node] !== null; $node = $asal[$node][0]) {
-            [$sebelum, $tetangga] = $asal[$node];
-            $langkah[] = [
-                'dari' => $sebelum,
-                'ke' => $node,
-                'kalimat' => self::kalimat($tetangga['relasi'], $sebelum),
-                'relasi' => $tetangga['relasi'],
-            ];
-        }
-
-        return array_reverse($langkah);
-    }
-
     public static function labelRelasi(array $relasi, string $sudut): string
     {
         $labels = $relasi[0] === $sudut ? self::LABEL_RELASI : self::LABEL_BALIK;

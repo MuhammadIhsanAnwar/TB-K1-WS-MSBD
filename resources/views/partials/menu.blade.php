@@ -5,7 +5,6 @@
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('jalur'), 'Jalur tematik', ['jalur*']],
         [route('rencana'), 'Perencana rute', ['rencana', 'rencana.bagikan']],
-        [route('jelajah'), 'Cerita Medan (Graf)', ['jelajah*']],
         [route('tanya'), 'Tanya asisten', ['tanya', 'cari']],
     ];
 @endphp

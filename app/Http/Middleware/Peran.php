@@ -40,6 +40,13 @@ class Peran
             abort(403, 'Akun ini tidak memiliki akses ke halaman tersebut.');
         }
 
+        if (($pengguna['peran'] ?? null) === 'admin' && $request->is('admin', 'admin/*')) {
+            $tempat = (new SupabaseApi)->tempatAdmin($pengguna['id']);
+            abort_if($tempat === [], 403, 'Akun admin belum ditautkan ke tempat wisata. Hubungi superadmin.');
+            $pengguna['tempat_slugs'] = $tempat;
+            $request->session()->put('pengguna', $pengguna);
+        }
+
         return $next($request);
     }
 }

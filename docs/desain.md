@@ -16,8 +16,8 @@ Seluruh warna diturunkan dari panduan merek MedanVisit dengan rasio kontras mini
 |---|---|---|---|
 | `--mv-hijau` | `#0F3B2E` | Hijau Deli: kepala situs, bidang gelap, judul utama | `#F6F1E4` (`12,8:1`), `#E3A51C` (`6,7:1`) |
 | `--mv-hijau-2` | `#154839` | Baris selang-seling gelap & tombol sekunder kepala | `#F6F1E4` |
-| `--mv-kuning` | `#E3A51C` | Kuning Deli: tombol aksi utama, benang peta 1930, penanda aktif | `#0F3B2E` (`6,7:1`, tidak pernah putih) |
-| `--mv-krem` | `#F6F1E4` | Bidang hangat editorial (Benang Merah, FAQ, kepala detail) | `#1B2622` (`12,9:1`), `#0F3B2E` (`12,8:1`) |
+| `--mv-kuning` | `#E3A51C` | Kuning Deli: tombol aksi utama dan penanda peta | `#0F3B2E` (`6,7:1`, tidak pernah putih) |
+| `--mv-krem` | `#F6F1E4` | Bidang hangat editorial (FAQ, kepala detail) | `#1B2622` (`12,9:1`), `#0F3B2E` (`12,8:1`) |
 | `--mv-kertas` | `#F4F6F2` | Latar dasar halaman baca dan ruang kerja | `#1B2622`, `#3F574E` |
 | `--mv-putih` | `#FFFFFF` | Permukaan kartu tempat, panel formulir, dan lembar e-tiket | `#1B2622`, `#0F3B2E` |
 | `--mv-teks` | `#1B2622` | Teks isi utama | Di atas `#FFFFFF`, `#F4F6F2`, `#F6F1E4` |
@@ -44,7 +44,7 @@ Warna kelas entitas semantik hanya digunakan pada simpul graf, penanda peta, dan
 
 Seluruh halaman publik memakai kerangka `resources/views/layouts/situs.blade.php` dengan komponen seragam:
 
-1. **Kepala Situs (`partials/kepala.blade.php`)**: Bilah lengket Hijau Deli di semua halaman termasuk Beranda, memuat logo `tanpa-tagline-gelap.svg`, lima tautan utama (`Tempat & Peta`, `Jalur & Rute`, `Cerita Medan`, `Tanya`, `Tiket`), tautan cepat satu ketuk di layar tablet/ponsel (`Peta`, `Tanya`) tanpa bilah bawah yang menutupi teks bacaan, pemicu dialog pencarian cepat, serta menu akun wisatawan dengan lencana tiket aktif dan poin.
+1. **Kepala Situs (`partials/kepala.blade.php`)**: Bilah lengket Hijau Deli di semua halaman termasuk Beranda, memuat logo `tanpa-tagline-gelap.svg`, empat tautan utama (`Tempat & Peta`, `Jalur & Rute`, `Tanya`, `Tiket`), tautan cepat satu ketuk di layar tablet/ponsel (`Peta`, `Tanya`) tanpa bilah bawah yang menutupi teks bacaan, pemicu dialog pencarian cepat, serta menu akun wisatawan dengan lencana tiket aktif dan poin.
 2. **Menu Lembar Penuh Ponsel (`partials/menu.blade.php`)**: Dialog `<dialog>` layar penuh untuk navigasi cepat di perangkat bergerak lengkap dengan kolom pencarian langsung dan akses sub-halaman akun.
 3. **Dialog Pencarian Cepat (`partials/dialog-cari.blade.php`)**: Dapat dibuka lewat tombol kepala atau tombol papan ketik `/`, menampilkan saran langsung toleran salah ketik serta tautan ke asisten percakapan.
 4. **Widget Asisten Melayang (`partials/asisten-melayang.blade.php`)**: Tombol di pojok kanan bawah layar desktop pada halaman selain `/tanya` yang membuka jendela percakapan ringkas ke `POST /tanya` lengkap dengan kartu tempat mini.
@@ -53,8 +53,8 @@ Seluruh halaman publik memakai kerangka `resources/views/layouts/situs.blade.php
 
 ## 5. Cakupan Halaman Gelombang 1
 
-- **Beranda (`situs/beranda.blade.php`)**: Sampul fotografi silang-pudar dengan tombol jeda, kolom pencarian bersaran langsung, galeri 13 tempat dengan saringan kategori instan, panggung interaktif Benang Merah di atas peta 1930, daftar harga menu 3 tempat bertiket, 3 jalur siap jalan, peta ringkas + penjelasan Paspor Digital, serta tanya jawab praktis.
-- **Detail Tempat (`situs/tempat.blade.php`)**: Tata letak editorial dua pertiga isi utama dan sepertiga kartu lengket tiket/check-in GPS, penggeser perbandingan arsip **Lorong Waktu** berskala penuh `16:9`, navigasi lompat bagian, potongan peta 1930, graf hubungan semantik, rekomendasi tempat terdekat beralasan graf, serta ulasan jujur tanpa data fiktif.
+- **Beranda (`situs/beranda.blade.php`)**: Sampul fotografi silang-pudar dengan tombol jeda, kolom pencarian bersaran langsung, galeri 13 tempat dengan saringan kategori instan, daftar harga menu 3 tempat bertiket, 3 jalur siap jalan, peta ringkas + penjelasan Paspor Digital, serta tanya jawab praktis.
+- **Detail Tempat (`situs/tempat.blade.php`)**: Tata letak editorial dua pertiga isi utama dan sepertiga kartu lengket tiket/check-in GPS, penggeser perbandingan arsip **Lorong Waktu** berskala penuh `16:9`, navigasi lompat bagian, potongan peta 1930, rekomendasi tempat terdekat, serta ulasan jujur tanpa data fiktif.
 - **Peta Wisata (`situs/peta.blade.php`)**: Ruang kerja Leaflet + daftar tersinkronisasi dengan pencarian teks langsung, pengurutan jarak/biaya, saringan kategori dan jam buka, serta lembar bawah tiga tinggi (`Peta`, `Daftar`, `Penuh`) di ponsel.
 - **Tanya Medan (`situs/tanya.blade.php`)**: Ruang percakapan dua kolom dengan topik pembuka populer, kartu cuplikan destinasi Medan pada tampilan awal, gelembung pesan jelas, kartu tempat mini (`Lihat tempat`, `Pesan tiket`), indikator mengetik, dan tombol coba ulang saat gagal.
 - **Alur Tiket & E-Tiket (`tiket/*.blade.php`)**: Penanda langkah 1 sampai 4 yang konsisten, penghitung jumlah pengunjung dengan total langsung, hitung mundur pembayaran 15 menit, layar stempel pelunasan, lembar e-tiket berlubang dengan kode QR SVG `224px` yang bersih saat dicetak ke PDF, serta halaman `Tiket saya` bertab status.

@@ -4,7 +4,7 @@
 
 @section('isi')
 <div class="alat">
-    <div class="alat__judul"><div><h1>Ulasan saya</h1><p>Ulasan tayang setelah diperiksa kurator.</p></div></div>
+    <div class="alat__judul"><div><h1>Ulasan saya</h1><p>Ulasan langsung ditayangkan setelah dikirim.</p></div></div>
     @include('partials.subnav-akun')
     @if ($ulasan)
         <div class="p-panel">

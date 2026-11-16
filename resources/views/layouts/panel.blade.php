@@ -4,7 +4,6 @@
         'ringkasan' => '<path d="M3 13h7V3H3zM14 21h7V11h-7zM3 21h7v-4H3zM14 7h7V3h-7z"/>',
         'entitas' => '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
         'relasi' => '<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8.3 7l7.4.6M7 8.3l2.2 7.4M16.4 10l-4.6 6.2"/>',
-        'cerita' => '<path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h6M9 8h3"/>',
         'ulasan' => '<path d="M4 5h16v11H9l-5 4z"/>',
         'mitra' => '<path d="M4 10l2-6h12l2 6M4 10v10h16V10M4 10h16M9 20v-5h6v5"/>',
         'tiket' => '<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/>',
@@ -19,8 +18,8 @@
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
     $antre = count(\App\Support\Penyimpanan::ulasan(null, 'menunggu', aman: true));
     $menuKurator = [
-        ['admin.ringkasan', 'Ringkasan', 'ringkasan', null], ['admin.entitas', 'Entitas', 'entitas', null], ['admin.relasi', 'Editor relasi', 'relasi', null],
-        ['admin.cerita', 'Cerita dan audio', 'cerita', null], ['admin.ulasan', 'Ulasan menunggu', 'ulasan', $antre ?: null],
+        ['admin.ringkasan', 'Ringkasan', 'ringkasan', null], ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null], ['admin.relasi', 'Editor relasi', 'relasi', null],
+        ['admin.ulasan', 'Ulasan', 'ulasan', $antre ?: null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
     ];
         $menuKurator[] = ['admin.insight', 'Insight', 'statistik', null];

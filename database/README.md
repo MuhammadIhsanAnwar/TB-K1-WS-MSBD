@@ -19,15 +19,16 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations-semantic/2026_11_06_000200_buat_objek_katalog.php` | arsip objek katalog PostgreSQL, tidak aktif |
 | `migrations/2026_11_06_000300_buat_tabel_transaksi.php` | tabel DB 2, aktif |
 | `migrations/2026_11_06_000400_buat_objek_transaksi.php` | index, view, function, trigger, procedure DB 2, aktif |
+| `migrations/2026_11_15_000200_buat_admin_tempat.php` | hubungan admin dengan tempat wisata di DB 1; mengisi relasi dari `users.tempat_slug` yang sudah ada |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
-| `seeders/` | tidak digunakan; data wisata dimuat ke Database 3 dan transaksi dibuat melalui alur aplikasi |
+| `seeders/AdminTempatSeeder.php` | membuat satu akun admin untuk tiap tempat wisata dan memastikan tautannya tersimpan di `admin_tempat` (jalankan setelah migration DB 1) |
 | `sql/00_role.sql`, `sql/01_medanvisit_katalog.sql`, `sql/02_medanvisit_transaksi.sql` | dump kedua database (struktur + data, perintah `INSERT` biasa). Bisa dijalankan di psql, DBeaver, atau SQL Editor Supabase tanpa Laravel; jalankan `00_role.sql` dulu |
 | `rdf/medanvisit-ontologi.ttl` (`.owl`) | ontologi (TBox): kelas dan properti, RDFS/OWL 2 |
 | `rdf/medanvisit-data.ttl` | sumber data wisata (ABox), dikirim langsung ke Database 3 |
 | `rdf/fuseki-medanvisit.ttl` | konfigurasi Fuseki: dataset `medanvisit`, hanya baca, reasoner OWL Micro |
-| `rdf/query/*.rq` | 11 contoh query SPARQL (SELECT, property path, reifikasi, ASK, CONSTRUCT) |
+| `rdf/query/*.rq` | 10 contoh query SPARQL (SELECT, reifikasi, ASK, CONSTRUCT) |
 
 ## Server lokal (pengembangan)
 
@@ -44,7 +45,7 @@ Membuka database lewat DBeaver: koneksi PostgreSQL baru, host `localhost`, port 
 
 | Koneksi | Variabel `.env` | Isi |
 |---|---|---|
-| `katalog` (DB 1) | `DB_*` | users, password_reset_tokens, sessions, cache, jobs, failed_jobs |
+| `katalog` (DB 1) | `DB_*` | users, admin_tempat, password_reset_tokens, sessions, cache, jobs, failed_jobs |
 | `transaksi` (DB 2) | `DB2_*` | usaha_mitra, menu_usaha, pesanan, pesanan_item, pembayaran, e_tiket, checkin, riwayat_poin, ulasan, ringkasan_ulasan, voucher, penukaran, rencana, rencana_minat, log_pencarian |
 | Database 3 | `SPARQL_*` | tempat wisata, kategori, kecamatan, tiket, entitas, relasi, dan jalur dalam RDF |
 
@@ -55,10 +56,11 @@ memakai koneksi `transaksi` dan tidak menyimpan data wisata.
 Untuk mengulang tahap awal pada database pengembangan, gunakan `php artisan migrate:fresh`
 setelah memastikan database yang dituju memang aman untuk dihapus.
 
-Super Admin mengelola akun melalui Database 1 dan mengubah tempat wisata langsung
-ke Database 3 melalui SPARQL Update. Insight kunjungan halaman dicatat sebagai
-agregat harian di cache aplikasi (tanpa menyimpan alamat IP); insight transaksi
-mengikuti data pesanan yang tersedia di penyimpanan aplikasi.
+Super Admin mengelola akun dan tautan admin-tempat melalui Database 1; admin hanya
+dapat mengelola tempat yang tertaut ke akunnya. Perubahan data tempat ditulis ke
+Database 3 melalui SPARQL Update. Insight kunjungan menghitung pembukaan halaman
+HTML publik yang berhasil (bukan pengunjung unik, dan tidak menghitung panel admin)
+sebagai agregat harian pada cache database; alamat IP tidak disimpan.
 
 ```bash
 php artisan migrate      # akun/Laravel di DB 1 dan transaksi di DB 2
@@ -134,9 +136,3 @@ fuseki-server --config=<path repo>/database/rdf/fuseki-medanvisit.ttl
 ```
 
 Buka `http://localhost:3030`, dataset `medanvisit`. Endpoint SPARQL: `http://localhost:3030/medanvisit/sparql` (isi `SPARQL_ENDPOINT` di `.env`). Halaman `/data` di web memakai endpoint ini; jika Database 3 mati, web menampilkan error koneksi dan tidak memakai data lokal.
-
-Menguji contoh query dari terminal:
-
-```bash
-curl http://localhost:3030/medanvisit/sparql -H "Accept: text/csv" --data-urlencode "query@database/rdf/query/05-benang-merah-property-path.rq"
-```

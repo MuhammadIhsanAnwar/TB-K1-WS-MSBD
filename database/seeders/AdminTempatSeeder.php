@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
@@ -49,6 +50,18 @@ class AdminTempatSeeder extends Seeder
             $user->peran = 'admin';
             $user->tempat_slug = $slug;
             $user->save();
+
+            $waktu = now();
+            DB::connection('katalog')->table('admin_tempat')->upsert(
+                [[
+                    'id_admin' => $user->id,
+                    'tempat_slug' => $slug,
+                    'created_at' => $waktu,
+                    'updated_at' => $waktu,
+                ]],
+                ['tempat_slug'],
+                ['id_admin', 'updated_at']
+            );
         }
 
         $this->command?->info(count($tempat)." tempat diproses, {$baru} akun baru dibuat.");
