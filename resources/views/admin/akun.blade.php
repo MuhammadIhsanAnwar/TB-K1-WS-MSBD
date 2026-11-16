@@ -89,6 +89,12 @@
                     </div>
                     <div><button class="p-btn p-btn--utama" type="submit">Ubah kata sandi admin</button></div>
                 </form>
+
+                <form method="post" action="{{ route('admin.akun.hapus', $user['id']) }}"
+                      onsubmit="return confirm('Hapus akun admin {{ $user['email'] }}? Tindakan ini tidak dapat dibatalkan.')">
+                    @csrf @method('DELETE')
+                    <button class="p-btn p-btn--bahaya" type="submit">Hapus akun admin</button>
+                </form>
             </div>
         </details>
     @empty
