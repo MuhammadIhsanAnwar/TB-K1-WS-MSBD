@@ -229,7 +229,8 @@ class AkunController extends Controller
     {
         return view('akun.verifikasi', [
             'email' => $request->query('email'),
-            'pesan' => 'Periksa kotak masuk emailmu dan klik link konfirmasi untuk mengaktifkan akun.',
+            'pesan' => 'Periksa kotak masuk emailmu dan klik link konfirmasi untuk mengaktifkan akun. Periksa juga folder spam.',
+            'tempatSorotan' => $this->tempatSorotan(),
         ]);
     }
 
