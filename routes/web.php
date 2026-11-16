@@ -93,6 +93,7 @@ Route::controller(AdminController::class)->prefix('admin')->name('admin.')->grou
     Route::post('/akun', 'buatAkun')->name('akun.buat');
     Route::patch('/akun/{id}', 'ubahAkun')->name('akun.ubah');
     Route::delete('/akun/{id}', 'hapusAkun')->name('akun.hapus');
+    Route::patch('/akun/{id}/tangguhkan', 'tangguhkanAkun')->name('akun.tangguhkan');
     Route::post('/akun/{id}/tempat', 'tautkanTempat')->name('akun.tempat.tautkan');
     Route::delete('/akun/{id}/tempat/{slug}', 'lepasTempat')->name('akun.tempat.lepas');
     Route::get('/tempat', 'entitas')->defaults('jenis', 'tempat')->name('tempat.daftar');

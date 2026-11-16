@@ -60,6 +60,10 @@ class AkunController extends Controller
             return redirect()->route('verifikasi', ['email' => $user['email']])
                 ->with('pesan', 'Email belum dikonfirmasi. Kami mengirimkan link verifikasi baru.');
         }
+        if (! empty($user['ditangguhkan_pada'])) {
+            return back()->withErrors(['email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.'])
+                ->withInput($request->only('email'));
+        }
 
         $request->session()->regenerate();
         $this->simpanSesiPengguna($request, $user);
@@ -402,6 +406,10 @@ class AkunController extends Controller
 
             return redirect()->route('verifikasi', ['email' => $user['email']])
                 ->with('pesan', 'Periksa email untuk mengonfirmasi akun Google sebelum masuk.');
+        }
+        if (! empty($user['ditangguhkan_pada'])) {
+            return redirect()->route('masuk')
+                ->withErrors(['email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.']);
         }
         $request->session()->regenerate();
         $this->simpanSesiPengguna($request, $user);
