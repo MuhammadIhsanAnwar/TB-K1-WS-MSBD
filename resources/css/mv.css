@@ -2572,6 +2572,17 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   color: var(--mv-redup);
   max-width: 44ch;
 }
+.mv-otentik__pesan {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--mv-kertas-2);
+  border-left: 4px solid var(--mv-hijau-3);
+  border-radius: 12px;
+  background: var(--mv-krem);
+  color: var(--mv-hijau);
+  font-size: var(--mv-s-ui);
+  line-height: 1.55;
+}
 .mv-otentik .isian__bantuan,
 .mv-otentik .isian__galat {
   font-size: var(--mv-s-ui);

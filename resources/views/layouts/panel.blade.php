@@ -16,10 +16,9 @@
         'akun' => '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2zM17 8h4M19 6v4"/>',
     ];
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
-    $antre = count(\App\Support\Penyimpanan::ulasan(null, 'menunggu', aman: true));
     $menuKurator = [
         ['admin.ringkasan', 'Ringkasan', 'ringkasan', null], ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null], ['admin.relasi', 'Editor relasi', 'relasi', null],
-        ['admin.ulasan', 'Ulasan', 'ulasan', $antre ?: null],
+        ['admin.ulasan', 'Ulasan', 'ulasan', null],
         ['admin.pesan', 'Pesan pengguna', 'pesan', null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
     ];

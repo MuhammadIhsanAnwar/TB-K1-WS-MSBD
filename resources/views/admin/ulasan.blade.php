@@ -1,11 +1,11 @@
 @extends('layouts.panel')
-@php use App\Support\Katalog; $label = ['menunggu' => 'Belum tayang (lama)', 'tayang' => 'Tayang', 'ditolak' => 'Ditolak (lama)']; @endphp
+@php use App\Support\Katalog; @endphp
 @section('judul', 'Ulasan pengunjung')
 
 @section('isi')
 <div class="p-judul"><div><h1>Ulasan pengunjung</h1><p class="sub">Ulasan baru langsung tampil. Admin dan superadmin dapat menghapus ulasan yang tidak sesuai.</p></div></div>
 <nav class="p-tabs" aria-label="Status ulasan">
-    @foreach ($label as $k => $l)<a href="{{ route('admin.ulasan', ['tab' => $k]) }}" @if ($tab === $k) aria-current="true" @endif>{{ $l }}<span class="n">{{ $jumlah[$k] ?? 0 }}</span></a>@endforeach
+    <a href="{{ route('admin.ulasan') }}" aria-current="true">Tayang<span class="n">{{ $jumlah }}</span></a>
 </nav>
 @if ($ulasan)
     <div class="p-baris">
@@ -24,6 +24,6 @@
         @endforeach
     </div>
 @else
-    <div class="p-kosong">{{ ['menunggu' => 'Tidak ada ulasan lama yang menunggu penayangan.', 'tayang' => 'Belum ada ulasan yang ditayangkan.', 'ditolak' => 'Belum ada ulasan lama yang ditolak.'][$tab] }}</div>
+    <div class="p-kosong">Belum ada ulasan yang ditayangkan.</div>
 @endif
 @endsection

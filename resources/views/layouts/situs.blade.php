@@ -32,7 +32,9 @@
     @else
         @include('partials.kepala')
     @endif
-    @include('partials.pesan')
+    @unless (request()->routeIs('verifikasi'))
+        @include('partials.pesan')
+    @endunless
     @include('partials.sambutan-login')
     <main id="isi">
         @yield('isi')

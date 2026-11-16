@@ -458,16 +458,15 @@ class AdminController extends Controller
 
     public function ulasan(Request $request)
     {
-        $tab = $request->query('tab', 'tayang');
-        $semuaUlasan = collect(Penyimpanan::ulasan());
-        if ($milik = $this->slugsKelolaan($request)) {
-            $semuaUlasan = $semuaUlasan->filter(fn ($ulasan) => in_array($ulasan['tempat'], $milik, true));
+        $ulasan = collect(Penyimpanan::ulasan(status: 'tayang'));
+        $milik = $this->slugsKelolaan($request);
+        if ($milik !== null) {
+            $ulasan = $ulasan->filter(fn ($baris) => in_array($baris['tempat'], $milik, true));
         }
 
         return view('admin.ulasan', [
-            'tab' => in_array($tab, ['menunggu', 'tayang', 'ditolak'], true) ? $tab : 'menunggu',
-            'jumlah' => $semuaUlasan->countBy('status')->all(),
-            'ulasan' => $semuaUlasan->where('status', in_array($tab, ['menunggu', 'tayang', 'ditolak'], true) ? $tab : 'menunggu')->values(),
+            'jumlah' => $ulasan->count(),
+            'ulasan' => $ulasan->values(),
         ]);
     }
 

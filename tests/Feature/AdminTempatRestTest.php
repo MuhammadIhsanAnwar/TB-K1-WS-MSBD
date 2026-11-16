@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Support\Katalog;
 use App\Support\SupabaseApi;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -58,6 +59,46 @@ class AdminTempatRestTest extends TestCase
             'email' => 'admin@example.test',
             'peran' => 'admin',
         ]])->get('/admin');
+    }
+
+    public function test_superadmin_can_view_all_published_reviews_without_legacy_tabs(): void
+    {
+        $this->fakeReviewPage();
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/ulasan?tab=ditolak')
+            ->assertOk()
+            ->assertSee('Ulasan Istana')
+            ->assertSee('Ulasan Masjid')
+            ->assertSee('Tayang')
+            ->assertDontSee('Belum tayang')
+            ->assertDontSee('Ditolak');
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/ulasan?')
+            && str_contains($request->url(), 'status=eq.tayang')
+            && ! str_contains($request->url(), 'tempat_slug='));
+    }
+
+    public function test_admin_can_only_view_published_reviews_for_managed_places(): void
+    {
+        $this->fakeReviewPage();
+
+        $this->withSession(['pengguna' => [
+            'id' => 7,
+            'nama' => 'Admin',
+            'email' => 'admin@example.test',
+            'peran' => 'admin',
+        ]])->get('/admin/ulasan')
+            ->assertOk()
+            ->assertSee('Ulasan Istana')
+            ->assertDontSee('Ulasan Masjid')
+            ->assertDontSee('Belum tayang')
+            ->assertDontSee('Ditolak');
     }
 
     public function test_admin_can_delete_reviews_for_managed_places(): void
@@ -127,5 +168,63 @@ class AdminTempatRestTest extends TestCase
 
         Http::assertNotSent(fn (Request $request) => $request->method() === 'DELETE'
             && str_contains($request->url(), '/ulasan?'));
+    }
+
+    private function fakeReviewPage(): void
+    {
+        config(['services.sparql.endpoint' => 'https://sparql.test/query']);
+        Katalog::forgetCache();
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'istana-maimun']]);
+            }
+            if (str_contains($request->url(), '/ulasan?')) {
+                return Http::response([
+                    $this->ulasanBaris(12, 'istana-maimun', 'Ulasan Istana'),
+                    $this->ulasanBaris(13, 'masjid-raya', 'Ulasan Masjid'),
+                ]);
+            }
+            if (str_contains($request->url(), 'sparql.test')) {
+                return Http::response($this->sparqlTempatResponse());
+            }
+
+            return Http::response([]);
+        });
+    }
+
+    private function ulasanBaris(int $id, string $slug, string $teks): array
+    {
+        return [
+            'id_ulasan' => $id,
+            'id_pengguna' => 50,
+            'tempat_slug' => $slug,
+            'nama_pengguna' => 'Wisatawan',
+            'email_pengguna' => 'wisatawan@example.test',
+            'bintang' => 5,
+            'teks' => $teks,
+            'status' => 'tayang',
+            'created_at' => '2026-11-15T10:00:00Z',
+        ];
+    }
+
+    private function sparqlTempatResponse(): array
+    {
+        $binding = static fn (string $value, string $type = 'literal'): array => ['type' => $type, 'value' => $value];
+        $triple = static fn (string $subject, string $predicate, string $object, string $type = 'literal'): array => [
+            's' => $binding($subject, 'uri'),
+            'p' => $binding($predicate, 'uri'),
+            'o' => $binding($object, $type),
+        ];
+        $base = 'https://medanvisit.neoverse.my.id/id/';
+
+        return [
+            'head' => ['vars' => ['s', 'p', 'o']],
+            'results' => ['bindings' => [
+                $triple($base.'istana-maimun', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'https://medanvisit.neoverse.my.id/ontologi#SitusSejarah', 'uri'),
+                $triple($base.'istana-maimun', 'https://schema.org/name', 'Istana Maimun'),
+                $triple($base.'masjid-raya', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'https://medanvisit.neoverse.my.id/ontologi#RumahIbadah', 'uri'),
+                $triple($base.'masjid-raya', 'https://schema.org/name', 'Masjid Raya'),
+            ]],
+        ];
     }
 }
