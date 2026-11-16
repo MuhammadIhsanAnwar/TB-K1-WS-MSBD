@@ -1058,6 +1058,93 @@
   .mv-pemuatan, .mv-pemuatan__jalur span { transition: none; }
 }
 
+.mv-sambutan {
+  position: fixed;
+  z-index: 1100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 59, 46, .92);
+  color: var(--mv-teks);
+  animation: mv-sambutan-hilang 5s linear forwards;
+}
+.mv-sambutan__kartu {
+  position: relative;
+  width: min(100%, 440px);
+  padding: 32px 28px 28px;
+  background: var(--mv-krem);
+  clip-path: var(--mv-potong);
+  text-align: center;
+  animation: mv-sambutan-muncul 260ms ease-out both;
+}
+.mv-sambutan__tutup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: var(--mv-teks);
+  font: inherit;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+.mv-sambutan__tutup:hover { background: var(--mv-krem-2); }
+.mv-sambutan__maskot {
+  display: block;
+  width: min(42vw, 160px);
+  height: auto;
+  margin: 0 auto 12px;
+  object-fit: contain;
+}
+.mv-sambutan__label {
+  margin-bottom: 8px;
+  color: var(--mv-redup);
+  font-size: var(--mv-s-meta);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.mv-sambutan__kartu h2 {
+  margin: 0;
+  color: var(--mv-hijau);
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+}
+.mv-sambutan__teks { margin-top: 10px; color: var(--mv-redup); }
+.mv-sambutan__pemuatan {
+  height: 6px;
+  margin-top: 24px;
+  overflow: hidden;
+  background: var(--mv-krem-2);
+}
+.mv-sambutan__pemuatan span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--mv-hijau);
+  transform-origin: left center;
+  animation: mv-sambutan-progres 5s linear forwards;
+}
+@keyframes mv-sambutan-muncul {
+  from { opacity: 0; transform: translateY(12px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes mv-sambutan-progres {
+  to { transform: scaleX(0); }
+}
+@keyframes mv-sambutan-hilang {
+  0%, 94% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mv-sambutan, .mv-sambutan__kartu, .mv-sambutan__pemuatan span { animation: none; }
+}
+
 .mv-kaki {
   position: relative;
   overflow: hidden;

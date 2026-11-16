@@ -59,6 +59,26 @@ if (pemuatan) {
     pemuatan?.remove();
 }
 
+// ---- Sambutan login ----
+const sambutan = document.querySelector('[data-sambutan]');
+if (sambutan) {
+    const tombolTutupSambutan = sambutan.querySelector('[data-tutup-sambutan]');
+    let timerSambutan;
+    const tutupSambutan = () => {
+        window.clearTimeout(timerSambutan);
+        document.removeEventListener('keydown', tutupDenganEscape);
+        sambutan.remove();
+    };
+    const tutupDenganEscape = (event) => {
+        if (event.key === 'Escape') tutupSambutan();
+    };
+
+    tombolTutupSambutan?.addEventListener('click', tutupSambutan);
+    document.addEventListener('keydown', tutupDenganEscape);
+    tombolTutupSambutan?.focus();
+    timerSambutan = window.setTimeout(tutupSambutan, 5000);
+}
+
 // ---- Menu navigasi ponsel ----
 const menu = document.getElementById('lembar-menu');
 document.querySelectorAll('[data-buka-menu]').forEach((b) => {

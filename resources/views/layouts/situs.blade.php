@@ -33,6 +33,7 @@
         @include('partials.kepala')
     @endif
     @include('partials.pesan')
+    @include('partials.sambutan-login')
     <main id="isi">
         @yield('isi')
     </main>

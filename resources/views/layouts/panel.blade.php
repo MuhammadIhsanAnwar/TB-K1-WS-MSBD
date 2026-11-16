@@ -13,7 +13,6 @@
         'tukar' => '<path d="M4 7h13l-3-3M20 17H7l3 3"/>',
         'statistik' => '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
         'akun' => '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2zM17 8h4M19 6v4"/>',
-        'situs' => '<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',
     ];
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
     $antre = count(\App\Support\Penyimpanan::ulasan(null, 'menunggu', aman: true));
@@ -44,10 +43,11 @@
 </head>
 <body class="panel-app" data-panel-app>
     <a class="lewati" href="#isi">Lewati ke isi</a>
+    @include('partials.sambutan-login')
     <div class="ps">
         <nav class="ps__samping" aria-label="Menu {{ $u['peran'] }}">
             <div class="ps__merek">
-                <img src="{{ asset('storage/logo_app/svg/MedanVisit_logo_tanpa-tagline_terang.svg') }}" alt="MedanVisit" width="736" height="256">
+                <a href="{{ route('beranda') }}" aria-label="Kembali ke Beranda MedanVisit"><img src="{{ asset('storage/logo_app/svg/MedanVisit_logo_tanpa-tagline_terang.svg') }}" alt="MedanVisit" width="736" height="256"></a>
                 <button class="ps__menu" type="button" data-tutup-samping style="margin-left:auto">Tutup</button>
             </div>
             <div class="ps__lingkup">
@@ -60,7 +60,6 @@
                 @endforeach
             </div>
             <div class="ps__bawah">
-                <a class="ps__tautan-situs" href="{{ route('beranda') }}">{!! $svg('situs') !!}<span>Lihat situs publik</span></a>
                 <div class="ps__pengguna">
                     <span class="ps__inisial" aria-hidden="true">{{ mb_substr($u['nama'], 0, 1) }}</span>
                     <span><b>{{ $u['nama'] }}</b><br><span style="font-size:12px;color:var(--p-muted)">{{ $u['email'] }}</span></span>
