@@ -27,7 +27,7 @@ class SupabaseToken
         if ($privateKey === false) {
             abort(503, 'Private key Supabase P2P tidak dapat dibaca.');
         }
-        $signingKey = openssl_pkey_get_private($privateKey);
+        $signingKey = openssl_pkey_get_private($this->privateKeyPem($privateKey));
         $keyDetails = $signingKey ? openssl_pkey_get_details($signingKey) : false;
         if (! $keyDetails) {
             abort(503, 'Private key Supabase P2P tidak valid.');
@@ -76,6 +76,67 @@ class SupabaseToken
         }
 
         return $message.'.'.rtrim(strtr(base64_encode($signature), '+/', '-_'), '=');
+    }
+
+    private function privateKeyPem(string $privateKey): string
+    {
+        $jwk = json_decode($privateKey, true);
+        if (! is_array($jwk)) {
+            return $privateKey;
+        }
+
+        abort_unless(
+            ($jwk['kty'] ?? null) === 'EC' && ($jwk['crv'] ?? null) === 'P-256',
+            503,
+            'Private key Supabase P2P tidak valid.'
+        );
+
+        $d = $this->decodeJwkCoordinate($jwk['d'] ?? null);
+        $x = $this->decodeJwkCoordinate($jwk['x'] ?? null);
+        $y = $this->decodeJwkCoordinate($jwk['y'] ?? null);
+        $publicPoint = "\x00\x04".$x.$y;
+        $ecPrivateKey = $this->encodeDer(0x30,
+            "\x02\x01\x01"
+            .$this->encodeDer(0x04, $d)
+            .$this->encodeDer(0xA0, "\x06\x08\x2A\x86\x48\xCE\x3D\x03\x01\x07")
+            .$this->encodeDer(0xA1, $this->encodeDer(0x03, $publicPoint))
+        );
+
+        return "-----BEGIN EC PRIVATE KEY-----\n"
+            .chunk_split(base64_encode($ecPrivateKey), 64, "\n")
+            ."-----END EC PRIVATE KEY-----\n";
+    }
+
+    private function decodeJwkCoordinate(mixed $coordinate): string
+    {
+        abort_unless(
+            is_string($coordinate) && preg_match('/\A[A-Za-z0-9_-]+\z/', $coordinate) === 1,
+            503,
+            'Private key Supabase P2P tidak valid.'
+        );
+        $base64 = strtr($coordinate, '-_', '+/');
+        $base64 .= str_repeat('=', (4 - strlen($base64) % 4) % 4);
+        $decoded = base64_decode($base64, true);
+        abort_unless(is_string($decoded) && strlen($decoded) === 32, 503, 'Private key Supabase P2P tidak valid.');
+
+        return $decoded;
+    }
+
+    private function encodeDer(int $tag, string $value): string
+    {
+        $length = strlen($value);
+        if ($length < 0x80) {
+            $encodedLength = chr($length);
+        } else {
+            $bytes = '';
+            while ($length > 0) {
+                $bytes = chr($length & 0xFF).$bytes;
+                $length >>= 8;
+            }
+            $encodedLength = chr(0x80 | strlen($bytes)).$bytes;
+        }
+
+        return chr($tag).$encodedLength.$value;
     }
 
     private function ecdsaDerToJose(string $signature): string
