@@ -69,7 +69,22 @@ return [
         'credential_lifetime' => (int) env('TURN_CREDENTIAL_LIFETIME', 3600),
     ],
 
-        'routing' => [
+    'webrtc' => [
+        'enabled' => env('WEBRTC_ENABLED') === null || env('WEBRTC_ENABLED') === '' ? true : filter_var(env('WEBRTC_ENABLED'), FILTER_VALIDATE_BOOL),
+        'stun_url' => env('WEBRTC_STUN_URL') ?: 'stun:stun.l.google.com:19302',
+        'turn_provider' => env('WEBRTC_TURN_PROVIDER') ?: 'coturn',
+        'metered' => [
+            'app_name' => env('METERED_APP_NAME') ?: 'medanvisit',
+            'urls' => array_values(array_filter(array_map('trim', explode(',', env(
+                'METERED_TURN_URLS',
+                'turn:asia.relay.metered.ca:80,turn:asia.relay.metered.ca:80?transport=tcp,turn:asia.relay.metered.ca:443,turns:asia.relay.metered.ca:443?transport=tcp'
+            ))))),
+            'username' => env('METERED_TURN_USERNAME'),
+            'credential' => env('METERED_TURN_CREDENTIAL'),
+        ],
+    ],
+
+    'routing' => [
         'osrm_url' => env('ROUTING_OSRM_URL', 'https://router.project-osrm.org'),
         'valhalla_url' => env('ROUTING_VALHALLA_URL', 'https://valhalla1.openstreetmap.de'),
         'timeout' => (int) env('ROUTING_TIMEOUT', 15),

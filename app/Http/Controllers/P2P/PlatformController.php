@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\P2P;
 
 use App\Http\Controllers\Controller;
+use App\Services\P2P\IceServerConfiguration;
 use App\Services\P2P\PeerRegistry;
 use App\Services\P2P\SupabaseToken;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,7 @@ class PlatformController extends Controller
         return view('p2p.index');
     }
 
-    public function register(Request $request, PeerRegistry $peers, SupabaseToken $tokens): JsonResponse
+    public function register(Request $request, PeerRegistry $peers, SupabaseToken $tokens, IceServerConfiguration $iceServers): JsonResponse
     {
         $data = $request->validate([
             'peer_id' => ['required', 'uuid'],
@@ -32,6 +33,7 @@ class PlatformController extends Controller
             503,
             'URL dan publishable key Supabase DB1 belum dikonfigurasi.'
         );
+        $ice = $iceServers->forPeer($device['id']);
 
         return $this->noStore([
             'peer_id' => $device['id'],
@@ -40,22 +42,23 @@ class PlatformController extends Controller
             'expires_in' => 300,
             'supabase_url' => $supabase['url'],
             'publishable_key' => $supabase['publishable_key'],
-            'ice_servers' => $this->iceServers($device['id']),
-            'turn_available' => (bool) config('services.turn.urls'),
+            'ice_servers' => $ice['ice_servers'],
+            'turn_available' => $ice['turn_available'],
         ]);
     }
 
-    public function refreshToken(Request $request, PeerRegistry $peers, SupabaseToken $tokens): JsonResponse
+    public function refreshToken(Request $request, PeerRegistry $peers, SupabaseToken $tokens, IceServerConfiguration $iceServers): JsonResponse
     {
         $data = $request->validate(['peer_id' => ['required', 'uuid']]);
         $user = $this->user($request);
         $device = $peers->assertOwnedDevice($data['peer_id'], $user['id']);
+        $ice = $iceServers->forPeer($device['id']);
 
         return $this->noStore([
             'access_token' => $tokens->issue($user['id'], $device['id'], $user['name']),
             'expires_in' => 300,
-            'ice_servers' => $this->iceServers($device['id']),
-            'turn_available' => (bool) config('services.turn.urls'),
+            'ice_servers' => $ice['ice_servers'],
+            'turn_available' => $ice['turn_available'],
         ]);
     }
 
@@ -120,35 +123,6 @@ class PlatformController extends Controller
             'id' => (int) $user['id'],
             'name' => (string) $user['nama'],
         ];
-    }
-
-    private function iceServers(string $peerId): array
-    {
-        $servers = [['urls' => 'stun:stun.l.google.com:19302']];
-        $urls = config('services.turn.urls', []);
-
-        if ($urls !== []) {
-            $secret = config('services.turn.shared_secret');
-            abort_unless(is_string($secret) && $secret !== '', 503, 'TURN_URLS diisi tetapi TURN_SHARED_SECRET belum dikonfigurasi.');
-            abort_unless(
-                collect($urls)->every(fn ($url) => is_string($url) && preg_match('/^turns?:/i', $url) === 1),
-                503,
-                'TURN_URLS hanya boleh berisi URL turn: atau turns:.'
-            );
-            $lifetime = (int) config('services.turn.credential_lifetime');
-            abort_unless($lifetime >= 60 && $lifetime <= 86400, 503, 'TURN_CREDENTIAL_LIFETIME harus antara 60 dan 86400 detik.');
-
-            $expiry = time() + $lifetime;
-            $username = $expiry.':'.$peerId;
-            $servers[] = [
-                'urls' => $urls,
-                'username' => $username,
-                'credential' => base64_encode(hash_hmac('sha1', $username, $secret, true)),
-                'credentialType' => 'password',
-            ];
-        }
-
-        return $servers;
     }
 
     private function noStore(array $payload): JsonResponse
