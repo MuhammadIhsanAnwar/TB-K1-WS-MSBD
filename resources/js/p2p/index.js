@@ -7,8 +7,16 @@ const MAX_CHAT_LENGTH = 4000;
 
 if (root) start().catch((error) => {
     root.querySelector('[data-p2p-status]').textContent = 'Gagal inisialisasi';
-    showFeedback(error.message, true);
+    root.querySelector('[data-turn-status]').textContent = 'Gagal memeriksa';
+    showFeedback(error instanceof Error ? error.message : 'Inisialisasi P2P gagal.', true);
 });
+
+function showFeedback(message, isError = false) {
+    const feedback = root?.querySelector('[data-p2p-feedback]');
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.dataset.kind = isError ? 'error' : 'info';
+}
 
 async function start() {
     const status = root.querySelector('[data-p2p-status]');
@@ -273,12 +281,6 @@ async function start() {
         item.className = 'p2p-empty';
         item.textContent = text;
         return item;
-    }
-
-    function showFeedback(message, isError = false) {
-        const feedback = root.querySelector('[data-p2p-feedback]');
-        feedback.textContent = message;
-        feedback.dataset.kind = isError ? 'error' : 'info';
     }
 
     await loadPending().catch((error) => showFeedback(error.message, true));
