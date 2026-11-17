@@ -4,7 +4,7 @@
         [route('beranda'), 'Beranda', ['beranda']],
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
-        [route('p2p.index'), 'MedanVisit Hub', ['p2p.*']],
+        [route('medanvisitt-hub.index'), 'MedanVisitt Hub', ['medanvisitt-hub.*']],
         [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
     ];
 @endphp

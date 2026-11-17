@@ -93,19 +93,28 @@ class P2PFoundationTest extends TestCase
 
     public function test_p2p_page_requires_a_signed_in_user(): void
     {
-        $this->get('/p2p')->assertRedirect(route('masuk', ['kembali' => '/p2p']));
+        $this->get('/MedanVisitt-Hub')
+            ->assertRedirect(route('masuk', ['kembali' => '/MedanVisitt-Hub']));
     }
 
     public function test_p2p_page_is_available_to_a_signed_in_traveler(): void
     {
         $this->withSession([
             'pengguna' => ['id' => 42, 'nama' => 'Pengguna Test', 'peran' => 'wisatawan'],
-        ])->get('/p2p')
+        ])->get('/MedanVisitt-Hub')
             ->assertOk()
-            ->assertSee('MedanVisit Hub')
+            ->assertSee('MedanVisitt Hub')
+            ->assertSee('css/medanvisitt-hub.css', false)
             ->assertSee('Komunikasi peer-to-peer')
             ->assertSee('WebRTC DataChannel')
             ->assertSee('data-p2p-root', false);
+
+        self::assertFileExists(public_path('css/medanvisitt-hub.css'));
+    }
+
+    public function test_legacy_p2p_url_redirects_to_medanvisitt_hub(): void
+    {
+        $this->get('/p2p')->assertRedirect('/MedanVisitt-Hub');
     }
 
     public function test_supabase_token_signing_fails_when_server_key_is_missing(): void
