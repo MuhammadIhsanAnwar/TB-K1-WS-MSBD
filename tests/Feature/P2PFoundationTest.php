@@ -114,10 +114,18 @@ class P2PFoundationTest extends TestCase
             'config' => $opensslConfigPath,
         ]);
         self::assertNotFalse($privateKey);
-        self::assertTrue(openssl_pkey_export($privateKey, $privatePem, null, ['config' => $opensslConfigPath]));
+        $keyDetails = openssl_pkey_get_details($privateKey);
+        $base64Url = fn (string $value) => rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+        $jwk = [
+            'kty' => 'EC',
+            'crv' => 'P-256',
+            'd' => $base64Url($keyDetails['ec']['d']),
+            'x' => $base64Url($keyDetails['ec']['x']),
+            'y' => $base64Url($keyDetails['ec']['y']),
+        ];
         $privateKeyPath = tempnam(sys_get_temp_dir(), 'p2p-es256-key-');
         self::assertNotFalse($privateKeyPath);
-        file_put_contents($privateKeyPath, $privatePem);
+        file_put_contents($privateKeyPath, json_encode($jwk, JSON_THROW_ON_ERROR));
         config([
             'services.supabase.katalog.url' => 'https://db1.example.test',
             'services.supabase.katalog.jwt_private_key_path' => $privateKeyPath,
@@ -141,7 +149,7 @@ class P2PFoundationTest extends TestCase
             };
             $derBody = $derInteger($r).$derInteger($s);
             $derSignature = "\x30".chr(strlen($derBody)).$derBody;
-            $publicKey = openssl_pkey_get_details($privateKey)['key'];
+            $publicKey = $keyDetails['key'];
 
             self::assertSame('ES256', $header['alg']);
             self::assertSame('test-es256-key-id', $header['kid']);
