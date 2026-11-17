@@ -19,12 +19,17 @@
             </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-            <a class="p-btn" href="{{ route('medanvisit-hub.index') }}">MedanVisit Hub</a>
+            @if (($u['peran'] ?? null) === 'wisatawan')
+                <a class="p-btn" href="{{ route('medanvisit-hub.index') }}">MedanVisit Hub</a>
+            @endif
             <a class="p-btn" href="{{ route('akun.pengaturan') }}">Pengaturan akun</a>
             <form method="post" action="{{ route('keluar') }}">@csrf<button class="p-btn" type="submit">Keluar</button></form>
         </div>
     </div>
-    @include('partials.subnav-akun')
+    @if (($u['peran'] ?? null) === 'wisatawan')
+        @include('partials.subnav-akun')
+    @endif
+    @if (($u['peran'] ?? null) === 'wisatawan')
     <div class="p-kpi">
         <div><div class="label">Pesanan tiket</div><div class="nilai">{{ $pesanan }}</div><div class="ket">semua status</div></div>
         <div><div class="label">Rencana</div><div class="nilai">{{ $rencana }}</div><div class="ket">tersimpan</div></div>
@@ -41,5 +46,6 @@
             </div>
         </section>
     </div>
+    @endif
 </div>
 @endsection

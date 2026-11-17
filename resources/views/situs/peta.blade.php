@@ -1,6 +1,7 @@
 @extends('layouts.situs')
 @php
     use App\Support\Katalog;
+    $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
     $warnaKat = ['sejarah' => '#e3a51c', 'religi' => '#6a4c9c', 'kuliner' => '#c9541e', 'museum' => '#2f6690', 'ruang-publik' => '#2e7d4f', 'belanja' => '#9b6b3d', 'rekreasi-air' => '#2f8a8a'];
     $json = collect($tempat)->map(fn ($t) => [
         'slug' => $t['slug'],
@@ -12,7 +13,7 @@
         'url' => route('tempat', $t['slug']),
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
         'hargaAngka' => Katalog::hargaTermurah($t) ?? 0,
-        'tiket' => ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
+        'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
         'buka' => Katalog::jadwal($t),
         'rating' => $t['rating'] ?? 0,
         'jumlahUlasan' => $t['jumlahUlasan'] ?? 0,

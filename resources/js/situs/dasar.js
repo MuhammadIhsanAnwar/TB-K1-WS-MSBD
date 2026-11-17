@@ -122,6 +122,18 @@ document.querySelectorAll('[data-tutup-pesan]').forEach((b) => {
     b.addEventListener('click', () => b.closest('[role="status"], [role="alert"]')?.remove());
 });
 
+// ---- Status penyimpanan pengaturan akun ----
+const dialogPengaturan = document.querySelector('[data-dialog-pengaturan]');
+if (dialogPengaturan?.showModal) {
+    const tombolTutupPengaturan = dialogPengaturan.querySelector('[data-tutup-dialog-pengaturan]');
+    tombolTutupPengaturan?.addEventListener('click', () => dialogPengaturan.close());
+    dialogPengaturan.addEventListener('click', (event) => {
+        if (event.target === dialogPengaturan) dialogPengaturan.close();
+    });
+    dialogPengaturan.showModal();
+    tombolTutupPengaturan?.focus();
+}
+
 // ---- Dialog pencarian cepat ----
 const dialogCari = document.querySelector('[data-dialog-cari]');
 const saranUrl = dialogCari?.dataset.saranUrl || '/cari/saran.json';

@@ -51,7 +51,9 @@
             <span>Ingin melihat letaknya langsung?</span>
             <div style="display:flex;flex-wrap:wrap;gap:8px">
                 <a class="mv-btn mv-btn--garis mv-btn--kecil" href="{{ route('peta') }}">Peta wisata</a>
-                <a class="mv-btn mv-btn--garis mv-btn--kecil" href="{{ route('rencana') }}">Susun rute</a>
+                @unless (in_array(session('pengguna.peran'), ['admin', 'superadmin'], true))
+                    <a class="mv-btn mv-btn--garis mv-btn--kecil" href="{{ route('rencana') }}">Susun rute</a>
+                @endunless
             </div>
         </div>
     </aside>

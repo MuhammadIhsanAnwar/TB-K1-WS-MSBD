@@ -33,7 +33,9 @@
         @include('partials.kepala')
     @endif
     @unless (request()->routeIs('verifikasi'))
-        @include('partials.pesan')
+        @unless (request()->routeIs('akun.pengaturan'))
+            @include('partials.pesan')
+        @endunless
     @endunless
     @include('partials.sambutan-login')
     <main id="isi">

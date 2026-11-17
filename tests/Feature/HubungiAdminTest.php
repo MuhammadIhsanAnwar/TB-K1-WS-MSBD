@@ -42,68 +42,42 @@ class HubungiAdminTest extends TestCase
         $this->post('/hubungi-admin')->assertRedirect(route('masuk', ['kembali' => '/hubungi-admin']));
     }
 
-    public function test_only_travelers_and_admins_can_open_or_send_contact_messages(): void
+    public function test_only_travelers_can_open_or_send_contact_messages(): void
     {
         Http::fake(fn () => Http::response([]));
 
-        $this->withSession(['pengguna' => [
-            'id' => 1,
-            'nama' => 'Superadmin',
-            'email' => 'superadmin@example.test',
-            'peran' => 'superadmin',
-        ]]);
+        foreach (['admin', 'superadmin'] as $peran) {
+            $this->withSession(['pengguna' => [
+                'id' => 1,
+                'nama' => ucfirst($peran),
+                'email' => $peran.'@example.test',
+                'peran' => $peran,
+            ]]);
 
-        $this->get('/hubungi-admin')->assertStatus(403);
-        $this->post('/hubungi-admin', [
-            'kategori' => 'akun',
-            'pesan' => 'Mohon bantu saya dengan akun ini.',
-        ])->assertStatus(403);
+            $this->get('/hubungi-admin')->assertStatus(403);
+            $this->post('/hubungi-admin', [
+                'kategori' => 'akun',
+                'pesan' => 'Mohon bantu saya dengan akun ini.',
+            ])->assertStatus(403);
+        }
     }
 
-    public function test_admin_can_send_account_and_other_messages_but_not_place_messages(): void
+    public function test_admin_cannot_send_contact_messages(): void
     {
-        Http::fake(function (Request $request) {
-            if ($request->method() === 'POST' && str_contains($request->url(), '/pesan_pengguna')) {
-                return Http::response([['id' => 53]], 201);
-            }
-
-            return Http::response([]);
-        });
-
+        Http::fake(fn () => Http::response([]));
         $this->withSession(['pengguna' => [
             'id' => 73,
             'nama' => 'Admin Tempat',
             'email' => 'admin@example.test',
             'peran' => 'admin',
-        ]])->get('/hubungi-admin')
-            ->assertOk()
-            ->assertSee('value="akun"', false)
-            ->assertSee('value="lainnya"', false)
-            ->assertDontSee('value="tempat"', false);
-
-        foreach (['akun', 'lainnya'] as $kategori) {
-            $this->post('/hubungi-admin', [
-                'kategori' => $kategori,
-                'pesan' => 'Mohon bantuan untuk kebutuhan administrasi.',
-            ])->assertRedirect(route('hubungi.admin'));
-        }
+        ]])->get('/hubungi-admin')->assertForbidden();
 
         $this->post('/hubungi-admin', [
-            'kategori' => 'tempat',
-            'tempat_slug' => 'kolam-renang-primbana',
-            'pesan' => 'Apakah tempat ini buka pada hari Senin?',
-        ])->assertSessionHasErrors('kategori');
+            'kategori' => 'akun',
+            'pesan' => 'Mohon bantuan untuk kebutuhan administrasi.',
+        ])->assertForbidden();
 
-        foreach (['akun', 'lainnya'] as $kategori) {
-            Http::assertSent(fn (Request $request) => $request->method() === 'POST'
-                && str_ends_with($request->url(), '/pesan_pengguna')
-                && (int) $request['id_pengguna'] === 73
-                && $request['kategori'] === $kategori
-                && $request['id_admin_tujuan'] === null);
-        }
-        Http::assertNotSent(fn (Request $request) => $request->method() === 'POST'
-            && str_ends_with($request->url(), '/pesan_pengguna')
-            && $request['kategori'] === 'tempat');
+        Http::assertNotSent(fn (Request $request) => str_ends_with($request->url(), '/pesan_pengguna'));
     }
 
     public function test_contact_form_routes_place_message_only_to_its_managing_admin(): void

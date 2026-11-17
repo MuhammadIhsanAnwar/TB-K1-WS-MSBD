@@ -418,19 +418,29 @@ class AkunController extends Controller
         $user = (new SupabaseApi)->findUserByEmail($u['email']);
         abort_unless($user, 404, 'Akun tidak ditemukan.');
 
-        return view('akun.pengaturan', ['user' => $user]);
+        return view('akun.pengaturan', [
+            'user' => $user,
+            'akunGoogle' => ! empty($user['google_id']),
+        ]);
     }
 
     public function simpanPengaturan(Request $request)
     {
         $u = $this->pengguna($request);
-        $data = $request->validate([
+        $api = new SupabaseApi;
+        $user = $api->findUserByEmail($u['email']);
+        abort_unless($user, 404, 'Akun tidak ditemukan.');
+        $akunGoogle = ! empty($user['google_id']);
+        $aturan = [
             'nama' => ['required', 'string', 'max:60'],
             'tanggal_lahir' => ['required', 'date', 'before:today'],
             'no_hp' => ['required', 'digits_between:10,15', 'regex:/^08[0-9]+$/'],
             'foto_profil' => ['nullable', 'image', 'max:2048'],
-            'password' => ['nullable', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/'],
-        ], [
+        ];
+        if (! $akunGoogle) {
+            $aturan['password'] = ['nullable', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/'];
+        }
+        $data = $request->validate($aturan, [
             'nama.required' => 'Isi nama.',
             'tanggal_lahir.required' => 'Isi tanggal lahir.',
             'no_hp.required' => 'Isi nomor HP.',
@@ -442,9 +452,6 @@ class AkunController extends Controller
             'password.confirmed' => 'Ulangi kata sandi yang sama.',
         ]);
 
-        $api = new SupabaseApi;
-        $user = $api->findUserByEmail($u['email']);
-        abort_unless($user, 404, 'Akun tidak ditemukan.');
         $attributes = [
             'name' => $data['nama'],
             'tanggal_lahir' => $data['tanggal_lahir'],
@@ -468,6 +475,16 @@ class AkunController extends Controller
 
         try {
             $updated = $api->updateUser($user['id'], $attributes);
+        } catch (\Illuminate\Http\Client\RequestException|\Illuminate\Http\Client\ConnectionException|\RuntimeException $exception) {
+            if ($fotoBaru !== null) {
+                File::delete(public_path('storage/'.$fotoBaru));
+            }
+
+            report($exception);
+
+            return redirect()->route('akun.pengaturan')
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->with('galat', 'Perubahan akun gagal disimpan. Coba lagi beberapa saat lagi.');
         } catch (\Throwable $exception) {
             if ($fotoBaru !== null) {
                 File::delete(public_path('storage/'.$fotoBaru));

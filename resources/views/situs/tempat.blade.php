@@ -6,6 +6,7 @@
 
     $t = $e;
     $u = session('pengguna');
+    $akunPengelola = in_array($u['peran'] ?? null, ['admin', 'superadmin'], true);
     $buka = Katalog::bukaSekarang($t);
     $gagal = session('checkin_gagal');
     $kategori = Katalog::KATEGORI[$t['kategori']];
@@ -65,10 +66,12 @@
             </div>
 
             <div class="mv-tempat-kepala__meta">
-                @if ($t['tiket'])
+                @if ($t['tiket'] && ! $akunPengelola)
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
                 @endif
-                <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
+                @unless ($akunPengelola)
+                    <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
+                @endunless
             </div>
         </div>
 
@@ -215,7 +218,7 @@
                 </div>
             @endif
 
-            @if ($u)
+            @if (($u['peran'] ?? null) === 'wisatawan')
                 <form class="form-ulasan" method="post" action="{{ route('ulasan.tulis', $t['slug']) }}" novalidate style="margin-top:24px;background:var(--mv-putih);padding:24px">
                     @csrf
                     <fieldset class="isian">
@@ -234,7 +237,7 @@
                     </div>
                     <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">Kirim ulasan</button>
                 </form>
-            @else
+            @elseif (! $u)
                 <p style="margin-top:18px">
                     <a class="mv-tautan" href="{{ route('masuk', ['kembali' => route('tempat', $t['slug'], false).'#ulasan']) }}">Masuk untuk menulis ulasan kunjungan</a>
                 </p>
@@ -257,7 +260,9 @@
                     @endif
                 </div>
             </div>
-            <a class="mv-btn mv-btn--utama mv-btn--lebar" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket masuk</a>
+            @unless ($akunPengelola)
+                <a class="mv-btn mv-btn--utama mv-btn--lebar" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket masuk</a>
+            @endunless
         @else
             @php
                 [$judulMasuk, $ketMasuk] = match ($t['kategori']) {

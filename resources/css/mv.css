@@ -1028,6 +1028,44 @@
   color: var(--mv-di-hijau-redup);
 }
 
+/* ---------- Status Simpan Pengaturan Akun ---------- */
+.mv-dialog-pengaturan {
+  width: min(440px, calc(100vw - 32px));
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: var(--mv-putih);
+  color: var(--mv-teks);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+.mv-dialog-pengaturan::backdrop { background: rgba(15, 35, 29, 0.62); }
+.mv-dialog-pengaturan__isi {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 30px 28px;
+  text-align: center;
+}
+.mv-dialog-pengaturan__isi h2 {
+  color: var(--mv-hijau);
+  font: 600 var(--mv-s-h3)/1.2 var(--font-display);
+}
+.mv-dialog-pengaturan__isi p { color: var(--mv-redup); }
+.mv-dialog-pengaturan__ikon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: 700;
+}
+.mv-dialog-pengaturan__ikon--sukses { background: #e2f2e6; color: #1e6b3a; }
+.mv-dialog-pengaturan__ikon--galat { background: #f7dcd8; color: #a3221b; }
+.mv-dialog-pengaturan__isi button { min-width: 120px; margin-top: 4px; }
+
 /* ---------- Kaki Halaman Arsip (.mv-kaki) ---------- */
 .mv-pemuatan {
   position: fixed;
