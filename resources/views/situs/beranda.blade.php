@@ -60,7 +60,13 @@
         <div class="mv-hero__utama">
             <h1 id="judul-utama" data-naik style="--i:0">Jelajahi Kota Medan</h1>
             <p class="mv-hero__sub" data-naik style="--i:1">Panduan wisata Kota Medan yang menautkan tempat, tokoh sejarah, budaya, dan kuliner khas. Cari tujuan dan pesan tiket masuk dengan mudah.</p>
+            <h1 id="judul-utama" data-naik style="--i:0">
+    Jelajahi Medan dan temukan ceritanya
+</h1>
 
+<p class="mv-hero__sub" data-naik style="--i:1">
+    Temukan berbagai tempat wisata, tokoh sejarah, budaya, dan kuliner khas Kota Medan. Cari destinasi, kenali kisahnya, dan rencanakan kunjunganmu dengan mudah.
+</p>
             <div class="mv-hero__cari-bungkus" data-naik style="--i:2">
                 <form action="{{ route('cari') }}" method="get" role="search" data-cari-cepat>
                     <div class="mv-hero__cari">
