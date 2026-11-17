@@ -33,7 +33,7 @@ class VerifikasiEmail extends Mailable
             );
 
             $logo->asInline();
-            $logo->setContentId('medanvisit-logo');
+            $logo->setContentId('medanvisit-logo@medanvisit.local');
 
             $message->addPart($logo);
         });
