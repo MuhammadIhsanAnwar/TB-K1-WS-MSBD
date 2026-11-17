@@ -19,6 +19,7 @@
             </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
+            <a class="p-btn" href="{{ route('p2p.index') }}">Jaringan P2P</a>
             <a class="p-btn" href="{{ route('akun.pengaturan') }}">Pengaturan akun</a>
             <form method="post" action="{{ route('keluar') }}">@csrf<button class="p-btn" type="submit">Keluar</button></form>
         </div>

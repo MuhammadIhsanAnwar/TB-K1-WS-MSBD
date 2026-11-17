@@ -576,3 +576,54 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .tempat-populer img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .tempat-populer b { display: block; margin-top: 10px; font-weight: 600; }
 @media (max-width: 900px) { .tempat-populer { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- jaringan peer-to-peer ---------- */
+.p2p { width: min(1120px, calc(100% - 2 * var(--margin))); margin: 56px auto 96px; }
+.p2p__heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+.p2p__heading h1 { margin-top: 8px; font-size: var(--s-head); }
+.p2p__heading p:not(.p2p__eyebrow) { margin-top: 12px; color: var(--muted); }
+.p2p__eyebrow { color: var(--gold-text); font-size: var(--s-small); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.p2p__feedback { margin: 24px 0 16px; padding: 14px 18px; background: var(--white); border-left: 4px solid var(--green); overflow-wrap: anywhere; }
+.p2p__feedback[data-kind="error"] { border-color: var(--danger); color: var(--danger); }
+.p2p__metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 16px 0 24px; background: var(--green); color: var(--on-green); }
+.p2p__metrics div { display: grid; gap: 4px; padding: 18px; border-right: 1px solid rgba(255,255,255,.18); }
+.p2p__metrics span { color: var(--on-green-muted); font-size: .9rem; }
+.p2p__metrics strong { font-size: 1rem; }
+.p2p__columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.p2p__panel { min-width: 0; padding: 22px; background: var(--white); }
+.p2p__panel > header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+.p2p__panel h2 { font-size: 1.5rem; }
+.p2p__panel > header span { color: var(--muted); font-size: .9rem; text-align: right; }
+.p2p__list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.p2p-peer { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-top: 1px solid var(--paper-deep); overflow-wrap: anywhere; }
+.p2p-peer button, .p2p-chat__form button { min-height: 42px; padding: 0 16px; border: 0; background: var(--green); color: var(--on-green); font: 600 1rem var(--font-text); }
+.p2p-peer button:hover, .p2p-chat__form button:hover { background: var(--green-hover); }
+.p2p-peer button:disabled, .p2p-chat__form button:disabled { opacity: .6; }
+.p2p-actions { display: flex; gap: 8px; }
+.p2p-peer .p2p-button--secondary { background: var(--paper-deep); color: var(--green); }
+.p2p-empty { padding: 12px 0; color: var(--muted); }
+.p2p__connections { margin-top: 20px; }
+.p2p__connection-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.p2p-chat { min-width: 0; padding: 16px; background: var(--paper); }
+.p2p-chat h3 { font-family: var(--font-text); font-size: 1.1rem; }
+.p2p-chat__state { margin-top: 4px; color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
+.p2p-chat__messages { display: grid; gap: 8px; min-height: 56px; max-height: 240px; overflow-y: auto; margin: 14px 0; padding: 0; list-style: none; }
+.p2p-chat__messages li { display: flex; flex-wrap: wrap; gap: 8px; overflow-wrap: anywhere; }
+.p2p-chat__messages time { color: var(--muted); font-size: .82rem; }
+.p2p-chat__form { display: flex; gap: 8px; }
+.p2p-chat__form input { min-width: 0; flex: 1; min-height: 44px; padding: 8px 10px; border: 1px solid var(--muted); background: var(--white); font: 1rem var(--font-text); }
+.p2p__note { margin-top: 20px; color: var(--muted); font-size: .95rem; }
+@media (max-width: 760px) {
+  .p2p__heading { align-items: flex-start; flex-direction: column; }
+  .p2p__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .p2p__metrics div:nth-child(2) { border-right: 0; }
+  .p2p__columns, .p2p__connection-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .p2p { margin-top: 32px; }
+  .p2p__panel { padding: 16px; }
+  .p2p__panel > header { align-items: flex-start; flex-direction: column; }
+  .p2p-peer { align-items: flex-start; flex-direction: column; }
+  .p2p-actions { width: 100%; }
+  .p2p-chat__form { align-items: stretch; flex-direction: column; }
+}
