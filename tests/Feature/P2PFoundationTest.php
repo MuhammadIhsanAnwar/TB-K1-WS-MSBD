@@ -105,6 +105,9 @@ class P2PFoundationTest extends TestCase
             ->assertOk()
             ->assertSee('MedanVisitt Hub')
             ->assertSee('css/medanvisitt-hub.css', false)
+            ->assertSee('aria-label="Navigasi utama"', false)
+            ->assertSee(route('medanvisitt-hub.index'), false)
+            ->assertSee('Wisatawan Online')
             ->assertSee('Komunikasi peer-to-peer')
             ->assertSee('WebRTC DataChannel')
             ->assertSee('data-p2p-root', false);

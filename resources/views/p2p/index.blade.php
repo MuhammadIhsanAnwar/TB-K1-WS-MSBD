@@ -2,7 +2,6 @@
 @section('judul', 'MedanVisitt Hub')
 @section('deskripsi', 'Temukan peer MedanVisit dan bertukar pesan langsung melalui WebRTC DataChannel.')
 @section('tanpa-kaki', '1')
-@section('tanpa-kepala', '1')
 @push('kepala')
     <link rel="stylesheet" href="{{ asset('css/medanvisitt-hub.css') }}?v={{ filemtime(public_path('css/medanvisitt-hub.css')) }}">
 @endpush
@@ -30,14 +29,14 @@
 
     <section class="p2p__metrics" aria-label="Status jaringan">
         <div><span>Status jaringan</span><strong data-p2p-status>Menginisialisasi</strong></div>
-        <div><span>Peer aktif lain</span><strong data-online-count>0</strong></div>
+        <div><span>Wisatawan Online</span><strong data-online-count>0</strong></div>
         <div><span>Transport pesan</span><strong>WebRTC DataChannel</strong></div>
         <div><span>Relay NAT</span><strong>{{ config('services.turn.urls') ? 'TURN dikonfigurasi' : 'Belum dikonfigurasi' }}</strong></div>
     </section>
 
     <div class="p2p__columns">
         <section class="p2p__panel" aria-labelledby="p2p-peers-heading">
-            <header><h2 id="p2p-peers-heading">Peer online</h2><span>Presence Realtime</span></header>
+            <header><h2 id="p2p-peers-heading">Wisatawan Online</h2><span>Presence Realtime</span></header>
             <ul class="p2p__list" data-peer-list>
                 <li class="p2p-empty">Memuat daftar peer...</li>
             </ul>
@@ -53,7 +52,7 @@
     <section class="p2p__panel p2p__connections" aria-labelledby="p2p-connections-heading">
         <header><h2 id="p2p-connections-heading">Koneksi dan pesan</h2><span>Isi pesan tidak melewati Laravel atau Supabase</span></header>
         <div class="p2p__connection-list" data-connection-list>
-            <p class="p2p-empty">Belum ada koneksi. Pilih peer online lalu tunggu permintaan diterima.</p>
+            <p class="p2p-empty">Belum ada koneksi. Pilih wisatawan online lalu tunggu permintaan diterima.</p>
         </div>
     </section>
 
