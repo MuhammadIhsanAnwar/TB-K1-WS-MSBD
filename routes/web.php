@@ -2,9 +2,29 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\P2P\PlatformController as P2PPlatformController;
 use App\Http\Controllers\SitusController;
 use App\Http\Controllers\TiketController;
+use App\Http\Middleware\P2PAuthenticated;
 use Illuminate\Support\Facades\Route;
+
+// ---------- komunikasi peer-to-peer ----------
+Route::get('/p2p', [P2PPlatformController::class, 'index'])->middleware('peran')->name('p2p.index');
+Route::middleware([P2PAuthenticated::class, 'throttle:60,1'])->prefix('api/p2p')->name('api.p2p.')->group(function () {
+    Route::post('/peers/register', [P2PPlatformController::class, 'register'])->name('peers.register');
+    Route::post('/token', [P2PPlatformController::class, 'refreshToken'])->name('token');
+    Route::post('/peers/{peer}/connect', [P2PPlatformController::class, 'connect'])
+        ->whereUuid('peer')
+        ->name('peers.connect');
+    Route::get('/connections/pending', [P2PPlatformController::class, 'pending'])->name('connections.pending');
+    Route::get('/connections/{session}', [P2PPlatformController::class, 'connection'])
+        ->whereUuid('session')
+        ->name('connections.show');
+    Route::post('/connections/{session}/{decision}', [P2PPlatformController::class, 'respond'])
+        ->whereUuid('session')
+        ->whereIn('decision', ['accept', 'reject'])
+        ->name('connections.respond');
+});
 
 // ---------- publik ----------
 Route::controller(SitusController::class)->middleware('kunjungan')->group(function () {

@@ -22,3 +22,10 @@ if (ada('[data-lorong]')) import('./situs/lorong.js');
 if (ada('[data-tiket]')) import('./situs/tiket.js');
 if (ada('[data-sparql]')) import('./situs/sparql.js');
 if (ada('[data-panel-app]')) import('./panel/panel.js');
+if (ada('[data-p2p-root]')) {
+    import('./p2p/index.js').catch((error) => {
+        console.error('Gagal memuat modul jaringan P2P:', error);
+        const feedback = ada('[data-p2p-feedback]');
+        if (feedback) feedback.textContent = `Modul P2P gagal dimuat: ${error.message}`;
+    });
+}

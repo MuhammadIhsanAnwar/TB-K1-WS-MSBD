@@ -52,6 +52,8 @@ return [
             'publishable_key' => env('SUPABASE_DB1_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB1_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB1_JWKS_URL'),
+            'jwt_private_key_path' => env('SUPABASE_DB1_JWT_PRIVATE_KEY_PATH'),
+            'jwt_key_id' => env('SUPABASE_DB1_JWT_KEY_ID'),
         ],
         'transaksi' => [
             'url' => env('SUPABASE_DB2_URL'),
@@ -59,6 +61,12 @@ return [
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
         ],
+    ],
+
+    'turn' => [
+        'urls' => array_values(array_filter(array_map('trim', explode(',', env('TURN_URLS', ''))))),
+        'shared_secret' => env('TURN_SHARED_SECRET'),
+        'credential_lifetime' => (int) env('TURN_CREDENTIAL_LIFETIME', 3600),
     ],
 
         'routing' => [
