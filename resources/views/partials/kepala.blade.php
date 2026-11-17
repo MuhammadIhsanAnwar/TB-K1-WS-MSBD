@@ -11,6 +11,7 @@
     $menu = [
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
         [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
+        [route('p2p.index'), 'MedanVisit Hub', ['p2p.*']],
         [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
         [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];

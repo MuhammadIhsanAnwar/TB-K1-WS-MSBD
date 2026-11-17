@@ -102,6 +102,7 @@ class P2PFoundationTest extends TestCase
             'pengguna' => ['id' => 42, 'nama' => 'Pengguna Test', 'peran' => 'wisatawan'],
         ])->get('/p2p')
             ->assertOk()
+            ->assertSee('MedanVisit Hub')
             ->assertSee('Komunikasi peer-to-peer')
             ->assertSee('WebRTC DataChannel')
             ->assertSee('data-p2p-root', false);
