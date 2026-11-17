@@ -24,7 +24,7 @@ class VerifikasiEmail extends Mailable
 
             if (!is_file($path)) {
                 throw new \RuntimeException(
-                    'File logo MedanVisit tidak ditemukan: '.$path
+                    'File logo MedanVisit tidak ditemukan: ' . $path
                 );
             }
 
