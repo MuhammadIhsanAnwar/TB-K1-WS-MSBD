@@ -38,6 +38,9 @@ class P2PFoundationTest extends TestCase
             'services.supabase.katalog.secret_key' => 'server-only-test-key',
             'services.supabase.katalog.jwt_private_key_path' => $privateKeyPath,
             'services.supabase.katalog.jwt_key_id' => 'test-key-id',
+            'services.webrtc.enabled' => true,
+            'services.webrtc.stun_url' => 'stun:stun.l.google.com:19302',
+            'services.webrtc.turn_provider' => 'coturn',
         ]);
         Http::fakeSequence()
             ->push([])
@@ -85,6 +88,70 @@ class P2PFoundationTest extends TestCase
                 $publicKey,
                 OPENSSL_ALGO_SHA256,
             ));
+        } finally {
+            unlink($privateKeyPath);
+            unlink($opensslConfigPath);
+        }
+    }
+
+    public function test_registration_returns_metered_ice_servers_from_server_configuration(): void
+    {
+        $opensslConfigPath = tempnam(sys_get_temp_dir(), 'p2p-openssl-config-');
+        self::assertNotFalse($opensslConfigPath);
+        file_put_contents($opensslConfigPath, "openssl_conf = openssl_init\n[openssl_init]\nproviders = provider_sect\n[provider_sect]\ndefault = default_sect\n[default_sect]\nactivate = 1\n");
+        $privateKey = openssl_pkey_new([
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => 2048,
+            'config' => $opensslConfigPath,
+        ]);
+        self::assertNotFalse($privateKey);
+        self::assertTrue(openssl_pkey_export($privateKey, $privatePem, null, ['config' => $opensslConfigPath]));
+        $privateKeyPath = tempnam(sys_get_temp_dir(), 'p2p-signing-key-');
+        self::assertNotFalse($privateKeyPath);
+        file_put_contents($privateKeyPath, $privatePem);
+        config([
+            'services.supabase.katalog.url' => 'https://db1.example.test',
+            'services.supabase.katalog.publishable_key' => 'publishable-test-key',
+            'services.supabase.katalog.jwt_private_key_path' => $privateKeyPath,
+            'services.supabase.katalog.jwt_key_id' => 'test-key-id',
+            'services.webrtc.enabled' => true,
+            'services.webrtc.stun_url' => 'stun:stun.l.google.com:19302',
+            'services.webrtc.turn_provider' => 'metered',
+            'services.webrtc.metered.urls' => [
+                'turn:asia.relay.metered.ca:80',
+                'turn:asia.relay.metered.ca:80?transport=tcp',
+                'turn:asia.relay.metered.ca:443',
+                'turns:asia.relay.metered.ca:443?transport=tcp',
+            ],
+            'services.webrtc.metered.username' => 'temporary-test-username',
+            'services.webrtc.metered.credential' => 'temporary-test-credential',
+        ]);
+        Http::fakeSequence()
+            ->push([])
+            ->push([[
+                'id' => '54f53d49-a38c-47dd-a627-8d0d83d8c874',
+                'user_id' => 42,
+                'revoked_at' => null,
+            ]]);
+
+        try {
+            $response = $this->withSession([
+                'pengguna' => ['id' => 42, 'nama' => 'Pengguna Test', 'peran' => 'wisatawan'],
+            ])->postJson('/api/p2p/peers/register', [
+                'peer_id' => '54f53d49-a38c-47dd-a627-8d0d83d8c874',
+                'label' => 'Browser test',
+            ])->assertOk()
+                ->assertJsonPath('turn_available', true)
+                ->assertJsonPath('ice_servers.0.urls', 'stun:stun.l.google.com:19302')
+                ->assertJsonPath('ice_servers.1.urls', 'stun:stun.relay.metered.ca:80')
+                ->assertJsonPath('ice_servers.2.urls.0', 'turn:asia.relay.metered.ca:80')
+                ->assertJsonPath('ice_servers.2.urls.1', 'turn:asia.relay.metered.ca:80?transport=tcp')
+                ->assertJsonPath('ice_servers.2.urls.2', 'turn:asia.relay.metered.ca:443')
+                ->assertJsonPath('ice_servers.2.urls.3', 'turns:asia.relay.metered.ca:443?transport=tcp')
+                ->assertJsonPath('ice_servers.2.username', 'temporary-test-username')
+                ->assertJsonPath('ice_servers.2.credential', 'temporary-test-credential')
+                ->assertHeader('Cache-Control', 'no-store, private')
+                ->assertDontSee('METERED_TURN_API_KEY');
         } finally {
             unlink($privateKeyPath);
             unlink($opensslConfigPath);

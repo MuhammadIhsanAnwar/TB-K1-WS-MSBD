@@ -15,7 +15,7 @@
 2. Pastikan DB1 memakai URL dan publishable key yang sudah ada di konfigurasi aplikasi. `SUPABASE_DB1_SECRET_KEY` tetap server-only dan tidak dikirim ke browser.
 3. Aktifkan Supabase Realtime untuk DB1 dan nonaktifkan **Allow public access**. Migrasi memasang kebijakan private-channel pada `realtime.messages`.
    Sebelum rollout, tinjau kebijakan lama pada `realtime.messages`: kebijakan permissive yang sudah ada dapat memperluas akses channel; hapus/persempit kebijakan lama yang tidak dibutuhkan setelah menilai dampaknya pada fitur lain.
-4. TURN opsional untuk memulai, tetapi diperlukan untuk jaringan NAT/firewall yang tidak dapat membuat koneksi langsung. Untuk coturn REST API, isi `TURN_URLS` (dipisah koma) dan `TURN_SHARED_SECRET`; API Laravel menerbitkan kredensial berjangka pendek. Tanpa TURN, aplikasi memakai STUN publik dan menampilkan keterbatasan tersebut.
+4. TURN opsional untuk memulai, tetapi diperlukan untuk jaringan NAT/firewall yang tidak dapat membuat koneksi langsung. Untuk coturn, isi `TURN_URLS` (dipisah koma) dan `TURN_SHARED_SECRET`; API Laravel menerbitkan kredensial berjangka pendek. Untuk Metered, gunakan `WEBRTC_TURN_PROVIDER=metered`, URL di `METERED_TURN_URLS`, `METERED_TURN_USERNAME`, dan `METERED_TURN_CREDENTIAL`. Nilai username/credential disimpan di environment server dan hanya dikirim melalui respons API P2P yang terautentikasi serta `Cache-Control: no-store`; jangan menaruhnya di JavaScript. Integrasi tidak memanggil API Metered karena `METERED_TURN_API_KEY` tidak tersedia dan format respons API belum diverifikasi. Tanpa kredensial TURN, browser memakai STUN dan UI memperingatkan keterbatasannya.
 5. Jalankan aplikasi melalui HTTPS (localhost juga memenuhi secure context browser). Pastikan browser dapat membuka koneksi WebSocket ke Supabase serta koneksi ICE ke STUN/TURN.
 
 Jangan memakai `service_role`, Supabase secret key, atau private signing key di JavaScript. Token Realtime Laravel berlaku lima menit dan diperbarui saat halaman aktif.
@@ -45,6 +45,7 @@ Setelah signing key, migration, dan Realtime disiapkan:
 ## Batasan dan deployment
 
 - TURN belum tersedia sebagai layanan yang dikelola aplikasi. Tanpa `TURN_URLS`/`TURN_SHARED_SECRET`, koneksi lintas NAT tertentu bisa gagal walaupun signaling berhasil.
+- Konfigurasi Metered tetap memprioritaskan kandidat koneksi langsung: aplikasi tidak mengatur `iceTransportPolicy: "relay"`. TURN hanya dipilih ICE bila koneksi langsung tidak berhasil/lebih buruk menurut negosiasi ICE.
 - Halaman Hub memuat stylesheet mandiri `public/css/medanvisit-hub.css`, sehingga tata letaknya tidak bergantung pada rebuild Vite. Sertakan file tersebut saat deployment dan jalankan `php artisan view:clear` setelah mengganti view.
 - Shared hosting tidak perlu menjalankan proses Laravel yang terus hidup untuk Presence atau WebRTC: browser berhubungan langsung dengan Supabase Realtime dan browser peer lain. Hosting tetap harus melayani halaman HTTPS dan endpoint Laravel HTTPS; server TURN harus dapat dijangkau browser melalui transport yang diizinkan jaringan.
 - `Peer online` berasal dari Supabase Presence (bukan hasil polling Laravel). WebRTC mengirim isi pesan secara langsung; jika signaling atau ICE gagal, UI menampilkan status gagal, bukan beralih diam-diam ke HTTP.
