@@ -6,7 +6,7 @@
             <nav class="mv-kaki__tautan" aria-label="Navigasi kaki halaman">
                 <a href="{{ route('peta') }}">Tempat &amp; peta</a>
                 <a href="{{ route('rencana') }}">Perencanaan Rute</a>
-                <a href="{{ route('medanvisitt-hub.index') }}">MedanVisitt Hub</a>
+                <a href="{{ route('medanvisit-hub.index') }}">MedanVisit Hub</a>
                 <a href="{{ route('hubungi.admin') }}">Hubungi Admin</a>
                 <a href="{{ route('ketentuan') }}">Ketentuan &amp; privasi</a>
             </nav>

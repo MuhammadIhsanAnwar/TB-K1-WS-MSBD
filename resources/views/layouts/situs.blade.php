@@ -52,7 +52,7 @@
     @endif
     @hasSection('tanpa-kepala')
     @else
-        @unless (request()->routeIs('medanvisitt-hub.index'))
+        @unless (request()->routeIs('medanvisit-hub.index'))
             @include('partials.dialog-cari')
             {{-- tidak dipasang di halaman Tanya (sudah percakapan) dan alur tiket (jangan menutupi tombol bayar) --}}
             @unless (request()->routeIs('tanya', 'tiket.*', 'checkout', 'pesanan*'))

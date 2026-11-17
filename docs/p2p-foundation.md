@@ -1,4 +1,4 @@
-# MedanVisitt Hub (Fase 1)
+# MedanVisit Hub (Fase 1)
 
 ## Audit singkat
 
@@ -36,7 +36,7 @@ Jika cPanel tidak dapat menjangkau port PostgreSQL, jalankan migration dari komp
 
 Setelah signing key, migration, dan Realtime disiapkan:
 
-1. Buka `/MedanVisitt-Hub` pada dua browser dengan akun MedanVisit berbeda.
+1. Buka `/MedanVisit-Hub` pada dua browser dengan akun MedanVisit berbeda.
 2. Pastikan masing-masing browser terlihat pada daftar **Peer online**.
 3. Browser pertama memilih **Minta koneksi**; browser kedua menekan **Terima**.
 4. Tunggu status WebRTC menjadi `connected`. Jenis jalur menampilkan `Direct` atau `Relay (TURN)` jika browser menyediakan statistik ICE.
@@ -45,7 +45,7 @@ Setelah signing key, migration, dan Realtime disiapkan:
 ## Batasan dan deployment
 
 - TURN belum tersedia sebagai layanan yang dikelola aplikasi. Tanpa `TURN_URLS`/`TURN_SHARED_SECRET`, koneksi lintas NAT tertentu bisa gagal walaupun signaling berhasil.
-- Halaman Hub memuat stylesheet mandiri `public/css/medanvisitt-hub.css`, sehingga tata letaknya tidak bergantung pada rebuild Vite. Sertakan file tersebut saat deployment dan jalankan `php artisan view:clear` setelah mengganti view.
+- Halaman Hub memuat stylesheet mandiri `public/css/medanvisit-hub.css`, sehingga tata letaknya tidak bergantung pada rebuild Vite. Sertakan file tersebut saat deployment dan jalankan `php artisan view:clear` setelah mengganti view.
 - Shared hosting tidak perlu menjalankan proses Laravel yang terus hidup untuk Presence atau WebRTC: browser berhubungan langsung dengan Supabase Realtime dan browser peer lain. Hosting tetap harus melayani halaman HTTPS dan endpoint Laravel HTTPS; server TURN harus dapat dijangkau browser melalui transport yang diizinkan jaringan.
 - `Peer online` berasal dari Supabase Presence (bukan hasil polling Laravel). WebRTC mengirim isi pesan secara langsung; jika signaling atau ICE gagal, UI menampilkan status gagal, bukan beralih diam-diam ke HTTP.
 - Status perangkat tersimpan di DB1, tetapi masa online ditentukan oleh koneksi Presence. Request yang tidak dijawab kedaluwarsa setelah lima menit; sesi signaling yang diterima berlaku satu hari.

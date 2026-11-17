@@ -93,31 +93,32 @@ class P2PFoundationTest extends TestCase
 
     public function test_p2p_page_requires_a_signed_in_user(): void
     {
-        $this->get('/MedanVisitt-Hub')
-            ->assertRedirect(route('masuk', ['kembali' => '/MedanVisitt-Hub']));
+        $this->get('/MedanVisit-Hub')
+            ->assertRedirect(route('masuk', ['kembali' => '/MedanVisit-Hub']));
     }
 
     public function test_p2p_page_is_available_to_a_signed_in_traveler(): void
     {
         $this->withSession([
             'pengguna' => ['id' => 42, 'nama' => 'Pengguna Test', 'peran' => 'wisatawan'],
-        ])->get('/MedanVisitt-Hub')
+        ])->get('/MedanVisit-Hub')
             ->assertOk()
-            ->assertSee('MedanVisitt Hub')
-            ->assertSee('css/medanvisitt-hub.css', false)
+            ->assertSee('MedanVisit Hub')
+            ->assertSee('css/medanvisit-hub.css', false)
             ->assertSee('aria-label="Navigasi utama"', false)
-            ->assertSee(route('medanvisitt-hub.index'), false)
+            ->assertSee(route('medanvisit-hub.index'), false)
             ->assertSee('Wisatawan Online')
             ->assertSee('Komunikasi peer-to-peer')
             ->assertSee('WebRTC DataChannel')
             ->assertSee('data-p2p-root', false);
 
-        self::assertFileExists(public_path('css/medanvisitt-hub.css'));
+        self::assertFileExists(public_path('css/medanvisit-hub.css'));
     }
 
-    public function test_legacy_p2p_url_redirects_to_medanvisitt_hub(): void
+    public function test_legacy_urls_redirect_to_medanvisit_hub(): void
     {
-        $this->get('/p2p')->assertRedirect('/MedanVisitt-Hub');
+        $this->get('/p2p')->assertRedirect('/MedanVisit-Hub');
+        $this->get('/MedanVisitt-Hub')->assertRedirect('/MedanVisit-Hub');
     }
 
     public function test_supabase_token_signing_fails_when_server_key_is_missing(): void

@@ -9,10 +9,11 @@ use App\Http\Middleware\P2PAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 // ---------- komunikasi peer-to-peer ----------
-Route::get('/MedanVisitt-Hub', [P2PPlatformController::class, 'index'])
+Route::get('/MedanVisit-Hub', [P2PPlatformController::class, 'index'])
     ->middleware('peran')
-    ->name('medanvisitt-hub.index');
-Route::redirect('/p2p', '/MedanVisitt-Hub', 301)->name('p2p.legacy');
+    ->name('medanvisit-hub.index');
+Route::redirect('/MedanVisitt-Hub', '/MedanVisit-Hub', 301)->name('medanvisit-hub.typo-legacy');
+Route::redirect('/p2p', '/MedanVisit-Hub', 301)->name('p2p.legacy');
 Route::middleware([P2PAuthenticated::class, 'throttle:60,1'])->prefix('api/p2p')->name('api.p2p.')->group(function () {
     Route::post('/peers/register', [P2PPlatformController::class, 'register'])->name('peers.register');
     Route::post('/token', [P2PPlatformController::class, 'refreshToken'])->name('token');
