@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Mail;
@@ -7,20 +8,50 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
 
 class VerifikasiEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly string $url) {}
+    public function __construct(public readonly string $url)
+    {
+        $this->withSymfonyMessage(function (Email $message) {
+            $path = public_path(
+                'storage/logo_app/png/MedanVisit_logo_horizontal_terang.png'
+            );
+
+            if (!is_file($path)) {
+                throw new \RuntimeException(
+                    'File logo MedanVisit tidak ditemukan: '.$path
+                );
+            }
+
+            $logo = DataPart::fromPath(
+                $path,
+                'MedanVisit_logo_horizontal_terang.png',
+                'image/png'
+            );
+
+            $logo->asInline();
+            $logo->setContentId('medanvisit-logo');
+
+            $message->addPart($logo);
+        });
+    }
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Konfirmasi email MedanVisit');
+        return new Envelope(
+            subject: 'Konfirmasi email MedanVisit'
+        );
     }
 
     public function content(): Content
     {
-        return new Content(view: 'emails.verifikasi-email');
+        return new Content(
+            view: 'emails.verifikasi-email'
+        );
     }
 }
