@@ -1,6 +1,5 @@
 
 <?php
-
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -24,7 +23,7 @@ class VerifikasiEmail extends Mailable
 
             if (!is_file($path)) {
                 throw new \RuntimeException(
-                    'File logo MedanVisit tidak ditemukan: ' . $path
+                    'File logo tidak ditemukan: ' . $path
                 );
             }
 
