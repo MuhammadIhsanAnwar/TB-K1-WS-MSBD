@@ -11,9 +11,8 @@
             <tr>
                 <td style="padding:30px 32px;background:#0f3b2e;text-align:center;border-bottom:5px solid #e3a51c;">
 
-
 <img
-    src="cid:medanvisit-logo"
+    src="cid:medanvisit-logo@medanvisit.local"
     alt="MedanVisit"
     width="184"
     height="64"
