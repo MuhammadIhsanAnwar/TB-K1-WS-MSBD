@@ -42,7 +42,7 @@
                 @if ($koreksi)
                     <p>Mungkin maksudmu <a class="tautan" href="{{ route('cari', ['q' => $koreksi]) }}">{{ $koreksi }}</a>?</p>
                 @else
-                    <p>Kata kunci ini dicatat untuk kurator, supaya tempatnya bisa ditambahkan. Coba kata lain, misalnya nama tempat, kuliner, atau tokoh.</p>
+                    <p>Belum menemukan informasi yang kamu cari? Coba gunakan kata kunci yang lebih singkat, seperti Istana Maimun, kuliner Medan, atau Tjong A Fie.</p>
                 @endif
                 <a class="tombol" href="{{ route('tanya', ['q' => $q]) }}">Tanyakan ke asisten</a>
             </div>

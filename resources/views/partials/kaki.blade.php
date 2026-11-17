@@ -13,7 +13,7 @@
                 <a href="{{ route('ketentuan') }}">Ketentuan &amp; privasi</a>
             </nav>
             <div class="mv-kaki__catatan">
-                <p>Panduan wisata Kota Medan untuk membantu menemukan tempat, menyusun rute, dan merencanakan kunjungan.</p>
+                <p>Temukan destinasi wisata, kuliner, dan sejarah Kota Medan. Susun rute perjalanan dan rencanakan kunjunganmu bersama MedanVisit.</p>
                 <p><a href="mailto:administrator@medanvisit.neoverse.my.id">administrator@medanvisit.neoverse.my.id</a></p>
             </div>
         </div>
