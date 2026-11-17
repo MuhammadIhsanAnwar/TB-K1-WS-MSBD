@@ -5,7 +5,10 @@ import { Signaling } from './signaling.js';
 const root = document.querySelector('[data-p2p-root]');
 const MAX_CHAT_LENGTH = 4000;
 
-if (root) start().catch((error) => showFeedback(error.message, true));
+if (root) start().catch((error) => {
+    root.querySelector('[data-p2p-status]').textContent = 'Gagal inisialisasi';
+    showFeedback(error.message, true);
+});
 
 async function start() {
     const status = root.querySelector('[data-p2p-status]');
@@ -13,9 +16,11 @@ async function start() {
     const pendingList = root.querySelector('[data-pending-list]');
     const count = root.querySelector('[data-online-count]');
     const connectionList = root.querySelector('[data-connection-list]');
+    const turnStatus = root.querySelector('[data-turn-status]');
     const peerId = getDeviceId(root.dataset.userId);
     const api = (path, body = null, method = 'POST') => request(path, body, method);
     let credentials = await api(root.dataset.registerUrl, { peer_id: peerId, label: 'Perangkat browser' });
+    turnStatus.textContent = credentials.turn_available ? 'TURN dikonfigurasi' : 'Belum dikonfigurasi';
 
     const supabase = createClient(credentials.supabase_url, credentials.publishable_key, {
         accessToken: async () => credentials.access_token,
@@ -285,6 +290,7 @@ async function start() {
         try {
             const renewed = await api(root.dataset.tokenUrl, { peer_id: peerId });
             credentials = { ...credentials, ...renewed };
+            turnStatus.textContent = renewed.turn_available ? 'TURN dikonfigurasi' : 'Belum dikonfigurasi';
             peerManager.iceServers = renewed.ice_servers;
             await supabase.realtime.setAuth(renewed.access_token);
         } catch (error) {

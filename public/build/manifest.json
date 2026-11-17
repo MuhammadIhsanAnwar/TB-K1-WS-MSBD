@@ -91,7 +91,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CA5SU_Su.css",
+    "file": "assets/app-DRwiRssS.css",
     "name": "app",
     "names": [
       "app.css"
@@ -110,7 +110,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CtqbSysy.js",
+    "file": "assets/app-DmAH-lz9.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -125,8 +125,15 @@
       "resources/js/situs/lorong.js",
       "resources/js/situs/tiket.js",
       "resources/js/situs/sparql.js",
-      "resources/js/panel/panel.js"
+      "resources/js/panel/panel.js",
+      "resources/js/p2p/index.js"
     ]
+  },
+  "resources/js/p2p/index.js": {
+    "file": "assets/p2p-DrWhUCqA.js",
+    "name": "p2p",
+    "src": "resources/js/p2p/index.js",
+    "isDynamicEntry": true
   },
   "resources/js/panel/panel.js": {
     "file": "assets/panel--9njvDEB.js",
@@ -150,7 +157,7 @@
     ]
   },
   "resources/js/situs/hubungi-admin.js": {
-    "file": "assets/hubungi-admin-DA-5SzUV.js",
+    "file": "assets/hubungi-admin-D2jYbCdn.js",
     "name": "hubungi-admin",
     "src": "resources/js/situs/hubungi-admin.js",
     "isDynamicEntry": true
