@@ -177,6 +177,7 @@ class P2PFoundationTest extends TestCase
             ->assertSee('Wisatawan Online')
             ->assertSee('Komunikasi peer-to-peer')
             ->assertSee('WebRTC DataChannel')
+            ->assertSee('data-turn-status', false)
             ->assertSee('data-p2p-root', false);
 
         self::assertFileExists(public_path('css/medanvisit-hub.css'));

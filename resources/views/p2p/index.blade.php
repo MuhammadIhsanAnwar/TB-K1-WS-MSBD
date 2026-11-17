@@ -31,7 +31,7 @@
         <div><span>Status jaringan</span><strong data-p2p-status>Menginisialisasi</strong></div>
         <div><span>Wisatawan Online</span><strong data-online-count>0</strong></div>
         <div><span>Transport pesan</span><strong>WebRTC DataChannel</strong></div>
-        <div><span>Relay NAT</span><strong>{{ config('services.turn.urls') ? 'TURN dikonfigurasi' : 'Belum dikonfigurasi' }}</strong></div>
+        <div><span>Relay NAT</span><strong data-turn-status>Memeriksa konfigurasi...</strong></div>
     </section>
 
     <div class="p2p__columns">
