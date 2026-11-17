@@ -22,6 +22,11 @@ class AkunController extends Controller
     private const JEDA_KIRIM_ULANG = 60;
     private const BLOKIR_KIRIM_ULANG = 3600;
 
+    private function googleRedirectUri(): string
+    {
+    return 'https://medanvisit.neoverse.my.id/masuk/google/callback';
+    }
+
     private function pengguna(Request $r): array
     {
         return $r->session()->get('pengguna', []);
@@ -348,70 +353,166 @@ class AkunController extends Controller
     }
 
     public function google(Request $request)
-    {
-        $config = config('services.google');
-        abort_unless($config['client_id'] && $config['client_secret'] && $config['redirect'], 503, 'Login Google belum dikonfigurasi.');
-        $state = Str::random(40);
-        $request->session()->put('google_oauth_state', $state);
-        $request->session()->put('google_oauth_kembali', $this->aman($request->query('kembali')));
-        $query = http_build_query([
-            'client_id' => $config['client_id'], 'redirect_uri' => $config['redirect'],
-            'response_type' => 'code', 'scope' => 'openid email profile',
-            'state' => $state, 'access_type' => 'online', 'prompt' => 'select_account',
-        ]);
+{
+    $config = config('services.google');
 
-        return redirect('https://accounts.google.com/o/oauth2/v2/auth?'.$query);
-    }
+    abort_unless(
+        !empty($config['client_id']) &&
+        !empty($config['client_secret']),
+        503,
+        'Login Google belum dikonfigurasi.'
+    );
+
+    $state = Str::random(40);
+
+    $request->session()->put('google_oauth_state', $state);
+    $request->session()->put(
+        'google_oauth_kembali',
+        $this->aman($request->query('kembali'))
+    );
+
+    $query = http_build_query([
+        'client_id' => $config['client_id'],
+        'redirect_uri' => $this->googleRedirectUri(),
+        'response_type' => 'code',
+        'scope' => 'openid email profile',
+        'state' => $state,
+        'access_type' => 'online',
+        'prompt' => 'select_account',
+    ]);
+
+    return redirect(
+        'https://accounts.google.com/o/oauth2/v2/auth?' . $query
+    );
+}
 
     public function googleCallback(Request $request)
-    {
-        if ($request->filled('error')) {
-            return redirect()->route('masuk')->withErrors(['email' => 'Login Google dibatalkan.']);
-        }
-
-        $expectedState = $request->session()->pull('google_oauth_state');
-        $kembali = $request->session()->pull('google_oauth_kembali');
-        abort_unless($request->filled('code') && $request->filled('state') && is_string($expectedState) && hash_equals($expectedState, $request->input('state')), 419);
-        $config = config('services.google');
-        $token = Http::asForm()->post('https://oauth2.googleapis.com/token', [
-            'code' => $request->string('code')->toString(), 'client_id' => $config['client_id'],
-            'client_secret' => $config['client_secret'], 'redirect_uri' => $config['redirect'],
-            'grant_type' => 'authorization_code',
-        ])->throw()->json();
-        $profile = Http::withToken($token['access_token'])->get('https://openidconnect.googleapis.com/v1/userinfo')->throw()->json();
-        abort_unless(($profile['email_verified'] ?? false) && ! empty($profile['email']) && ! empty($profile['sub']), 422, 'Akun Google belum terverifikasi.');
-        $api = new SupabaseApi;
-        $user = $api->findUserByEmail($profile['email']);
-        if (! $user) {
-            $user = $api->createUser([
-                'name' => $profile['name'] ?? Str::before($profile['email'], '@'),
-                'email' => strtolower($profile['email']),
-                'google_id' => $profile['sub'],
-                'email_verified_at' => null,
-                'peran' => 'wisatawan',
-                'password' => Hash::make(Str::random(40)),
-            ]);
-        } elseif (($user['google_id'] ?? null) !== $profile['sub']) {
-            $user = $api->updateUser($user['id'], [
-                'google_id' => $profile['sub'],
-            ]);
-        }
-        if (empty($user['email_verified_at'])) {
-            $this->kirimVerifikasi($user);
-
-            return redirect()->route('verifikasi', ['email' => $user['email']])
-                ->with('pesan', 'Periksa email untuk mengonfirmasi akun Google sebelum masuk.');
-        }
-        if (! empty($user['ditangguhkan_pada'])) {
-            return redirect()->route('masuk')
-                ->withErrors(['email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.']);
-        }
-        $request->session()->regenerate();
-        $this->simpanSesiPengguna($request, $user);
-
-        return redirect($kembali ?? $this->tujuan($user['peran']))->with('sambutan', $user['name']);
+{
+    if ($request->filled('error')) {
+        return redirect()->route('masuk')
+            ->withErrors(['email' => 'Login Google dibatalkan.']);
     }
 
+    $expectedState = $request->session()->pull('google_oauth_state');
+    $kembali = $request->session()->pull('google_oauth_kembali');
+
+    abort_unless(
+        $request->filled('code') &&
+        $request->filled('state') &&
+        is_string($expectedState) &&
+        hash_equals($expectedState, $request->input('state')),
+        419,
+        'Sesi login Google tidak valid. Silakan coba lagi.'
+    );
+
+    $config = config('services.google');
+
+    try {
+        $response = Http::asForm()
+            ->acceptJson()
+            ->timeout(15)
+            ->post('https://oauth2.googleapis.com/token', [
+                'code' => $request->input('code'),
+                'client_id' => $config['client_id'],
+                'client_secret' => $config['client_secret'],
+                'redirect_uri' => $this->googleRedirectUri(),
+                'grant_type' => 'authorization_code',
+            ]);
+
+        if (!$response->successful()) {
+            report(new \RuntimeException(
+                'Google OAuth gagal: HTTP ' . $response->status() .
+                ', ' . $response->json('error', 'unknown_error')
+            ));
+
+            return redirect()->route('masuk')
+                ->withErrors([
+                    'email' => 'Login Google gagal. Silakan mulai proses login dari awal.'
+                ]);
+        }
+
+        $token = $response->json();
+
+        if (empty($token['access_token'])) {
+            throw new \RuntimeException(
+                'Google tidak mengembalikan access token.'
+            );
+        }
+
+        $profile = Http::withToken($token['access_token'])
+            ->acceptJson()
+            ->timeout(15)
+            ->get('https://openidconnect.googleapis.com/v1/userinfo')
+            ->throw()
+            ->json();
+
+    } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        report($e);
+
+        return redirect()->route('masuk')
+            ->withErrors([
+                'email' => 'Tidak dapat terhubung ke Google. Coba lagi.'
+            ]);
+    } catch (\Throwable $e) {
+        report($e);
+
+        return redirect()->route('masuk')
+            ->withErrors([
+                'email' => 'Terjadi kesalahan saat memproses login Google.'
+            ]);
+    }
+
+    abort_unless(
+        ($profile['email_verified'] ?? false) &&
+        !empty($profile['email']) &&
+        !empty($profile['sub']),
+        422,
+        'Akun Google belum terverifikasi.'
+    );
+
+    $api = new SupabaseApi;
+    $user = $api->findUserByEmail($profile['email']);
+
+    if (!$user) {
+        $user = $api->createUser([
+            'name' => $profile['name'] ?? Str::before($profile['email'], '@'),
+            'email' => strtolower($profile['email']),
+            'google_id' => $profile['sub'],
+            'email_verified_at' => null,
+            'peran' => 'wisatawan',
+            'password' => Hash::make(Str::random(40)),
+        ]);
+    } elseif (($user['google_id'] ?? null) !== $profile['sub']) {
+        $user = $api->updateUser($user['id'], [
+            'google_id' => $profile['sub'],
+        ]);
+    }
+
+    if (empty($user['email_verified_at'])) {
+        $this->kirimVerifikasi($user);
+
+        return redirect()->route('verifikasi', [
+            'email' => $user['email']
+        ])->with(
+            'pesan',
+            'Periksa email untuk mengonfirmasi akun Google sebelum masuk.'
+        );
+    }
+
+    if (!empty($user['ditangguhkan_pada'])) {
+        return redirect()->route('masuk')
+            ->withErrors([
+                'email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.'
+            ]);
+    }
+
+    $request->session()->regenerate();
+    $this->simpanSesiPengguna($request, $user);
+
+    return redirect(
+        $kembali ?? $this->tujuan($user['peran'])
+    )->with('sambutan', $user['name']);
+}
     public function pengaturan(Request $request)
     {
         $u = $this->pengguna($request);
