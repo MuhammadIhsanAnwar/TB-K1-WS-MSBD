@@ -41,11 +41,8 @@ class SitusController extends Controller
     public function simpanPesanAdmin(Request $request)
     {
         $pengguna = $request->session()->get('pengguna', []);
-        $kategoriDiizinkan = ($pengguna['peran'] ?? null) === 'admin'
-            ? ['akun', 'lainnya']
-            : ['tempat', 'akun', 'lainnya'];
         $data = $request->validate([
-            'kategori' => ['required', Rule::in($kategoriDiizinkan)],
+            'kategori' => ['required', Rule::in(['tempat', 'akun', 'lainnya'])],
             'tempat_slug' => ['nullable', 'required_if:kategori,tempat', 'string', 'max:120'],
             'pesan' => ['required', 'string', 'min:10', 'max:3000'],
         ], [

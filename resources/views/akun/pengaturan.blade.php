@@ -12,14 +12,12 @@
         <a class="p-btn" href="{{ route('akun') }}">Kembali ke akun saya</a>
     </div>
 
-    @if (session('pesan'))<div role="status" class="mv-pesan mv-pesan--sukses">{{ session('pesan') }}</div>@endif
-
     <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="p-panel" style="max-width:720px">
         @csrf
         <div class="isian">
             <label for="foto_profil">Foto profil</label>
             @if (!empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil'])))
-                <img src="{{ asset('storage/'.$user['foto_profil']) }}?v={{ filemtime(public_path('storage/'.$user['foto_profil'])) }}" alt="Foto profil saat ini" width="96" height="96" style="display:block;object-fit:cover;border-radius:50%;margin-bottom:12px">
+                <img src="{{ asset('storage/'.$user['foto_profil']) }}?v={{ filemtime(public_path('storage/'.$user['foto_profil'])) }}" alt="Foto profil saat ini" width="96" height="96" style="display:block;width:96px;height:96px;aspect-ratio:1;object-fit:cover;border-radius:50%;margin-bottom:12px">
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
@@ -41,12 +39,12 @@
             <p class="isian__bantuan">Hanya angka dan harus diawali 08.</p>
             @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
-        <fieldset style="border:0;padding:0;margin:24px 0 0">
+        <fieldset @disabled($akunGoogle) style="border:0;padding:0;margin:24px 0 0">
             <legend>Password (opsional)</legend>
             <div class="isian">
                 <label for="password">Password baru</label>
                 <input id="password" type="password" name="password" autocomplete="new-password">
-                <p class="isian__bantuan">Kosongkan jika tidak ingin mengubah password.</p>
+                <p class="isian__bantuan">{{ $akunGoogle ? 'Password akun ini dikelola melalui Google dan tidak dapat diubah di sini.' : 'Kosongkan jika tidak ingin mengubah password.' }}</p>
                 @error('password')<p class="isian__galat">{{ $message }}</p>@enderror
             </div>
             <div class="isian">
@@ -57,4 +55,19 @@
         <button class="mv-btn mv-btn--utama" type="submit" style="margin-top:24px">Simpan perubahan</button>
     </form>
 </div>
+
+@if (session('pesan') || session('galat') || $errors->any())
+    @php
+        $berhasil = session()->has('pesan');
+        $pesanStatus = session('pesan') ?? session('galat') ?? $errors->first();
+    @endphp
+    <dialog class="mv-dialog-pengaturan" data-dialog-pengaturan role="alertdialog" aria-modal="true" aria-labelledby="judul-status-pengaturan" aria-describedby="isi-status-pengaturan">
+        <div class="mv-dialog-pengaturan__isi">
+            <span class="mv-dialog-pengaturan__ikon {{ $berhasil ? 'mv-dialog-pengaturan__ikon--sukses' : 'mv-dialog-pengaturan__ikon--galat' }}" aria-hidden="true">{{ $berhasil ? '✓' : '!' }}</span>
+            <h2 id="judul-status-pengaturan">{{ $berhasil ? 'Perubahan berhasil' : 'Perubahan belum berhasil' }}</h2>
+            <p id="isi-status-pengaturan">{{ $pesanStatus }}</p>
+            <button type="button" class="mv-btn mv-btn--utama" data-tutup-dialog-pengaturan>OK</button>
+        </div>
+    </dialog>
+@endif
 @endsection

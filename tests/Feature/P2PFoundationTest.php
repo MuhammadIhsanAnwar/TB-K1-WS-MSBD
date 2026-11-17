@@ -29,14 +29,15 @@ class P2PFoundationTest extends TestCase
         ]);
         self::assertNotFalse($privateKey);
         self::assertTrue(openssl_pkey_export($privateKey, $privatePem, null, ['config' => $opensslConfigPath]));
-        $privateKeyPath = tempnam(sys_get_temp_dir(), 'p2p-signing-key-');
+        $privateKeyPath = tempnam(storage_path('app/keys'), 'p2p-signing-key-');
         self::assertNotFalse($privateKeyPath);
+        $relativePrivateKeyPath = 'storage/app/keys/'.basename($privateKeyPath);
         file_put_contents($privateKeyPath, $privatePem);
         config([
             'services.supabase.katalog.url' => 'https://db1.example.test',
             'services.supabase.katalog.publishable_key' => 'publishable-test-key',
             'services.supabase.katalog.secret_key' => 'server-only-test-key',
-            'services.supabase.katalog.jwt_private_key_path' => $privateKeyPath,
+            'services.supabase.katalog.jwt_private_key_path' => $relativePrivateKeyPath,
             'services.supabase.katalog.jwt_key_id' => 'test-key-id',
             'services.webrtc.enabled' => true,
             'services.webrtc.stun_url' => 'stun:stun.l.google.com:19302',
@@ -51,6 +52,10 @@ class P2PFoundationTest extends TestCase
             ]]);
 
         try {
+            $originalWorkingDirectory = getcwd();
+            self::assertNotFalse($originalWorkingDirectory);
+            self::assertTrue(chdir(sys_get_temp_dir()));
+
             $response = $this->withSession([
                 'pengguna' => ['id' => 42, 'nama' => 'Pengguna Test', 'peran' => 'wisatawan'],
             ])->postJson('/api/p2p/peers/register', [
@@ -61,6 +66,7 @@ class P2PFoundationTest extends TestCase
                 ->assertJsonPath('user_id', 42)
                 ->assertJsonPath('publishable_key', 'publishable-test-key')
                 ->assertDontSee('server-only-test-key');
+            self::assertTrue(chdir($originalWorkingDirectory));
 
             $token = $response->json('access_token');
             [$headerPart, $payloadPart, $signaturePart] = explode('.', $token);
@@ -89,6 +95,9 @@ class P2PFoundationTest extends TestCase
                 OPENSSL_ALGO_SHA256,
             ));
         } finally {
+            if (isset($originalWorkingDirectory) && getcwd() !== $originalWorkingDirectory) {
+                chdir($originalWorkingDirectory);
+            }
             unlink($privateKeyPath);
             unlink($opensslConfigPath);
         }

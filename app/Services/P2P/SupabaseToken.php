@@ -14,6 +14,15 @@ class SupabaseToken
             abort(503, 'Supabase P2P JWT signing key belum dikonfigurasi.');
         }
 
+        $isAbsolutePath = str_starts_with($keyPath, DIRECTORY_SEPARATOR)
+            || str_starts_with($keyPath, '\\')
+            || (strlen($keyPath) > 2
+                && $keyPath[1] === ':'
+                && in_array($keyPath[2], ['\\', '/'], true));
+        if (! $isAbsolutePath) {
+            $keyPath = base_path($keyPath);
+        }
+
         $privateKey = file_get_contents($keyPath);
         if ($privateKey === false) {
             abort(503, 'Private key Supabase P2P tidak dapat dibaca.');

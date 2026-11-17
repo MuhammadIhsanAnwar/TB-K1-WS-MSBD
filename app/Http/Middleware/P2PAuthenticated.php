@@ -16,6 +16,10 @@ class P2PAuthenticated
             return response()->json(['message' => 'Sesi masuk tidak valid atau sudah berakhir.'], 401);
         }
 
+        if (($user['peran'] ?? null) !== 'wisatawan') {
+            return response()->json(['message' => 'MedanVisit Hub hanya tersedia untuk wisatawan.'], 403);
+        }
+
         return $next($request);
     }
 }

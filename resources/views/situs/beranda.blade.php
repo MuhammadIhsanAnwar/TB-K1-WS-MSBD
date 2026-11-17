@@ -2,6 +2,7 @@
 
 @php
     use App\Support\Katalog;
+    $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
     $semuaTempat = Katalog::tempat();
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
     $heroSlide = collect($semuaTempat)->filter(fn ($t) => ! empty($t['foto']))->take(4)->values();
@@ -28,7 +29,7 @@
         'kategori' => $t['kategori'],
         'url' => route('tempat', $t['slug']),
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
-        'tiket' => ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
+        'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
     ])->values();
     $urutTempat = collect($semuaTempat)->sortBy('nama')->values();
     $jumlahGaleri = $urutTempat->countBy('kategori');
@@ -183,7 +184,9 @@
                                         <span>{{ $t['kecamatan'] }}, {{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(' · ') }}@if (! empty($t['harga_contoh'])) <span class="contoh">contoh</span>@endif</span>
                                     </span>
                                     <span class="mv-menu-harga__harga nums">{{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</span>
-                                    <a class="mv-btn mv-btn--utama mv-btn--kecil" href="{{ route('tiket.pilih', $t['slug']) }}" aria-label="Pesan tiket {{ $t['nama'] }}">Pesan</a>
+                                    @unless ($akunPengelola)
+                                        <a class="mv-btn mv-btn--utama mv-btn--kecil" href="{{ route('tiket.pilih', $t['slug']) }}" aria-label="Pesan tiket {{ $t['nama'] }}">Pesan</a>
+                                    @endunless
                                 </li>
                             @endforeach
                         </ul>
@@ -202,7 +205,9 @@
                 <h2 id="judul-rencana">Rencana perjalanan</h2>
                 <p>Susun rute wisata sesuai minat, waktu kunjungan, dan cara berpindahmu.</p>
             </div>
-            <a class="mv-btn mv-btn--utama" href="{{ route('rencana') }}">Buat rencana</a>
+            @unless ($akunPengelola)
+                <a class="mv-btn mv-btn--utama" href="{{ route('rencana') }}">Buat rencana</a>
+            @endunless
         </div>
     </div>
 </section>

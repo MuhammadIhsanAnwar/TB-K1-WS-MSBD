@@ -1,12 +1,15 @@
 @php
     $u = session('pengguna');
+    $akunPengelola = in_array($u['peran'] ?? null, ['admin', 'superadmin'], true);
     $menuPonsel = [
         [route('beranda'), 'Beranda', ['beranda']],
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
-        [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
-        [route('medanvisit-hub.index'), 'MedanVisit Hub', ['medanvisit-hub.*']],
-        [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
     ];
+    if (! $akunPengelola) {
+        $menuPonsel[] = [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']];
+        $menuPonsel[] = [route('medanvisit-hub.index'), 'MedanVisit Hub', ['medanvisit-hub.*']];
+        $menuPonsel[] = [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']];
+    }
 @endphp
 <dialog class="lembar-menu" id="lembar-menu" data-ui aria-label="Menu navigasi">
     <div class="lembar-menu__isi">
@@ -26,14 +29,6 @@
                 <a href="{{ $href }}" @if (request()->routeIs(...$pola)) aria-current="page" @endif>{{ $label }}</a>
             @endforeach
         </nav>
-
-        @if ($u && $u['peran'] === 'wisatawan')
-            <nav class="lembar-menu__sub" aria-label="Menu akun">
-                <a href="{{ route('tiket.saya') }}">Tiket saya</a>
-                <a href="{{ route('rencana.saya') }}">Rencana tersimpan</a>
-                <a href="{{ route('akun') }}">Akun saya</a>
-            </nav>
-        @endif
 
         <div class="lembar-menu__bawah">
             @if ($u)

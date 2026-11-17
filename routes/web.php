@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 // ---------- komunikasi peer-to-peer ----------
 Route::get('/MedanVisit-Hub', [P2PPlatformController::class, 'index'])
-    ->middleware('peran')
+    ->middleware('peran:wisatawan')
     ->name('medanvisit-hub.index');
 Route::redirect('/MedanVisitt-Hub', '/MedanVisit-Hub', 301)->name('medanvisit-hub.typo-legacy');
 Route::redirect('/p2p', '/MedanVisit-Hub', 301)->name('p2p.legacy');
@@ -40,11 +40,11 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
     Route::post('/tempat/{slug}/sukai', 'sukai')->name('tempat.sukai');
-    Route::get('/rencana', 'rencana')->name('rencana');
-    Route::get('/r/{kode}', 'rencanaBagikan')->name('rencana.bagikan');
+    Route::get('/rencana', 'rencana')->middleware('bukan-pengelola')->name('rencana');
+    Route::get('/r/{kode}', 'rencanaBagikan')->middleware('bukan-pengelola')->name('rencana.bagikan');
     Route::get('/ketentuan', 'ketentuan')->name('ketentuan');
-    Route::get('/hubungi-admin', 'hubungiAdmin')->middleware('peran:wisatawan,admin')->name('hubungi.admin');
-    Route::post('/hubungi-admin', 'simpanPesanAdmin')->middleware('peran:wisatawan,admin')->name('hubungi.admin.kirim');
+    Route::get('/hubungi-admin', 'hubungiAdmin')->middleware('peran:wisatawan')->name('hubungi.admin');
+    Route::post('/hubungi-admin', 'simpanPesanAdmin')->middleware('peran:wisatawan')->name('hubungi.admin.kirim');
     Route::get('/{jenis}/{slug}', 'entitas')->whereIn('jenis', ['tokoh', 'budaya', 'kuliner', 'peristiwa', 'kerajaan', 'transportasi'])->name('entitas');
 });
 
@@ -69,15 +69,15 @@ Route::controller(AkunController::class)->middleware('kunjungan')->group(functio
         Route::get('/akun', 'akun')->name('akun');
         Route::get('/akun/pengaturan', 'pengaturan')->name('akun.pengaturan');
         Route::post('/akun/pengaturan', 'simpanPengaturan');
-        Route::get('/ulasan-saya', 'ulasanSaya')->name('ulasan.saya');
-        Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->name('ulasan.tulis');
-        Route::get('/rencana/saya', 'rencanaSaya')->name('rencana.saya');
-        Route::post('/rencana/simpan', 'simpanRencana')->name('rencana.simpan');
+        Route::get('/ulasan-saya', 'ulasanSaya')->middleware('peran:wisatawan')->name('ulasan.saya');
+        Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->middleware('peran:wisatawan')->name('ulasan.tulis');
+        Route::get('/rencana/saya', 'rencanaSaya')->middleware('peran:wisatawan')->name('rencana.saya');
+        Route::post('/rencana/simpan', 'simpanRencana')->middleware('peran:wisatawan')->name('rencana.simpan');
     });
 });
 
 // ---------- tiket ----------
-Route::controller(TiketController::class)->middleware(['peran', 'kunjungan'])->group(function () {
+Route::controller(TiketController::class)->middleware(['peran:wisatawan', 'kunjungan'])->group(function () {
     Route::get('/tempat/{slug}/tiket', 'pilih')->name('tiket.pilih');
     Route::post('/tempat/{slug}/tiket', 'simpanPilihan');
     Route::get('/checkout', 'checkout')->name('checkout');

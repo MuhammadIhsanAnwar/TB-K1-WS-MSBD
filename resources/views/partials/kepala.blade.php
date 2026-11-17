@@ -2,6 +2,7 @@
     use App\Support\Katalog;
     use App\Support\Penyimpanan;
     $u = session('pengguna');
+    $akunPengelola = in_array($u['peran'] ?? null, ['admin', 'superadmin'], true);
     $jalurFotoProfil = $u['foto_profil'] ?? null;
     $berkasFotoProfil = $jalurFotoProfil ? public_path('storage/'.$jalurFotoProfil) : null;
     $urlFotoProfil = $berkasFotoProfil && is_file($berkasFotoProfil)
@@ -10,11 +11,13 @@
     $adalahBeranda = request()->routeIs('beranda');
     $menu = [
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
-        [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']],
-        [route('medanvisit-hub.index'), 'MedanVisit Hub', ['medanvisit-hub.*']],
-        [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
-        [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];
+    if (! $akunPengelola) {
+        $menu[] = [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']];
+        $menu[] = [route('medanvisit-hub.index'), 'MedanVisit Hub', ['medanvisit-hub.*']];
+        $menu[] = [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']];
+        $menu[] = [route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']];
+    }
     $tiketAktif = ($u && $u['peran'] === 'wisatawan' && ! request()->routeIs('medanvisit-hub.index'))
         ? collect(Penyimpanan::pesanan((int) ($u['id'] ?? 0), aman: true))->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString())->count()
         : 0;
