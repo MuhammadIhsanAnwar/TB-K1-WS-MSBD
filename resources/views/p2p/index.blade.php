@@ -1,8 +1,11 @@
 @extends('layouts.situs')
-@section('judul', 'MedanVisit Hub')
+@section('judul', 'MedanVisitt Hub')
 @section('deskripsi', 'Temukan peer MedanVisit dan bertukar pesan langsung melalui WebRTC DataChannel.')
 @section('tanpa-kaki', '1')
 @section('tanpa-kepala', '1')
+@push('kepala')
+    <link rel="stylesheet" href="{{ asset('css/medanvisitt-hub.css') }}?v={{ filemtime(public_path('css/medanvisitt-hub.css')) }}">
+@endpush
 
 @section('isi')
 <div class="p2p halaman-alat"
@@ -16,8 +19,8 @@
      data-respond-url="{{ route('api.p2p.connections.respond', ['session' => '__SESSION__', 'decision' => '__DECISION__']) }}">
     <header class="p2p__heading">
         <div>
-            <p class="p2p__eyebrow">MedanVisit Hub</p>
-            <h1>Komunikasi peer-to-peer</h1>
+            <p class="p2p__eyebrow">Komunikasi peer-to-peer</p>
+            <h1>MedanVisitt Hub</h1>
             <p>Temukan perangkat online, terima permintaan koneksi, lalu bertukar pesan melalui RTCDataChannel.</p>
         </div>
         <a class="p-btn" href="{{ route('akun') }}">Kembali ke akun</a>
