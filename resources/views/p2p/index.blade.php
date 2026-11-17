@@ -1,9 +1,9 @@
 @extends('layouts.situs')
-@section('judul', 'MedanVisitt Hub')
+@section('judul', 'MedanVisit Hub')
 @section('deskripsi', 'Temukan peer MedanVisit dan bertukar pesan langsung melalui WebRTC DataChannel.')
 @section('tanpa-kaki', '1')
 @push('kepala')
-    <link rel="stylesheet" href="{{ asset('css/medanvisitt-hub.css') }}?v={{ filemtime(public_path('css/medanvisitt-hub.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/medanvisit-hub.css') }}?v={{ filemtime(public_path('css/medanvisit-hub.css')) }}">
 @endpush
 
 @section('isi')
@@ -19,7 +19,7 @@
     <header class="p2p__heading">
         <div>
             <p class="p2p__eyebrow">Komunikasi peer-to-peer</p>
-            <h1>MedanVisitt Hub</h1>
+            <h1>MedanVisit Hub</h1>
             <p>Temukan perangkat online, terima permintaan koneksi, lalu bertukar pesan melalui RTCDataChannel.</p>
         </div>
         <a class="p-btn" href="{{ route('akun') }}">Kembali ke akun</a>
