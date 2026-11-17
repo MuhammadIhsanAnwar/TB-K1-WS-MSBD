@@ -9,9 +9,15 @@
 
 ## Yang perlu disiapkan
 
-1. Tambahkan signing key asimetris RSA ke **Supabase DB1 → Authentication → JWT Signing Keys**. Simpan private PEM di luar repository, berikan akses baca hanya kepada PHP, lalu isi:
+1. Gunakan signing key RSA atau EC P-256 (ES256) yang private key-nya Anda miliki. Supabase tidak dapat mengekspor private key dari key yang dibuat di dashboard. Untuk dipakai Laravel, buat pasangan P-256 sendiri:
+   ```sh
+   openssl ecparam -name prime256v1 -genkey -noout -out medanvisit-p2p-private.pem
+   openssl pkey -in medanvisit-p2p-private.pem -pubout -out medanvisit-p2p-public.pem
+   ```
+   Impor key pair tersebut ke **Supabase DB1 → Authentication → JWT Signing Keys**. Simpan file private PEM hanya di server Laravel, lalu gunakan `kid` dari key yang diimpor:
    - `SUPABASE_DB1_JWT_PRIVATE_KEY_PATH`: path private PEM pada server Laravel.
    - `SUPABASE_DB1_JWT_KEY_ID`: `kid` signing key yang terdaftar di Supabase.
+   `kid` yang dibuat Supabase sendiri tidak dapat digunakan untuk menandatangani JWT di Laravel tanpa private key pasangannya.
 2. Pastikan DB1 memakai URL dan publishable key yang sudah ada di konfigurasi aplikasi. `SUPABASE_DB1_SECRET_KEY` tetap server-only dan tidak dikirim ke browser.
 3. Aktifkan Supabase Realtime untuk DB1 dan nonaktifkan **Allow public access**. Migrasi memasang kebijakan private-channel pada `realtime.messages`.
    Sebelum rollout, tinjau kebijakan lama pada `realtime.messages`: kebijakan permissive yang sudah ada dapat memperluas akses channel; hapus/persempit kebijakan lama yang tidak dibutuhkan setelah menilai dampaknya pada fitur lain.
