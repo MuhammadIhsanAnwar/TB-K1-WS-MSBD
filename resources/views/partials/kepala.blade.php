@@ -15,7 +15,7 @@
         [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']],
         [$u && $u['peran'] === 'wisatawan' ? route('tiket.saya') : route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']],
     ];
-    $tiketAktif = ($u && $u['peran'] === 'wisatawan')
+    $tiketAktif = ($u && $u['peran'] === 'wisatawan' && ! request()->routeIs('medanvisitt-hub.index'))
         ? collect(Penyimpanan::pesanan((int) ($u['id'] ?? 0), aman: true))->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString())->count()
         : 0;
 @endphp
@@ -34,10 +34,12 @@
         <div class="mv-kepala__aksi">
             <a class="mv-kepala__cepat-ponsel" href="{{ route('peta') }}" @if (request()->routeIs('peta')) aria-current="page" @endif>Peta</a>
 
-            <button class="mv-kepala__cari" type="button" data-buka-cari aria-haspopup="dialog" aria-controls="dialog-cari" aria-label="Cari tempat, tokoh, atau kuliner">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                <span class="mv-kepala__cari-teks">Cari</span>
-            </button>
+            @unless (request()->routeIs('medanvisitt-hub.index'))
+                <button class="mv-kepala__cari" type="button" data-buka-cari aria-haspopup="dialog" aria-controls="dialog-cari" aria-label="Cari tempat, tokoh, atau kuliner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                    <span class="mv-kepala__cari-teks">Cari</span>
+                </button>
+            @endunless
 
             @if ($u)
                 @if ($u['peran'] === 'admin')

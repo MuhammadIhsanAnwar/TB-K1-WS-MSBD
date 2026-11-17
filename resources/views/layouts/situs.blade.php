@@ -52,10 +52,12 @@
     @endif
     @hasSection('tanpa-kepala')
     @else
-        @include('partials.dialog-cari')
-        {{-- tidak dipasang di halaman Tanya (sudah percakapan) dan alur tiket (jangan menutupi tombol bayar) --}}
-        @unless (request()->routeIs('tanya', 'tiket.*', 'checkout', 'pesanan*'))
-            @include('partials.asisten-melayang')
+        @unless (request()->routeIs('medanvisitt-hub.index'))
+            @include('partials.dialog-cari')
+            {{-- tidak dipasang di halaman Tanya (sudah percakapan) dan alur tiket (jangan menutupi tombol bayar) --}}
+            @unless (request()->routeIs('tanya', 'tiket.*', 'checkout', 'pesanan*'))
+                @include('partials.asisten-melayang')
+            @endunless
         @endunless
     @endif
     @include('partials.lightbox-foto')
