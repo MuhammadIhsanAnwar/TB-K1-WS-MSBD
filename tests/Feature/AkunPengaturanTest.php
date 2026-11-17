@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -111,6 +112,55 @@ class AkunPengaturanTest extends TestCase
             ->assertSee('Perubahan belum berhasil')
             ->assertSee('class="mv-dialog-pengaturan"', false)
             ->assertDontSee('class="pesan"', false);
+    }
+
+    public function test_validation_failure_is_shown_in_centered_dialog(): void
+    {
+        $user = $this->user();
+        Http::fake(fn () => Http::response([$user]));
+
+        $this->followingRedirects()->from('/akun/pengaturan')
+            ->withSession(['pengguna' => [
+                'id' => 42,
+                'nama' => $user['name'],
+                'email' => $user['email'],
+                'peran' => 'wisatawan',
+            ]])->post('/akun/pengaturan', [
+                'nama' => '',
+                'tanggal_lahir' => '1990-01-01',
+                'no_hp' => '081234567890',
+            ])->assertOk()
+            ->assertSee('Perubahan belum berhasil')
+            ->assertSee('class="mv-dialog-pengaturan"', false)
+            ->assertDontSee('class="pesan"', false);
+
+        Http::assertNotSent(fn (Request $request) => $request->method() === 'PATCH');
+    }
+
+    public function test_non_google_account_can_still_update_its_password(): void
+    {
+        $user = $this->user();
+        Http::fake(function (Request $request) use ($user) {
+            return Http::response([$user]);
+        });
+
+        $this->withSession(['pengguna' => [
+            'id' => 42,
+            'nama' => $user['name'],
+            'email' => $user['email'],
+            'peran' => 'wisatawan',
+        ]])->post('/akun/pengaturan', [
+            'nama' => $user['name'],
+            'tanggal_lahir' => $user['tanggal_lahir'],
+            'no_hp' => $user['no_hp'],
+            'password' => 'NewPassword!9',
+            'password_confirmation' => 'NewPassword!9',
+        ])->assertRedirect(route('akun.pengaturan'))
+            ->assertSessionHas('pesan', 'Pengaturan akun berhasil disimpan.');
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
+            && isset($request['password'])
+            && Hash::check('NewPassword!9', $request['password']));
     }
 
     private function user(array $attributes = []): array
