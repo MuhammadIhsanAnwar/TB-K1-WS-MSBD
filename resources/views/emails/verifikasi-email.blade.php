@@ -27,7 +27,7 @@
             </tr>
             <tr>
                 <td style="padding:40px 40px 32px;">
-                    <p style="margin:0 0 12px;color:#a06b00;font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;">Selamat datang di MedanVisiit</p>
+                    <p style="margin:0 0 12px;color:#a06b00;font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;">Selamat datang di MedanVisit</p>
                     <h1 style="margin:0 0 16px;color:#0f3b2e;font-size:30px;line-height:1.2;">Konfirmasi emailmu</h1>
                     <p style="margin:0 0 24px;color:#3f574e;">Terima kasih sudah mendaftar di MedanVisit. Konfirmasi alamat emailmu untuk mengaktifkan akun dan mulai menjelajahi Kota Medan.</p>
                     <p style="margin:0 0 28px;text-align:center;">
