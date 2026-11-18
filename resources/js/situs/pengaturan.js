@@ -44,3 +44,4 @@ inputFoto?.addEventListener('change', () => {
     }
     aturBantuFoto(`${berkas.name} siap dipakai. Tekan "Simpan perubahan" untuk menyimpannya.`);
 });
+
