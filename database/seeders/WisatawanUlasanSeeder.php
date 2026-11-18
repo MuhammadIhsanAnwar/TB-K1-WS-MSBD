@@ -54,3 +54,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Nyaman untuk belanja sambil makan. Parkirnya luas.',
             'Pilihan tokonya banyak dan tempatnya bersih.',
         ],
+        'rekreasi-air' => [
