@@ -83,3 +83,4 @@ function periksaSandi() {
     ulang.setCustomValidity(sama ? '' : 'Ulangi password yang sama.');
     if (ulang.value === '') aturStatusUlang('Ketik ulang password baru di kolom ini.');
     else aturStatusUlang(sama ? 'Kedua password sudah sama.' : 'Belum sama dengan password baru.');
+}
