@@ -381,6 +381,7 @@ class SupabaseApi
 
     /** Simpan (buat atau timpa) satu kunci pengaturan. */
     public function simpanPengaturanSitus(string $kunci, mixed $nilai, ?int $idPengguna): void
+    {
 
     public function ping(string $table): void
     {
