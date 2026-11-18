@@ -14,3 +14,4 @@ return new class extends Migration
     protected $connection = 'katalog';
 
     public function up(): void
+    {
