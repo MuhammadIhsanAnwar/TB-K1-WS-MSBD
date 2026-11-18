@@ -86,3 +86,4 @@ return new class extends Migration
         $isiBayar = self::ISI_BAYAR;
 
         DB::connection($this->connection)->unprepared(<<<SQL
+            DROP PROCEDURE IF EXISTS sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar);
