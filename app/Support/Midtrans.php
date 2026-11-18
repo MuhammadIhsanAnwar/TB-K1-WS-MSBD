@@ -172,3 +172,4 @@ class Midtrans
         Cache::forget('midtrans.snap.'.$kode);
     }
 
+    /** Tanda tangan notifikasi: SHA512(order_id + status_code + gross_amount + Signature Secret Key). */
