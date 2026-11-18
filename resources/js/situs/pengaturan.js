@@ -41,3 +41,4 @@ inputFoto?.addEventListener('change', () => {
         pratinjau.src = urlPratinjau;
         pratinjau.alt = 'Pratinjau foto profil baru';
         pratinjau.hidden = false;
+    }
