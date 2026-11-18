@@ -11,3 +11,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     const tampilkan = (src, teks) => {
         gambar.hidden = !src;
         kosong.hidden = Boolean(src);
+        if (src) gambar.src = src;
