@@ -222,6 +222,7 @@
 }
 /* 380 px ke bawah: pintasan Peta disembunyikan saat login; "Tempat & Peta" tetap ada di lembar Menu. */
 @media (max-width: 380px) {
+  .mv-kepala__aksi:has(.mv-akun-menu, .mv-kepala__foto, .mv-btn) .mv-kepala__cepat-ponsel { display: none; }
 
 /* Dropdown Akun Wisatawan ([data-ui]) */
 [data-ui].mv-akun-menu { position: relative; }
