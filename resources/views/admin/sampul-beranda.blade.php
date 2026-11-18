@@ -13,3 +13,4 @@
     <div>
         <h1>Sampul beranda</h1>
         <p class="sub">Foto besar di bagian atas beranda. Foto berganti otomatis sesuai urutan slot.</p>
+    </div>
