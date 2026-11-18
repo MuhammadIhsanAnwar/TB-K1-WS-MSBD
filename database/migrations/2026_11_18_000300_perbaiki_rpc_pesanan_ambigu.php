@@ -13,3 +13,4 @@ use Illuminate\Support\Facades\DB;
  * dan function pembungkus tetap memanggilnya dengan argumen lengkap.
  */
 return new class extends Migration
+{
