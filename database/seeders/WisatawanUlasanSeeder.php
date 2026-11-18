@@ -17,3 +17,4 @@ use RuntimeException;
  * aturan satu akun satu ulasan per tempat dan trigger ringkasan_ulasan menghitung rating. Aman
  * dijalankan berulang: akun yang sudah ada dipakai ulang dan ulasannya hanya diperbarui.
  *
+ * Jalankan: php artisan db:seed --class=WisatawanUlasanSeeder   (perlu SEED_WISATAWAN_PASSWORD di .env)
