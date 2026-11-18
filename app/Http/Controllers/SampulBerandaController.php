@@ -98,3 +98,4 @@ class SampulBerandaController extends Controller
                 File::delete(public_path($jalur));
             }
         }
+
