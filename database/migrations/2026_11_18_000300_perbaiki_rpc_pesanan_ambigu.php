@@ -16,3 +16,4 @@ return new class extends Migration
 {
     protected $connection = 'transaksi';
 
+    private const PERAN = 'PUBLIC, anon, authenticated, service_role';
