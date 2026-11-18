@@ -62,6 +62,7 @@ class Semantik
                         'bestRating' => 5,
                         'worstRating' => 1,
                     ];
+                }
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
