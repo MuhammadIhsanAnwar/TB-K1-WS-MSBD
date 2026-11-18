@@ -77,3 +77,4 @@ class WisatawanUlasanSeeder extends Seeder
                 'name' => "Wisatawan Contoh {$nomor}",
                 'email' => $email,
                 'password' => Hash::make($password),
+                'peran' => 'wisatawan',
