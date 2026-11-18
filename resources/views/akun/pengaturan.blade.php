@@ -122,7 +122,6 @@
             </div>
         </form>
     </div>
-                <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password">
             </div>
         </fieldset>
         <button class="mv-btn mv-btn--utama" type="submit" style="margin-top:24px">Simpan perubahan</button>
