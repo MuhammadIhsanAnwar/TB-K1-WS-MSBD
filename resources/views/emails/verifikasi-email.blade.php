@@ -13,7 +13,6 @@
                     {{-- URL publik, bukan lampiran cid: gambar cid tidak tampil di browser dan sebagian aplikasi email --}}
                     <img src="{{ url('storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png') }}" alt="MedanVisit" width="184" height="64" style="display:inline-block;width:184px;height:64px;object-fit:contain;color:#f6f1e4;font-size:20px;font-weight:bold;">
                 </td>
-
     <div style="margin-top:8px;color:#f6f1e4;font-size:12px;letter-spacing:1.5px;">
         JELAJAHI MEDAN LEWAT CERITANYA
     </div>
