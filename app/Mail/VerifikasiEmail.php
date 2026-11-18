@@ -13,7 +13,6 @@ class VerifikasiEmail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(public readonly string $url) {}
-            $logo->setContentId('medanvisit-logo@medanvisit.local');
 
             $message->addPart($logo);
         });
