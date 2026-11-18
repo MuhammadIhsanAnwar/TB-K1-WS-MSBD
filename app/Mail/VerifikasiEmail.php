@@ -12,7 +12,7 @@ class VerifikasiEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public readonly string $url)
+    public function __construct(public readonly string $url) {}
     {
         $this->withSymfonyMessage(function (Email $message) {
             $path = public_path(
