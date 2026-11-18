@@ -175,6 +175,7 @@ class Penyimpanan
             ->first(fn ($u) => (int) ($u['id_pengguna'] ?? 0) === (int) $data['id_pengguna'] && ($u['tempat_slug'] ?? null) === $data['tempat']);
         if ($lama) {
             $row = self::api()->ubahUlasan((int) $lama['id_ulasan'], [
+                'nama_pengguna' => Str::limit($data['nama'] ?? 'Wisatawan', 77),
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
