@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'bukan-pengelola' => \App\Http\Middleware\BukanPengelola::class,
             'kunjungan' => \App\Http\Middleware\CatatKunjungan::class,
         ]);
+        // server Midtrans tidak membawa token CSRF; keasliannya diperiksa lewat tanda tangan notifikasi
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
