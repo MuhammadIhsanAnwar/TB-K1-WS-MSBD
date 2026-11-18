@@ -35,3 +35,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         urlUnggah = URL.createObjectURL(berkas);
         tampilkan(urlUnggah, `${berkas.name}, belum disimpan`);
     });
+});
