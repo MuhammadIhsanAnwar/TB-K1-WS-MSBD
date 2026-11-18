@@ -209,6 +209,7 @@
             <h2 id="judul-ulasan">Ulasan pengunjung</h2>
             @if ($ratingTempat['jumlah'])
                 <p class="mv-rating-ringkas">
+                    <x-bintang :n="(int) round($ratingTempat['rata'])" />
             @if ($ulasan)
                 <div class="ulasan-daftar">
                     @foreach ($ulasan as $ul)
