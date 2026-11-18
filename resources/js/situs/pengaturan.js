@@ -85,3 +85,4 @@ function periksaSandi() {
     else aturStatusUlang(sama ? 'Kedua password sudah sama.' : 'Belum sama dengan password baru.');
 }
 
+if (sandi) {
