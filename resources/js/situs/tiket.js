@@ -146,3 +146,4 @@ if (bayar) {
         tulisKabar('Membuka jendela pembayaran...');
         try {
             const data = await kirim(formBayar.action);
+            if (!data.token) {
