@@ -33,6 +33,7 @@
                     <span class="akun-atur__inisial" aria-hidden="true" data-foto-sekarang>{{ $inisial }}</span>
                 @endif
             </div>
+            <h2 id="judul-profil">{{ $user['name'] }}</h2>
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
