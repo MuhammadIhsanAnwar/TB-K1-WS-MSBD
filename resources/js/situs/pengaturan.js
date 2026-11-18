@@ -28,3 +28,4 @@ inputFoto?.addEventListener('change', () => {
     if (!berkas) return;
 
     let galat = '';
+    if (!berkas.type.startsWith('image/')) galat = 'Berkas ini bukan gambar. Pilih JPG, PNG, GIF, atau WEBP.';
