@@ -375,6 +375,7 @@ class SupabaseApi
 
     /** Nilai JSON satu kunci pengaturan, atau null kalau belum pernah diatur. */
     public function pengaturanSitus(string $kunci): mixed
+    {
 
     public function ping(string $table): void
     {
