@@ -31,3 +31,4 @@ inputFoto?.addEventListener('change', () => {
     if (!berkas.type.startsWith('image/')) galat = 'Berkas ini bukan gambar. Pilih JPG, PNG, GIF, atau WEBP.';
     else if (berkas.size > BATAS_FOTO) galat = `Ukuran foto ${(berkas.size / 1048576).toFixed(1)} MB, melebihi batas 2 MB.`;
     if (galat) {
+        inputFoto.setCustomValidity(galat);
