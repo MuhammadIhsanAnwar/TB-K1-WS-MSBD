@@ -7,6 +7,7 @@
     $midtrans = $p['status'] === 'menunggu' && Midtrans::aktif();
 @endphp
 @if ($midtrans)
+    @push('kepala')
 @section('judul', 'Pesanan '.$p['kode'])
 @section('tanpa-kaki', '1')
 @if ($p['status'] === 'lunas') @section('tanpa-kepala', '1') @endif
