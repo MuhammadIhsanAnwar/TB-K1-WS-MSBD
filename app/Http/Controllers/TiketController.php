@@ -119,6 +119,7 @@ class TiketController extends Controller
             'item' => $pilihan['item'],
             'total' => array_sum(array_column($pilihan['item'], 'subtotal')),
             // nilai sementara (kolom wajib diisi); diganti cara bayar yang dipilih di Midtrans saat sinkron
+            'metode' => $data['metode'] ?? 'qris',
         ]);
         $request->session()->forget('pilihan');
 
