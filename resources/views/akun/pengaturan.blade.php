@@ -103,6 +103,7 @@
                             <li data-syarat="kecil">Huruf kecil</li>
                             <li data-syarat="besar">Huruf kapital</li>
                             <li data-syarat="angka">Angka</li>
+                            <li data-syarat="simbol">Simbol, misalnya ! atau #</li>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
