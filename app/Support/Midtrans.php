@@ -52,3 +52,4 @@ class Midtrans
     }
 
     /**
+     * Token Snap untuk pesanan yang masih menunggu. Disimpan di cache sampai batas bayar, jadi
