@@ -80,3 +80,4 @@ function periksaSandi() {
         return;
     }
     const sama = ulang.value === nilai;
+    ulang.setCustomValidity(sama ? '' : 'Ulangi password yang sama.');
