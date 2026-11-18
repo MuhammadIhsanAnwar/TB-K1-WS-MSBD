@@ -28,3 +28,4 @@ class SampulBeranda
 
     /** Slot tersimpan: [['slug' => ..., 'foto' => 'storage/sampul_beranda/...' atau null], ...]. */
     public static function pengaturan(): array
+    {
