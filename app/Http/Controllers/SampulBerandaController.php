@@ -41,3 +41,4 @@ class SampulBerandaController extends Controller
             'slot.*.hapus_foto' => ['nullable', 'boolean'],
         ], [
             'slot.*.slug.in' => 'Tempat di slot :position tidak ada di katalog.',
+            'slot.*.slug.distinct' => 'Satu tempat hanya boleh dipakai di satu slot.',
