@@ -239,7 +239,7 @@
                         <legend>{{ $ulasanSaya ? 'Perbarui penilaianmu' : 'Penilaian kunjunganmu' }}</legend>
                         <div class="pilih-banyak" style="margin-top:8px">
                             @for ($b = 1; $b <= 5; $b++)
-                                <label><input type="radio" name="bintang" value="{{ $b }}" @checked(old('bintang') == $b)>{{ $b }} bintang</label>
+                                <label><input type="radio" name="bintang" value="{{ $b }}" @checked(old('bintang', $ulasanSaya['bintang'] ?? null) == $b)>{{ $b }} bintang</label>
                             @endfor
                         </div>
                         @error('bintang')<p class="isian__galat">{{ $message }}</p>@enderror
