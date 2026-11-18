@@ -297,6 +297,7 @@ class SupabaseApi
         $rows = $this->request()
             ->withHeaders(['Prefer' => 'return=representation'])
             ->patch($this->url('ulasan').'?'.http_build_query(['id_ulasan' => 'eq.'.$id]), $data)
+            ->throw()
     public function hapusUlasan(int $id): void
     {
         $rows = $this->request()
