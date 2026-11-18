@@ -112,3 +112,4 @@ if (bayar) {
     let pantau = null;
 
     const tulisKabar = (teks) => {
+        kabar.hidden = !teks;
