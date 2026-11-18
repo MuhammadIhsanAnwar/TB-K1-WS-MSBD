@@ -58,3 +58,4 @@ return new class extends Migration
                 UPDATE pesanan SET status = 'kedaluwarsa', updated_at = now() WHERE id_pesanan = p.id_pesanan;
                 RAISE NOTICE 'Pesanan % sudah lewat batas bayar dan ditandai kedaluwarsa', p_kode;
                 RETURN;
+            END IF;
