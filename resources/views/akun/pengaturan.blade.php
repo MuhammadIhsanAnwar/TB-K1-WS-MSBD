@@ -8,6 +8,7 @@
     $inisial = mb_strtoupper(mb_substr($user['name'] ?? '?', 0, 1));
     $bergabung = ! empty($user['created_at']) ? \Illuminate\Support\Carbon::parse($user['created_at'])->locale('id')->translatedFormat('j F Y') : null;
     $wisatawan = ($user['peran'] ?? null) === 'wisatawan';
+@endphp
 @section('isi')
 <div class="alat">
     <div class="alat__judul">
