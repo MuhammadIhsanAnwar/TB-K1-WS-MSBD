@@ -33,3 +33,4 @@ class Midtrans
 
     public static function aktif(): bool
     {
+        return filled(config('services.midtrans.server_key')) && filled(config('services.midtrans.client_key'));
