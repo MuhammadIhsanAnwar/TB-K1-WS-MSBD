@@ -69,7 +69,7 @@
                     <label for="nama">Nama</label>
                     <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" autocomplete="name" required @error('nama') aria-invalid="true" @enderror>
                     @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
-        <fieldset @disabled($akunGoogle) style="border:0;padding:0;margin:24px 0 0">
+                </div>
             <legend>Password (opsional)</legend>
             <div class="isian">
                 <label for="password">Password baru</label>
