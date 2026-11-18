@@ -36,3 +36,4 @@ return new class extends Migration
     {
         Schema::connection($this->connection)->dropIfExists('pengaturan_situs');
     }
+};
