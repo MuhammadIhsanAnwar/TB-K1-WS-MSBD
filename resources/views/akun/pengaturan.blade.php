@@ -38,6 +38,7 @@
             <dl class="akun-atur__fakta">
                 <div><dt>Peran</dt><dd>{{ ucfirst($user['peran'] ?? 'wisatawan') }}</dd></div>
                 @if ($bergabung)<div><dt>Bergabung</dt><dd>{{ $bergabung }}</dd></div>@endif
+                <div><dt>Email</dt><dd>{{ ! empty($user['email_verified_at']) ? 'Terverifikasi' : 'Belum diverifikasi' }}</dd></div>
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
