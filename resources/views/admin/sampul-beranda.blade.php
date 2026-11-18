@@ -49,3 +49,4 @@
                         @endif
                     </figcaption>
                 </figure>
+                <div class="p-field">
