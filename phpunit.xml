@@ -35,5 +35,6 @@
         <!-- test tidak pernah memanggil Midtrans sungguhan; pembayaran memakai mode simulasi -->
         <env name="MIDTRANS_SERVER_KEY" value=""/>
         <env name="MIDTRANS_CLIENT_KEY" value=""/>
+        <env name="MIDTRANS_SIGNATURE_KEY" value=""/>
     </php>
 </phpunit>
