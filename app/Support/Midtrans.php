@@ -83,3 +83,4 @@ class Midtrans
                 'email' => $p['pemesan']['email'],
                 'phone' => $p['pemesan']['hp'],
             ],
+            'expiry' => ['start_time' => now('Asia/Jakarta')->format('Y-m-d H:i:s O'), 'unit' => 'minute', 'duration' => $menit],
