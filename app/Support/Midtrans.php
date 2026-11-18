@@ -28,3 +28,4 @@ class Midtrans
         'kartu' => ['credit_card'],
     ];
 
+    /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
