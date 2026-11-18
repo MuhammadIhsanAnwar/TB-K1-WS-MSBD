@@ -137,6 +137,7 @@ final class Database3CatalogWriter
             "WHERE { $subjek schema:address ?alamat . FILTER (isLiteral(?alamat)) }";
         $operasi[] = "INSERT { $subjek schema:address $alamat } WHERE { FILTER NOT EXISTS { $subjek schema:address ?apaPun } }";
 
+        self::replaceOffers(implode(";\n", $operasi), $slug, $harga);
     }
 
     public static function delete(string $slug): void
