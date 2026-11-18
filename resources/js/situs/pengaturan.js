@@ -37,3 +37,4 @@ inputFoto?.addEventListener('change', () => {
     }
 
     urlPratinjau = URL.createObjectURL(berkas);
+    if (pratinjau) {
