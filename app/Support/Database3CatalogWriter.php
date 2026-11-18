@@ -87,7 +87,6 @@ final class Database3CatalogWriter
             "$subjek rdfs:label ".self::literal($data['nama']),
             "$subjek schema:name ".self::literal($data['nama']),
             "$subjek schema:description ".self::literal($data['ringkas']),
-            "$subjek mv:cerita ".self::literal($data['ringkas']),
             "$subjek geo:lat ".self::angka($data['lat']),
             "$subjek geo:long ".self::angka($data['lng']),
             "$subjek schema:address ".self::literal($data['alamat']),
