@@ -64,6 +64,7 @@
                     <div class="bayar-midtrans" data-bayar-midtrans data-cek-url="{{ route('pesanan.cek', $p['kode']) }}">
                         <p>Pembayaran diproses oleh Midtrans. Jendela pembayaran terbuka di halaman ini dengan pilihan <b>{{ $metode[$p['metode']] }}</b>, nominal {{ Katalog::rupiah($p['total']) }}.</p>
                         @unless (Midtrans::produksi())
+                            <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
