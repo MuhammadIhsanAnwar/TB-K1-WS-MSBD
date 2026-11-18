@@ -77,6 +77,7 @@
                         @error('tanggal_lahir')<p class="isian__galat">{{ $message }}</p>@enderror
                     </div>
                     <div class="isian">
+                        <label for="no_hp">Nomor HP</label>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
