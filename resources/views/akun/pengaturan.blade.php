@@ -122,7 +122,6 @@
             </div>
         </form>
     </div>
-            </div>
         </fieldset>
         <button class="mv-btn mv-btn--utama" type="submit" style="margin-top:24px">Simpan perubahan</button>
     </form>
