@@ -195,3 +195,4 @@ class Midtrans
             ->withBasicAuth((string) config('services.midtrans.server_key'), '');
     }
 
+    private static function urlSnap(): string
