@@ -293,6 +293,7 @@ class SupabaseApi
     }
 
     public function ubahUlasan(int $id, array $data): array
+    {
     public function hapusUlasan(int $id): void
     {
         $rows = $this->request()
