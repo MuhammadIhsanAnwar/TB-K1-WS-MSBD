@@ -147,6 +147,7 @@ final class Database3CatalogWriter
      */
     public static function rentangJam(string $keterangan): ?array
     {
+        if (preg_match('/24\s*jam/i', $keterangan)) {
     }
 
     public static function delete(string $slug): void
