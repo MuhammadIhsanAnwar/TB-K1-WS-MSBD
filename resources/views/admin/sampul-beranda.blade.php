@@ -57,3 +57,4 @@
                             <option value="{{ $t['slug'] }}" data-foto="{{ $fotoKecil($t['foto'] ?? null) }}" data-tanpa-foto="{{ empty($t['foto']) ? '1' : '' }}" @selected($slugTerpilih === $t['slug'])>{{ $t['nama'] }}{{ empty($t['foto']) ? ' (belum ada foto)' : '' }}</option>
                         @endforeach
                     </select>
+                    @error("slot.$i.slug")<span class="sampul-atur__salah">{{ $message }}</span>@enderror
