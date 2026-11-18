@@ -178,3 +178,4 @@ class Midtrans
         if (! isset($n['order_id'], $n['status_code'], $n['gross_amount'], $n['signature_key'])) {
             return false;
         }
+        $teks = $n['order_id'].$n['status_code'].$n['gross_amount'];
