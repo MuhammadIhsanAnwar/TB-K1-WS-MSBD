@@ -142,7 +142,7 @@
         <aside class="p-panel ringkasan-pesanan" aria-labelledby="judul-ringkasan">
             <header>
                 <h2 id="judul-ringkasan">Ringkasan</h2>
-                <span class="meta">{{ $metode[$p['metode']] }}</span>
+                <span class="meta">{{ $midtrans ? 'Dipilih di Midtrans' : $metode[$p['metode']] }}</span>
             </header>
             <div class="p-baris nums">
                 @foreach ($p['item'] as $i)
