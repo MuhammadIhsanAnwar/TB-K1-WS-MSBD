@@ -199,6 +199,7 @@ class TiketController extends Controller
     {
         $p = $this->milik($request, $kode);
         if ($p['status'] === 'menunggu' && Midtrans::aktif()) {
+            // jangan batalkan pesanan yang ternyata sudah dibayar
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
