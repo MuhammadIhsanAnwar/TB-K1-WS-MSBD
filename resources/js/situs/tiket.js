@@ -140,3 +140,4 @@ if (bayar) {
     };
 
     formBayar.addEventListener('submit', async (e) => {
+        if (!window.snap) return;
