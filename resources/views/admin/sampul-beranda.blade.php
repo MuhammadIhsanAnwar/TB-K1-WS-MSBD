@@ -66,3 +66,4 @@
                     @error("slot.$i.foto")<span class="sampul-atur__salah">{{ $message }}</span>@enderror
                 </div>
                 @if ($s['fotoAda'])
+                    <label class="sampul-atur__cek"><input type="checkbox" name="slot[{{ $i }}][hapus_foto]" value="1" @checked(old("slot.$i.hapus_foto"))> Hapus foto unggahan, pakai foto dari data tempat</label>
