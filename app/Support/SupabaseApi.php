@@ -264,6 +264,7 @@ class SupabaseApi
 
     /** Cara bayar pesanan yang masih menunggu (dipilih pembeli di jendela Midtrans). */
     public function ubahMetodePesanan(string $kode, string $metode): void
+    {
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
