@@ -77,7 +77,6 @@ final class Database3CatalogWriter
             "$subjek schema:description ?description",
             "$subjek geo:lat ?lat",
             "$subjek geo:long ?long",
-            "$subjek schema:address ?address",
             "$subjek mv:keteranganJam ?hours",
             "$subjek schema:image ?image",
             "$subjek dcterms:source ?source",
