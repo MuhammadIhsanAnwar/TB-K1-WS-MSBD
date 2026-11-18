@@ -23,3 +23,4 @@ return new class extends Migration
         DECLARE
             v_id bigint;
         BEGIN
+            IF jsonb_array_length(p_item) = 0 THEN
