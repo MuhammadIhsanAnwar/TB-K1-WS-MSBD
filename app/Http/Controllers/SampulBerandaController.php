@@ -49,3 +49,4 @@ class SampulBerandaController extends Controller
             'slot.*.foto.dimensions' => 'Foto slot :position minimal 1200 x 600 piksel supaya tidak pecah di layar lebar.',
         ]);
 
+        $lama = SampulBeranda::pengaturan();
