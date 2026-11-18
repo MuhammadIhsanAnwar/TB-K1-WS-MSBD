@@ -68,6 +68,7 @@
                                 Mode uji coba (sandbox): tidak ada uang yang ditarik. Salin nomor virtual account atau QRIS-nya, lalu bayar di
                                 <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>
                                 dengan bank yang sama. Untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
+                                Halaman ini diperbarui sendiri setelah pembayaran diterima.
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
