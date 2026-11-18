@@ -139,3 +139,4 @@ if (bayar) {
         pantau = setInterval(() => { if (!document.hidden) cekStatus(); }, 15000);
     };
 
+    formBayar.addEventListener('submit', async (e) => {
