@@ -109,3 +109,4 @@ class WisatawanUlasanSeeder extends Seeder
     private function acak(array $daftar): array
     {
         for ($i = count($daftar) - 1; $i > 0; $i--) {
+            $j = mt_rand(0, $i);
