@@ -107,3 +107,4 @@ class WisatawanUlasanSeeder extends Seeder
     }
 
     private function acak(array $daftar): array
+    {
