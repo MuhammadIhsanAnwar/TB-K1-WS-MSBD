@@ -115,3 +115,4 @@ class Midtrans
         if (($data['status_code'] ?? null) === '404') {
             return null;
         }
+        $jawab->throw();
