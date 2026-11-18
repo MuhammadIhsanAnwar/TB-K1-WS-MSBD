@@ -99,3 +99,4 @@ class WisatawanUlasanSeeder extends Seeder
                     'email' => $user['email'],
                     'bintang' => [5, 5, 4, 4, 4, 3][mt_rand(0, 5)],
                     'teks' => $teks[($n + mt_rand(0, 2)) % count($teks)],
+                ]);
