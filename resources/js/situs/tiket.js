@@ -158,3 +158,4 @@ if (bayar) {
                         tulisKabar('Pembayaran sedang dikonfirmasi Midtrans. Halaman ini diperbarui otomatis.');
                         mulaiPantau();
                     }
+                },
