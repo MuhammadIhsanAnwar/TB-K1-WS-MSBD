@@ -14,3 +14,4 @@ use Throwable;
 class MidtransController extends Controller
 {
     public function notifikasi(Request $request)
+    {
