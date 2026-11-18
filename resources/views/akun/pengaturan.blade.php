@@ -107,6 +107,7 @@
                         </ul>
                         @error('password')<p class="isian__galat">{{ $message }}</p>@enderror
                     </div>
+                    <div class="isian">
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
