@@ -121,3 +121,4 @@ if (bayar) {
         if (!r.ok) throw new Error(data.pesan || 'Permintaan ke server gagal. Coba lagi.');
         return data;
     };
+    // true kalau status pesanan sudah berubah (lunas, kedaluwarsa, dibatalkan): halaman dimuat ulang
