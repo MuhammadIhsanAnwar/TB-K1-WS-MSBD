@@ -184,3 +184,4 @@ class Midtrans
             if (hash_equals(hash('sha512', $teks.$rahasia), (string) $n['signature_key'])) {
                 return true;
             }
+        }
