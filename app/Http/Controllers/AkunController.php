@@ -527,6 +527,7 @@ class AkunController extends Controller
             'jumlah' => $wisatawan ? [
                 'pesanan' => count(Penyimpanan::pesanan((int) $user['id'], aman: true)),
                 'ulasan' => count(Penyimpanan::ulasan(idPengguna: (int) $user['id'], aman: true)),
+                'rencana' => count(Penyimpanan::rencana((int) $user['id'], aman: true)),
         ]);
     }
 
