@@ -56,7 +56,7 @@
             @csrf
             <section class="p-panel" aria-labelledby="judul-data-diri">
                 <header><h2 id="judul-data-diri">Data diri</h2></header>
-            @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
+                <div class="isian">
         </div>
         <div class="isian">
             <label for="tanggal_lahir">Tanggal lahir</label>
