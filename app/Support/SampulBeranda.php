@@ -78,3 +78,4 @@ class SampulBeranda
             ->values();
 
         if ($pilihan->isEmpty()) {
+            $berfoto = collect($semuaTempat)->filter(fn ($t) => ! empty($t['foto']));
