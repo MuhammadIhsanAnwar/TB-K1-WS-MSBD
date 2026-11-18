@@ -166,3 +166,4 @@ class Midtrans
     {
         try {
             self::http()->post(self::urlApi()."/v2/{$kode}/expire");
+        } catch (Throwable $e) {
