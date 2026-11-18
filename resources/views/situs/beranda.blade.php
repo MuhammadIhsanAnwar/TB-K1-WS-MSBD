@@ -7,7 +7,6 @@
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
     // foto sampul: pilihan super admin (DB 1, panel Sampul beranda), atau otomatis 4 tempat berfoto
     $heroSlide = \App\Support\SampulBeranda::slide($semuaTempat);
-    ])->all();
     $unggulan = array_column(array_slice($heroSlide, 0, 3), 'slug');
     $pusatPeta = array_key_first($semuaTempat) ?? '';
     $fotoPilihan = collect($semuaTempat)->filter(fn ($t) => ! empty($t['foto']))->values();
