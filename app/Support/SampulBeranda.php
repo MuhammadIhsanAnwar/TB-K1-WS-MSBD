@@ -63,3 +63,4 @@ class SampulBeranda
     }
 
     /** true kalau slide beranda berasal dari pilihan super admin, bukan otomatis. */
+    public static function diatur(array $semuaTempat): bool
