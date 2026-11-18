@@ -172,6 +172,7 @@ class Penyimpanan
     public static function tulisUlasan(array $data): array
     {
         $lama = collect(self::api()->ulasan($data['tempat'], null, (int) $data['id_pengguna']))
+            ->first(fn ($u) => (int) ($u['id_pengguna'] ?? 0) === (int) $data['id_pengguna'] && ($u['tempat_slug'] ?? null) === $data['tempat']);
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
