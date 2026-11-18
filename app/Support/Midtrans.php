@@ -96,7 +96,6 @@ class Midtrans
             'callbacks' => ['finish' => route('pesanan', $p['kode'])],
             'enabled_payments' => self::KANAL,
         ];
-        }
 
         $jawab = self::http()->post(self::urlSnap(), $isi);
         if ($jawab->status() === 400 && isset($isi['enabled_payments']) && str_contains(strtolower($jawab->body()), 'payment')) {
