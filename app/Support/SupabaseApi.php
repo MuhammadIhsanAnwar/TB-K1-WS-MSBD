@@ -272,6 +272,7 @@ class SupabaseApi
                 'updated_at' => now()->toIso8601String(),
             ])
             ->throw();
+    }
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
