@@ -72,3 +72,4 @@ function periksaSandi() {
         semua &&= terpenuhi;
     }
     sandi.setCustomValidity(nilai === '' || semua ? '' : 'Password belum memenuhi semua syarat di bawah kolom ini.');
+
