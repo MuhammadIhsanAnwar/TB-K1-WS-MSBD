@@ -194,3 +194,4 @@ class Midtrans
         return Http::acceptJson()->asJson()->timeout(20)
             ->withBasicAuth((string) config('services.midtrans.server_key'), '');
     }
+
