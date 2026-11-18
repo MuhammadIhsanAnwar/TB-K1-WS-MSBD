@@ -39,3 +39,4 @@
                 <header>
                     <h2 id="slot-{{ $i }}">Slot {{ $i + 1 }}</h2>
                     @if ($i === 0)<span class="meta">tampil pertama</span>@endif
+                </header>
