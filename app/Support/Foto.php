@@ -21,4 +21,5 @@ class Foto
     {
         return $berkas ? asset(self::jalur($berkas)) : null;
     }
+    }
 }
