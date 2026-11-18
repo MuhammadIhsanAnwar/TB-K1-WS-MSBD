@@ -128,3 +128,4 @@ if (bayar) {
             if (data.status && data.status !== 'menunggu') {
                 location.reload();
                 return true;
+            }
