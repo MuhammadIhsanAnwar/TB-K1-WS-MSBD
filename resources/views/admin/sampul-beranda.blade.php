@@ -54,3 +54,4 @@
                     <select id="slot-{{ $i }}-slug" name="slot[{{ $i }}][slug]" data-pilih-tempat @error("slot.$i.slug") aria-invalid="true" @enderror>
                         <option value="" data-foto="">Kosong</option>
                         @foreach ($pilihanTempat as $t)
+                            <option value="{{ $t['slug'] }}" data-foto="{{ $fotoKecil($t['foto'] ?? null) }}" data-tanpa-foto="{{ empty($t['foto']) ? '1' : '' }}" @selected($slugTerpilih === $t['slug'])>{{ $t['nama'] }}{{ empty($t['foto']) ? ' (belum ada foto)' : '' }}</option>
