@@ -39,3 +39,4 @@ class Midtrans
     public static function produksi(): bool
     {
         return (bool) config('services.midtrans.is_production');
+    }
