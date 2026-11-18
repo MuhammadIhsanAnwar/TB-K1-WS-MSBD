@@ -47,6 +47,7 @@
                     <a href="{{ route('ulasan.saya') }}"><b>{{ $jumlah['ulasan'] }}</b><span>ulasan</span></a>
                     <a href="{{ route('rencana.saya') }}"><b>{{ $jumlah['rencana'] }}</b><span>rencana</span></a>
                 </div>
+                <p class="akun-atur__bantuan">Ada kendala dengan akunmu? <a class="mv-tautan" href="{{ route('hubungi.admin') }}">Hubungi admin</a></p>
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
