@@ -18,6 +18,7 @@ if (ada('[data-dekat]')) import('./situs/dekat.js');
 if (ada('[data-tanya]')) import('./situs/tanya.js');
 if (ada('[data-hubungi-admin]')) import('./situs/hubungi-admin.js');
 if (ada('[data-pengaturan]')) import('./situs/pengaturan.js');
+if (ada('[data-sampul-atur]')) import('./admin/sampul-beranda.js');
 if (ada('[data-checkin]')) import('./situs/checkin.js');
 if (ada('[data-lorong]')) import('./situs/lorong.js');
 if (ada('[data-tiket]')) import('./situs/tiket.js');
