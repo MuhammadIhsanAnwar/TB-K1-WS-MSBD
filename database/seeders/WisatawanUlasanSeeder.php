@@ -79,3 +79,4 @@ class WisatawanUlasanSeeder extends Seeder
                 'password' => Hash::make($password),
                 'peran' => 'wisatawan',
                 'email_verified_at' => now()->toDateTimeString(),
+            ]);
