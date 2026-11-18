@@ -71,3 +71,4 @@
             </section>
         @endforeach
     </div>
+    <div class="sampul-atur__aksi">
