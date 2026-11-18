@@ -8,3 +8,4 @@
     $tempatPerSlug = collect($pilihanTempat)->keyBy('slug');
 @endphp
 
+@section('isi')
