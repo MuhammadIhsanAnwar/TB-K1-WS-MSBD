@@ -90,3 +90,4 @@ class SampulBerandaController extends Controller
 
             return back()->with('galat', 'Sampul beranda gagal disimpan ke Database 1. Coba lagi beberapa saat lagi.');
         }
+
