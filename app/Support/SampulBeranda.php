@@ -99,3 +99,4 @@ class SampulBeranda
     {
         if (! $jalur || ! str_starts_with($jalur, self::FOLDER.'/') || str_contains($jalur, '..')) {
             return null;
+        }
