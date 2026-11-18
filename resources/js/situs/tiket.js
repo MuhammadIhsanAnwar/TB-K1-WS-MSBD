@@ -111,3 +111,4 @@ if (bayar) {
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
     let pantau = null;
 
+    const tulisKabar = (teks) => {
