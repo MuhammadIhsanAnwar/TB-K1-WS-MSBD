@@ -30,3 +30,4 @@
     @csrf
     <div class="p-grid sampul-atur">
         @foreach ($slot as $i => $s)
+            @php
