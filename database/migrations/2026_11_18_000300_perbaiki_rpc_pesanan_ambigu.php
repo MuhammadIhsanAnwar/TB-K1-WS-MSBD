@@ -8,3 +8,4 @@ use Illuminate\Support\Facades\DB;
  *
  * Function pembungkus untuk Supabase REST (migration 2026_11_15_000100) bernama sama dengan
  * procedure-nya. Karena parameter INOUT terakhir procedure punya DEFAULT NULL, pemanggilan function
+ * dengan 8 argumen (sp_buat_pesanan) atau 2 argumen (sp_bayar_pesanan) juga cocok dengan procedure,
