@@ -95,6 +95,7 @@
                     <div class="isian">
                         <label for="password">Password baru (opsional)</label>
                         <div class="akun-atur__sandi">
+                            <input id="password" type="password" name="password" autocomplete="new-password" aria-describedby="syarat-sandi" @unless ($akunGoogle) data-input-sandi @endunless @error('password') aria-invalid="true" @enderror>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
