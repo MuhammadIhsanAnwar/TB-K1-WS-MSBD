@@ -101,3 +101,4 @@ class Midtrans
         $hasil = ['token' => $jawab->json('token'), 'redirect_url' => $jawab->json('redirect_url')];
         if (! $hasil['token']) {
             throw new RuntimeException('Midtrans tidak mengembalikan token pembayaran.');
+        }
