@@ -89,3 +89,4 @@ if (sandi) {
     sandi.addEventListener('input', periksaSandi);
     ulang?.addEventListener('input', periksaSandi);
     periksaSandi();
+}
