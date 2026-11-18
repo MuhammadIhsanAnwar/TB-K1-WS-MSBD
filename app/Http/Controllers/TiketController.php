@@ -205,6 +205,7 @@ class TiketController extends Controller
                 return redirect()->route('pesanan', $kode)->with('pesan', 'Pembayaran pesanan ini sudah diterima, jadi pesanan tidak dibatalkan.');
             }
             if ($p['status'] === 'menunggu') {
+                Midtrans::hentikan($kode);
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
