@@ -34,3 +34,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         if (!berkas) return dariTempat();
         urlUnggah = URL.createObjectURL(berkas);
         tampilkan(urlUnggah, `${berkas.name}, belum disimpan`);
+    });
