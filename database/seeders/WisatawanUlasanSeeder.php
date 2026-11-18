@@ -44,3 +44,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Pilihan menunya banyak dan pelayanannya cepat. Layak dicoba saat berkunjung ke Medan.',
             'Tempatnya sederhana, tetapi rasanya sesuai harapan. Parkir agak terbatas.',
         ],
+        'ruang-publik' => [
