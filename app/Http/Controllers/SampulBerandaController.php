@@ -67,3 +67,4 @@ class SampulBerandaController extends Controller
                 $nama = Str::slug($slug).'-'.Str::lower(Str::random(8)).'.'.$berkas->extension();
                 $berkas->move($folder, $nama);
                 $foto = SampulBeranda::FOLDER.'/'.$nama;
+                $unggahan[] = $foto;
