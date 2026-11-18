@@ -46,6 +46,7 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    // Pembayaran tiket. Kosongkan server_key untuk kembali ke mode simulasi (pengembangan dan test).
     ],
 
     'supabase' => [
