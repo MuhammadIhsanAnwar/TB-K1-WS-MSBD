@@ -151,6 +151,7 @@ final class Database3CatalogWriter
             return ['00:00:00', '23:59:00'];
         }
         preg_match_all('/(\d{1,2})[.:](\d{2})\s*[–-]\s*(\d{1,2})[.:](\d{2})/u', $keterangan, $m, PREG_SET_ORDER);
+        if (! $m) {
     }
 
     public static function delete(string $slug): void
