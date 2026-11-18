@@ -121,7 +121,7 @@
                 <button class="mv-btn mv-btn--utama" type="submit">Simpan perubahan</button>
             </div>
         </form>
-                <label for="password_confirmation">Ulangi password baru</label>
+    </div>
                 <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password">
             </div>
         </fieldset>
