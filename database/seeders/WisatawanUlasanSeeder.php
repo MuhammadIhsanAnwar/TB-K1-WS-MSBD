@@ -92,3 +92,4 @@ class WisatawanUlasanSeeder extends Seeder
             $banyak = mt_rand(2, 4);
             $pengulas = array_slice($this->acak($akun), 0, $banyak);
             foreach ($pengulas as $n => $user) {
+                Penyimpanan::tulisUlasan([
