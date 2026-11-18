@@ -30,3 +30,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Suasananya tenang dan arsitekturnya unik. Sempatkan membaca cerita tempatnya di MedanVisit sebelum datang.',
         ],
         'museum' => [
+            'Koleksinya beragam dan cukup lengkap untuk kunjungan satu sampai dua jam.',
