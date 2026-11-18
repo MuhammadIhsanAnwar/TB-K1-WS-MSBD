@@ -49,3 +49,4 @@ class SampulBeranda
         }
 
         return $slot;
+    }
