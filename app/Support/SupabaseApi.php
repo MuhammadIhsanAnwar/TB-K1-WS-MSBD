@@ -379,6 +379,7 @@ class SupabaseApi
         return $this->getRows('pengaturan_situs', ['kunci' => 'eq.'.$kunci, 'limit' => 1])[0]['nilai'] ?? null;
     }
 
+
     public function ping(string $table): void
     {
         $this->request()
