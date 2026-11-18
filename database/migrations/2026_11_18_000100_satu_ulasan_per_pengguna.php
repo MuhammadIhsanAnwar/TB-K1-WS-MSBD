@@ -27,3 +27,4 @@ return new class extends Migration
     {
         DB::connection($this->connection)->statement('DROP INDEX IF EXISTS ux_ulasan_pengguna_tempat');
     }
+};
