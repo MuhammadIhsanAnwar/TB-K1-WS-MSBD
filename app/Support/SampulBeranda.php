@@ -27,3 +27,4 @@ class SampulBeranda
     private const CADANGAN = 'peta-medan-1930-kota-lama.jpg';
 
     /** Slot tersimpan: [['slug' => ..., 'foto' => 'storage/sampul_beranda/...' atau null], ...]. */
+    public static function pengaturan(): array
