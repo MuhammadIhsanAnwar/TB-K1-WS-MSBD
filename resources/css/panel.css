@@ -223,6 +223,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .sampul-atur__cek input { width: 18px; height: 18px; accent-color: var(--p-primary); }
 .sampul-atur__aksi { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--p-gap); }
 .sampul-atur__galat { margin: 0; padding-left: 18px; list-style: disc; }
+.sampul-atur__urutan { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
