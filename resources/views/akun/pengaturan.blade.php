@@ -120,7 +120,7 @@
             <div class="akun-atur__simpan">
                 <button class="mv-btn mv-btn--utama" type="submit">Simpan perubahan</button>
             </div>
-            <div class="isian">
+        </form>
                 <label for="password_confirmation">Ulangi password baru</label>
                 <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password">
             </div>
