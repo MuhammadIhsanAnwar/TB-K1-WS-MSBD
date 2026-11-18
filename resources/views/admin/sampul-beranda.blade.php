@@ -21,3 +21,4 @@
 </div>
 
 @if ($errors->any())
+    <div class="p-pesan p-pesan--galat" role="alert">
