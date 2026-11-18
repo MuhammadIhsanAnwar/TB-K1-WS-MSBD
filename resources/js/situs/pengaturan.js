@@ -51,3 +51,4 @@ const ulang = akar?.querySelector('[data-input-ulang]');
 const statusUlang = akar?.querySelector('[data-status-ulang]');
 const teksStatusUlang = statusUlang?.textContent ?? '';
 const SYARAT = {
+    panjang: (s) => s.length >= 8,
