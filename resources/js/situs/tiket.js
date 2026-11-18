@@ -115,3 +115,4 @@ if (bayar) {
         kabar.hidden = !teks;
         kabar.textContent = teks;
     };
+    const kirim = async (url) => {
