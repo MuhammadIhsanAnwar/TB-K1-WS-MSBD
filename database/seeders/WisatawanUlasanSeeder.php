@@ -106,3 +106,4 @@ class WisatawanUlasanSeeder extends Seeder
         $this->command?->info("{$jumlah} ulasan untuk ".count(Katalog::tempat()).' tempat tersimpan di DB 2.');
     }
 
+    private function acak(array $daftar): array
