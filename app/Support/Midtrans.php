@@ -155,3 +155,4 @@ class Midtrans
                 Log::warning("Midtrans: {$kode} dibayar tetapi pesanan berstatus {$p['status']}. Periksa dan kembalikan dana dari dashboard Midtrans.");
             }
         } elseif ($p['status'] === 'menunggu' && in_array($transaksi, ['expire', 'cancel'], true)) {
+            $p = Penyimpanan::ubahPesanan($kode, ['status' => $transaksi === 'expire' ? 'kedaluwarsa' : 'dibatalkan']);
