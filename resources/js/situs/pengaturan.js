@@ -86,3 +86,4 @@ function periksaSandi() {
 }
 
 if (sandi) {
+    sandi.addEventListener('input', periksaSandi);
