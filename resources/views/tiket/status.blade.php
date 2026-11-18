@@ -60,7 +60,7 @@
                 <p>Selesaikan sebelum batas waktu berakhir agar pesanan tidak dibatalkan otomatis.</p>
                 <p class="hitung-mundur nums" data-batas="{{ $p['batas_bayar'] }}" role="timer" aria-live="off" style="margin:12px 0 20px">15:00</p>
 
-                @if ($p['metode'] === 'qris')
+                @if ($midtrans)
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
