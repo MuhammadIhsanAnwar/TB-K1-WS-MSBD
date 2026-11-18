@@ -34,3 +34,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Bagus untuk belajar bersama anak. Beberapa ruang bisa diberi penerangan yang lebih baik.',
             'Penataan koleksinya rapi dan keterangannya mudah dipahami.',
         ],
+        'religi' => [
