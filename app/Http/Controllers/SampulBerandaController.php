@@ -18,3 +18,4 @@ class SampulBerandaController extends Controller
         $tempat = Katalog::tempat();
 
         return view('admin.sampul-beranda', [
+            'slot' => collect(range(0, SampulBeranda::SLOT - 1))
