@@ -40,3 +40,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Detail bangunannya menarik. Hormati jamaah yang sedang beribadah saat berkunjung.',
         ],
         'kuliner' => [
+            'Rasanya enak dan porsinya pas. Pada jam makan siang biasanya ramai, jadi datang lebih awal.',
