@@ -76,3 +76,4 @@ class Midtrans
                 'id' => Str::limit(Str::slug($i['jenis']), 50, ''),
                 'price' => (int) $i['harga'],
                 'quantity' => (int) $i['jumlah'],
+                'name' => Str::limit('Tiket '.$i['jenis'].', '.$namaTempat, 50, ''),
