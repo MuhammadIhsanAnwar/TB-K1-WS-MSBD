@@ -135,7 +135,7 @@ class TiketController extends Controller
         return view('tiket.status', ['p' => $p, 't' => Katalog::get($p['tempat']), 'metode' => self::METODE]);
     }
 
-    /** Prototipe: menggantikan notifikasi payment gateway (webhook Midtrans) yang belum tersambung. */
+    /** Buka jendela pembayaran Midtrans: token Snap untuk JavaScript, atau alihkan ke halaman Midtrans. */
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
