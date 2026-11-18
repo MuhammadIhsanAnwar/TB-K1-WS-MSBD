@@ -165,6 +165,7 @@ class Penyimpanan
             ]])->all(), []);
     }
 
+    /**
     public static function tulisUlasan(array $data): array
     {
         $row = self::api()->tulisUlasan([
