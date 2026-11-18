@@ -61,7 +61,7 @@
                     <div class="akun-atur__unggah">
                         <img alt="" width="64" height="64" data-pratinjau-foto hidden>
                         <input id="foto_profil" type="file" name="foto_profil" accept="image/jpeg,image/png,image/gif,image/webp" data-input-foto aria-describedby="bantu-foto" @error('foto_profil') aria-invalid="true" @enderror>
-            @error('tanggal_lahir')<p class="isian__galat">{{ $message }}</p>@enderror
+                    </div>
         </div>
         <div class="isian">
             <label for="no_hp">Nomor HP</label>
