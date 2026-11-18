@@ -246,7 +246,7 @@
                     </fieldset>
                     <div class="isian">
                         <label for="teks-ulasan">Ceritakan pengalamanmu di sini</label>
-                        <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukan…" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks') }}</textarea>
+                        <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukan…" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks', $ulasanSaya['teks'] ?? '') }}</textarea>
                         @error('teks')<p class="isian__galat" id="galat-teks">{{ $message }}</p>@enderror
                     </div>
                     <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">Kirim ulasan</button>
