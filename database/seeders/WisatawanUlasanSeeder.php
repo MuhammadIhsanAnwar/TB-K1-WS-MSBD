@@ -59,3 +59,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Seru untuk liburan keluarga. Ruang ganti bisa diperbanyak.',
             'Airnya jernih dan petugasnya sigap mengawasi.',
         ],
+    ];
