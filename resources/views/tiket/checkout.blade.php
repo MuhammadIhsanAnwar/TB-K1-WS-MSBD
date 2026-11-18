@@ -58,6 +58,7 @@
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Kamu punya 15 menit untuk menyelesaikan pembayaran setelah pesanan dibuat.@unless (\App\Support\Midtrans::produksi()) Mode uji coba: tidak ada uang yang ditarik.@endunless</p>
                 @else
                     <fieldset class="metode" style="border:0;padding:0;margin:0">
+                        <legend class="sr-only">Pilih metode pembayaran</legend>
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Catatan prototipe: gerbang pembayaran Midtrans belum dihubungkan. Pada langkah berikutnya tersedia tombol simulasi pelunasan instan.</p>
                 @endif
             </section>
