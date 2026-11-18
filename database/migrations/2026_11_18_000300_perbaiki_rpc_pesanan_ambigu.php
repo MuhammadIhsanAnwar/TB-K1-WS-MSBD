@@ -94,3 +94,4 @@ return new class extends Migration
             {$isiBuat};
 
             DROP PROCEDURE IF EXISTS sp_bayar_pesanan(varchar, varchar, varchar);
+            CREATE PROCEDURE sp_bayar_pesanan(p_kode varchar, p_referensi varchar{$bawaan}, INOUT p_kode_qr varchar{$bawaan})
