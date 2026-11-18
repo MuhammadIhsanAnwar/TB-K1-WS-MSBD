@@ -30,3 +30,4 @@ class SampulBeranda
     public static function pengaturan(): array
     {
         $tersimpan = Cache::get(self::CACHE);
+        if (is_array($tersimpan)) {
