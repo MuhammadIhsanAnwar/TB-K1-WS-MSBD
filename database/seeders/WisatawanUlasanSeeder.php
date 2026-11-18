@@ -35,3 +35,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Penataan koleksinya rapi dan keterangannya mudah dipahami.',
         ],
         'religi' => [
+            'Tempatnya indah dan terawat. Datang di luar jam ibadah dan berpakaian sopan.',
