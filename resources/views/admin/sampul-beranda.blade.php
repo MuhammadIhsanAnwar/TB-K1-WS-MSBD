@@ -89,3 +89,4 @@
                 <b>{{ $n + 1 }}. {{ $h['nama'] }}</b>
             </li>
         @endforeach
+    </ol>
