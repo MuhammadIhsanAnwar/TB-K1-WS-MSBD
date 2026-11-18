@@ -46,7 +46,7 @@ class Semantik
     }
 
     /** JSON-LD satu tempat, untuk disematkan di halaman detail. */
-    public static function jsonldTempat(array $t): array
+    /**
     {
         foreach (self::jsonld()['@graph'] as $n) {
             if ($n['@id'] === self::BASIS.'id/'.$t['slug']) {
