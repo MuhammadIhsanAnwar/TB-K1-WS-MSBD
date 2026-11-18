@@ -42,3 +42,4 @@ class Midtrans
     }
 
     public static function urlSnapJs(): string
+    {
