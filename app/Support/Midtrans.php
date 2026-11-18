@@ -45,3 +45,4 @@ class Midtrans
     {
         return self::produksi() ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js';
     }
+
