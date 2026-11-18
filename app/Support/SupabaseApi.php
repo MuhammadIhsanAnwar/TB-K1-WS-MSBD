@@ -262,6 +262,7 @@ class SupabaseApi
             ->throw();
     }
 
+    /** Cara bayar pesanan yang masih menunggu (dipilih pembeli di jendela Midtrans). */
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
