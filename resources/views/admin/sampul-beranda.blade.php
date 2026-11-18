@@ -62,3 +62,4 @@
                 <div class="p-field">
                     <label for="slot-{{ $i }}-foto">Ganti dengan foto sendiri (opsional)</label>
                     <input id="slot-{{ $i }}-foto" type="file" name="slot[{{ $i }}][foto]" accept="image/jpeg,image/png,image/webp" data-unggah aria-describedby="slot-{{ $i }}-bantu" @error("slot.$i.foto") aria-invalid="true" @enderror>
+                    <span class="bantu" id="slot-{{ $i }}-bantu">JPG, PNG, atau WEBP, minimal 1200 x 600 piksel, maksimal 4 MB. Bagian tengah foto paling aman karena tepinya terpotong di ponsel.</span>
