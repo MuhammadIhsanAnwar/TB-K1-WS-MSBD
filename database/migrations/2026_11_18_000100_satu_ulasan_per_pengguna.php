@@ -18,3 +18,4 @@ return new class extends Migration
         $ganda = $db->select('SELECT id_pengguna, tempat_slug FROM ulasan GROUP BY id_pengguna, tempat_slug HAVING count(*) > 1');
         if ($ganda) {
             throw new RuntimeException(count($ganda).' pasangan akun dan tempat punya lebih dari satu ulasan. Rapikan dulu sebelum menjalankan migration ini.');
+        }
