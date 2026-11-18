@@ -267,6 +267,7 @@ class SupabaseApi
     {
         $this->request()
             ->withHeaders(['Prefer' => 'return=minimal'])
+            ->patch($this->url('pesanan').'?'.http_build_query(['kode' => 'eq.'.$kode, 'status' => 'eq.menunggu']), [
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
