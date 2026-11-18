@@ -24,3 +24,4 @@
     <div class="p-pesan p-pesan--galat" role="alert">
         <ul class="sampul-atur__galat">@foreach (array_unique($errors->all()) as $g)<li>{{ $g }}</li>@endforeach</ul>
     </div>
+@endif
