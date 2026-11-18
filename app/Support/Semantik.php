@@ -59,6 +59,7 @@ class Semantik
                         '@type' => 'AggregateRating',
                         'ratingValue' => round((float) $rating['rata'], 1),
                         'reviewCount' => (int) $rating['jumlah'],
+                        'bestRating' => 5,
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
