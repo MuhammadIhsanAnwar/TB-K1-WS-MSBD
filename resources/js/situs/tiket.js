@@ -129,3 +129,4 @@ if (bayar) {
                 location.reload();
                 return true;
             }
+        } catch {
