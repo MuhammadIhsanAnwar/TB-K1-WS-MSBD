@@ -117,7 +117,7 @@
                         </form>
                         <form method="post" action="{{ route('pesanan.batal', $p['kode']) }}">
                             @csrf
-                        <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
+                            <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
                     </form>
                 </div>
             @elseif ($p['status'] === 'kedaluwarsa')
