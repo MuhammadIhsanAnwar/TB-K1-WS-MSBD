@@ -68,3 +68,4 @@ return new class extends Migration
         SQL;
 
     public function up(): void
+    {
