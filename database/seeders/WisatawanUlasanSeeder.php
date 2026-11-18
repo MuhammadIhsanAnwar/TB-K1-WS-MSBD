@@ -113,3 +113,4 @@ class WisatawanUlasanSeeder extends Seeder
             [$daftar[$i], $daftar[$j]] = [$daftar[$j], $daftar[$i]];
         }
 
+        return $daftar;
