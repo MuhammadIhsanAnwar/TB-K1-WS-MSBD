@@ -21,3 +21,4 @@ use Throwable;
 class Midtrans
 {
     /** Metode pilihan di checkout menjadi kanal yang ditampilkan di jendela Snap. */
+    private const KANAL = [
