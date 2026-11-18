@@ -110,7 +110,7 @@
                 @unless ($midtrans)
                     <div class="p-pesan p-pesan--info" style="margin-top:20px">Mode prototipe: klik tombol simulasi di bawah untuk menerbitkan e-tiket secara langsung.</div>
 
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
                     <form method="post" action="{{ route('pesanan.simulasi', $p['kode']) }}">
                         @csrf
                         <button class="mv-btn mv-btn--utama" type="submit">Simulasikan pembayaran berhasil</button>
