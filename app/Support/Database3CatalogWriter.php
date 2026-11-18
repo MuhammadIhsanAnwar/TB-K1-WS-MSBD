@@ -125,6 +125,7 @@ final class Database3CatalogWriter
         $operasi = ["DELETE { $subjek mv:jamBuka ?buka . $subjek mv:jamTutup ?tutup }\n".
             ($rentang ? "INSERT { $subjek mv:jamBuka \"{$rentang[0]}\"^^xsd:time . $subjek mv:jamTutup \"{$rentang[1]}\"^^xsd:time }\n" : '').
             "WHERE { FILTER NOT EXISTS { $subjek mv:keteranganJam ?jamLama . FILTER (STR(?jamLama) = $jamBaru) }\n".
+            "OPTIONAL { $subjek mv:jamBuka ?buka } OPTIONAL { $subjek mv:jamTutup ?tutup } }"];
     }
 
     public static function delete(string $slug): void
