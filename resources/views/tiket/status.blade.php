@@ -1,6 +1,7 @@
 @extends('layouts.situs')
 @php
     use App\Support\Katalog;
+    use App\Support\Midtrans;
     $tgl = \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id');
     $vaNomor = '8808'.substr(preg_replace('/\D/', '', $p['kode']), 0, 4).substr(preg_replace('/\D/', '', $p['pemesan']['hp']), -6);
 @endphp
