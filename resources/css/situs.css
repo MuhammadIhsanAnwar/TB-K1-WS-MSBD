@@ -360,6 +360,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .ulasan-daftar article p { margin-top: 8px; }
 .bintang { color: var(--gold-text); letter-spacing: 2px; }
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
+.mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
 .form-ulasan .pilih-banyak label { min-width: 52px; justify-content: center; }
 .lorong { position: absolute; inset: 0; }
