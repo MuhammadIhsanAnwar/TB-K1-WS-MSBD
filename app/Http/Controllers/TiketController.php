@@ -151,6 +151,7 @@ class TiketController extends Controller
         } catch (Throwable $e) {
             Log::warning("Midtrans: token pembayaran {$kode} gagal dibuat: ".$e->getMessage());
             // RuntimeException dari Midtrans::snap berisi pesan untuk pembeli; galat jaringan tidak
+            $pesan = $e instanceof \RuntimeException ? $e->getMessage() : 'Jendela pembayaran belum bisa dibuka. Coba lagi sebentar lagi.';
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
