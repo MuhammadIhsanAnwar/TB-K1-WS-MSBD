@@ -15,3 +15,4 @@ class MidtransController extends Controller
 {
     public function notifikasi(Request $request)
     {
+        abort_unless(Midtrans::aktif(), 404);
