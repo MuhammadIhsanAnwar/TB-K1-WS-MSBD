@@ -53,3 +53,4 @@ class SampulBeranda
 
     public static function simpan(array $slot, ?int $idPengguna): void
     {
+        (new SupabaseApi)->simpanPengaturanSitus(self::KUNCI, array_values($slot), $idPengguna);
