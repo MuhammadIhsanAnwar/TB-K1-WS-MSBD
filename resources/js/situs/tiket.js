@@ -132,3 +132,4 @@ if (bayar) {
         } catch {
             /* dicoba lagi pada putaran berikutnya */
         }
+        return false;
