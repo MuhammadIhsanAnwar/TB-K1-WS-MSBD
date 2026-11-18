@@ -8,3 +8,4 @@ Tautan ini berlaku selama 24 jam.
 
 Jika kamu tidak membuat akun MedanVisit, abaikan email ini. Email ini dikirim otomatis, jadi tidak perlu membalas.
 
+MedanVisit, Kota Medan
