@@ -48,6 +48,7 @@ final class Database3CatalogWriter
         if ($data['foto'] !== '') {
             $triples[] = "$subjek schema:image <".self::urlFoto($data['foto']).'>';
         }
+        if ($rentang = self::rentangJam($data['jam'])) {
 
         self::replaceOffers('', $slug, $harga, implode(" .\n", $triples).'.');
     }
