@@ -135,3 +135,4 @@ class Midtrans
         $lunas = $transaksi === 'settlement' || ($transaksi === 'capture' && ($s['fraud_status'] ?? 'accept') === 'accept');
 
         if ($lunas) {
+            if ((int) round((float) ($s['gross_amount'] ?? 0)) !== (int) $p['total']) {
