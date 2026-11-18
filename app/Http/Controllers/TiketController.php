@@ -154,6 +154,7 @@ class TiketController extends Controller
             $pesan = $e instanceof \RuntimeException ? $e->getMessage() : 'Jendela pembayaran belum bisa dibuka. Coba lagi sebentar lagi.';
 
             return $request->expectsJson()
+                ? response()->json(['pesan' => $pesan], 422)
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
