@@ -18,3 +18,4 @@ class MidtransController extends Controller
         abort_unless(Midtrans::aktif(), 404);
         $n = $request->json()->all() ?: $request->all();
 
+        if (! Midtrans::tandaTanganSah($n)) {
