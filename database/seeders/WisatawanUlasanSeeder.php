@@ -101,3 +101,4 @@ class WisatawanUlasanSeeder extends Seeder
                     'teks' => $teks[($n + mt_rand(0, 2)) % count($teks)],
                 ]);
                 $jumlah++;
+            }
