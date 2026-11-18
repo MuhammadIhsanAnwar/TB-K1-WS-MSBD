@@ -371,6 +371,7 @@ class SupabaseApi
 
     // ---------- utilitas ----------
 
+
     public function ping(string $table): void
     {
         $this->request()
