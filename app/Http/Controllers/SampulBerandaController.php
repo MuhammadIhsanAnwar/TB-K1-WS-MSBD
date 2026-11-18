@@ -68,3 +68,4 @@ class SampulBerandaController extends Controller
                 $berkas->move($folder, $nama);
                 $foto = SampulBeranda::FOLDER.'/'.$nama;
                 $unggahan[] = $foto;
+            }
