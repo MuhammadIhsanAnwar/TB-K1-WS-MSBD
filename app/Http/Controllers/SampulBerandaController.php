@@ -44,3 +44,4 @@ class SampulBerandaController extends Controller
             'slot.*.slug.distinct' => 'Satu tempat hanya boleh dipakai di satu slot.',
             'slot.*.slug.required_with' => 'Pilih tempat untuk slot :position sebelum mengunggah foto.',
             'slot.*.foto.image' => 'Foto slot :position harus berupa gambar.',
+            'slot.*.foto.mimes' => 'Foto slot :position harus JPG, PNG, atau WEBP.',
