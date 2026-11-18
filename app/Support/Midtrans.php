@@ -151,3 +151,4 @@ class Midtrans
                     }
                 }
             }
+            if ($p['status'] !== 'lunas') {
