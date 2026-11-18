@@ -34,3 +34,4 @@
                 $slugTerpilih = old("slot.$i.slug", $s['slug']);
                 $tempatSlot = $slugTerpilih ? $tempatPerSlug->get($slugTerpilih) : null;
                 $pratinjau = $s['fotoAda'] && $slugTerpilih === $s['slug'] ? asset($s['fotoAda']) : ($tempatSlot ? $fotoKecil($tempatSlot['foto'] ?? null) : null);
+            @endphp
