@@ -77,3 +77,4 @@ return new class extends Migration
         $this->buatUlang(true);
     }
 
+    /** $default = true mengembalikan bentuk lama (dengan DEFAULT NULL, yang ambigu). */
