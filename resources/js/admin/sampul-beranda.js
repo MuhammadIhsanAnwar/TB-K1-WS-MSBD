@@ -29,3 +29,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
 
     unggah?.addEventListener('change', () => {
         if (urlUnggah) URL.revokeObjectURL(urlUnggah);
+        urlUnggah = null;
