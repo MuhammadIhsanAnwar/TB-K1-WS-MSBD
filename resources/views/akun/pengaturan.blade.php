@@ -110,6 +110,7 @@
                     <div class="isian">
                         <label for="password_confirmation">Ulangi password baru</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" data-input-ulang>
+                        @unless ($akunGoogle)
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
