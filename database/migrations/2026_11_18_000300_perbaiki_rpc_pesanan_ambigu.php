@@ -97,3 +97,4 @@ return new class extends Migration
             CREATE PROCEDURE sp_bayar_pesanan(p_kode varchar, p_referensi varchar{$bawaan}, INOUT p_kode_qr varchar{$bawaan})
             {$isiBayar};
 
+            GRANT EXECUTE ON PROCEDURE sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar) TO {$peran};
