@@ -155,3 +155,4 @@ if (bayar) {
                 onSuccess: async () => {
                     tulisKabar('Pembayaran diterima. Menerbitkan e-tiket...');
                     if (!(await cekStatus())) {
+                        tulisKabar('Pembayaran sedang dikonfirmasi Midtrans. Halaman ini diperbarui otomatis.');
