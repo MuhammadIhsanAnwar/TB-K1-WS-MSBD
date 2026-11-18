@@ -201,6 +201,7 @@ class TiketController extends Controller
         if ($p['status'] === 'menunggu' && Midtrans::aktif()) {
             // jangan batalkan pesanan yang ternyata sudah dibayar
             $p = $this->sinkronAman($kode) ?? $p;
+            if ($p['status'] === 'lunas') {
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
