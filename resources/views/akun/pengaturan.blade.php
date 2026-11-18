@@ -21,6 +21,7 @@
     </div>
     @if ($wisatawan)
         @include('partials.subnav-akun')
+    @endif
 
     <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="p-panel" style="max-width:720px">
         @csrf
