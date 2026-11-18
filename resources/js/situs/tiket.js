@@ -124,3 +124,4 @@ if (bayar) {
     // true kalau status pesanan sudah berubah (lunas, kedaluwarsa, dibatalkan): halaman dimuat ulang
     const cekStatus = async () => {
         try {
+            const data = await kirim(bayar.dataset.cekUrl);
