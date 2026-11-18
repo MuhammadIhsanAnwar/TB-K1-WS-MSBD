@@ -18,3 +18,4 @@ return new class extends Migration
 
     private const PERAN = 'PUBLIC, anon, authenticated, service_role';
 
+    private const ISI_BUAT = <<<'SQL'
