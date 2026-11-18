@@ -120,7 +120,7 @@ final class Database3CatalogWriter
         // jam terstruktur dipakai saringan "buka sekarang": diganti hanya kalau keterangan jam berubah,
         // supaya jam yang sudah dikurasi tidak tertimpa. Operasi ini jalan sebelum mv:keteranganJam
         // diganti, jadi perbandingannya masih dengan teks lama.
-            $harga,
+        $jamBaru = json_encode(trim($data['jam']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         );
     }
 
