@@ -24,5 +24,6 @@ class Foto
 
     /** Foto katalog ada di images/foto; unggahan (misalnya sampul beranda) ditulis lengkap dengan awalan storage/. */
     private static function jalur(string $berkas): string
+    {
     }
 }
