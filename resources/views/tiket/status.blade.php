@@ -66,7 +66,7 @@
                         @unless (Midtrans::produksi())
                             <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
                                 Mode uji coba (sandbox): tidak ada uang yang ditarik. Salin nomor virtual account atau QRIS-nya, lalu bayar di
-                                <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>;
+                                <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>
                                 untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
                             </div>
                         @endunless
