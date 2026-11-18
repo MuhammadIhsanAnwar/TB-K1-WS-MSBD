@@ -179,6 +179,7 @@ class Penyimpanan
                 'bintang' => $data['bintang'],
                 'teks' => $data['teks'],
                 'status' => 'tayang',
+                'updated_at' => now()->toIso8601String(),
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
