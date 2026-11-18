@@ -41,3 +41,4 @@ class Midtrans
         return (bool) config('services.midtrans.is_production');
     }
 
+    public static function urlSnapJs(): string
