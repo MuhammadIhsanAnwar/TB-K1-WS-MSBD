@@ -57,6 +57,7 @@ class Semantik
                 if ($rating && ($rating['jumlah'] ?? 0) > 0) {
                     $n['aggregateRating'] = [
                         '@type' => 'AggregateRating',
+                        'ratingValue' => round((float) $rating['rata'], 1),
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
