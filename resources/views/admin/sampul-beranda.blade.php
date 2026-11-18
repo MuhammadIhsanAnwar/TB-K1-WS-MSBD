@@ -36,3 +36,4 @@
                 $pratinjau = $s['fotoAda'] && $slugTerpilih === $s['slug'] ? asset($s['fotoAda']) : ($tempatSlot ? $fotoKecil($tempatSlot['foto'] ?? null) : null);
             @endphp
             <section class="p-panel s6" aria-labelledby="slot-{{ $i }}" data-slot>
+                <header>
