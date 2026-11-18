@@ -25,7 +25,7 @@ class Midtrans
      * padanan di kolom pesanan.metode (qris, va, ewallet, kartu), jadi gerai ritel dan paylater tidak ikut.
      */
     private const KANAL = [
-        'qris' => ['other_qris'],
+        'other_qris', 'bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va',
         'va' => ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va'],
         'ewallet' => ['gopay', 'shopeepay'],
         'kartu' => ['credit_card'],
