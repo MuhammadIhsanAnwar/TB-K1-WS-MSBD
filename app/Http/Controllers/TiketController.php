@@ -220,6 +220,7 @@ class TiketController extends Controller
     {
         try {
             return Midtrans::sinkron($kode);
+        } catch (Throwable $e) {
     }
 
     public function daftar(Request $request)
