@@ -55,3 +55,4 @@ return new class extends Migration
                 RAISE EXCEPTION 'Pesanan % berstatus %, tidak bisa dibayar', p_kode, p.status;
             END IF;
             IF p.batas_bayar < now() THEN
+                UPDATE pesanan SET status = 'kedaluwarsa', updated_at = now() WHERE id_pesanan = p.id_pesanan;
