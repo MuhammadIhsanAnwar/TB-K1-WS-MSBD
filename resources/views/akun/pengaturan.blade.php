@@ -116,6 +116,7 @@
                     </div>
                 </fieldset>
             </section>
+
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
