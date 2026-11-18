@@ -112,7 +112,6 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek schema:description ?description }",
             "OPTIONAL { $subjek geo:lat ?lat }",
             "OPTIONAL { $subjek geo:long ?long }",
-            "OPTIONAL { $subjek schema:address ?address }",
             "OPTIONAL { $subjek mv:keteranganJam ?hours }",
             "OPTIONAL { $subjek schema:image ?image }",
             "OPTIONAL { $subjek dcterms:source ?source }",
