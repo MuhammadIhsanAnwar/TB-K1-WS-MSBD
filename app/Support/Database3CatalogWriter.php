@@ -140,6 +140,7 @@ final class Database3CatalogWriter
         self::replaceOffers(implode(";\n", $operasi), $slug, $harga);
     }
 
+    /**
     }
 
     public static function delete(string $slug): void
