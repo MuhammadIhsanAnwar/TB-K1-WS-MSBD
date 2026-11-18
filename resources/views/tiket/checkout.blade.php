@@ -63,6 +63,7 @@
                 @if (\App\Support\Midtrans::aktif())
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Pembayaran diproses oleh Midtrans. Setelah pesanan dibuat, jendela pembayaran terbuka di langkah berikutnya dan kamu punya 15 menit untuk menyelesaikannya.@unless (\App\Support\Midtrans::produksi()) Mode uji coba: tidak ada uang yang ditarik.@endunless</p>
                 @else
+                    <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Catatan prototipe: gerbang pembayaran Midtrans belum dihubungkan. Pada langkah berikutnya tersedia tombol simulasi pelunasan instan.</p>
             </section>
         </div>
 
