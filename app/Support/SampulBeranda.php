@@ -91,3 +91,4 @@ class SampulBeranda
             'nama' => $s['tempat']['nama'],
             'sub' => trim(($s['tempat']['kecamatan'] ?? '').(! empty($s['tempat']['ringkas']) ? ' · '.$s['tempat']['ringkas'] : '')),
             'alt' => $s['tempat']['nama'],
+        ])->all();
