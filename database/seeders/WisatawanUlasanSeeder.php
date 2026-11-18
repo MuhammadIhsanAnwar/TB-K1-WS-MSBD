@@ -45,3 +45,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Tempatnya sederhana, tetapi rasanya sesuai harapan. Parkir agak terbatas.',
         ],
         'ruang-publik' => [
+            'Tempat yang nyaman untuk bersantai sore bersama keluarga.',
