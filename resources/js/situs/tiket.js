@@ -116,3 +116,4 @@ if (bayar) {
         kabar.textContent = teks;
     };
     const kirim = async (url) => {
+        const r = await fetch(url, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
