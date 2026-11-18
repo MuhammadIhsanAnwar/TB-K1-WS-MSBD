@@ -146,6 +146,7 @@ final class Database3CatalogWriter
      * "24 jam" menjadi 00.00 sampai 23.59. Tanpa rentang jam yang bisa dibaca, hasilnya null.
      */
     public static function rentangJam(string $keterangan): ?array
+    {
     }
 
     public static function delete(string $slug): void
