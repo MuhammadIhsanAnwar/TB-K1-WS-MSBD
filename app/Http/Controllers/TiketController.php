@@ -176,6 +176,7 @@ class TiketController extends Controller
         }
         $pesan = match (true) {
             $hasil === null => ['galat', 'Status pembayaran belum bisa dicek. Coba lagi sebentar lagi.'],
+            $status === 'menunggu' => ['pesan', 'Pembayaran belum diterima Midtrans. Kalau sudah membayar, tunggu sebentar lalu cek lagi.'],
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
