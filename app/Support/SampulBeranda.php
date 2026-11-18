@@ -23,3 +23,4 @@ class SampulBeranda
     public const FOLDER = 'storage/sampul_beranda';
 
     private const CACHE = 'medanvisit.sampul_beranda';
+
