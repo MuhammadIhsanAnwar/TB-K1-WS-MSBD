@@ -100,3 +100,4 @@ class SampulBerandaController extends Controller
         }
 
         return redirect()->route('admin.beranda')->with('pesan', $pesan);
+    }
