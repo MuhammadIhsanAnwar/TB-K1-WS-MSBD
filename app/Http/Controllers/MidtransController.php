@@ -12,3 +12,4 @@ use Throwable;
  * Alamatnya diisi di dashboard Midtrans: Settings > Payment > Notification URL.
  */
 class MidtransController extends Controller
+{
