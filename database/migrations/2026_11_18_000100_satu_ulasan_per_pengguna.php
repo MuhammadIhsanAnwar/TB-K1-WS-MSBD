@@ -9,3 +9,4 @@ use Illuminate\Support\Facades\DB;
  * ringkasan_ulasan tidak bisa digeser dengan mengirim ulasan berkali-kali.
  */
 return new class extends Migration
+{
