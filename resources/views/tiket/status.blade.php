@@ -8,6 +8,7 @@
 @endphp
 @if ($midtrans)
     @push('kepala')
+        <script src="{{ Midtrans::urlSnapJs() }}" data-client-key="{{ Midtrans::clientKey() }}" defer></script>
 @section('judul', 'Pesanan '.$p['kode'])
 @section('tanpa-kaki', '1')
 @if ($p['status'] === 'lunas') @section('tanpa-kepala', '1') @endif
