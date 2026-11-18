@@ -91,7 +91,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BRvV1NSU.css",
+    "file": "assets/app-G6zwxh4c.css",
     "name": "app",
     "names": [
       "app.css"
@@ -109,8 +109,14 @@
       "_leaflet-Bb8NY-5q.js"
     ]
   },
+  "resources/js/admin/sampul-beranda.js": {
+    "file": "assets/sampul-beranda-2fVcAAum.js",
+    "name": "sampul-beranda",
+    "src": "resources/js/admin/sampul-beranda.js",
+    "isDynamicEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-FvcOd8RC.js",
+    "file": "assets/app-DKlfVACT.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -121,6 +127,8 @@
       "resources/js/situs/dekat.js",
       "resources/js/situs/tanya.js",
       "resources/js/situs/hubungi-admin.js",
+      "resources/js/situs/pengaturan.js",
+      "resources/js/admin/sampul-beranda.js",
       "resources/js/situs/checkin.js",
       "resources/js/situs/lorong.js",
       "resources/js/situs/tiket.js",
@@ -172,6 +180,12 @@
     "file": "assets/panggung-Bk4wn1BY.js",
     "name": "panggung",
     "src": "resources/js/situs/panggung.js",
+    "isDynamicEntry": true
+  },
+  "resources/js/situs/pengaturan.js": {
+    "file": "assets/pengaturan-DXhpY1G9.js",
+    "name": "pengaturan",
+    "src": "resources/js/situs/pengaturan.js",
     "isDynamicEntry": true
   },
   "resources/js/situs/peta.js": {
