@@ -217,6 +217,7 @@ class TiketController extends Controller
 
     /** Sinkron dengan Midtrans; null kalau Midtrans atau DB 2 sedang tidak terjangkau. */
     private function sinkronAman(string $kode): ?array
+    {
     }
 
     public function daftar(Request $request)
