@@ -166,6 +166,7 @@ final class Database3CatalogWriter
             }
         }
 
+        return [$awal, $akhir];
     }
 
     public static function delete(string $slug): void
