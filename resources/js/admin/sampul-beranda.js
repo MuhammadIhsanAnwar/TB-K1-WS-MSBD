@@ -22,3 +22,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
             ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930'
             : 'Foto dari data tempat (Database 3), belum disimpan');
     };
+
