@@ -53,7 +53,6 @@
 
             <section class="p-panel" aria-labelledby="judul-metode">
                 <header><h2 id="judul-metode">{{ \App\Support\Midtrans::aktif() ? 'Pembayaran' : 'Metode pembayaran' }}</h2></header>
-                    @endforeach
                 </fieldset>
                 @error('metode')<p class="p-pesan p-pesan--galat" role="alert" style="margin-top:12px">{{ $message }}</p>@enderror
                 @if (\App\Support\Midtrans::aktif())
