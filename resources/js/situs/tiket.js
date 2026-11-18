@@ -125,3 +125,4 @@ if (bayar) {
     const cekStatus = async () => {
         try {
             const data = await kirim(bayar.dataset.cekUrl);
+            if (data.status && data.status !== 'menunggu') {
