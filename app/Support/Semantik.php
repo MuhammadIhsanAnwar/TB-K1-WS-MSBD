@@ -54,6 +54,7 @@ class Semantik
     {
         foreach (self::jsonld()['@graph'] as $n) {
             if ($n['@id'] === self::BASIS.'id/'.$t['slug']) {
+                if ($rating && ($rating['jumlah'] ?? 0) > 0) {
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
