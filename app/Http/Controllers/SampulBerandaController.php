@@ -57,3 +57,4 @@ class SampulBerandaController extends Controller
             if (! $slug) {
                 continue;
             }
+            // foto unggahan lama ikut slot hanya kalau tempatnya tidak diganti
