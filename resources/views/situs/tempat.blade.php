@@ -43,7 +43,7 @@
     $ulasanSaya = collect($ulasan)->firstWhere('id_pengguna', (int) ($u['id'] ?? 0));
 @endphp
 @push('kepala')
-    <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t, $ratingTempat), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
 
 @section('isi')
