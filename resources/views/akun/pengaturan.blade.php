@@ -91,6 +91,7 @@
                     <p class="isian__bantuan akun-atur__catatan">Password akun ini dikelola melalui Google dan tidak dapat diubah di sini.</p>
                 @endif
                 <fieldset @disabled($akunGoogle) class="akun-atur__kunci">
+                    <legend class="sr-only">Ganti password</legend>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
