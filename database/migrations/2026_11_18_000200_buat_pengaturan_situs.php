@@ -29,3 +29,4 @@ return new class extends Migration
         $connection = DB::connection($this->connection);
         $connection->statement('ALTER TABLE pengaturan_situs ENABLE ROW LEVEL SECURITY');
         $connection->statement('DROP POLICY IF EXISTS "server can manage pengaturan_situs" ON pengaturan_situs');
+        $connection->statement('CREATE POLICY "server can manage pengaturan_situs" ON pengaturan_situs FOR ALL TO service_role USING (true) WITH CHECK (true)');
