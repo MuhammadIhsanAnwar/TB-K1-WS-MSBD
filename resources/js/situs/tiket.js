@@ -163,3 +163,4 @@ if (bayar) {
                     tulisKabar('Selesaikan pembayaran sesuai petunjuk Midtrans. Halaman ini diperbarui otomatis setelah pembayaran diterima.');
                     mulaiPantau();
                 },
+                onError: () => tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.'),
