@@ -134,6 +134,7 @@ final class Database3CatalogWriter
         $operasi[] = "DELETE { ?alamat schema:streetAddress ?jalan } INSERT { ?alamat schema:streetAddress $alamat }\n".
             "WHERE { $subjek schema:address ?alamat . FILTER (!isLiteral(?alamat)) OPTIONAL { ?alamat schema:streetAddress ?jalan } }";
         $operasi[] = "DELETE { $subjek schema:address ?alamat } INSERT { $subjek schema:address $alamat }\n".
+            "WHERE { $subjek schema:address ?alamat . FILTER (isLiteral(?alamat)) }";
     }
 
     public static function delete(string $slug): void
