@@ -168,6 +168,7 @@ class Penyimpanan
     /**
      * Satu akun satu ulasan per tempat: kalau sudah pernah mengulas, ulasan lamanya diperbarui
      * (tanggal tulis awal dipertahankan). Trigger ulasan_ringkasan menghitung ulang rating.
+     */
     public static function tulisUlasan(array $data): array
     {
         $row = self::api()->tulisUlasan([
