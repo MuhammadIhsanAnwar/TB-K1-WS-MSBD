@@ -107,3 +107,4 @@ class Midtrans
         return $hasil;
     }
 
+    /** Status transaksi dari API Midtrans, atau null kalau pembeli belum memilih cara bayar. */
