@@ -95,3 +95,4 @@ class SampulBeranda
     }
 
     /** Jalur foto unggahan kalau berkasnya memang ada di folder sampul, selain itu null. */
+    public static function fotoAda(?string $jalur): ?string
