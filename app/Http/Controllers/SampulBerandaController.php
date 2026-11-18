@@ -39,3 +39,4 @@ class SampulBerandaController extends Controller
             'slot.*.slug' => ['nullable', 'string', Rule::in(array_keys(Katalog::tempat())), 'distinct', 'required_with:slot.*.foto'],
             'slot.*.foto' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096', 'dimensions:min_width=1200,min_height=600'],
             'slot.*.hapus_foto' => ['nullable', 'boolean'],
+        ], [
