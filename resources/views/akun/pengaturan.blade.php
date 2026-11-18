@@ -78,6 +78,7 @@
                     </div>
                     <div class="isian">
                         <label for="no_hp">Nomor HP</label>
+                        <input id="no_hp" type="tel" name="no_hp" value="{{ old('no_hp', $user['no_hp'] ?? '') }}" inputmode="numeric" pattern="08[0-9]{8,13}" maxlength="15" autocomplete="tel" aria-describedby="bantu-hp" required @error('no_hp') aria-invalid="true" @enderror>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
