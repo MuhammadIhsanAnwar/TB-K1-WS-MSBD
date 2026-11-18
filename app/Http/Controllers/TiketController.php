@@ -172,6 +172,7 @@ class TiketController extends Controller
         $status = $hasil['status'] ?? $p['status'];
 
         if ($request->expectsJson()) {
+            return response()->json(['status' => $status, 'tersambung' => $hasil !== null]);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
