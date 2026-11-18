@@ -11,3 +11,4 @@
 @section('isi')
 <div class="p-judul">
     <div>
+        <h1>Sampul beranda</h1>
