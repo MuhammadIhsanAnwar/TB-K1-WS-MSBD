@@ -64,3 +64,4 @@ class Midtrans
             return $simpan;
         }
 
+        $batas = Carbon::parse($p['batas_bayar']);
