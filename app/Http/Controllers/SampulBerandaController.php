@@ -45,3 +45,4 @@ class SampulBerandaController extends Controller
             'slot.*.slug.required_with' => 'Pilih tempat untuk slot :position sebelum mengunggah foto.',
             'slot.*.foto.image' => 'Foto slot :position harus berupa gambar.',
             'slot.*.foto.mimes' => 'Foto slot :position harus JPG, PNG, atau WEBP.',
+            'slot.*.foto.max' => 'Foto slot :position maksimal 4 MB.',
