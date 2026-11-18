@@ -302,6 +302,7 @@ class SupabaseApi
 
         return $rows[0] ?? throw new RuntimeException('Supabase tidak menemukan ulasan untuk diperbarui.');
     }
+
     public function hapusUlasan(int $id): void
     {
         $rows = $this->request()
