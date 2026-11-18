@@ -85,6 +85,7 @@ Route::controller(TiketController::class)->middleware(['peran:wisatawan', 'kunju
     Route::get('/checkout', 'checkout')->name('checkout');
     Route::post('/checkout', 'bayar');
     Route::get('/pesanan/{kode}', 'status')->name('pesanan');
+    Route::post('/pesanan/{kode}/bayar', 'bayarMidtrans')->name('pesanan.bayar');
     Route::post('/pesanan/{kode}/simulasi', 'simulasi')->name('pesanan.simulasi');
     Route::post('/pesanan/{kode}/batal', 'batal')->name('pesanan.batal');
     Route::get('/tiket', 'daftar')->name('tiket.saya');
