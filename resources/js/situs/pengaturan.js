@@ -98,3 +98,4 @@ akar?.querySelector('[data-lihat-sandi]')?.addEventListener('click', (e) => {
         if (input) input.type = tampil ? 'text' : 'password';
     });
     tombol.textContent = tampil ? 'Sembunyikan' : 'Tampilkan';
+});
