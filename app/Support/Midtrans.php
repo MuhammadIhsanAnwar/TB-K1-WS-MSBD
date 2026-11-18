@@ -60,3 +60,4 @@ class Midtrans
     public static function snap(array $p, string $namaTempat): array
     {
         $kunci = 'midtrans.snap.'.$p['kode'];
+        if (is_array($simpan = Cache::get($kunci))) {
