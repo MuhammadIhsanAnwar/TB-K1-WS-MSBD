@@ -169,3 +169,4 @@ class Midtrans
         } catch (Throwable $e) {
             Log::info("Midtrans: transaksi {$kode} tidak bisa dihentikan: ".$e->getMessage());
         }
+        Cache::forget('midtrans.snap.'.$kode);
