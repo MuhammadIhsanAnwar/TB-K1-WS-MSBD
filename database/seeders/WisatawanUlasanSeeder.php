@@ -68,3 +68,4 @@ class WisatawanUlasanSeeder extends Seeder
             throw new RuntimeException('SEED_WISATAWAN_PASSWORD harus diisi di .env sebelum menjalankan seeder ini.');
         }
 
+        $api = new SupabaseApi;
