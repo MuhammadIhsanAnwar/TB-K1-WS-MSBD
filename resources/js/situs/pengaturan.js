@@ -5,3 +5,4 @@ const akar = document.querySelector('[data-pengaturan]');
 
 // ---- Foto profil ----
 const inputFoto = akar?.querySelector('[data-input-foto]');
+const pratinjau = akar?.querySelector('[data-pratinjau-foto]');
