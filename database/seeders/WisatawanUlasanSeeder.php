@@ -27,3 +27,4 @@ class WisatawanUlasanSeeder extends Seeder
         'sejarah' => [
             'Bangunannya terawat dan banyak sudut menarik untuk difoto. Datang pagi supaya belum terlalu ramai.',
             'Cocok untuk mengenal sejarah Medan. Papan keterangannya membantu, walaupun sebagian masih bisa dilengkapi.',
+            'Suasananya tenang dan arsitekturnya unik. Sempatkan membaca cerita tempatnya di MedanVisit sebelum datang.',
