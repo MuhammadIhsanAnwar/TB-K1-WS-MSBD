@@ -170,3 +170,4 @@ if (bayar) {
             tulisKabar(err.message);
         } finally {
             tombolBayar.disabled = false;
+        }
