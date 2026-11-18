@@ -218,6 +218,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .sampul-atur__pratinjau figcaption { min-height: 16px; color: var(--p-muted); font-size: 12px; }
 .sampul-atur .p-field input[type="file"] { height: auto; min-height: 40px; padding: 8px 12px; }
 .sampul-atur .p-field .bantu { line-height: 16px; }
+.sampul-atur__salah { color: var(--p-negative); font-size: 13px; font-weight: 600; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
