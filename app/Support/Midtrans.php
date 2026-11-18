@@ -27,3 +27,4 @@ class Midtrans
         'ewallet' => ['gopay', 'shopeepay'],
         'kartu' => ['credit_card'],
     ];
+
