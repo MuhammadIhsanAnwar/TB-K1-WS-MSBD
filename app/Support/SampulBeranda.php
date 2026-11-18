@@ -32,3 +32,4 @@ class SampulBeranda
         $tersimpan = Cache::get(self::CACHE);
         if (is_array($tersimpan)) {
             return $tersimpan;
+        }
