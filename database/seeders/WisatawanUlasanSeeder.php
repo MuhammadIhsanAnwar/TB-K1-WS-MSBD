@@ -22,3 +22,4 @@ use RuntimeException;
 class WisatawanUlasanSeeder extends Seeder
 {
     private const JUMLAH_AKUN = 12;
+
