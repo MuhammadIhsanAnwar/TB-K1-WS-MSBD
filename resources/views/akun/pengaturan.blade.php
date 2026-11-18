@@ -15,7 +15,7 @@
     <div class="alat__judul">
         <div>
             <h1>Pengaturan akun</h1>
-            <p class="mv-meta-garis"><span>{{ $user['email'] }}</span></p>
+            <p class="mv-meta-garis"><span>Profil, data diri, dan keamanan akun</span></p>
         </div>
         <a class="p-btn" href="{{ route('akun') }}">Kembali ke akun saya</a>
     </div>
