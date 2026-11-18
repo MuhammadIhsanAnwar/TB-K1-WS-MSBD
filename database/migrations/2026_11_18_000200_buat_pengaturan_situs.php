@@ -22,3 +22,4 @@ return new class extends Migration
                 $table->string('kunci', 60)->primary();
                 $table->jsonb('nilai');
                 $table->foreignId('diubah_oleh')->nullable()->constrained('users')->nullOnDelete();
+                $table->timestamps();
