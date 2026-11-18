@@ -137,3 +137,4 @@ if (bayar) {
     const mulaiPantau = () => {
         if (pantau) return;
         pantau = setInterval(() => { if (!document.hidden) cekStatus(); }, 15000);
+    };
