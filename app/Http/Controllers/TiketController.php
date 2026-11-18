@@ -101,6 +101,7 @@ class TiketController extends Controller
             'email' => ['required', 'email'],
             'hp' => ['required', 'regex:/^(\+62|0)8[0-9]{7,11}$/'],
             // dengan Midtrans, cara bayar dipilih di jendela pembayaran, bukan di checkout
+            'metode' => [Midtrans::aktif() ? 'nullable' : 'required', 'in:'.implode(',', array_keys(self::METODE))],
             'setuju' => ['accepted'],
         ], [
             'nama.required' => 'Isi nama pemesan.',
