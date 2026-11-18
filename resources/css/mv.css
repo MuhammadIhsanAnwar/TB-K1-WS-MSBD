@@ -217,6 +217,7 @@
 @media (max-width: 420px) {
   .mv-kepala__aksi:has(.mv-akun-menu, .mv-kepala__foto, .mv-btn) .mv-kepala__tombol-menu { flex: none; width: 44px; padding: 0; }
   .mv-kepala__aksi:has(.mv-akun-menu, .mv-kepala__foto, .mv-btn) .mv-kepala__tombol-menu span {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
 
 /* Dropdown Akun Wisatawan ([data-ui]) */
 [data-ui].mv-akun-menu { position: relative; }
