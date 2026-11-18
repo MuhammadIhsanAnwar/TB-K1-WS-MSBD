@@ -119,7 +119,7 @@
                             @csrf
                             <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
                         </form>
-                </div>
+                    </div>
             @elseif ($p['status'] === 'kedaluwarsa')
                 <header>
                     <h2 id="judul-bayar">Batas waktu pembayaran berakhir</h2>
