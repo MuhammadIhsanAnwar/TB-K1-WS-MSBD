@@ -50,7 +50,7 @@
                 <p class="akun-atur__bantuan">Ada kendala dengan akunmu? <a class="mv-tautan" href="{{ route('hubungi.admin') }}">Hubungi admin</a></p>
             @endif
         </aside>
-            <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
+
             @error('foto_profil')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
         <div class="isian">
