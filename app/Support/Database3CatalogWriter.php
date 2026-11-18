@@ -89,7 +89,6 @@ final class Database3CatalogWriter
             "$subjek schema:description ".self::literal($data['ringkas']),
             "$subjek geo:lat ".self::angka($data['lat']),
             "$subjek geo:long ".self::angka($data['lng']),
-            "$subjek schema:address ".self::literal($data['alamat']),
             "$subjek mv:keteranganJam ".self::literal($data['jam']),
             "$subjek dcterms:source ".self::sumber($data['sumber']),
         ];
