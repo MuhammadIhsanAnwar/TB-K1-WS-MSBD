@@ -16,3 +16,4 @@ return new class extends Migration
     {
         $db = DB::connection($this->connection);
         $ganda = $db->select('SELECT id_pengguna, tempat_slug FROM ulasan GROUP BY id_pengguna, tempat_slug HAVING count(*) > 1');
+        if ($ganda) {
