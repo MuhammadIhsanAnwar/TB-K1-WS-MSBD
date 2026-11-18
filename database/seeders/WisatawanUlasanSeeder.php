@@ -4,3 +4,4 @@ namespace Database\Seeders;
 
 use App\Support\Katalog;
 use App\Support\Penyimpanan;
+use App\Support\SupabaseApi;
