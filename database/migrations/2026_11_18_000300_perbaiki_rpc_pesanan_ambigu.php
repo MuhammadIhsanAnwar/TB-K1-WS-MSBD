@@ -65,3 +65,4 @@ return new class extends Migration
             p_kode_qr := fn_kode_acak('QR-', 12);
             INSERT INTO e_tiket (id_pesanan, kode_qr) VALUES (p.id_pesanan, p_kode_qr);
         END $$
+        SQL;
