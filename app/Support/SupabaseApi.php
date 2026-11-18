@@ -376,6 +376,7 @@ class SupabaseApi
     /** Nilai JSON satu kunci pengaturan, atau null kalau belum pernah diatur. */
     public function pengaturanSitus(string $kunci): mixed
     {
+        return $this->getRows('pengaturan_situs', ['kunci' => 'eq.'.$kunci, 'limit' => 1])[0]['nilai'] ?? null;
 
     public function ping(string $table): void
     {
