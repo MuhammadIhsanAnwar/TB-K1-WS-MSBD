@@ -143,3 +143,4 @@ if (bayar) {
         if (!window.snap) return;
         e.preventDefault();
         tombolBayar.disabled = true;
+        tulisKabar('Membuka jendela pembayaran...');
