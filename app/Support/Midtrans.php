@@ -144,3 +144,4 @@ class Midtrans
                 try {
                     $p = Penyimpanan::ubahPesanan($kode, ['status' => 'lunas', 'referensi' => Str::limit((string) ($s['transaction_id'] ?? 'MIDTRANS'), 40, '')]);
                 } catch (Throwable $e) {
+                    // notifikasi dan tombol cek bisa melunasi bersamaan; yang kedua ditolak sp_bayar_pesanan
