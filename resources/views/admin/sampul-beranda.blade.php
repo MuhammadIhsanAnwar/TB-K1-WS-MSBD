@@ -18,3 +18,4 @@
         <span class="p-pill {{ $diatur ? 'pos' : '' }}">{{ $diatur ? 'Diatur super admin' : 'Otomatis' }}</span>
         <a class="p-btn" href="{{ route('beranda') }}">Lihat beranda</a>
     </div>
+</div>
