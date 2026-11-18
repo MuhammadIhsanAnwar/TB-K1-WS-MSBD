@@ -166,6 +166,7 @@ class Penyimpanan
     }
 
     /**
+     * Satu akun satu ulasan per tempat: kalau sudah pernah mengulas, ulasan lamanya diperbarui
     public static function tulisUlasan(array $data): array
     {
         $row = self::api()->tulisUlasan([
