@@ -81,3 +81,4 @@ class Midtrans
             'customer_details' => [
                 'first_name' => Str::limit($p['pemesan']['nama'], 50, ''),
                 'email' => $p['pemesan']['email'],
+                'phone' => $p['pemesan']['hp'],
