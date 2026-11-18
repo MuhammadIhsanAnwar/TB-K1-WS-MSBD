@@ -29,3 +29,4 @@ class MidtransController extends Controller
             $p = Midtrans::sinkron((string) $n['order_id']);
         } catch (Throwable $e) {
             report($e);
+
