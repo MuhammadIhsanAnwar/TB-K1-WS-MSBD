@@ -89,6 +89,7 @@
                 <header><h2 id="judul-keamanan">Keamanan</h2></header>
                 @if ($akunGoogle)
                     <p class="isian__bantuan akun-atur__catatan">Password akun ini dikelola melalui Google dan tidak dapat diubah di sini.</p>
+                @endif
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
