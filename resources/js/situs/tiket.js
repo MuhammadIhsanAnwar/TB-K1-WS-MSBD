@@ -133,3 +133,4 @@ if (bayar) {
             /* dicoba lagi pada putaran berikutnya */
         }
         return false;
+    };
