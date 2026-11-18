@@ -42,3 +42,4 @@ inputFoto?.addEventListener('change', () => {
         pratinjau.alt = 'Pratinjau foto profil baru';
         pratinjau.hidden = false;
     }
+    aturBantuFoto(`${berkas.name} siap dipakai. Tekan "Simpan perubahan" untuk menyimpannya.`);
