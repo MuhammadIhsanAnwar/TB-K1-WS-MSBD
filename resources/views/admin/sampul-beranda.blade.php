@@ -48,3 +48,4 @@
                         @elseif ($tempatSlot) {{ empty($tempatSlot['foto']) ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930' : 'Foto dari data tempat (Database 3)' }}
                         @endif
                     </figcaption>
+                </figure>
