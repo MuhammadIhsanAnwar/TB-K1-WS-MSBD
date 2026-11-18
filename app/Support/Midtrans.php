@@ -161,3 +161,4 @@ class Midtrans
         return $p;
     }
 
+    /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
