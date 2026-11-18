@@ -142,3 +142,4 @@ class Midtrans
             }
             if ($p['status'] === 'menunggu') {
                 try {
+                    $p = Penyimpanan::ubahPesanan($kode, ['status' => 'lunas', 'referensi' => Str::limit((string) ($s['transaction_id'] ?? 'MIDTRANS'), 40, '')]);
