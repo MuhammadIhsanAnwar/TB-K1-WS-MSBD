@@ -137,6 +137,7 @@ class TiketController extends Controller
 
     /** Buka jendela pembayaran Midtrans: token Snap untuk JavaScript, atau alihkan ke halaman Midtrans. */
     public function bayarMidtrans(Request $request, string $kode)
+    {
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
