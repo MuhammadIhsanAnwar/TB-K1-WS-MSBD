@@ -86,3 +86,4 @@ class SampulBerandaController extends Controller
             report($e);
             foreach ($unggahan as $jalur) {
                 File::delete(public_path($jalur));
+            }
