@@ -41,6 +41,7 @@
     // rating dari ulasan yang tayang (DB 2); ulasan milik pengguna yang sedang masuk dipakai untuk form "perbarui"
     $ratingTempat = ['rata' => collect($ulasan)->avg('bintang') ?? 0, 'jumlah' => count($ulasan)];
     $ulasanSaya = collect($ulasan)->firstWhere('id_pengguna', (int) ($u['id'] ?? 0));
+@endphp
 @push('kepala')
     <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
