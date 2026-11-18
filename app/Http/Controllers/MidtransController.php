@@ -33,3 +33,4 @@ class MidtransController extends Controller
             // selain 2xx, Midtrans mengulang pengiriman notifikasi beberapa kali
             return response()->json(['pesan' => 'Sedang tidak bisa diproses.'], 503);
         }
+
