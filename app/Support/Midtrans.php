@@ -85,3 +85,4 @@ class Midtrans
             ],
             'expiry' => ['start_time' => now('Asia/Jakarta')->format('Y-m-d H:i:s O'), 'unit' => 'minute', 'duration' => $menit],
             'callbacks' => ['finish' => route('pesanan', $p['kode'])],
+        ];
