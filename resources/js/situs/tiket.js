@@ -150,3 +150,4 @@ if (bayar) {
                 location.href = data.url || location.href;
                 return;
             }
+            tulisKabar('');
