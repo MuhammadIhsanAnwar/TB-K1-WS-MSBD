@@ -54,3 +54,4 @@ class SampulBerandaController extends Controller
         $unggahan = [];
         foreach (range(0, SampulBeranda::SLOT - 1) as $i) {
             $slug = $request->input("slot.$i.slug");
+            if (! $slug) {
