@@ -75,3 +75,4 @@ class WisatawanUlasanSeeder extends Seeder
             $email = "wisatawan.contoh{$nomor}@example.com";
             $user = $api->findUserByEmail($email) ?? $api->createUser([
                 'name' => "Wisatawan Contoh {$nomor}",
+                'email' => $email,
