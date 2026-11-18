@@ -23,3 +23,4 @@ class Midtrans
     /** Metode pilihan di checkout menjadi kanal yang ditampilkan di jendela Snap. */
     private const KANAL = [
         'qris' => ['other_qris'],
+        'va' => ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va'],
