@@ -58,7 +58,7 @@
                 <header><h2 id="judul-data-diri">Data diri</h2></header>
                 <div class="isian">
                     <label for="foto_profil">Foto profil</label>
-        <div class="isian">
+                    <div class="akun-atur__unggah">
             <label for="tanggal_lahir">Tanggal lahir</label>
             <input id="tanggal_lahir" type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $user['tanggal_lahir'] ?? '') }}" required>
             @error('tanggal_lahir')<p class="isian__galat">{{ $message }}</p>@enderror
