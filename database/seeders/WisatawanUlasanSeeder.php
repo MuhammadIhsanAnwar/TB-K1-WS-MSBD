@@ -39,3 +39,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Suasananya damai, pengurusnya ramah menjelaskan sejarah bangunan.',
             'Detail bangunannya menarik. Hormati jamaah yang sedang beribadah saat berkunjung.',
         ],
+        'kuliner' => [
