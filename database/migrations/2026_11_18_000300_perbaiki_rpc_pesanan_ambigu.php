@@ -59,3 +59,4 @@ return new class extends Migration
                 RAISE NOTICE 'Pesanan % sudah lewat batas bayar dan ditandai kedaluwarsa', p_kode;
                 RETURN;
             END IF;
+            INSERT INTO pembayaran (id_pesanan, metode, jumlah, referensi)
