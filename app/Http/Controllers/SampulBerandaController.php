@@ -20,3 +20,4 @@ class SampulBerandaController extends Controller
         return view('admin.sampul-beranda', [
             'slot' => collect(range(0, SampulBeranda::SLOT - 1))
                 ->map(fn ($i) => SampulBeranda::pengaturan()[$i] ?? ['slug' => null, 'foto' => null])
+                ->map(fn ($s) => $s + ['fotoAda' => SampulBeranda::fotoAda($s['foto'])])
