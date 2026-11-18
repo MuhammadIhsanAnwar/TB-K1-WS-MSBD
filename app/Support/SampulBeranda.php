@@ -14,3 +14,4 @@ use Throwable;
  * beranda memakai empat tempat pertama yang punya foto.
  */
 class SampulBeranda
+{
