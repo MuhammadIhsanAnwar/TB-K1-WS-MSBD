@@ -77,3 +77,4 @@ class SampulBerandaController extends Controller
         return $this->tulis($request, $baru, $unggahan, $pesan);
     }
 
+    private function tulis(Request $request, array $baru, array $unggahan, string $pesan)
