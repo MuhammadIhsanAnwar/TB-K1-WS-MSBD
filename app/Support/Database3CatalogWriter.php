@@ -148,6 +148,7 @@ final class Database3CatalogWriter
     public static function rentangJam(string $keterangan): ?array
     {
         if (preg_match('/24\s*jam/i', $keterangan)) {
+            return ['00:00:00', '23:59:00'];
     }
 
     public static function delete(string $slug): void
