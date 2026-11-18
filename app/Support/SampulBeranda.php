@@ -62,3 +62,4 @@ class SampulBeranda
         Cache::forget(self::CACHE);
     }
 
+    /** true kalau slide beranda berasal dari pilihan super admin, bukan otomatis. */
