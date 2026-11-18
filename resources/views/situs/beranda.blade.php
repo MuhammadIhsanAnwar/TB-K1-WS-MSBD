@@ -7,7 +7,6 @@
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
     // foto sampul: pilihan super admin (DB 1, panel Sampul beranda), atau otomatis 4 tempat berfoto
     $heroSlide = \App\Support\SampulBeranda::slide($semuaTempat);
-        'berkas' => $t['foto'] ?: 'peta-medan-1930-kota-lama.jpg',
         'nama' => $t['nama'],
         'sub' => trim(($t['kecamatan'] ?? '').(! empty($t['ringkas']) ? ' · '.$t['ringkas'] : '')),
         'alt' => $t['nama'],
