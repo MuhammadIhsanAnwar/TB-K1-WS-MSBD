@@ -147,3 +147,4 @@ class Midtrans
                     // notifikasi dan tombol cek bisa melunasi bersamaan; yang kedua ditolak sp_bayar_pesanan
                     $p = Penyimpanan::cariPesanan($kode);
                     if (($p['status'] ?? null) !== 'lunas') {
+                        throw $e;
