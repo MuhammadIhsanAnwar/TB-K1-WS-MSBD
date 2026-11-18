@@ -204,3 +204,4 @@ class Midtrans
     {
         return self::produksi() ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
     }
+}
