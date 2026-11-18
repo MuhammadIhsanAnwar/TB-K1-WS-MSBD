@@ -19,3 +19,4 @@ return new class extends Migration
 
         if (! $schema->hasTable('pengaturan_situs')) {
             $schema->create('pengaturan_situs', function (Blueprint $table) {
+                $table->string('kunci', 60)->primary();
