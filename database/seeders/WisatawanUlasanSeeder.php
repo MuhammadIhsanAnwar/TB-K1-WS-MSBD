@@ -96,3 +96,4 @@ class WisatawanUlasanSeeder extends Seeder
                     'tempat' => $tempat['slug'],
                     'id_pengguna' => (int) $user['id'],
                     'nama' => $user['name'],
+                    'email' => $user['email'],
