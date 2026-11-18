@@ -60,3 +60,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Airnya jernih dan petugasnya sigap mengawasi.',
         ],
     ];
+
