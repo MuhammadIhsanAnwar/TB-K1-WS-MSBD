@@ -111,6 +111,7 @@
                         <label for="password_confirmation">Ulangi password baru</label>
                         <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" data-input-ulang>
                         @unless ($akunGoogle)
+                            <p class="isian__bantuan" data-status-ulang aria-live="polite">Kosongkan kedua kolom kalau tidak ingin mengganti password.</p>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
