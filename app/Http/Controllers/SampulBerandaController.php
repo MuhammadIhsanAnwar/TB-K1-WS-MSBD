@@ -32,3 +32,4 @@ class SampulBerandaController extends Controller
     {
         if ($request->boolean('otomatis')) {
             return $this->tulis($request, [], [], 'Sampul beranda kembali otomatis: empat tempat pertama yang punya foto.');
+        }
