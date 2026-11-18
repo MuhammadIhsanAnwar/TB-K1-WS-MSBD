@@ -14,6 +14,7 @@
         'tukar' => '<path d="M4 7h13l-3-3M20 17H7l3 3"/>',
         'statistik' => '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
         'akun' => '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2zM17 8h4M19 6v4"/>',
+        'sampul' => '<rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>',
     ];
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
     $menuKurator = [
