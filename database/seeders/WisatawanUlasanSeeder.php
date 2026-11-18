@@ -36,3 +36,4 @@ class WisatawanUlasanSeeder extends Seeder
         ],
         'religi' => [
             'Tempatnya indah dan terawat. Datang di luar jam ibadah dan berpakaian sopan.',
+            'Suasananya damai, pengurusnya ramah menjelaskan sejarah bangunan.',
