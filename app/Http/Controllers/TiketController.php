@@ -147,6 +147,7 @@ class TiketController extends Controller
         }
 
         try {
+            $snap = Midtrans::snap($p, Katalog::get($p['tempat'])['nama'] ?? 'MedanVisit');
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
