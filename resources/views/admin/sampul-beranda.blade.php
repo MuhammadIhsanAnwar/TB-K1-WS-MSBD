@@ -52,3 +52,4 @@
                 <div class="p-field">
                     <label for="slot-{{ $i }}-slug">Tempat wisata</label>
                     <select id="slot-{{ $i }}-slug" name="slot[{{ $i }}][slug]" data-pilih-tempat @error("slot.$i.slug") aria-invalid="true" @enderror>
+                        <option value="" data-foto="">Kosong</option>
