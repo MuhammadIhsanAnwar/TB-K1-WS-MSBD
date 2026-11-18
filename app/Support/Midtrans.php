@@ -87,3 +87,4 @@ class Midtrans
             'callbacks' => ['finish' => route('pesanan', $p['kode'])],
         ];
         if (isset(self::KANAL[$p['metode']])) {
+            $isi['enabled_payments'] = self::KANAL[$p['metode']];
