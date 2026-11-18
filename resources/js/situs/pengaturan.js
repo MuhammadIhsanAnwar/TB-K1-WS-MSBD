@@ -63,3 +63,4 @@ function aturStatusUlang(teks) {
     if (statusUlang && statusUlang.textContent !== teks) statusUlang.textContent = teks;
 }
 
+function periksaSandi() {
