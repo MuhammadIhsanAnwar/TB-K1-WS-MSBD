@@ -60,3 +60,4 @@ const SYARAT = {
 
 function aturStatusUlang(teks) {
     // teks yang sama tidak ditulis ulang, supaya pembaca layar tidak mengumumkannya di setiap ketukan
+    if (statusUlang && statusUlang.textContent !== teks) statusUlang.textContent = teks;
