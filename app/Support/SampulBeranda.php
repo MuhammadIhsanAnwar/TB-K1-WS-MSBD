@@ -82,3 +82,4 @@ class SampulBeranda
             $pilihan = ($berfoto->isEmpty() ? collect($semuaTempat) : $berfoto)
                 ->take(self::SLOT)
                 ->map(fn ($t) => ['tempat' => $t, 'foto' => null])
+                ->values();
