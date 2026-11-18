@@ -38,3 +38,4 @@ class SampulBeranda
             $nilai = (new SupabaseApi)->pengaturanSitus(self::KUNCI);
             $slot = collect(is_array($nilai) ? $nilai : [])
                 ->filter(fn ($s) => is_array($s) && is_string($s['slug'] ?? null) && $s['slug'] !== '')
+                ->map(fn ($s) => ['slug' => $s['slug'], 'foto' => is_string($s['foto'] ?? null) ? $s['foto'] : null])
