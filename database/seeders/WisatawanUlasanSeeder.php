@@ -114,3 +114,4 @@ class WisatawanUlasanSeeder extends Seeder
         }
 
         return $daftar;
+    }
