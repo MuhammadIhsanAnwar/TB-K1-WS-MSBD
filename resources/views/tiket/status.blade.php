@@ -67,6 +67,7 @@
                             <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
                                 Mode uji coba (sandbox): tidak ada uang yang ditarik. Selesaikan QRIS atau virtual account lewat
                                 <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>;
+                                untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
