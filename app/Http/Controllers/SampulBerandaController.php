@@ -29,3 +29,4 @@ class SampulBerandaController extends Controller
     }
 
     public function simpan(Request $request)
+    {
