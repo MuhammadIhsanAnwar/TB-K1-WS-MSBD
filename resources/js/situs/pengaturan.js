@@ -71,3 +71,4 @@ function periksaSandi() {
         akar.querySelector(`[data-syarat="${kunci}"]`)?.toggleAttribute('data-terpenuhi', terpenuhi);
         semua &&= terpenuhi;
     }
+    sandi.setCustomValidity(nilai === '' || semua ? '' : 'Password belum memenuhi semua syarat di bawah kolom ini.');
