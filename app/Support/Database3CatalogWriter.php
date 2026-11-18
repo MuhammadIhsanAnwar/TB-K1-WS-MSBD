@@ -160,6 +160,7 @@ final class Database3CatalogWriter
         foreach ($m as $x) {
             if ((int) $x[1] * 60 + (int) $x[2] === $buka) {
                 $awal = $jam((int) $x[1], (int) $x[2]);
+            }
     }
 
     public static function delete(string $slug): void
