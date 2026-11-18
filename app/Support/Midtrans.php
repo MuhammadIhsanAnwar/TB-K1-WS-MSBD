@@ -98,3 +98,4 @@ class Midtrans
         }
         $jawab->throw();
 
+        $hasil = ['token' => $jawab->json('token'), 'redirect_url' => $jawab->json('redirect_url')];
