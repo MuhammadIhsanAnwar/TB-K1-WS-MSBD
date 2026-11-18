@@ -60,3 +60,4 @@ class SampulBerandaController extends Controller
             // foto unggahan lama ikut slot hanya kalau tempatnya tidak diganti
             $foto = ($lama[$i]['slug'] ?? null) === $slug && ! $request->boolean("slot.$i.hapus_foto")
                 ? SampulBeranda::fotoAda($lama[$i]['foto'] ?? null)
+                : null;
