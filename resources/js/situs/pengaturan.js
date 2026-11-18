@@ -32,3 +32,4 @@ inputFoto?.addEventListener('change', () => {
     else if (berkas.size > BATAS_FOTO) galat = `Ukuran foto ${(berkas.size / 1048576).toFixed(1)} MB, melebihi batas 2 MB.`;
     if (galat) {
         inputFoto.setCustomValidity(galat);
+        aturBantuFoto(galat, true);
