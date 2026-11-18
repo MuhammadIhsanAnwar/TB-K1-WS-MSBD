@@ -89,3 +89,4 @@ return new class extends Migration
             DROP PROCEDURE IF EXISTS sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar);
             CREATE PROCEDURE sp_buat_pesanan(
                 p_id_pengguna bigint, p_nama varchar, p_email varchar, p_hp varchar,
+                p_tempat_slug varchar, p_tanggal date, p_metode varchar, p_item jsonb,
