@@ -17,3 +17,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
 
     const dariTempat = () => {
         const opsi = pilih.selectedOptions[0];
+        if (!opsi?.value) return tampilkan('', '');
