@@ -114,3 +114,4 @@ if (bayar) {
     const tulisKabar = (teks) => {
         kabar.hidden = !teks;
         kabar.textContent = teks;
+    };
