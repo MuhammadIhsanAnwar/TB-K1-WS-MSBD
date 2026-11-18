@@ -524,6 +524,7 @@ class AkunController extends Controller
         return view('akun.pengaturan', [
             'user' => $user,
             'akunGoogle' => ! empty($user['google_id']),
+            'jumlah' => $wisatawan ? [
         ]);
     }
 
