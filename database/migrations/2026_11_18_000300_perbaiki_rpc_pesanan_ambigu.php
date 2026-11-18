@@ -12,3 +12,4 @@ use Illuminate\Support\Facades\DB;
  * sehingga PostgreSQL tidak bisa memilih. Procedure dibuat ulang tanpa DEFAULT; isinya tidak berubah
  * dan function pembungkus tetap memanggilnya dengan argumen lengkap.
  */
+return new class extends Migration
