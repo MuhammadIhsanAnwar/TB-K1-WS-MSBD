@@ -55,7 +55,7 @@
         <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="s8 akun-atur__form">
             @csrf
             <section class="p-panel" aria-labelledby="judul-data-diri">
-            <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" required>
+                <header><h2 id="judul-data-diri">Data diri</h2></header>
             @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
         <div class="isian">
