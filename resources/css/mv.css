@@ -220,6 +220,7 @@
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
   }
 }
+/* 380 px ke bawah: pintasan Peta disembunyikan saat login; "Tempat & Peta" tetap ada di lembar Menu. */
 
 /* Dropdown Akun Wisatawan ([data-ui]) */
 [data-ui].mv-akun-menu { position: relative; }
