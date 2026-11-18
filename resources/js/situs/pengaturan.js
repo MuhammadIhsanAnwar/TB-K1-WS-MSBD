@@ -91,3 +91,4 @@ if (sandi) {
     periksaSandi();
 }
 
+akar?.querySelector('[data-lihat-sandi]')?.addEventListener('click', (e) => {
