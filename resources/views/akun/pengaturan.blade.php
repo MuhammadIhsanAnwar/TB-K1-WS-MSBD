@@ -63,7 +63,7 @@
                         <input id="foto_profil" type="file" name="foto_profil" accept="image/jpeg,image/png,image/gif,image/webp" data-input-foto aria-describedby="bantu-foto" @error('foto_profil') aria-invalid="true" @enderror>
                     </div>
                     <p class="isian__bantuan" id="bantu-foto" data-bantu-foto>JPG, PNG, GIF, atau WEBP; maksimal 2 MB. Pratinjau muncul sebelum disimpan.</p>
-        <div class="isian">
+                    @error('foto_profil')<p class="isian__galat">{{ $message }}</p>@enderror
             <label for="no_hp">Nomor HP</label>
             <input id="no_hp" type="tel" name="no_hp" value="{{ old('no_hp', $user['no_hp'] ?? '') }}" inputmode="numeric" pattern="08[0-9]{8,13}" maxlength="15" required>
             <p class="isian__bantuan">Hanya angka dan harus diawali 08.</p>
