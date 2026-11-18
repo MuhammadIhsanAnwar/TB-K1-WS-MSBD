@@ -69,3 +69,4 @@ function periksaSandi() {
     for (const [kunci, cek] of Object.entries(SYARAT)) {
         const terpenuhi = nilai !== '' && cek(nilai);
         akar.querySelector(`[data-syarat="${kunci}"]`)?.toggleAttribute('data-terpenuhi', terpenuhi);
+        semua &&= terpenuhi;
