@@ -27,3 +27,4 @@ inputFoto?.addEventListener('change', () => {
     aturBantuFoto(teksBantuFoto);
     if (!berkas) return;
 
+    let galat = '';
