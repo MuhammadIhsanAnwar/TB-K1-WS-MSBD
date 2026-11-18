@@ -22,3 +22,4 @@ return new class extends Migration
         LANGUAGE plpgsql AS $$
         DECLARE
             v_id bigint;
+        BEGIN
