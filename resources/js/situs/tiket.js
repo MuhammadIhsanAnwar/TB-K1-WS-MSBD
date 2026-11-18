@@ -105,3 +105,4 @@ document.querySelectorAll('[data-qr]').forEach(async (el) => {
 // Tanpa snap.js (diblokir atau gagal dimuat) form dikirim biasa dan server mengalihkan ke halaman Midtrans.
 const bayar = document.querySelector('[data-bayar-midtrans]');
 if (bayar) {
+    const formBayar = bayar.querySelector('[data-form-bayar]');
