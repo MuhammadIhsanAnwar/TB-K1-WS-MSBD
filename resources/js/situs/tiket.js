@@ -135,3 +135,4 @@ if (bayar) {
         return false;
     };
     const mulaiPantau = () => {
+        if (pantau) return;
