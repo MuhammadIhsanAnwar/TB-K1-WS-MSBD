@@ -76,3 +76,4 @@ class WisatawanUlasanSeeder extends Seeder
             $user = $api->findUserByEmail($email) ?? $api->createUser([
                 'name' => "Wisatawan Contoh {$nomor}",
                 'email' => $email,
+                'password' => Hash::make($password),
