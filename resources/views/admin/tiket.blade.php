@@ -3,7 +3,7 @@
 @section('judul', 'Tiket dan transaksi')
 
 @section('isi')
-<div class="p-judul"><div><h1>Tiket dan transaksi</h1><p class="sub">{{ $lunas->count() }} pesanan lunas, {{ Katalog::rupiah($lunas->sum('total')) }}. Pembayaran masih simulasi sampai Midtrans tersambung.</p></div></div>
+<div class="p-judul"><div><h1>Tiket dan transaksi</h1><p class="sub">{{ $lunas->count() }} pesanan lunas, {{ Katalog::rupiah($lunas->sum('total')) }}. {{ \App\Support\Midtrans::aktif() ? 'Pembayaran lewat Midtrans ('.(\App\Support\Midtrans::produksi() ? 'produksi' : 'sandbox, uji coba tanpa uang sungguhan').').' : 'Pembayaran masih simulasi sampai Midtrans tersambung.' }}</p></div></div>
 <div class="p-grid">
     <section class="p-panel s4" aria-labelledby="judul-validasi">
         <header><h2 id="judul-validasi">Validasi di loket</h2></header>
