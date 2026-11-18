@@ -33,5 +33,6 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <!-- test tidak pernah memanggil Midtrans sungguhan; pembayaran memakai mode simulasi -->
+        <env name="MIDTRANS_SERVER_KEY" value=""/>
     </php>
 </phpunit>
