@@ -40,3 +40,4 @@ class SampulBerandaController extends Controller
             'slot.*.foto' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096', 'dimensions:min_width=1200,min_height=600'],
             'slot.*.hapus_foto' => ['nullable', 'boolean'],
         ], [
+            'slot.*.slug.in' => 'Tempat di slot :position tidak ada di katalog.',
