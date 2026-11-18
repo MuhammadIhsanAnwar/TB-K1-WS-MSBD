@@ -7,3 +7,4 @@
     $fotoKecil = fn (?string $berkas) => Foto::url('kecil/'.pathinfo($berkas ?: $cadangan, PATHINFO_FILENAME).'.jpg');
     $tempatPerSlug = collect($pilihanTempat)->keyBy('slug');
 @endphp
+
