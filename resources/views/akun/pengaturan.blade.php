@@ -24,7 +24,7 @@
     @endif
 
     <div class="p-grid akun-atur">
-        @csrf
+        {{-- ringkasan profil --}}
         <div class="isian">
             <label for="foto_profil">Foto profil</label>
             @if (!empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil'])))
