@@ -27,3 +27,4 @@ class SampulBerandaController extends Controller
             'diatur' => SampulBeranda::diatur($tempat),
         ]);
     }
+
