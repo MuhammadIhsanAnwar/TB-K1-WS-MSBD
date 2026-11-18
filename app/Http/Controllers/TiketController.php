@@ -140,6 +140,7 @@ class TiketController extends Controller
     {
         abort_unless(Midtrans::aktif(), 404);
         $p = $this->milik($request, $kode);
+        if ($p['status'] !== 'menunggu') {
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
