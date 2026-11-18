@@ -98,6 +98,7 @@
                             <input id="password" type="password" name="password" autocomplete="new-password" aria-describedby="syarat-sandi" @unless ($akunGoogle) data-input-sandi @endunless @error('password') aria-invalid="true" @enderror>
                             <button type="button" class="p-btn" data-lihat-sandi aria-controls="password password_confirmation">Tampilkan</button>
                         </div>
+                        <ul class="akun-atur__syarat" id="syarat-sandi" aria-label="Syarat password">
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
