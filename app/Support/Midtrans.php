@@ -96,7 +96,6 @@ class Midtrans
             'callbacks' => ['finish' => route('pesanan', $p['kode'])],
             'enabled_payments' => self::KANAL,
         ];
-            $isi['enabled_payments'] = self::KANAL[$p['metode']];
         }
 
         $jawab = self::http()->post(self::urlSnap(), $isi);
