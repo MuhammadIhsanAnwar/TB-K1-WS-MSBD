@@ -87,3 +87,4 @@ return new class extends Migration
 
         DB::connection($this->connection)->unprepared(<<<SQL
             DROP PROCEDURE IF EXISTS sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar);
+            CREATE PROCEDURE sp_buat_pesanan(
