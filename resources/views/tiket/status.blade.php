@@ -73,6 +73,7 @@
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
                             <form method="post" action="{{ route('pesanan.bayar', $p['kode']) }}" data-form-bayar>
+                                @csrf
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
