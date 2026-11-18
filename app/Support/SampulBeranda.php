@@ -16,3 +16,4 @@ use Throwable;
 class SampulBeranda
 {
     public const KUNCI = 'sampul_beranda';
+
