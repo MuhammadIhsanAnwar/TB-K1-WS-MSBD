@@ -53,7 +53,6 @@
 
             <section class="p-panel" aria-labelledby="judul-metode">
                 <header><h2 id="judul-metode">{{ \App\Support\Midtrans::aktif() ? 'Pembayaran' : 'Metode pembayaran' }}</h2></header>
-                    <legend class="sr-only">Pilih metode pembayaran</legend>
                     @foreach ($metode as $k => $label)
                         <label><input type="radio" name="metode" value="{{ $k }}" @checked(old('metode', 'qris') === $k)>{{ $label }}</label>
                     @endforeach
