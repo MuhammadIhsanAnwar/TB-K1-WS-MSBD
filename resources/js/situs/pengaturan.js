@@ -21,3 +21,4 @@ function aturBantuFoto(teks, galat = false) {
 inputFoto?.addEventListener('change', () => {
     const berkas = inputFoto.files?.[0];
     if (urlPratinjau) URL.revokeObjectURL(urlPratinjau);
+    urlPratinjau = null;
