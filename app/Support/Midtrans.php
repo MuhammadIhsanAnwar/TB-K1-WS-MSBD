@@ -25,3 +25,4 @@ class Midtrans
         'qris' => ['other_qris'],
         'va' => ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va'],
         'ewallet' => ['gopay', 'shopeepay'],
+        'kartu' => ['credit_card'],
