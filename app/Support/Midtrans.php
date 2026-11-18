@@ -158,3 +158,4 @@ class Midtrans
             $p = Penyimpanan::ubahPesanan($kode, ['status' => $transaksi === 'expire' ? 'kedaluwarsa' : 'dibatalkan']);
         }
 
+        return $p;
