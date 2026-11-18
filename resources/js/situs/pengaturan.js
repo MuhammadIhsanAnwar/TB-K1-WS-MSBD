@@ -66,3 +66,4 @@ function aturStatusUlang(teks) {
 function periksaSandi() {
     const nilai = sandi.value;
     let semua = true;
+    for (const [kunci, cek] of Object.entries(SYARAT)) {
