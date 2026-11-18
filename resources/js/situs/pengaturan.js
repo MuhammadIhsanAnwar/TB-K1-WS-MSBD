@@ -16,3 +16,4 @@ function aturBantuFoto(teks, galat = false) {
     bantuFoto.textContent = teks;
     bantuFoto.classList.toggle('isian__galat', galat);
     bantuFoto.classList.toggle('isian__bantuan', !galat);
+}
