@@ -48,3 +48,4 @@ class SampulBerandaController extends Controller
             'slot.*.foto.max' => 'Foto slot :position maksimal 4 MB.',
             'slot.*.foto.dimensions' => 'Foto slot :position minimal 1200 x 600 piksel supaya tidak pecah di layar lebar.',
         ]);
+
