@@ -47,3 +47,4 @@ return new class extends Migration
         DECLARE
             p pesanan%ROWTYPE;
         BEGIN
+            SELECT * INTO p FROM pesanan WHERE kode = p_kode FOR UPDATE;
