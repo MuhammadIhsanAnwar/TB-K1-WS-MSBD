@@ -19,3 +19,4 @@ use RuntimeException;
  *
  * Jalankan: php artisan db:seed --class=WisatawanUlasanSeeder   (perlu SEED_WISATAWAN_PASSWORD di .env)
  */
+class WisatawanUlasanSeeder extends Seeder
