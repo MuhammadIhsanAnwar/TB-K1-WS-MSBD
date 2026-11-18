@@ -106,3 +106,4 @@ document.querySelectorAll('[data-qr]').forEach(async (el) => {
 const bayar = document.querySelector('[data-bayar-midtrans]');
 if (bayar) {
     const formBayar = bayar.querySelector('[data-form-bayar]');
+    const tombolBayar = formBayar.querySelector('button');
