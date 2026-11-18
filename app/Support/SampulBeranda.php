@@ -77,3 +77,4 @@ class SampulBeranda
             ->map(fn ($s) => ['tempat' => $semuaTempat[$s['slug']], 'foto' => self::fotoAda($s['foto'])])
             ->values();
 
+        if ($pilihan->isEmpty()) {
