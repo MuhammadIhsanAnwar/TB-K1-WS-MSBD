@@ -53,3 +53,4 @@ const teksStatusUlang = statusUlang?.textContent ?? '';
 const SYARAT = {
     panjang: (s) => s.length >= 8,
     kecil: (s) => /[a-z]/.test(s),
+    besar: (s) => /[A-Z]/.test(s),
