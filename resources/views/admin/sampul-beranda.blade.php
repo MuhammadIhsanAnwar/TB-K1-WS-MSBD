@@ -10,3 +10,4 @@
 
 @section('isi')
 <div class="p-judul">
+    <div>
