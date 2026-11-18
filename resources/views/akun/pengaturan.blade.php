@@ -71,7 +71,7 @@
                     @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
                 </div>
                 <div class="akun-atur__dua">
-            <div class="isian">
+                    <div class="isian">
                 <label for="password">Password baru</label>
                 <input id="password" type="password" name="password" autocomplete="new-password">
                 <p class="isian__bantuan">{{ $akunGoogle ? 'Password akun ini dikelola melalui Google dan tidak dapat diubah di sini.' : 'Kosongkan jika tidak ingin mengubah password.' }}</p>
