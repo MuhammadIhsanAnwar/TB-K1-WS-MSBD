@@ -30,3 +30,4 @@ class SampulBerandaController extends Controller
 
     public function simpan(Request $request)
     {
+        if ($request->boolean('otomatis')) {
