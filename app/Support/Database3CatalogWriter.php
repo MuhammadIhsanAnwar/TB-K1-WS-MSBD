@@ -121,7 +121,7 @@ final class Database3CatalogWriter
         // supaya jam yang sudah dikurasi tidak tertimpa. Operasi ini jalan sebelum mv:keteranganJam
         // diganti, jadi perbandingannya masih dengan teks lama.
         $jamBaru = json_encode(trim($data['jam']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
-        );
+        $rentang = self::rentangJam($data['jam']);
     }
 
     public static function delete(string $slug): void
