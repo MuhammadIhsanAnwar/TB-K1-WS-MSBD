@@ -47,3 +47,4 @@ inputFoto?.addEventListener('change', () => {
 
 // ---- Password ----
 const sandi = akar?.querySelector('[data-input-sandi]');
+const ulang = akar?.querySelector('[data-input-ulang]');
