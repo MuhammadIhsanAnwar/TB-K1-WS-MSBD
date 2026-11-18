@@ -93,6 +93,7 @@
                 <fieldset @disabled($akunGoogle) class="akun-atur__kunci">
                     <legend class="sr-only">Ganti password</legend>
                     <div class="isian">
+                        <label for="password">Password baru (opsional)</label>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
