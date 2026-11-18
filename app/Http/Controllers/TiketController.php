@@ -203,6 +203,7 @@ class TiketController extends Controller
             $p = $this->sinkronAman($kode) ?? $p;
             if ($p['status'] === 'lunas') {
                 return redirect()->route('pesanan', $kode)->with('pesan', 'Pembayaran pesanan ini sudah diterima, jadi pesanan tidak dibatalkan.');
+            }
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
