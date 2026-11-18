@@ -4,6 +4,7 @@
     use App\Support\Midtrans;
     $tgl = \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id');
     $vaNomor = '8808'.substr(preg_replace('/\D/', '', $p['kode']), 0, 4).substr(preg_replace('/\D/', '', $p['pemesan']['hp']), -6);
+    $midtrans = $p['status'] === 'menunggu' && Midtrans::aktif();
 @endphp
 @section('judul', 'Pesanan '.$p['kode'])
 @section('tanpa-kaki', '1')
