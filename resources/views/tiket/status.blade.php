@@ -61,6 +61,7 @@
                 <p class="hitung-mundur nums" data-batas="{{ $p['batas_bayar'] }}" role="timer" aria-live="off" style="margin:12px 0 20px">15:00</p>
 
                 @if ($midtrans)
+                    <div class="bayar-midtrans" data-bayar-midtrans data-cek-url="{{ route('pesanan.cek', $p['kode']) }}">
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
