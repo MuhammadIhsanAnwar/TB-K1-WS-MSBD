@@ -385,6 +385,7 @@ class SupabaseApi
         $this->request()
             ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
             ->post($this->url('pengaturan_situs').'?on_conflict=kunci', [
+                'kunci' => $kunci,
 
     public function ping(string $table): void
     {
