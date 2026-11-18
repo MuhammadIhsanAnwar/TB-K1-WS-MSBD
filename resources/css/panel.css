@@ -253,6 +253,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__unggah input[type="file"] { min-width: 0; max-width: 100%; font: inherit; color: var(--muted); }
 .akun-atur__unggah input[type="file"]::file-selector-button { min-height: 44px; margin-right: 12px; padding: 0 14px; border: 1px solid var(--p-control); border-radius: var(--p-radius-control); background: var(--p-surface); color: var(--ink); font: 600 15px var(--font-text); cursor: pointer; transition: background-color var(--t-hover) ease; }
 .akun-atur__unggah input[type="file"]::file-selector-button:hover { background: var(--paper); }
+.akun-atur__form .isian input[type="date"] { height: 52px; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
