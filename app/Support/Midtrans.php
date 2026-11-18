@@ -112,3 +112,4 @@ class Midtrans
     {
         $jawab = self::http()->get(self::urlApi()."/v2/{$kode}/status");
         $data = $jawab->json() ?? [];
+        if (($data['status_code'] ?? null) === '404') {
