@@ -26,3 +26,4 @@ class SampulBerandaController extends Controller
             'tampilSekarang' => SampulBeranda::slide($tempat),
             'diatur' => SampulBeranda::diatur($tempat),
         ]);
+    }
