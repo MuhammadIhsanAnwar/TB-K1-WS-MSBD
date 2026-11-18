@@ -15,3 +15,4 @@
         <p class="sub">Foto besar di bagian atas beranda. Foto berganti otomatis sesuai urutan slot.</p>
     </div>
     <div class="p-judul__aksi">
+        <span class="p-pill {{ $diatur ? 'pos' : '' }}">{{ $diatur ? 'Diatur super admin' : 'Otomatis' }}</span>
