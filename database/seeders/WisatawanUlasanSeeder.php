@@ -46,3 +46,4 @@ class WisatawanUlasanSeeder extends Seeder
         ],
         'ruang-publik' => [
             'Tempat yang nyaman untuk bersantai sore bersama keluarga.',
+            'Area terbukanya luas dan cukup bersih. Lebih enak dikunjungi pagi atau sore hari.',
