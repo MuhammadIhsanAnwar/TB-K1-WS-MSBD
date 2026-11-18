@@ -69,3 +69,4 @@ class SampulBerandaController extends Controller
                 $foto = SampulBeranda::FOLDER.'/'.$nama;
                 $unggahan[] = $foto;
             }
+            $baru[] = ['slug' => $slug, 'foto' => $foto];
