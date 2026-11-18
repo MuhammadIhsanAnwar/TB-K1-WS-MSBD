@@ -210,6 +210,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 /* sampul beranda (super admin): empat slot 2 x 2, lalu urutan yang tampil sekarang */
 .sampul-atur { margin-bottom: var(--p-gap); }
 .sampul-atur > .p-panel { display: grid; gap: 14px; }
+.sampul-atur > .p-panel + .p-panel { margin-top: 0; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
