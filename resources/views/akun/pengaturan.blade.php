@@ -94,6 +94,7 @@
                     <legend class="sr-only">Ganti password</legend>
                     <div class="isian">
                         <label for="password">Password baru (opsional)</label>
+                        <div class="akun-atur__sandi">
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
