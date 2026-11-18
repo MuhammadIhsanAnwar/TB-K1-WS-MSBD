@@ -35,3 +35,4 @@ return new class extends Migration
     public function down(): void
     {
         Schema::connection($this->connection)->dropIfExists('pengaturan_situs');
+    }
