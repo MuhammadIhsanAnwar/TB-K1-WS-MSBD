@@ -88,3 +88,4 @@ class Midtrans
         ];
         if (isset(self::KANAL[$p['metode']])) {
             $isi['enabled_payments'] = self::KANAL[$p['metode']];
+        }
