@@ -24,3 +24,4 @@ class SampulBeranda
 
     private const CACHE = 'medanvisit.sampul_beranda';
 
+    private const CADANGAN = 'peta-medan-1930-kota-lama.jpg';
