@@ -68,3 +68,4 @@ class Midtrans
         $menit = (int) floor(now()->diffInSeconds($batas, false) / 60) - self::JEDA_MENIT;
         if ($menit < 1) {
             throw new RuntimeException('Waktu pembayaran pesanan ini hampir habis. Buat pesanan baru.');
+        }
