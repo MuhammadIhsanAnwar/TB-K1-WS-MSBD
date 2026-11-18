@@ -146,6 +146,7 @@ class Midtrans
         $metode = self::METODE[$s['payment_type'] ?? ''] ?? null;
         if ($metode && $metode !== $p['metode'] && $p['status'] === 'menunggu') {
             $p = Penyimpanan::ubahPesanan($kode, ['metode' => $metode]) ?? $p;
+        }
 
         if ($lunas) {
             if ((int) round((float) ($s['gross_amount'] ?? 0)) !== (int) $p['total']) {
