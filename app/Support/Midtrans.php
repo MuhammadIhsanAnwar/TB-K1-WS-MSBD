@@ -79,3 +79,4 @@ class Midtrans
                 'name' => Str::limit('Tiket '.$i['jenis'].', '.$namaTempat, 50, ''),
             ], $p['item']),
             'customer_details' => [
+                'first_name' => Str::limit($p['pemesan']['nama'], 50, ''),
