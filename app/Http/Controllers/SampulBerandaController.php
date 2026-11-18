@@ -72,3 +72,4 @@ class SampulBerandaController extends Controller
             $baru[] = ['slug' => $slug, 'foto' => $foto];
         }
 
+        $pesan = $baru ? 'Sampul beranda disimpan: '.count($baru).' foto, tampil sesuai urutan slot.' : 'Semua slot kosong, sampul beranda kembali otomatis.';
