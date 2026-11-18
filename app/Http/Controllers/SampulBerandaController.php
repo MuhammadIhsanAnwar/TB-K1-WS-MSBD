@@ -63,3 +63,4 @@ class SampulBerandaController extends Controller
                 : null;
             if ($berkas = $request->file("slot.$i.foto")) {
                 $folder = public_path(SampulBeranda::FOLDER);
+                File::ensureDirectoryExists($folder);
