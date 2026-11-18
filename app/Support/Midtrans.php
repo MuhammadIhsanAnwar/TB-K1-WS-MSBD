@@ -96,3 +96,4 @@ class Midtrans
             unset($isi['enabled_payments']);
             $jawab = self::http()->post(self::urlSnap(), $isi);
         }
+        $jawab->throw();
