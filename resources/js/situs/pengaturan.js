@@ -13,3 +13,4 @@ let urlPratinjau = null;
 
 function aturBantuFoto(teks, galat = false) {
     if (!bantuFoto) return;
+    bantuFoto.textContent = teks;
