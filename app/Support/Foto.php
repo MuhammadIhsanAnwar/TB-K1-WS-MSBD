@@ -9,7 +9,7 @@ class Foto
     {
         static $cache = [];
         if (! isset($cache[$berkas])) {
-            $path = public_path('images/foto/'.$berkas);
+            $path = public_path(self::jalur($berkas));
             $info = is_file($path) ? @getimagesize($path) : false;
             $cache[$berkas] = $info ? [$info[0], $info[1]] : [1600, 1000];
         }
