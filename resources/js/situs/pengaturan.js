@@ -94,3 +94,4 @@ if (sandi) {
 akar?.querySelector('[data-lihat-sandi]')?.addEventListener('click', (e) => {
     const tombol = e.currentTarget;
     const tampil = sandi?.type === 'password';
+    [sandi, ulang].forEach((input) => {
