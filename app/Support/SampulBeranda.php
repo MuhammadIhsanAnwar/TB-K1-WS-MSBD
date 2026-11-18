@@ -81,3 +81,4 @@ class SampulBeranda
             $berfoto = collect($semuaTempat)->filter(fn ($t) => ! empty($t['foto']));
             $pilihan = ($berfoto->isEmpty() ? collect($semuaTempat) : $berfoto)
                 ->take(self::SLOT)
+                ->map(fn ($t) => ['tempat' => $t, 'foto' => null])
