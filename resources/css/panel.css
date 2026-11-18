@@ -260,6 +260,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__syarat { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 0.9375rem; }
 .akun-atur__syarat li::before { content: '\25CB'; display: inline-block; width: 1.1em; }
 .akun-atur__syarat li[data-terpenuhi] { color: var(--ink); }
+.akun-atur__syarat li[data-terpenuhi]::before { content: '\2713'; color: var(--success); font-weight: 700; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
