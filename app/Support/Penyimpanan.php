@@ -182,6 +182,7 @@ class Penyimpanan
                 'updated_at' => now()->toIso8601String(),
             ]);
 
+            return ['id' => (string) $row['id_ulasan'], 'diperbarui' => true] + $data;
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
