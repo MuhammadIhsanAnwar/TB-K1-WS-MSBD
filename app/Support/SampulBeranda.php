@@ -71,3 +71,4 @@ class SampulBeranda
     /** Slide hero beranda: slug, berkas foto (untuk komponen x-foto), nama, keterangan, dan alt. */
     public static function slide(array $semuaTempat): array
     {
+        // tempat yang sudah dihapus dari DB 3 dilewati, bukan membuat beranda error
