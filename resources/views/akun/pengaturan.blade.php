@@ -27,7 +27,7 @@
         {{-- ringkasan profil --}}
         <aside class="p-panel s4 akun-atur__profil" aria-labelledby="judul-profil">
             <div class="akun-atur__foto">
-            @if (!empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil'])))
+                @if ($urlFoto)
                 <img src="{{ asset('storage/'.$user['foto_profil']) }}?v={{ filemtime(public_path('storage/'.$user['foto_profil'])) }}" alt="Foto profil saat ini" width="96" height="96" style="display:block;width:96px;height:96px;aspect-ratio:1;object-fit:cover;border-radius:50%;margin-bottom:12px">
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
