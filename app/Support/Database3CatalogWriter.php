@@ -117,7 +117,7 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek dcterms:source ?source }",
             "OPTIONAL { $subjek mv:beradaDi ?district }",
         ];
-        self::replaceOffers(
+        // jam terstruktur dipakai saringan "buka sekarang": diganti hanya kalau keterangan jam berubah,
             'DELETE { '.implode(" .\n", $delete)." }\nINSERT { ".implode(" .\n", $insert)." }\nWHERE { ".implode(" .\n", $where)." }",
             $slug,
             $harga,
