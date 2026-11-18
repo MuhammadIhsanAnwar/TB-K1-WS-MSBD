@@ -232,6 +232,7 @@
             @if (($u['peran'] ?? null) === 'wisatawan')
                 <form class="form-ulasan" method="post" action="{{ route('ulasan.tulis', $t['slug']) }}" novalidate style="margin-top:24px;background:var(--mv-putih);padding:24px">
                     @csrf
+                    @if ($ulasanSaya)
                     <fieldset class="isian">
                         <legend>Penilaian kunjunganmu</legend>
                         <div class="pilih-banyak" style="margin-top:8px">
