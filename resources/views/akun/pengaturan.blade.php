@@ -67,7 +67,7 @@
                 </div>
                 <div class="isian">
                     <label for="nama">Nama</label>
-            @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
+                    <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" autocomplete="name" required @error('nama') aria-invalid="true" @enderror>
         </div>
         <fieldset @disabled($akunGoogle) style="border:0;padding:0;margin:24px 0 0">
             <legend>Password (opsional)</legend>
