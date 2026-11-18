@@ -67,3 +67,4 @@ class SampulBeranda
     {
         return collect(self::pengaturan())->contains(fn ($s) => isset($semuaTempat[$s['slug']]));
     }
+
