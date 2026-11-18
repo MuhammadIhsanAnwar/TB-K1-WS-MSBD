@@ -46,3 +46,4 @@ return new class extends Migration
         LANGUAGE plpgsql AS $$
         DECLARE
             p pesanan%ROWTYPE;
+        BEGIN
