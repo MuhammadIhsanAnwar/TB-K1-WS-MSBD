@@ -30,3 +30,4 @@ class MidtransController extends Controller
         } catch (Throwable $e) {
             report($e);
 
+            // selain 2xx, Midtrans mengulang pengiriman notifikasi beberapa kali
