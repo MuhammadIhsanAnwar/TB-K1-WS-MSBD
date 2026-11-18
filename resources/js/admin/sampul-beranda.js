@@ -20,3 +20,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         if (!opsi?.value) return tampilkan('', '');
         tampilkan(opsi.dataset.foto, opsi.dataset.tanpaFoto
             ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930'
+            : 'Foto dari data tempat (Database 3), belum disimpan');
