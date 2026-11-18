@@ -49,3 +49,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Area terbukanya luas dan cukup bersih. Lebih enak dikunjungi pagi atau sore hari.',
             'Cocok untuk jalan santai dan berfoto. Bawa air minum sendiri.',
         ],
+        'belanja' => [
