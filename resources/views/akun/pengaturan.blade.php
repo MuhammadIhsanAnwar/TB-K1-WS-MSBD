@@ -54,7 +54,7 @@
         {{-- formulir --}}
         <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="s8 akun-atur__form">
             @csrf
-            <label for="nama">Nama</label>
+            <section class="p-panel" aria-labelledby="judul-data-diri">
             <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" required>
             @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
