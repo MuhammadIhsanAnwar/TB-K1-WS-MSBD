@@ -76,3 +76,4 @@ class SampulBerandaController extends Controller
 
         return $this->tulis($request, $baru, $unggahan, $pesan);
     }
+
