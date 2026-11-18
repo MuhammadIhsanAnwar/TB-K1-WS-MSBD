@@ -182,3 +182,4 @@ class Midtrans
         // Signature Secret Key untuk akun baru; Server Key untuk akun lama yang belum memisahkannya
         foreach (array_filter([config('services.midtrans.signature_key'), config('services.midtrans.server_key')]) as $rahasia) {
             if (hash_equals(hash('sha512', $teks.$rahasia), (string) $n['signature_key'])) {
+                return true;
