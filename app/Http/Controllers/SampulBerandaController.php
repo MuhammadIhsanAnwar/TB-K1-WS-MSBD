@@ -71,3 +71,4 @@ class SampulBerandaController extends Controller
             }
             $baru[] = ['slug' => $slug, 'foto' => $foto];
         }
+
