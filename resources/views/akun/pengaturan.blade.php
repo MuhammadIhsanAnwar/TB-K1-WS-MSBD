@@ -43,6 +43,7 @@
             </dl>
             @if ($wisatawan)
                 <div class="akun-atur__angka" aria-label="Aktivitasmu">
+                    <a href="{{ route('tiket.saya') }}"><b>{{ $jumlah['pesanan'] }}</b><span>pesanan tiket</span></a>
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
