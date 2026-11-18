@@ -61,3 +61,4 @@ class SampulBerandaController extends Controller
             $foto = ($lama[$i]['slug'] ?? null) === $slug && ! $request->boolean("slot.$i.hapus_foto")
                 ? SampulBeranda::fotoAda($lama[$i]['foto'] ?? null)
                 : null;
+            if ($berkas = $request->file("slot.$i.foto")) {
