@@ -87,3 +87,4 @@ class WisatawanUlasanSeeder extends Seeder
         // urutan acak yang selalu sama, supaya menjalankan ulang menghasilkan ulasan yang sama
         mt_srand(20261118);
         $jumlah = 0;
+        foreach (Katalog::tempat() as $tempat) {
