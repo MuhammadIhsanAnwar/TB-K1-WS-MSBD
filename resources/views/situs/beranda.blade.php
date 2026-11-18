@@ -5,7 +5,7 @@
     $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
     $semuaTempat = Katalog::tempat();
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
-    $heroSlide = collect($semuaTempat)->filter(fn ($t) => ! empty($t['foto']))->take(4)->values();
+    // foto sampul: pilihan super admin (DB 1, panel Sampul beranda), atau otomatis 4 tempat berfoto
     if ($heroSlide->isEmpty()) {
         $heroSlide = collect($semuaTempat)->take(4)->values();
     }
