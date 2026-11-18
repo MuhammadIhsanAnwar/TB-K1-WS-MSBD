@@ -174,6 +174,7 @@ class TiketController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['status' => $status, 'tersambung' => $hasil !== null]);
         }
+        $pesan = match (true) {
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
