@@ -146,6 +146,7 @@ class TiketController extends Controller
                 : redirect()->route('pesanan', $kode);
         }
 
+        try {
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
