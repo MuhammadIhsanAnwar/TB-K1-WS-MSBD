@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+/** Logo dimuat dari URL publik di template, sama seperti email reset password. */
 class VerifikasiEmail extends Mailable
 {
     use Queueable, SerializesModels;
