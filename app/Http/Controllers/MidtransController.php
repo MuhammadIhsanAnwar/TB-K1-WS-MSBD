@@ -11,3 +11,4 @@ use Throwable;
  * Notifikasi pembayaran dari Midtrans (HTTP POST, tanpa sesi dan tanpa token CSRF).
  * Alamatnya diisi di dashboard Midtrans: Settings > Payment > Notification URL.
  */
+class MidtransController extends Controller
