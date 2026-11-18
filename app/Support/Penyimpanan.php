@@ -183,6 +183,7 @@ class Penyimpanan
             ]);
 
             return ['id' => (string) $row['id_ulasan'], 'diperbarui' => true] + $data;
+        }
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
