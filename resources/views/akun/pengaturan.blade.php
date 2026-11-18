@@ -62,7 +62,7 @@
                         <img alt="" width="64" height="64" data-pratinjau-foto hidden>
                         <input id="foto_profil" type="file" name="foto_profil" accept="image/jpeg,image/png,image/gif,image/webp" data-input-foto aria-describedby="bantu-foto" @error('foto_profil') aria-invalid="true" @enderror>
                     </div>
-        </div>
+                    <p class="isian__bantuan" id="bantu-foto" data-bantu-foto>JPG, PNG, GIF, atau WEBP; maksimal 2 MB. Pratinjau muncul sebelum disimpan.</p>
         <div class="isian">
             <label for="no_hp">Nomor HP</label>
             <input id="no_hp" type="tel" name="no_hp" value="{{ old('no_hp', $user['no_hp'] ?? '') }}" inputmode="numeric" pattern="08[0-9]{8,13}" maxlength="15" required>
