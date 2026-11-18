@@ -239,6 +239,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__fakta dd { margin: 0; font-weight: 600; text-align: right; }
 .akun-atur__angka { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; margin-top: 16px; }
 .akun-atur__angka a { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--p-border); border-radius: var(--p-radius-control); color: var(--ink); text-decoration: none; transition: background-color var(--t-hover) ease; }
+.akun-atur__angka a:hover { background: var(--paper); }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
