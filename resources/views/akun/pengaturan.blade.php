@@ -101,6 +101,7 @@
                         <ul class="akun-atur__syarat" id="syarat-sandi" aria-label="Syarat password">
                             <li data-syarat="panjang">Minimal 8 karakter</li>
                             <li data-syarat="kecil">Huruf kecil</li>
+                            <li data-syarat="besar">Huruf kapital</li>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
