@@ -65,3 +65,4 @@
                     <span class="bantu" id="slot-{{ $i }}-bantu">JPG, PNG, atau WEBP, minimal 1200 x 600 piksel, maksimal 4 MB. Bagian tengah foto paling aman karena tepinya terpotong di ponsel.</span>
                     @error("slot.$i.foto")<span class="sampul-atur__salah">{{ $message }}</span>@enderror
                 </div>
+                @if ($s['fotoAda'])
