@@ -79,3 +79,4 @@ return new class extends Migration
 
     /** $default = true mengembalikan bentuk lama (dengan DEFAULT NULL, yang ambigu). */
     private function buatUlang(bool $default): void
+    {
