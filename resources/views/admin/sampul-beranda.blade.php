@@ -72,3 +72,4 @@
         @endforeach
     </div>
     <div class="sampul-atur__aksi">
+        <button class="p-btn p-btn--utama" type="submit">Simpan sampul</button>
