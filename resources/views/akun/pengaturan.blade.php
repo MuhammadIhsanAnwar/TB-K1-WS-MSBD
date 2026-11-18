@@ -65,7 +65,7 @@
                     <p class="isian__bantuan" id="bantu-foto" data-bantu-foto>JPG, PNG, GIF, atau WEBP; maksimal 2 MB. Pratinjau muncul sebelum disimpan.</p>
                     @error('foto_profil')<p class="isian__galat">{{ $message }}</p>@enderror
                 </div>
-            <input id="no_hp" type="tel" name="no_hp" value="{{ old('no_hp', $user['no_hp'] ?? '') }}" inputmode="numeric" pattern="08[0-9]{8,13}" maxlength="15" required>
+                <div class="isian">
             <p class="isian__bantuan">Hanya angka dan harus diawali 08.</p>
             @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
