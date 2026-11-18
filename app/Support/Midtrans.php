@@ -191,3 +191,4 @@ class Midtrans
 
     private static function http(): PendingRequest
     {
+        return Http::acceptJson()->asJson()->timeout(20)
