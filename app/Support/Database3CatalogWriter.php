@@ -132,6 +132,7 @@ final class Database3CatalogWriter
         // alamat: di data asli berupa simpul schema:PostalAddress; tempat baru dari admin berupa teks
         $alamat = self::literal($data['alamat']);
         $operasi[] = "DELETE { ?alamat schema:streetAddress ?jalan } INSERT { ?alamat schema:streetAddress $alamat }\n".
+            "WHERE { $subjek schema:address ?alamat . FILTER (!isLiteral(?alamat)) OPTIONAL { ?alamat schema:streetAddress ?jalan } }";
     }
 
     public static function delete(string $slug): void
