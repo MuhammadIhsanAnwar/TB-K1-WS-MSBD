@@ -28,3 +28,4 @@ class MidtransController extends Controller
             // isi notifikasi tidak dipakai langsung: status ditanyakan ulang ke API Midtrans
             $p = Midtrans::sinkron((string) $n['order_id']);
         } catch (Throwable $e) {
+            report($e);
