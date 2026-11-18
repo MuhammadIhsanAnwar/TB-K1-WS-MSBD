@@ -82,3 +82,4 @@
         <h2 id="judul-tampil">Tampil di beranda sekarang</h2>
         <span class="meta">{{ $diatur ? 'pilihan super admin' : 'otomatis, empat tempat pertama yang punya foto' }}</span>
     </header>
+    <ol class="sampul-atur__urutan">
