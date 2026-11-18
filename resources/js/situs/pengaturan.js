@@ -25,3 +25,4 @@ inputFoto?.addEventListener('change', () => {
     if (pratinjau) pratinjau.hidden = true;
     inputFoto.setCustomValidity('');
     aturBantuFoto(teksBantuFoto);
+    if (!berkas) return;
