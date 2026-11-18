@@ -35,3 +35,4 @@ class SampulBeranda
         }
 
         try {
+            $nilai = (new SupabaseApi)->pengaturanSitus(self::KUNCI);
