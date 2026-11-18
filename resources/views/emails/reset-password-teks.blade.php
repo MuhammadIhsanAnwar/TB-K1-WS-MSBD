@@ -4,3 +4,4 @@ Kami menerima permintaan untuk membuat kata sandi baru pada akun MedanVisit kamu
 
 {!! $url !!}
 
+Tautan ini berlaku selama 60 menit.
