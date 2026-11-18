@@ -93,3 +93,4 @@ return new class extends Migration
                 INOUT p_kode varchar{$bawaan})
             {$isiBuat};
 
+            DROP PROCEDURE IF EXISTS sp_bayar_pesanan(varchar, varchar, varchar);
