@@ -10,7 +10,7 @@
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 12px 32px rgba(15,59,46,.12);">
             <tr>
                 <td style="padding:30px 32px;background:#0f3b2e;text-align:center;border-bottom:5px solid #e3a51c;">
-
+                    {{-- URL publik, bukan lampiran cid: gambar cid tidak tampil di browser dan sebagian aplikasi email --}}
 <img
     src="cid:medanvisit-logo@medanvisit.local"
     alt="MedanVisit"
