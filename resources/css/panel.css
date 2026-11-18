@@ -228,6 +228,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .sampul-atur__urutan img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--p-radius-control); }
 .sampul-atur__urutan b { font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
 
+/* pengaturan akun: ringkasan profil di kiri, formulir per bagian di kanan */
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
