@@ -21,3 +21,4 @@ return new class extends Migration
     private const ISI_BUAT = <<<'SQL'
         LANGUAGE plpgsql AS $$
         DECLARE
+            v_id bigint;
