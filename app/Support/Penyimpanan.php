@@ -93,6 +93,7 @@ class Penyimpanan
     public static function ubahPesanan(string $kode, array $ubah): ?array
     {
         $api = self::api();
+        if (isset($ubah['metode'])) {
         if (($ubah['status'] ?? null) === 'lunas') {
             $api->bayarPesanan($kode, $ubah['referensi'] ?? 'SIMULASI');
         } elseif (in_array($ubah['status'] ?? null, ['dibatalkan', 'kedaluwarsa'], true)) {
