@@ -83,3 +83,4 @@ class WisatawanUlasanSeeder extends Seeder
             $akun[] = $user;
         }
         $this->command?->info(count($akun).' akun wisatawan contoh siap.');
+
