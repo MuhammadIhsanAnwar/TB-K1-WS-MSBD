@@ -102,3 +102,4 @@ class WisatawanUlasanSeeder extends Seeder
                 ]);
                 $jumlah++;
             }
+        }
