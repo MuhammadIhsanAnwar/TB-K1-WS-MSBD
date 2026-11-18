@@ -85,3 +85,4 @@ return new class extends Migration
         $isiBuat = self::ISI_BUAT;
         $isiBayar = self::ISI_BAYAR;
 
+        DB::connection($this->connection)->unprepared(<<<SQL
