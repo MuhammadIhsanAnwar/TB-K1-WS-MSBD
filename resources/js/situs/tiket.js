@@ -117,3 +117,4 @@ if (bayar) {
     };
     const kirim = async (url) => {
         const r = await fetch(url, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
+        const data = await r.json().catch(() => ({}));
