@@ -94,6 +94,7 @@ class Penyimpanan
     {
         $api = self::api();
         if (isset($ubah['metode'])) {
+            $api->ubahMetodePesanan($kode, $ubah['metode']);
         if (($ubah['status'] ?? null) === 'lunas') {
             $api->bayarPesanan($kode, $ubah['referensi'] ?? 'SIMULASI');
         } elseif (in_array($ubah['status'] ?? null, ['dibatalkan', 'kedaluwarsa'], true)) {
