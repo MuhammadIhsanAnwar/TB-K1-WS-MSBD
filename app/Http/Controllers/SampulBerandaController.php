@@ -62,3 +62,4 @@ class SampulBerandaController extends Controller
                 ? SampulBeranda::fotoAda($lama[$i]['foto'] ?? null)
                 : null;
             if ($berkas = $request->file("slot.$i.foto")) {
+                $folder = public_path(SampulBeranda::FOLDER);
