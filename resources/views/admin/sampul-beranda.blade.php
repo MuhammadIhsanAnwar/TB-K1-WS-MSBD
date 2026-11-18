@@ -88,3 +88,4 @@
                 <img src="{{ str_starts_with($h['berkas'], 'storage/') ? asset($h['berkas']) : $fotoKecil($h['berkas']) }}" alt="" width="320" height="180" loading="lazy">
                 <b>{{ $n + 1 }}. {{ $h['nama'] }}</b>
             </li>
+        @endforeach
