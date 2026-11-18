@@ -371,6 +371,7 @@ class SupabaseApi
 
     // ---------- utilitas ----------
 
+    // ---------- pengaturan situs (DB 1) ----------
 
     public function ping(string $table): void
     {
