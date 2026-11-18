@@ -31,3 +31,4 @@ class WisatawanUlasanSeeder extends Seeder
         ],
         'museum' => [
             'Koleksinya beragam dan cukup lengkap untuk kunjungan satu sampai dua jam.',
+            'Bagus untuk belajar bersama anak. Beberapa ruang bisa diberi penerangan yang lebih baik.',
