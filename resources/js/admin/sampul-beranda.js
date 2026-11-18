@@ -7,3 +7,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     const kosong = slot.querySelector('[data-kosong]');
     const sumber = slot.querySelector('[data-sumber]');
     let urlUnggah = null;
+
