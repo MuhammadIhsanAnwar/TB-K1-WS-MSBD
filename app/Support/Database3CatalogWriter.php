@@ -128,6 +128,7 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek mv:jamBuka ?buka } OPTIONAL { $subjek mv:jamTutup ?tutup } }"];
 
         $operasi[] = 'DELETE { '.implode(" .\n", $delete)." }\nINSERT { ".implode(" .\n", $insert)." }\nWHERE { ".implode(" .\n", $where).' }';
+
     }
 
     public static function delete(string $slug): void
