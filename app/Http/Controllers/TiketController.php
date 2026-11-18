@@ -130,6 +130,7 @@ class TiketController extends Controller
         // kembali dari halaman Midtrans (mode tanpa JavaScript): langsung tanyakan statusnya
         if ($p['status'] === 'menunggu' && Midtrans::aktif() && $request->has('transaction_status')) {
             $p = $this->sinkronAman($kode) ?? $p;
+        }
 
         return view('tiket.status', ['p' => $p, 't' => Katalog::get($p['tempat']), 'metode' => self::METODE]);
     }
