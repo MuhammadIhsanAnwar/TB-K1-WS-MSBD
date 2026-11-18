@@ -64,3 +64,4 @@ class WisatawanUlasanSeeder extends Seeder
     public function run(): void
     {
         $password = env('SEED_WISATAWAN_PASSWORD');
+        if (! is_string($password) || $password === '') {
