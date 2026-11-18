@@ -162,6 +162,7 @@ class TiketController extends Controller
             ? response()->json(['token' => $snap['token']])
             : redirect()->away($snap['redirect_url']);
     }
+
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
