@@ -152,3 +152,4 @@ if (bayar) {
             }
             tulisKabar('');
             window.snap.pay(data.token, {
+                onSuccess: async () => {
