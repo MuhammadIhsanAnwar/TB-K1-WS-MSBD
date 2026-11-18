@@ -31,3 +31,4 @@ class Midtrans
     /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
     private const JEDA_MENIT = 1;
 
+    public static function aktif(): bool
