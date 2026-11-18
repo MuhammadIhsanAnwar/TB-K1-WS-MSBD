@@ -43,3 +43,4 @@ return new class extends Migration
         SQL;
 
     private const ISI_BAYAR = <<<'SQL'
+        LANGUAGE plpgsql AS $$
