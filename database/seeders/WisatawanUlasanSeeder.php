@@ -18,3 +18,4 @@ use RuntimeException;
  * dijalankan berulang: akun yang sudah ada dipakai ulang dan ulasannya hanya diperbarui.
  *
  * Jalankan: php artisan db:seed --class=WisatawanUlasanSeeder   (perlu SEED_WISATAWAN_PASSWORD di .env)
+ */
