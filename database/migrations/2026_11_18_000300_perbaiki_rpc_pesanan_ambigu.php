@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\DB;
  * procedure-nya. Karena parameter INOUT terakhir procedure punya DEFAULT NULL, pemanggilan function
  * dengan 8 argumen (sp_buat_pesanan) atau 2 argumen (sp_bayar_pesanan) juga cocok dengan procedure,
  * sehingga PostgreSQL tidak bisa memilih. Procedure dibuat ulang tanpa DEFAULT; isinya tidak berubah
+ * dan function pembungkus tetap memanggilnya dengan argumen lengkap.
