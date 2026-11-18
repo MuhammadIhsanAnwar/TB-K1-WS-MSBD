@@ -56,6 +56,7 @@ class Semantik
             if ($n['@id'] === self::BASIS.'id/'.$t['slug']) {
                 if ($rating && ($rating['jumlah'] ?? 0) > 0) {
                     $n['aggregateRating'] = [
+                        '@type' => 'AggregateRating',
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
