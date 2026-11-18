@@ -83,3 +83,4 @@ class SampulBeranda
                 ->take(self::SLOT)
                 ->map(fn ($t) => ['tempat' => $t, 'foto' => null])
                 ->values();
+        }
