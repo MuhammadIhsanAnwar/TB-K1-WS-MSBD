@@ -183,3 +183,4 @@ class Midtrans
         foreach (array_filter([config('services.midtrans.signature_key'), config('services.midtrans.server_key')]) as $rahasia) {
             if (hash_equals(hash('sha512', $teks.$rahasia), (string) $n['signature_key'])) {
                 return true;
+            }
