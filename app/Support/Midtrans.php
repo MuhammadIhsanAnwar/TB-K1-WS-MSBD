@@ -198,3 +198,4 @@ class Midtrans
     private static function urlSnap(): string
     {
         return self::produksi() ? 'https://app.midtrans.com/snap/v1/transactions' : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+    }
