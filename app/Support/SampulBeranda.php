@@ -74,3 +74,4 @@ class SampulBeranda
         // tempat yang sudah dihapus dari DB 3 dilewati, bukan membuat beranda error
         $pilihan = collect(self::pengaturan())
             ->filter(fn ($s) => isset($semuaTempat[$s['slug']]))
+            ->map(fn ($s) => ['tempat' => $semuaTempat[$s['slug']], 'foto' => self::fotoAda($s['foto'])])
