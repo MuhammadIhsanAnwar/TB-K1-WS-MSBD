@@ -270,6 +270,7 @@ class SupabaseApi
             ->patch($this->url('pesanan').'?'.http_build_query(['kode' => 'eq.'.$kode, 'status' => 'eq.menunggu']), [
                 'metode' => $metode,
                 'updated_at' => now()->toIso8601String(),
+            ])
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
