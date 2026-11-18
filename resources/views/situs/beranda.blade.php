@@ -6,7 +6,7 @@
     $semuaTempat = Katalog::tempat();
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
     // foto sampul: pilihan super admin (DB 1, panel Sampul beranda), atau otomatis 4 tempat berfoto
-    if ($heroSlide->isEmpty()) {
+    $heroSlide = \App\Support\SampulBeranda::slide($semuaTempat);
         $heroSlide = collect($semuaTempat)->take(4)->values();
     }
     $heroSlide = $heroSlide->map(fn ($t) => [
