@@ -60,3 +60,4 @@ return new class extends Migration
                 RETURN;
             END IF;
             INSERT INTO pembayaran (id_pesanan, metode, jumlah, referensi)
+            VALUES (p.id_pesanan, p.metode, p.total, p_referensi);
