@@ -23,3 +23,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
             : 'Foto dari data tempat (Database 3), belum disimpan');
     };
 
+    pilih?.addEventListener('change', () => {
