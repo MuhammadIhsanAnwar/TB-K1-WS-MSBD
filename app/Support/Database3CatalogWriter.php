@@ -58,6 +58,7 @@ final class Database3CatalogWriter
 
     /**
      * Ubah tempat wisata. Cerita lengkap (mv:cerita) tidak disentuh karena formulir tidak memuatnya;
+     * alamat diperbarui di dalam simpul schema:PostalAddress yang sudah ada; jam buka terstruktur
     public static function update(string $slug, array $data, array $harga): void
     {
         $subjek = self::subjek($slug);
