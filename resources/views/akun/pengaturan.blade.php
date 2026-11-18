@@ -70,7 +70,7 @@
                     <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" autocomplete="name" required @error('nama') aria-invalid="true" @enderror>
                     @error('nama')<p class="isian__galat">{{ $message }}</p>@enderror
                 </div>
-            <legend>Password (opsional)</legend>
+                <div class="akun-atur__dua">
             <div class="isian">
                 <label for="password">Password baru</label>
                 <input id="password" type="password" name="password" autocomplete="new-password">
