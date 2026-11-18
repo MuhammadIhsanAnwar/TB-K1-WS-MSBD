@@ -85,3 +85,4 @@ class SampulBerandaController extends Controller
         } catch (Throwable $e) {
             report($e);
             foreach ($unggahan as $jalur) {
+                File::delete(public_path($jalur));
