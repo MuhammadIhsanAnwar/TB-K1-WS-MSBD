@@ -63,6 +63,7 @@
                             <label><input type="radio" name="metode" value="{{ $k }}" @checked(old('metode', 'qris') === $k)>{{ $label }}</label>
                         @endforeach
                     </fieldset>
+                    @error('metode')<p class="p-pesan p-pesan--galat" role="alert" style="margin-top:12px">{{ $message }}</p>@enderror
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Catatan prototipe: gerbang pembayaran Midtrans belum dihubungkan. Pada langkah berikutnya tersedia tombol simulasi pelunasan instan.</p>
                 @endif
             </section>
