@@ -31,6 +31,7 @@
                     <img src="{{ $urlFoto }}" alt="Foto profil {{ $user['name'] }}" width="96" height="96" style="width:96px;height:96px;aspect-ratio:1;object-fit:cover;border-radius:50%" data-foto-sekarang>
                 @else
                     <span class="akun-atur__inisial" aria-hidden="true" data-foto-sekarang>{{ $inisial }}</span>
+                @endif
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
