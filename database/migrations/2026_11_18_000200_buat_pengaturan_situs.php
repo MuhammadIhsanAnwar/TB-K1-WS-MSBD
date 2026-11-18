@@ -18,3 +18,4 @@ return new class extends Migration
         $schema = Schema::connection($this->connection);
 
         if (! $schema->hasTable('pengaturan_situs')) {
+            $schema->create('pengaturan_situs', function (Blueprint $table) {
