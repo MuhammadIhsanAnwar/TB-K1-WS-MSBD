@@ -85,3 +85,4 @@ class SampulBeranda
                 ->values();
         }
 
+        return $pilihan->map(fn ($s) => [
