@@ -62,7 +62,7 @@
 
                 @if ($midtrans)
                     <div class="bayar-midtrans" data-bayar-midtrans data-cek-url="{{ route('pesanan.cek', $p['kode']) }}">
-                        <p>Pembayaran diproses oleh Midtrans. Jendela pembayaran terbuka di halaman ini dengan pilihan <b>{{ $metode[$p['metode']] }}</b>, nominal {{ Katalog::rupiah($p['total']) }}.</p>
+                        <p>Tekan <b>Bayar</b>, lalu pilih cara bayar di jendela Midtrans: QRIS, virtual account bank, dompet digital, atau kartu. Nominalnya {{ Katalog::rupiah($p['total']) }}. Untuk virtual account, nomornya muncul setelah bank dipilih.</p>
                         @unless (Midtrans::produksi())
                             <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
                                 Mode uji coba (sandbox): tidak ada uang yang ditarik. Selesaikan QRIS atau virtual account lewat
