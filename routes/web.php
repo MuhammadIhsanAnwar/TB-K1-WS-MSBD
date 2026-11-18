@@ -93,6 +93,7 @@ Route::controller(TiketController::class)->middleware(['peran:wisatawan', 'kunju
     Route::get('/tiket/{kode}', 'eTiket')->name('tiket.e');
 });
 
+// notifikasi pembayaran dari server Midtrans (tanpa sesi; dikecualikan dari CSRF di bootstrap/app.php)
 
 // ---------- kurator & admin ----------
 Route::controller(AdminController::class)->middleware('peran:admin,superadmin')->prefix('admin')->name('admin.')->group(function () {
