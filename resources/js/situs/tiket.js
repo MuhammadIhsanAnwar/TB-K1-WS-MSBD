@@ -168,3 +168,4 @@ if (bayar) {
             });
         } catch (err) {
             tulisKabar(err.message);
+        } finally {
