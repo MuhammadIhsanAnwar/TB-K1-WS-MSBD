@@ -233,6 +233,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__foto img, .akun-atur__inisial { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; object-fit: cover; background: var(--paper-deep); color: var(--green); font: 600 2.5rem/1 var(--font-display); }
 .akun-atur__profil h2 { margin-top: 14px; font: 600 1.375rem/1.2 var(--font-display); color: var(--green); overflow-wrap: anywhere; }
 .akun-atur__email { margin-top: 4px; color: var(--muted); overflow-wrap: anywhere; }
+.akun-atur__fakta { width: 100%; margin: 16px 0 0; border-top: 1px solid var(--p-rule); }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
