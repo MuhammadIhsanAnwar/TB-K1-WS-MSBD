@@ -38,6 +38,7 @@
 @if ($t['foto']) @section('foto-kaki', $t['foto']) @endif
 
 @php
+    // rating dari ulasan yang tayang (DB 2); ulasan milik pengguna yang sedang masuk dipakai untuk form "perbarui"
 @push('kepala')
     <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
