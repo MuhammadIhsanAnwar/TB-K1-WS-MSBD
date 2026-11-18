@@ -21,6 +21,7 @@ use Throwable;
 class Midtrans
 {
     /**
+     * Kanal yang ditawarkan di jendela Snap; pembeli memilih sendiri di sana. Hanya kanal yang punya
     private const KANAL = [
         'qris' => ['other_qris'],
         'va' => ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va'],
