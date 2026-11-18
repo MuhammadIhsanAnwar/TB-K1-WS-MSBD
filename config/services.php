@@ -53,6 +53,7 @@ return [
         // akun Midtrans baru: notifikasi ditandatangani dengan Signature Secret Key, bukan Server Key
         'signature_key' => env('MIDTRANS_SIGNATURE_KEY'),
         'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
+        'is_production' => (bool) env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
     'supabase' => [
