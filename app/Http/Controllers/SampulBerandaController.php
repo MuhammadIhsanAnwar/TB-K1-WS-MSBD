@@ -42,3 +42,4 @@ class SampulBerandaController extends Controller
         ], [
             'slot.*.slug.in' => 'Tempat di slot :position tidak ada di katalog.',
             'slot.*.slug.distinct' => 'Satu tempat hanya boleh dipakai di satu slot.',
+            'slot.*.slug.required_with' => 'Pilih tempat untuk slot :position sebelum mengunggah foto.',
