@@ -51,6 +51,7 @@ final class Database3CatalogWriter
         if ($rentang = self::rentangJam($data['jam'])) {
             $triples[] = "$subjek mv:jamBuka \"{$rentang[0]}\"^^xsd:time";
             $triples[] = "$subjek mv:jamTutup \"{$rentang[1]}\"^^xsd:time";
+        }
 
         self::replaceOffers('', $slug, $harga, implode(" .\n", $triples).'.');
     }
