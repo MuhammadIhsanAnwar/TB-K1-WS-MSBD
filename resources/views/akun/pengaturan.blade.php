@@ -99,6 +99,7 @@
                             <button type="button" class="p-btn" data-lihat-sandi aria-controls="password password_confirmation">Tampilkan</button>
                         </div>
                         <ul class="akun-atur__syarat" id="syarat-sandi" aria-label="Syarat password">
+                            <li data-syarat="panjang">Minimal 8 karakter</li>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
