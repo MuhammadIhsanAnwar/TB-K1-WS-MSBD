@@ -8,3 +8,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     const sumber = slot.querySelector('[data-sumber]');
     let urlUnggah = null;
 
+    const tampilkan = (src, teks) => {
