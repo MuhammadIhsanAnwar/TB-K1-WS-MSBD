@@ -32,3 +32,4 @@ return new class extends Migration
         $connection->statement('CREATE POLICY "server can manage pengaturan_situs" ON pengaturan_situs FOR ALL TO service_role USING (true) WITH CHECK (true)');
     }
 
+    public function down(): void
