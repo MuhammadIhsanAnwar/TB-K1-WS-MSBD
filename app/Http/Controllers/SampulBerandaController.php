@@ -92,3 +92,4 @@ class SampulBerandaController extends Controller
         }
 
         // foto unggahan yang tidak dipakai lagi dibuang dari folder sampul
+        $dipakai = array_filter(array_column($baru, 'foto'));
