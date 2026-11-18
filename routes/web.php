@@ -93,6 +93,7 @@ Route::controller(TiketController::class)->middleware(['peran:wisatawan', 'kunju
     Route::get('/tiket/{kode}', 'eTiket')->name('tiket.e');
 });
 
+
 // ---------- kurator & admin ----------
 Route::controller(AdminController::class)->middleware('peran:admin,superadmin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', 'ringkasan')->name('ringkasan');
