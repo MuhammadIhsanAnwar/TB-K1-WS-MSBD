@@ -169,3 +169,4 @@ if (bayar) {
         } catch (err) {
             tulisKabar(err.message);
         } finally {
+            tombolBayar.disabled = false;
