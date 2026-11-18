@@ -177,6 +177,7 @@ class Penyimpanan
             $row = self::api()->ubahUlasan((int) $lama['id_ulasan'], [
                 'nama_pengguna' => Str::limit($data['nama'] ?? 'Wisatawan', 77),
                 'bintang' => $data['bintang'],
+                'teks' => $data['teks'],
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
