@@ -94,3 +94,4 @@ class WisatawanUlasanSeeder extends Seeder
             foreach ($pengulas as $n => $user) {
                 Penyimpanan::tulisUlasan([
                     'tempat' => $tempat['slug'],
+                    'id_pengguna' => (int) $user['id'],
