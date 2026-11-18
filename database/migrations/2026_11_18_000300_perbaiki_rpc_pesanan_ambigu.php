@@ -101,3 +101,4 @@ return new class extends Migration
             GRANT EXECUTE ON PROCEDURE sp_bayar_pesanan(varchar, varchar, varchar) TO {$peran};
             SQL);
     }
+};
