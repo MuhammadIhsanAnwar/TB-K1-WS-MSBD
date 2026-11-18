@@ -143,6 +143,7 @@ class TiketController extends Controller
         if ($p['status'] !== 'menunggu') {
             return $request->expectsJson()
                 ? response()->json(['status' => $p['status'], 'url' => route('pesanan', $kode)])
+                : redirect()->route('pesanan', $kode);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
