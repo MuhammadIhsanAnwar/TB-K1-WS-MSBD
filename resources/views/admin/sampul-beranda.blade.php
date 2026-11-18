@@ -41,3 +41,4 @@
                     @if ($i === 0)<span class="meta">tampil pertama</span>@endif
                 </header>
                 <figure class="sampul-atur__pratinjau">
+                    <img src="{{ $pratinjau }}" alt="" width="640" height="360" data-pratinjau @unless ($pratinjau) hidden @endunless>
