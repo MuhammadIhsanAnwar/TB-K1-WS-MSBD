@@ -28,6 +28,7 @@
         $menuKurator = array_merge($menuKurator, [
             ['admin.tempat.daftar', 'Kelola tempat wisata', 'entitas', null],
             ['admin.akun', 'Kelola akun', 'akun', null],
+            ['admin.beranda', 'Sampul beranda', 'sampul', null],
         ]);
     }
 @endphp
