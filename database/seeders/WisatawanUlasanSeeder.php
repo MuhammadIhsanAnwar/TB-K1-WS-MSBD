@@ -66,3 +66,4 @@ class WisatawanUlasanSeeder extends Seeder
         $password = env('SEED_WISATAWAN_PASSWORD');
         if (! is_string($password) || $password === '') {
             throw new RuntimeException('SEED_WISATAWAN_PASSWORD harus diisi di .env sebelum menjalankan seeder ini.');
+        }
