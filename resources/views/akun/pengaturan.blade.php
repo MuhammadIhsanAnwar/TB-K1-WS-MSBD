@@ -106,6 +106,7 @@
                             <li data-syarat="simbol">Simbol, misalnya ! atau #</li>
                         </ul>
                         @error('password')<p class="isian__galat">{{ $message }}</p>@enderror
+                    </div>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
