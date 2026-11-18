@@ -21,6 +21,6 @@ class ResetPasswordEmail extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.reset-password');
+        // versi teks biasa ikut dikirim (multipart/alternative): email hanya-HTML lebih mudah masuk spam
     }
 }
