@@ -61,6 +61,7 @@ class Semantik
                         'reviewCount' => (int) $rating['jumlah'],
                         'bestRating' => 5,
                         'worstRating' => 1,
+                    ];
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
