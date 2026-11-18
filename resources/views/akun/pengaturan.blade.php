@@ -19,6 +19,7 @@
         </div>
         <a class="p-btn" href="{{ route('akun') }}">Kembali ke akun saya</a>
     </div>
+    @if ($wisatawan)
 
     <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="p-panel" style="max-width:720px">
         @csrf
