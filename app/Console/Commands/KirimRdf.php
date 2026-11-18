@@ -40,6 +40,16 @@ class KirimRdf extends Command
         $http = Http::timeout((int) config('services.sparql.timeout', 30))
             ->withBasicAuth($username, $password);
 
+        // Simpan salinan lokal sebelum menyentuh Database 3, supaya bisa dikirim ulang kalau gagal.
+        $cadangan = database_path('rdf/medanvisit-data.backup-'.date('Ymd-His').'.ttl');
+        if (! copy(database_path('rdf/medanvisit-data.ttl'), $cadangan)) {
+            $this->error('Gagal membuat cadangan data RDF.');
+
+            return self::FAILURE;
+        }
+
+        $this->line('Cadangan: '.basename($cadangan));
+
         try {
             if ($this->option('replace')) {
                 $hapus = $http->delete($endpoint);
