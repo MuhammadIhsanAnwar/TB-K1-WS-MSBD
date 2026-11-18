@@ -150,6 +150,7 @@ class TiketController extends Controller
             $snap = Midtrans::snap($p, Katalog::get($p['tempat'])['nama'] ?? 'MedanVisit');
         } catch (Throwable $e) {
             Log::warning("Midtrans: token pembayaran {$kode} gagal dibuat: ".$e->getMessage());
+            // RuntimeException dari Midtrans::snap berisi pesan untuk pembeli; galat jaringan tidak
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
