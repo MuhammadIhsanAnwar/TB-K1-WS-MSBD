@@ -13,7 +13,6 @@ class VerifikasiEmail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(public readonly string $url) {}
-                'image/png'
             );
 
             $logo->asInline();
