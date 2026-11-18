@@ -127,6 +127,7 @@ class TiketController extends Controller
     public function status(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
+        // kembali dari halaman Midtrans (mode tanpa JavaScript): langsung tanyakan statusnya
 
         return view('tiket.status', ['p' => $p, 't' => Katalog::get($p['tempat']), 'metode' => self::METODE]);
     }
