@@ -99,7 +99,7 @@ class Midtrans
 
         $jawab = self::http()->post(self::urlSnap(), $isi);
         if ($jawab->status() === 400 && str_contains(strtolower($jawab->body()), 'payment')) {
-            // kanal pilihan belum aktif di akun Midtrans: tampilkan semua kanal yang aktif
+            // sebagian kanal belum aktif di akun Midtrans: tampilkan semua kanal yang aktif
             unset($isi['enabled_payments']);
             $jawab = self::http()->post(self::urlSnap(), $isi);
         }
