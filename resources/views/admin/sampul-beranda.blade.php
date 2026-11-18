@@ -46,3 +46,4 @@
                     <figcaption data-sumber>
                         @if ($s['fotoAda'] && $slugTerpilih === $s['slug']) Foto unggahan
                         @elseif ($tempatSlot) {{ empty($tempatSlot['foto']) ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930' : 'Foto dari data tempat (Database 3)' }}
+                        @endif
