@@ -32,3 +32,4 @@
         @foreach ($slot as $i => $s)
             @php
                 $slugTerpilih = old("slot.$i.slug", $s['slug']);
+                $tempatSlot = $slugTerpilih ? $tempatPerSlug->get($slugTerpilih) : null;
