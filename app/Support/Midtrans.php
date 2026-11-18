@@ -131,3 +131,4 @@ class Midtrans
             return $p;
         }
 
+        $transaksi = $s['transaction_status'] ?? '';
