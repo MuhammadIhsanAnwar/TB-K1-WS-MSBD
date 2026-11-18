@@ -11,3 +11,4 @@ const teksBantuFoto = bantuFoto?.textContent ?? '';
 const BATAS_FOTO = 2 * 1024 * 1024;
 let urlPratinjau = null;
 
+function aturBantuFoto(teks, galat = false) {
