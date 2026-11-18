@@ -145,6 +145,7 @@ final class Database3CatalogWriter
      * "Senin–Sabtu 06.00–11.00 dan 17.00–20.00" (diambil buka paling awal dan tutup paling akhir).
      * "24 jam" menjadi 00.00 sampai 23.59. Tanpa rentang jam yang bisa dibaca, hasilnya null.
      */
+    public static function rentangJam(string $keterangan): ?array
     }
 
     public static function delete(string $slug): void
