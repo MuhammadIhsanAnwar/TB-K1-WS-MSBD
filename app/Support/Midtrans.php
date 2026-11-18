@@ -28,7 +28,7 @@ class Midtrans
         'other_qris', 'bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va',
         'gopay', 'shopeepay', 'credit_card',
     ];
-        'kartu' => ['credit_card'],
+
     ];
 
     /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
