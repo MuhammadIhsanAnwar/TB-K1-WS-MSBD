@@ -114,3 +114,4 @@ class Midtrans
         $data = $jawab->json() ?? [];
         if (($data['status_code'] ?? null) === '404') {
             return null;
+        }
