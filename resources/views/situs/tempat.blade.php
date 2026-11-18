@@ -249,7 +249,7 @@
                         <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukan…" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks', $ulasanSaya['teks'] ?? '') }}</textarea>
                         @error('teks')<p class="isian__galat" id="galat-teks">{{ $message }}</p>@enderror
                     </div>
-                    <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">Kirim ulasan</button>
+                    <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">{{ $ulasanSaya ? 'Perbarui ulasan' : 'Kirim ulasan' }}</button>
                 </form>
             @elseif (! $u)
                 <p style="margin-top:18px">
