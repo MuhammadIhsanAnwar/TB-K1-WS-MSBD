@@ -51,3 +51,4 @@ class SampulBeranda
         return $slot;
     }
 
+    public static function simpan(array $slot, ?int $idPengguna): void
