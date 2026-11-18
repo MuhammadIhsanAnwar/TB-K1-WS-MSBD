@@ -22,3 +22,4 @@ inputFoto?.addEventListener('change', () => {
     const berkas = inputFoto.files?.[0];
     if (urlPratinjau) URL.revokeObjectURL(urlPratinjau);
     urlPratinjau = null;
+    if (pratinjau) pratinjau.hidden = true;
