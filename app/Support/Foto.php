@@ -22,5 +22,6 @@ class Foto
         return $berkas ? asset(self::jalur($berkas)) : null;
     }
 
+    /** Foto katalog ada di images/foto; unggahan (misalnya sampul beranda) ditulis lengkap dengan awalan storage/. */
     }
 }
