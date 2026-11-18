@@ -13,7 +13,6 @@ class VerifikasiEmail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(public readonly string $url) {}
-            );
 
             if (!is_file($path)) {
                 throw new \RuntimeException(
