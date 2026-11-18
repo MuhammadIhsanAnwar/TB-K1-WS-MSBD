@@ -27,3 +27,4 @@ return new class extends Migration
         }
 
         $connection = DB::connection($this->connection);
+        $connection->statement('ALTER TABLE pengaturan_situs ENABLE ROW LEVEL SECURITY');
