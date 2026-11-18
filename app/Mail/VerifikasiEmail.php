@@ -13,7 +13,6 @@ class VerifikasiEmail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(public readonly string $url) {}
-                'storage/logo_app/png/MedanVisit_logo_horizontal_terang.png'
             );
 
             if (!is_file($path)) {
