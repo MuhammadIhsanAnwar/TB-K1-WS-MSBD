@@ -15,3 +15,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         sumber.textContent = teks;
     };
 
+    const dariTempat = () => {
