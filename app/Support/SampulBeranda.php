@@ -86,3 +86,4 @@ class SampulBeranda
         }
 
         return $pilihan->map(fn ($s) => [
+            'slug' => $s['tempat']['slug'],
