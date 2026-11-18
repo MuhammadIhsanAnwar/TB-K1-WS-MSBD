@@ -33,3 +33,4 @@ class SampulBeranda
         if (is_array($tersimpan)) {
             return $tersimpan;
         }
+
