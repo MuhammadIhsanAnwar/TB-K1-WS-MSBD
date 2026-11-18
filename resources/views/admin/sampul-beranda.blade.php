@@ -61,3 +61,4 @@
                 </div>
                 <div class="p-field">
                     <label for="slot-{{ $i }}-foto">Ganti dengan foto sendiri (opsional)</label>
+                    <input id="slot-{{ $i }}-foto" type="file" name="slot[{{ $i }}][foto]" accept="image/jpeg,image/png,image/webp" data-unggah aria-describedby="slot-{{ $i }}-bantu" @error("slot.$i.foto") aria-invalid="true" @enderror>
