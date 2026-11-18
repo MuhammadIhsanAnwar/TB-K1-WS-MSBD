@@ -51,3 +51,4 @@ return new class extends Migration
             IF p.id_pesanan IS NULL THEN
                 RAISE EXCEPTION 'Pesanan % tidak ditemukan', p_kode;
             END IF;
+            IF p.status <> 'menunggu' THEN
