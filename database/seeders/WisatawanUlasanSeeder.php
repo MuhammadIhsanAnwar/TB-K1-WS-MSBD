@@ -52,3 +52,4 @@ class WisatawanUlasanSeeder extends Seeder
         'belanja' => [
             'Tenant-nya lengkap dan mudah dijangkau. Akhir pekan cukup ramai.',
             'Nyaman untuk belanja sambil makan. Parkirnya luas.',
+            'Pilihan tokonya banyak dan tempatnya bersih.',
