@@ -13,3 +13,4 @@ return new class extends Migration
     protected $connection = 'transaksi';
 
     public function up(): void
+    {
