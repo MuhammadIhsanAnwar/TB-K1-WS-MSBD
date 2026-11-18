@@ -145,3 +145,4 @@ if (bayar) {
         tombolBayar.disabled = true;
         tulisKabar('Membuka jendela pembayaran...');
         try {
+            const data = await kirim(formBayar.action);
