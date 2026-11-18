@@ -22,3 +22,4 @@ return new class extends Migration
 
         $db->statement('CREATE UNIQUE INDEX IF NOT EXISTS ux_ulasan_pengguna_tempat ON ulasan (id_pengguna, tempat_slug)');
     }
+
