@@ -42,3 +42,4 @@ class WisatawanUlasanSeeder extends Seeder
         'kuliner' => [
             'Rasanya enak dan porsinya pas. Pada jam makan siang biasanya ramai, jadi datang lebih awal.',
             'Pilihan menunya banyak dan pelayanannya cepat. Layak dicoba saat berkunjung ke Medan.',
+            'Tempatnya sederhana, tetapi rasanya sesuai harapan. Parkir agak terbatas.',
