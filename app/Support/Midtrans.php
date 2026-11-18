@@ -31,6 +31,7 @@ class Midtrans
 
     /** payment_type dari Midtrans menjadi nilai pesanan.metode di DB 2. */
     private const METODE = [
+        'qris' => 'qris',
     ];
 
     /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
