@@ -62,3 +62,4 @@ class Midtrans
         $kunci = 'midtrans.snap.'.$p['kode'];
         if (is_array($simpan = Cache::get($kunci))) {
             return $simpan;
+        }
