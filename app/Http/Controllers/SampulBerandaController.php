@@ -35,3 +35,4 @@ class SampulBerandaController extends Controller
         }
 
         $request->validate([
+            'slot' => ['required', 'array', 'max:'.SampulBeranda::SLOT],
