@@ -54,3 +54,4 @@ return new class extends Migration
             IF p.status <> 'menunggu' THEN
                 RAISE EXCEPTION 'Pesanan % berstatus %, tidak bisa dibayar', p_kode, p.status;
             END IF;
+            IF p.batas_bayar < now() THEN
