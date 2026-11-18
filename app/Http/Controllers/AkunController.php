@@ -643,6 +643,7 @@ class AkunController extends Controller
 
         return redirect()->to(route('tempat', $slug).'#ulasan')->with('pesan', ! empty($hasil['diperbarui'])
             ? 'Ulasanmu sudah diperbarui.'
+            : 'Terima kasih. Ulasanmu langsung ditayangkan.');
     }
 
     public function rencanaSaya(Request $request)
