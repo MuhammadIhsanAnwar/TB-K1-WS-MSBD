@@ -55,3 +55,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Pilihan tokonya banyak dan tempatnya bersih.',
         ],
         'rekreasi-air' => [
+            'Kolamnya bersih dan anak-anak senang. Datang pagi supaya tidak terlalu ramai.',
