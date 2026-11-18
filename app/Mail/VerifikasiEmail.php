@@ -25,7 +25,7 @@ class VerifikasiEmail extends Mailable
     {
         // versi teks biasa ikut dikirim (multipart/alternative): email hanya-HTML lebih mudah masuk spam
         return new Content(
-            view: 'emails.verifikasi-email'
+            view: 'emails.verifikasi-email',
         );
     }
 }
