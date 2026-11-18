@@ -127,3 +127,4 @@ if (bayar) {
             const data = await kirim(bayar.dataset.cekUrl);
             if (data.status && data.status !== 'menunggu') {
                 location.reload();
+                return true;
