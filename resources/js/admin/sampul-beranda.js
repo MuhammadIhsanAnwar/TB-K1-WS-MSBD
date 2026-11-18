@@ -24,3 +24,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     };
 
     pilih?.addEventListener('change', () => {
+        if (!unggah?.files?.length) dariTempat();
