@@ -66,7 +66,7 @@
                     @error('foto_profil')<p class="isian__galat">{{ $message }}</p>@enderror
                 </div>
                 <div class="isian">
-            <p class="isian__bantuan">Hanya angka dan harus diawali 08.</p>
+                    <label for="nama">Nama</label>
             @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
         <fieldset @disabled($akunGoogle) style="border:0;padding:0;margin:24px 0 0">
