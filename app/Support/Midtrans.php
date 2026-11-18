@@ -66,3 +66,4 @@ class Midtrans
 
         $batas = Carbon::parse($p['batas_bayar']);
         $menit = (int) floor(now()->diffInSeconds($batas, false) / 60) - self::JEDA_MENIT;
+        if ($menit < 1) {
