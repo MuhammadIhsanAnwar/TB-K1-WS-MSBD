@@ -93,3 +93,4 @@ class SampulBeranda
             'alt' => $s['tempat']['nama'],
         ])->all();
     }
+
