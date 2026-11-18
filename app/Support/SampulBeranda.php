@@ -66,3 +66,4 @@ class SampulBeranda
     public static function diatur(array $semuaTempat): bool
     {
         return collect(self::pengaturan())->contains(fn ($s) => isset($semuaTempat[$s['slug']]));
+    }
