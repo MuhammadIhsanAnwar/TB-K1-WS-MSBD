@@ -245,6 +245,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__bantuan { margin-top: 16px; color: var(--muted); }
 .akun-atur__form { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--p-gap); }
 .akun-atur__form .isian { grid-template-columns: minmax(0, 1fr); }
+.akun-atur__form .p-panel + .p-panel { margin-top: 0; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
