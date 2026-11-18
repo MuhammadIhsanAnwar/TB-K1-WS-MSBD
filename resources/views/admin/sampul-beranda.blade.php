@@ -37,3 +37,4 @@
             @endphp
             <section class="p-panel s6" aria-labelledby="slot-{{ $i }}" data-slot>
                 <header>
+                    <h2 id="slot-{{ $i }}">Slot {{ $i + 1 }}</h2>
