@@ -101,3 +101,4 @@ class SampulBeranda
             return null;
         }
 
+        return File::isFile(public_path($jalur)) ? $jalur : null;
