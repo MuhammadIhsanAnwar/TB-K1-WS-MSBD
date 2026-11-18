@@ -20,3 +20,4 @@ return new class extends Migration
             throw new RuntimeException(count($ganda).' pasangan akun dan tempat punya lebih dari satu ulasan. Rapikan dulu sebelum menjalankan migration ini.');
         }
 
+        $db->statement('CREATE UNIQUE INDEX IF NOT EXISTS ux_ulasan_pengguna_tempat ON ulasan (id_pengguna, tempat_slug)');
