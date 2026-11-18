@@ -16,3 +16,4 @@ return new class extends Migration
     public function up(): void
     {
         $schema = Schema::connection($this->connection);
+
