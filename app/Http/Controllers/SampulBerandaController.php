@@ -36,3 +36,4 @@ class SampulBerandaController extends Controller
 
         $request->validate([
             'slot' => ['required', 'array', 'max:'.SampulBeranda::SLOT],
+            'slot.*.slug' => ['nullable', 'string', Rule::in(array_keys(Katalog::tempat())), 'distinct', 'required_with:slot.*.foto'],
