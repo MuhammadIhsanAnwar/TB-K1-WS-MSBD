@@ -57,6 +57,7 @@ final class Database3CatalogWriter
     }
 
     /**
+     * Ubah tempat wisata. Cerita lengkap (mv:cerita) tidak disentuh karena formulir tidak memuatnya;
     public static function update(string $slug, array $data, array $harga): void
     {
         $subjek = self::subjek($slug);
