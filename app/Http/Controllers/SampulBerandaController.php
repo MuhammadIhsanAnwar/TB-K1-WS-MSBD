@@ -23,3 +23,4 @@ class SampulBerandaController extends Controller
                 ->map(fn ($s) => $s + ['fotoAda' => SampulBeranda::fotoAda($s['foto'])])
                 ->all(),
             'pilihanTempat' => collect($tempat)->sortBy('nama')->values()->all(),
+            'tampilSekarang' => SampulBeranda::slide($tempat),
