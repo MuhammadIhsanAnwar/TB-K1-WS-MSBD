@@ -133,3 +133,4 @@ class Midtrans
 
         $transaksi = $s['transaction_status'] ?? '';
         $lunas = $transaksi === 'settlement' || ($transaksi === 'capture' && ($s['fraud_status'] ?? 'accept') === 'accept');
+
