@@ -24,3 +24,4 @@ inputFoto?.addEventListener('change', () => {
     urlPratinjau = null;
     if (pratinjau) pratinjau.hidden = true;
     inputFoto.setCustomValidity('');
+    aturBantuFoto(teksBantuFoto);
