@@ -19,3 +19,4 @@ function aturBantuFoto(teks, galat = false) {
 }
 
 inputFoto?.addEventListener('change', () => {
+    const berkas = inputFoto.files?.[0];
