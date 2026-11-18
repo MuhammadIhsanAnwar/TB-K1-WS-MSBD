@@ -8,3 +8,4 @@ use Illuminate\Support\Facades\DB;
  * Kalau wisatawan mengirim ulasan lagi, ulasan lamanya diperbarui, sehingga rating di
  * ringkasan_ulasan tidak bisa digeser dengan mengirim ulasan berkali-kali.
  */
+return new class extends Migration
