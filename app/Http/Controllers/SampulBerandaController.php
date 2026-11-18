@@ -84,3 +84,4 @@ class SampulBerandaController extends Controller
             SampulBeranda::simpan($baru, (int) $request->session()->get('pengguna.id') ?: null);
         } catch (Throwable $e) {
             report($e);
+            foreach ($unggahan as $jalur) {
