@@ -45,3 +45,4 @@
                     <div class="p-kosong" data-kosong @if ($pratinjau) hidden @endif>Slot kosong</div>
                     <figcaption data-sumber>
                         @if ($s['fotoAda'] && $slugTerpilih === $s['slug']) Foto unggahan
+                        @elseif ($tempatSlot) {{ empty($tempatSlot['foto']) ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930' : 'Foto dari data tempat (Database 3)' }}
