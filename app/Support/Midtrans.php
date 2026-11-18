@@ -72,3 +72,4 @@ class Midtrans
 
         $isi = [
             'transaction_details' => ['order_id' => $p['kode'], 'gross_amount' => (int) $p['total']],
+            'item_details' => array_map(fn ($i) => [
