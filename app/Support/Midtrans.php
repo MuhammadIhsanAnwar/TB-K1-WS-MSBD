@@ -126,3 +126,4 @@ class Midtrans
      */
     public static function sinkron(string $kode): ?array
     {
+        $p = Penyimpanan::cariPesanan($kode);
