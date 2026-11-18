@@ -124,3 +124,4 @@ Route::controller(AdminController::class)->prefix('admin')->name('admin.')->grou
     Route::get('/tempat', 'entitas')->defaults('jenis', 'tempat')->name('tempat.daftar');
     });
 });
+
