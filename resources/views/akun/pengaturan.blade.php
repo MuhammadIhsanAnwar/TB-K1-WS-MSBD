@@ -59,7 +59,7 @@
                 <div class="isian">
                     <label for="foto_profil">Foto profil</label>
                     <div class="akun-atur__unggah">
-            <label for="tanggal_lahir">Tanggal lahir</label>
+                        <img alt="" width="64" height="64" data-pratinjau-foto hidden>
             <input id="tanggal_lahir" type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $user['tanggal_lahir'] ?? '') }}" required>
             @error('tanggal_lahir')<p class="isian__galat">{{ $message }}</p>@enderror
         </div>
