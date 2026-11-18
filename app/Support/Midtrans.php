@@ -180,3 +180,4 @@ class Midtrans
         }
         $teks = $n['order_id'].$n['status_code'].$n['gross_amount'];
         // Signature Secret Key untuk akun baru; Server Key untuk akun lama yang belum memisahkannya
+        foreach (array_filter([config('services.midtrans.signature_key'), config('services.midtrans.server_key')]) as $rahasia) {
