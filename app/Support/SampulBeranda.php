@@ -36,3 +36,4 @@ class SampulBeranda
 
         try {
             $nilai = (new SupabaseApi)->pengaturanSitus(self::KUNCI);
+            $slot = collect(is_array($nilai) ? $nilai : [])
