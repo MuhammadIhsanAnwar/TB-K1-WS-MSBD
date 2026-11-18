@@ -52,7 +52,7 @@
         </aside>
 
         {{-- formulir --}}
-        </div>
+        <form method="post" action="{{ route('akun.pengaturan') }}" enctype="multipart/form-data" class="s8 akun-atur__form">
         <div class="isian">
             <label for="nama">Nama</label>
             <input id="nama" type="text" name="nama" value="{{ old('nama', $user['name']) }}" maxlength="60" required>
