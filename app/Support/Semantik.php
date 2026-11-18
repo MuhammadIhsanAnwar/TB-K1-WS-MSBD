@@ -50,6 +50,7 @@ class Semantik
      * JSON-LD schema.org satu tempat. Rating (dari ulasan di DB 2) ditambahkan sebagai
      * schema:aggregateRating supaya mesin pencari ikut membaca penilaian pengunjung.
      */
+    public static function jsonldTempat(array $t, ?array $rating = null): array
     {
         foreach (self::jsonld()['@graph'] as $n) {
             if ($n['@id'] === self::BASIS.'id/'.$t['slug']) {
