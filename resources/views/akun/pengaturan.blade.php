@@ -73,7 +73,7 @@
                 <div class="akun-atur__dua">
                     <div class="isian">
                         <label for="tanggal_lahir">Tanggal lahir</label>
-                <input id="password" type="password" name="password" autocomplete="new-password">
+                        <input id="tanggal_lahir" type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $user['tanggal_lahir'] ?? '') }}" max="{{ now()->subDay()->toDateString() }}" autocomplete="bday" required @error('tanggal_lahir') aria-invalid="true" @enderror>
                 <p class="isian__bantuan">{{ $akunGoogle ? 'Password akun ini dikelola melalui Google dan tidak dapat diubah di sini.' : 'Kosongkan jika tidak ingin mengubah password.' }}</p>
                 @error('password')<p class="isian__galat">{{ $message }}</p>@enderror
             </div>
