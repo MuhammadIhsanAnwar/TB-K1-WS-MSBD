@@ -9,3 +9,4 @@ const pratinjau = akar?.querySelector('[data-pratinjau-foto]');
 const bantuFoto = akar?.querySelector('[data-bantu-foto]');
 const teksBantuFoto = bantuFoto?.textContent ?? '';
 const BATAS_FOTO = 2 * 1024 * 1024;
+let urlPratinjau = null;
