@@ -520,6 +520,7 @@ class AkunController extends Controller
         abort_unless($user, 404, 'Akun tidak ditemukan.');
 
         $wisatawan = ($user['peran'] ?? null) === 'wisatawan';
+
         return view('akun.pengaturan', [
             'user' => $user,
             'akunGoogle' => ! empty($user['google_id']),
