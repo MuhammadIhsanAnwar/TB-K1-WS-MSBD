@@ -56,6 +56,7 @@ final class Database3CatalogWriter
         self::replaceOffers('', $slug, $harga, implode(" .\n", $triples).'.');
     }
 
+    /**
     public static function update(string $slug, array $data, array $harga): void
     {
         $subjek = self::subjek($slug);
