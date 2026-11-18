@@ -51,3 +51,4 @@ class SampulBerandaController extends Controller
 
         $lama = SampulBeranda::pengaturan();
         $baru = [];
+        $unggahan = [];
