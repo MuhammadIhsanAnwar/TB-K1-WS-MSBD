@@ -390,6 +390,7 @@ class SupabaseApi
                 'diubah_oleh' => $idPengguna,
                 'updated_at' => now()->toIso8601String(),
             ])
+            ->throw();
 
     public function ping(string $table): void
     {
