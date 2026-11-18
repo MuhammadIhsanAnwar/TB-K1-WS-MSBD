@@ -29,6 +29,7 @@ class Midtrans
         'gopay', 'shopeepay', 'credit_card',
     ];
 
+    /** payment_type dari Midtrans menjadi nilai pesanan.metode di DB 2. */
     ];
 
     /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
