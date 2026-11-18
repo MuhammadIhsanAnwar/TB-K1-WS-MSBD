@@ -77,3 +77,4 @@ function periksaSandi() {
     if (nilai === '' && ulang.value === '') {
         ulang.setCustomValidity('');
         aturStatusUlang(teksStatusUlang);
+        return;
