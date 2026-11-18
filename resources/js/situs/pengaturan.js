@@ -70,3 +70,4 @@ function periksaSandi() {
         const terpenuhi = nilai !== '' && cek(nilai);
         akar.querySelector(`[data-syarat="${kunci}"]`)?.toggleAttribute('data-terpenuhi', terpenuhi);
         semua &&= terpenuhi;
+    }
