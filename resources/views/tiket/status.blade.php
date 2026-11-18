@@ -6,6 +6,7 @@
     $vaNomor = '8808'.substr(preg_replace('/\D/', '', $p['kode']), 0, 4).substr(preg_replace('/\D/', '', $p['pemesan']['hp']), -6);
     $midtrans = $p['status'] === 'menunggu' && Midtrans::aktif();
 @endphp
+@if ($midtrans)
 @section('judul', 'Pesanan '.$p['kode'])
 @section('tanpa-kaki', '1')
 @if ($p['status'] === 'lunas') @section('tanpa-kepala', '1') @endif
