@@ -70,3 +70,4 @@
                 @endif
             </section>
         @endforeach
+    </div>
