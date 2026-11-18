@@ -143,6 +143,7 @@ class Midtrans
 
         // cara bayar dipilih pembeli di jendela Midtrans: catat ke pesanan sebelum pelunasan,
         // supaya pembayaran.metode (disalin sp_bayar_pesanan) sesuai yang benar-benar dipakai
+        $metode = self::METODE[$s['payment_type'] ?? ''] ?? null;
 
         if ($lunas) {
             if ((int) round((float) ($s['gross_amount'] ?? 0)) !== (int) $p['total']) {
