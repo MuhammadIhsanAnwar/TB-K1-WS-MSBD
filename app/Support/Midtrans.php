@@ -141,6 +141,7 @@ class Midtrans
         $transaksi = $s['transaction_status'] ?? '';
         $lunas = $transaksi === 'settlement' || ($transaksi === 'capture' && ($s['fraud_status'] ?? 'accept') === 'accept');
 
+        // cara bayar dipilih pembeli di jendela Midtrans: catat ke pesanan sebelum pelunasan,
 
         if ($lunas) {
             if ((int) round((float) ($s['gross_amount'] ?? 0)) !== (int) $p['total']) {
