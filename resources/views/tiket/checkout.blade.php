@@ -55,6 +55,7 @@
                 <header><h2 id="judul-metode">{{ \App\Support\Midtrans::aktif() ? 'Pembayaran' : 'Metode pembayaran' }}</h2></header>
                 @if (\App\Support\Midtrans::aktif())
                     <p>Cara bayar dipilih di jendela Midtrans setelah pesanan dibuat: QRIS, transfer virtual account bank, dompet digital (GoPay, ShopeePay), atau kartu debit/kredit.</p>
+                    <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Kamu punya 15 menit untuk menyelesaikan pembayaran setelah pesanan dibuat.@unless (\App\Support\Midtrans::produksi()) Mode uji coba: tidak ada uang yang ditarik.@endunless</p>
                 @else
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Catatan prototipe: gerbang pembayaran Midtrans belum dihubungkan. Pada langkah berikutnya tersedia tombol simulasi pelunasan instan.</p>
                 @endif
