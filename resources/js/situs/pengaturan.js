@@ -35,3 +35,4 @@ inputFoto?.addEventListener('change', () => {
         aturBantuFoto(galat, true);
         return;
     }
+
