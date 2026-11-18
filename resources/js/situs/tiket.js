@@ -167,3 +167,4 @@ if (bayar) {
                 onClose: () => tulisKabar('Jendela pembayaran ditutup. Tekan tombol Bayar untuk melanjutkan.'),
             });
         } catch (err) {
+            tulisKabar(err.message);
