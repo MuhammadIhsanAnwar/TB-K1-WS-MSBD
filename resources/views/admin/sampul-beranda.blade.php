@@ -60,3 +60,4 @@
                     @error("slot.$i.slug")<span class="sampul-atur__salah">{{ $message }}</span>@enderror
                 </div>
                 <div class="p-field">
+                    <label for="slot-{{ $i }}-foto">Ganti dengan foto sendiri (opsional)</label>
