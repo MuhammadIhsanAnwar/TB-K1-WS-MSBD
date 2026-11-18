@@ -210,6 +210,7 @@
             @if ($ratingTempat['jumlah'])
                 <p class="mv-rating-ringkas">
                     <x-bintang :n="(int) round($ratingTempat['rata'])" />
+                    <b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> dari 5, dari {{ $ratingTempat['jumlah'] }} ulasan
             @if ($ulasan)
                 <div class="ulasan-daftar">
                     @foreach ($ulasan as $ul)
