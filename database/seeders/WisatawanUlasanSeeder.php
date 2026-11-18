@@ -69,3 +69,4 @@ class WisatawanUlasanSeeder extends Seeder
         }
 
         $api = new SupabaseApi;
+        $akun = [];
