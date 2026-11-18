@@ -95,3 +95,4 @@ class Midtrans
             // kanal pilihan belum aktif di akun Midtrans: tampilkan semua kanal yang aktif
             unset($isi['enabled_payments']);
             $jawab = self::http()->post(self::urlSnap(), $isi);
+        }
