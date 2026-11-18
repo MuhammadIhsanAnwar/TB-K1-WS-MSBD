@@ -81,3 +81,4 @@ class SampulBerandaController extends Controller
     {
         $lama = SampulBeranda::pengaturan();
         try {
+            SampulBeranda::simpan($baru, (int) $request->session()->get('pengguna.id') ?: null);
