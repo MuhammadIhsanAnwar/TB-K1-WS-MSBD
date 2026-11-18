@@ -100,3 +100,4 @@ return new class extends Migration
             GRANT EXECUTE ON PROCEDURE sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar) TO {$peran};
             GRANT EXECUTE ON PROCEDURE sp_bayar_pesanan(varchar, varchar, varchar) TO {$peran};
             SQL);
+    }
