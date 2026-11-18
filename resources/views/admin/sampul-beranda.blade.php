@@ -50,3 +50,4 @@
                     </figcaption>
                 </figure>
                 <div class="p-field">
+                    <label for="slot-{{ $i }}-slug">Tempat wisata</label>
