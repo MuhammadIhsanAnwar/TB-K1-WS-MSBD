@@ -129,6 +129,7 @@ final class Database3CatalogWriter
 
         $operasi[] = 'DELETE { '.implode(" .\n", $delete)." }\nINSERT { ".implode(" .\n", $insert)." }\nWHERE { ".implode(" .\n", $where).' }';
 
+        // alamat: di data asli berupa simpul schema:PostalAddress; tempat baru dari admin berupa teks
     }
 
     public static function delete(string $slug): void
