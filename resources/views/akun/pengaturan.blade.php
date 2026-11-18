@@ -83,6 +83,7 @@
                         @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
                     </div>
                 </div>
+            </section>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
