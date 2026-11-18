@@ -5,3 +5,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     const unggah = slot.querySelector('[data-unggah]');
     const gambar = slot.querySelector('[data-pratinjau]');
     const kosong = slot.querySelector('[data-kosong]');
+    const sumber = slot.querySelector('[data-sumber]');
