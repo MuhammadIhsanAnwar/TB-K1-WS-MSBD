@@ -12,3 +12,4 @@ use Throwable;
 
 /** Panel super admin: memilih foto sampul (hero) beranda. Disimpan di DB 1 tabel pengaturan_situs. */
 class SampulBerandaController extends Controller
+{
