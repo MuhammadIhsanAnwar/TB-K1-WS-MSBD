@@ -50,3 +50,4 @@ const sandi = akar?.querySelector('[data-input-sandi]');
 const ulang = akar?.querySelector('[data-input-ulang]');
 const statusUlang = akar?.querySelector('[data-status-ulang]');
 const teksStatusUlang = statusUlang?.textContent ?? '';
+const SYARAT = {
