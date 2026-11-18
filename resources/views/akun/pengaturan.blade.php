@@ -113,6 +113,7 @@
                         @unless ($akunGoogle)
                             <p class="isian__bantuan" data-status-ulang aria-live="polite">Kosongkan kedua kolom kalau tidak ingin mengganti password.</p>
                         @endunless
+                    </div>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
