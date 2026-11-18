@@ -49,6 +49,7 @@ return [
     // Pembayaran tiket. Kosongkan server_key untuk kembali ke mode simulasi (pengembangan dan test).
     'midtrans' => [
         'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
     ],
 
     'supabase' => [
