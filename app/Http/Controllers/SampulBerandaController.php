@@ -75,3 +75,4 @@ class SampulBerandaController extends Controller
         $pesan = $baru ? 'Sampul beranda disimpan: '.count($baru).' foto, tampil sesuai urutan slot.' : 'Semua slot kosong, sampul beranda kembali otomatis.';
 
         return $this->tulis($request, $baru, $unggahan, $pesan);
+    }
