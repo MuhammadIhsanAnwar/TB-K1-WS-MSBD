@@ -88,6 +88,7 @@ class Penyimpanan
      *                                 kalau sudah lewat batas bayar, function menandainya kedaluwarsa)
      * - ['status' => 'dibatalkan'|'kedaluwarsa']  hanya untuk pesanan yang masih menunggu
      * - ['dipakai' => waktu]         e-tiket dipindai di lokasi
+     * - ['metode' => qris|va|ewallet|kartu]  cara bayar yang dipilih di Midtrans (hanya pesanan menunggu)
      */
     public static function ubahPesanan(string $kode, array $ubah): ?array
     {
