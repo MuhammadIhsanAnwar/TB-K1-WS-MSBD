@@ -52,3 +52,4 @@ class SampulBeranda
     }
 
     public static function simpan(array $slot, ?int $idPengguna): void
+    {
