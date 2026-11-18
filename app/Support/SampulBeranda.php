@@ -61,3 +61,4 @@ class SampulBeranda
     {
         Cache::forget(self::CACHE);
     }
+
