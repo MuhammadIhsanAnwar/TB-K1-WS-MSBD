@@ -26,3 +26,4 @@ class WisatawanUlasanSeeder extends Seeder
     private const TEKS = [
         'sejarah' => [
             'Bangunannya terawat dan banyak sudut menarik untuk difoto. Datang pagi supaya belum terlalu ramai.',
+            'Cocok untuk mengenal sejarah Medan. Papan keterangannya membantu, walaupun sebagian masih bisa dilengkapi.',
