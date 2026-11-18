@@ -134,3 +134,4 @@ if (bayar) {
         }
         return false;
     };
+    const mulaiPantau = () => {
