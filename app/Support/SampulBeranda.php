@@ -13,3 +13,4 @@ use Throwable;
  * foto unggahan pengganti foto tempat. Tanpa pengaturan, atau kalau DB 1 tidak terjangkau,
  * beranda memakai empat tempat pertama yang punya foto.
  */
+class SampulBeranda
