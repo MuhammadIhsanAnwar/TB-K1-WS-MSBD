@@ -167,6 +167,7 @@ class TiketController extends Controller
     public function cekPembayaran(Request $request, string $kode)
     {
         abort_unless(Midtrans::aktif(), 404);
+        $p = $this->milik($request, $kode);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
