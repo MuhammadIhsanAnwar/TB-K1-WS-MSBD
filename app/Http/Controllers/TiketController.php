@@ -186,6 +186,7 @@ class TiketController extends Controller
     /** Prototipe tanpa payment gateway: hanya tersedia selama Midtrans belum dikonfigurasi. */
     public function simulasi(Request $request, string $kode)
     {
+        abort_if(Midtrans::aktif(), 404);
         $p = $this->milik($request, $kode);
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'lunas', 'referensi' => 'SIMULASI']);
