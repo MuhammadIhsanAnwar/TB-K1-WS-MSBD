@@ -33,3 +33,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         const berkas = unggah.files?.[0];
         if (!berkas) return dariTempat();
         urlUnggah = URL.createObjectURL(berkas);
+        tampilkan(urlUnggah, `${berkas.name}, belum disimpan`);
