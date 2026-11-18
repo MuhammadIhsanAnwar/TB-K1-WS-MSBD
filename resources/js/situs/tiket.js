@@ -151,3 +151,4 @@ if (bayar) {
                 return;
             }
             tulisKabar('');
+            window.snap.pay(data.token, {
