@@ -14,3 +14,4 @@ use RuntimeException;
  *
  * Akun diberi nama "Wisatawan Contoh NN" dengan email @example.com supaya jelas data contoh, bukan
  * pengunjung sungguhan. Ulasan ditulis lewat Penyimpanan::tulisUlasan (Supabase REST), jadi berlaku
+ * aturan satu akun satu ulasan per tempat dan trigger ringkasan_ulasan menghitung rating. Aman
