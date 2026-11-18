@@ -98,3 +98,4 @@ class SampulBeranda
     public static function fotoAda(?string $jalur): ?string
     {
         if (! $jalur || ! str_starts_with($jalur, self::FOLDER.'/') || str_contains($jalur, '..')) {
+            return null;
