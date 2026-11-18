@@ -153,6 +153,7 @@ class TiketController extends Controller
             // RuntimeException dari Midtrans::snap berisi pesan untuk pembeli; galat jaringan tidak
             $pesan = $e instanceof \RuntimeException ? $e->getMessage() : 'Jendela pembayaran belum bisa dibuka. Coba lagi sebentar lagi.';
 
+            return $request->expectsJson()
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
