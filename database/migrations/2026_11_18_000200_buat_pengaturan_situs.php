@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Schema;
  * satu baris per kunci dengan nilai JSON. Kunci pertama: sampul_beranda (foto hero beranda).
  */
 return new class extends Migration
+{
