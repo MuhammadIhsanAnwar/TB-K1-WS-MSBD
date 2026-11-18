@@ -108,7 +108,7 @@ final class PesanLayanan
         $mailer = config('mail.default') === 'failover' ? 'smtp' : config('mail.default');
 
         try {
-            Mail::to($pesan['email_pengguna'])->send(new BalasanPesanAdmin(
+            Mail::mailer($mailer)->to($pesan['email_pengguna'])->send(new BalasanPesanAdmin(
                 idPesan: $id,
                 namaPengguna: $pesan['nama_pengguna'],
                 namaAdmin: $pengguna['nama'],
