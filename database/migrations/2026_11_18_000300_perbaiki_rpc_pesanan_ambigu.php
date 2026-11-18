@@ -66,3 +66,4 @@ return new class extends Migration
             INSERT INTO e_tiket (id_pesanan, kode_qr) VALUES (p.id_pesanan, p_kode_qr);
         END $$
         SQL;
+
