@@ -19,3 +19,4 @@
         <a class="p-btn" href="{{ route('beranda') }}">Lihat beranda</a>
     </div>
 </div>
+
