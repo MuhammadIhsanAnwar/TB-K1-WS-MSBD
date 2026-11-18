@@ -17,3 +17,4 @@ class SampulBerandaController extends Controller
     {
         $tempat = Katalog::tempat();
 
+        return view('admin.sampul-beranda', [
