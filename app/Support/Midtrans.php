@@ -36,3 +36,4 @@ class Midtrans
         return filled(config('services.midtrans.server_key')) && filled(config('services.midtrans.client_key'));
     }
 
+    public static function produksi(): bool
