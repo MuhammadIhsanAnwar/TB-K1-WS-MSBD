@@ -46,3 +46,4 @@ class SampulBeranda
             Log::warning('Sampul beranda tidak bisa dibaca dari DB 1: '.$e->getMessage());
             $slot = [];
             Cache::put(self::CACHE, $slot, now()->addMinute());
+        }
