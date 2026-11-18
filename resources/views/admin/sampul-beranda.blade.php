@@ -29,3 +29,4 @@
 <form method="post" action="{{ route('admin.beranda') }}" enctype="multipart/form-data" data-sampul-atur>
     @csrf
     <div class="p-grid sampul-atur">
+        @foreach ($slot as $i => $s)
