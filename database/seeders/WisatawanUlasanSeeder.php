@@ -23,3 +23,4 @@ class WisatawanUlasanSeeder extends Seeder
 {
     private const JUMLAH_AKUN = 12;
 
+    private const TEKS = [
