@@ -79,3 +79,4 @@ class SampulBerandaController extends Controller
 
     private function tulis(Request $request, array $baru, array $unggahan, string $pesan)
     {
+        $lama = SampulBeranda::pengaturan();
