@@ -72,3 +72,4 @@ class SampulBeranda
     public static function slide(array $semuaTempat): array
     {
         // tempat yang sudah dihapus dari DB 3 dilewati, bukan membuat beranda error
+        $pilihan = collect(self::pengaturan())
