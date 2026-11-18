@@ -233,6 +233,7 @@
                 <form class="form-ulasan" method="post" action="{{ route('ulasan.tulis', $t['slug']) }}" novalidate style="margin-top:24px;background:var(--mv-putih);padding:24px">
                     @csrf
                     @if ($ulasanSaya)
+                        <p class="kecil redup" style="margin-bottom:10px">Kamu sudah mengulas tempat ini. Mengirim lagi akan memperbarui ulasanmu, bukan menambah ulasan baru.</p>
                     <fieldset class="isian">
                         <legend>Penilaian kunjunganmu</legend>
                         <div class="pilih-banyak" style="margin-top:8px">
