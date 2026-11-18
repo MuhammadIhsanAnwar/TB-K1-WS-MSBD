@@ -82,6 +82,7 @@
                         <p class="isian__bantuan" id="bantu-hp">Hanya angka, diawali 08. Dipakai untuk e-tiket.</p>
                         @error('no_hp')<p class="isian__galat">{{ $message }}</p>@enderror
                     </div>
+                </div>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
