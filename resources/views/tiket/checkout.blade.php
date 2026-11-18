@@ -61,6 +61,7 @@
                         <legend class="sr-only">Pilih metode pembayaran</legend>
                         @foreach ($metode as $k => $label)
                             <label><input type="radio" name="metode" value="{{ $k }}" @checked(old('metode', 'qris') === $k)>{{ $label }}</label>
+                        @endforeach
                     <p class="p-pesan p-pesan--info" style="margin:16px 0 0">Catatan prototipe: gerbang pembayaran Midtrans belum dihubungkan. Pada langkah berikutnya tersedia tombol simulasi pelunasan instan.</p>
                 @endif
             </section>
