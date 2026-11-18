@@ -14,3 +14,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         if (src) gambar.src = src;
         sumber.textContent = teks;
     };
+
