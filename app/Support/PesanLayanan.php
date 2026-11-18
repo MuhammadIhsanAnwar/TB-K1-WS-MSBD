@@ -103,6 +103,7 @@ final class PesanLayanan
             'updated_at' => $waktu,
         ]);
 
+        // mailer bawaan "failover" jatuh ke "log" saat SMTP gagal, sehingga email tidak terkirim tetapi
         try {
             Mail::to($pesan['email_pengguna'])->send(new BalasanPesanAdmin(
                 idPesan: $id,
