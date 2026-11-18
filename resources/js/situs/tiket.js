@@ -171,3 +171,4 @@ if (bayar) {
         } finally {
             tombolBayar.disabled = false;
         }
+    });
