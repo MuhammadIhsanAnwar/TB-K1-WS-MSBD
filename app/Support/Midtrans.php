@@ -165,3 +165,4 @@ class Midtrans
     public static function hentikan(string $kode): void
     {
         try {
+            self::http()->post(self::urlApi()."/v2/{$kode}/expire");
