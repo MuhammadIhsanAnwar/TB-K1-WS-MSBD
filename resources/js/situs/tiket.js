@@ -130,3 +130,4 @@ if (bayar) {
                 return true;
             }
         } catch {
+            /* dicoba lagi pada putaran berikutnya */
