@@ -22,6 +22,7 @@ class Midtrans
 {
     /**
      * Kanal yang ditawarkan di jendela Snap; pembeli memilih sendiri di sana. Hanya kanal yang punya
+     * padanan di kolom pesanan.metode (qris, va, ewallet, kartu), jadi gerai ritel dan paylater tidak ikut.
     private const KANAL = [
         'qris' => ['other_qris'],
         'va' => ['bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va'],
