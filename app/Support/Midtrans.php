@@ -152,3 +152,4 @@ class Midtrans
                 }
             }
             if ($p['status'] !== 'lunas') {
+                Log::warning("Midtrans: {$kode} dibayar tetapi pesanan berstatus {$p['status']}. Periksa dan kembalikan dana dari dashboard Midtrans.");
