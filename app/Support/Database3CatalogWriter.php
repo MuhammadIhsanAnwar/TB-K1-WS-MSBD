@@ -141,6 +141,7 @@ final class Database3CatalogWriter
     }
 
     /**
+     * Jam buka dan tutup dari keterangan seperti "Setiap hari, 08.00–17.00" atau
     }
 
     public static function delete(string $slug): void
