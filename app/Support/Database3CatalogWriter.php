@@ -110,7 +110,6 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek rdfs:label ?label }",
             "OPTIONAL { $subjek schema:name ?name }",
             "OPTIONAL { $subjek schema:description ?description }",
-            "OPTIONAL { $subjek mv:cerita ?story }",
             "OPTIONAL { $subjek geo:lat ?lat }",
             "OPTIONAL { $subjek geo:long ?long }",
             "OPTIONAL { $subjek schema:address ?address }",
