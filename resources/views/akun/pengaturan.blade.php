@@ -5,6 +5,7 @@
 @php
     $punyaFoto = ! empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil']));
     $urlFoto = $punyaFoto ? asset('storage/'.$user['foto_profil']).'?v='.filemtime(public_path('storage/'.$user['foto_profil'])) : null;
+    $inisial = mb_strtoupper(mb_substr($user['name'] ?? '?', 0, 1));
 @section('isi')
 <div class="alat">
     <div class="alat__judul">
