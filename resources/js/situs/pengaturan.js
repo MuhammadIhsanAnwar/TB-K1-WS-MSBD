@@ -18,3 +18,4 @@ function aturBantuFoto(teks, galat = false) {
     bantuFoto.classList.toggle('isian__bantuan', !galat);
 }
 
+inputFoto?.addEventListener('change', () => {
