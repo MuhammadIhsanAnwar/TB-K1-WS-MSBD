@@ -52,3 +52,4 @@ class SampulBerandaController extends Controller
         $lama = SampulBeranda::pengaturan();
         $baru = [];
         $unggahan = [];
+        foreach (range(0, SampulBeranda::SLOT - 1) as $i) {
