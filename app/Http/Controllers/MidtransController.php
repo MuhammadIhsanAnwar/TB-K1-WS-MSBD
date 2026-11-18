@@ -8,3 +8,4 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
+ * Notifikasi pembayaran dari Midtrans (HTTP POST, tanpa sesi dan tanpa token CSRF).
