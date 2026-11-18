@@ -236,7 +236,7 @@
                         <p class="kecil redup" style="margin-bottom:10px">Kamu sudah mengulas tempat ini. Mengirim lagi akan memperbarui ulasanmu, bukan menambah ulasan baru.</p>
                     @endif
                     <fieldset class="isian">
-                        <legend>Penilaian kunjunganmu</legend>
+                        <legend>{{ $ulasanSaya ? 'Perbarui penilaianmu' : 'Penilaian kunjunganmu' }}</legend>
                         <div class="pilih-banyak" style="margin-top:8px">
                             @for ($b = 1; $b <= 5; $b++)
                                 <label><input type="radio" name="bintang" value="{{ $b }}" @checked(old('bintang') == $b)>{{ $b }} bintang</label>
