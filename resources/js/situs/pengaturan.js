@@ -23,3 +23,4 @@ inputFoto?.addEventListener('change', () => {
     if (urlPratinjau) URL.revokeObjectURL(urlPratinjau);
     urlPratinjau = null;
     if (pratinjau) pratinjau.hidden = true;
+    inputFoto.setCustomValidity('');
