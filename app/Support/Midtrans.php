@@ -74,3 +74,4 @@ class Midtrans
             'transaction_details' => ['order_id' => $p['kode'], 'gross_amount' => (int) $p['total']],
             'item_details' => array_map(fn ($i) => [
                 'id' => Str::limit(Str::slug($i['jenis']), 50, ''),
+                'price' => (int) $i['harga'],
