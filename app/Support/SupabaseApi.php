@@ -383,6 +383,7 @@ class SupabaseApi
     public function simpanPengaturanSitus(string $kunci, mixed $nilai, ?int $idPengguna): void
     {
         $this->request()
+            ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
 
     public function ping(string $table): void
     {
