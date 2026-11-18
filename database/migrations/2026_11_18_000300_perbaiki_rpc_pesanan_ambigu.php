@@ -48,3 +48,4 @@ return new class extends Migration
             p pesanan%ROWTYPE;
         BEGIN
             SELECT * INTO p FROM pesanan WHERE kode = p_kode FOR UPDATE;
+            IF p.id_pesanan IS NULL THEN
