@@ -65,3 +65,4 @@ class SampulBerandaController extends Controller
                 $folder = public_path(SampulBeranda::FOLDER);
                 File::ensureDirectoryExists($folder);
                 $nama = Str::slug($slug).'-'.Str::lower(Str::random(8)).'.'.$berkas->extension();
+                $berkas->move($folder, $nama);
