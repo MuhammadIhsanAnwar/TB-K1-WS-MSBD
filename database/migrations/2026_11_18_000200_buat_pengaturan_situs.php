@@ -24,3 +24,4 @@ return new class extends Migration
                 $table->foreignId('diubah_oleh')->nullable()->constrained('users')->nullOnDelete();
                 $table->timestamps();
             });
+        }
