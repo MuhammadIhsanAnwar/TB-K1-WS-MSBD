@@ -222,6 +222,7 @@ class TiketController extends Controller
             return Midtrans::sinkron($kode);
         } catch (Throwable $e) {
             Log::warning("Midtrans: status {$kode} tidak bisa dicek: ".$e->getMessage());
+
     }
 
     public function daftar(Request $request)
