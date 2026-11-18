@@ -90,3 +90,4 @@ class Midtrans
             $isi['enabled_payments'] = self::KANAL[$p['metode']];
         }
 
+        $jawab = self::http()->post(self::urlSnap(), $isi);
