@@ -215,6 +215,7 @@ class TiketController extends Controller
         return redirect()->route('tiket.saya', ['tab' => 'dibatalkan'])->with('pesan', 'Pesanan '.$kode.' dibatalkan.');
     }
 
+    /** Sinkron dengan Midtrans; null kalau Midtrans atau DB 2 sedang tidak terjangkau. */
     }
 
     public function daftar(Request $request)
