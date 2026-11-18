@@ -138,6 +138,7 @@ class TiketController extends Controller
     /** Buka jendela pembayaran Midtrans: token Snap untuk JavaScript, atau alihkan ke halaman Midtrans. */
     public function bayarMidtrans(Request $request, string $kode)
     {
+        abort_unless(Midtrans::aktif(), 404);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
