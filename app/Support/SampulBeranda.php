@@ -19,3 +19,4 @@ class SampulBeranda
 
     public const SLOT = 4;
 
+    /** Folder unggahan di dalam public/, sama seperti foto profil di public/storage/profil_picture. */
