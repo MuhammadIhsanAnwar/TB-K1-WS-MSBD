@@ -92,3 +92,4 @@ return new class extends Migration
                 p_tempat_slug varchar, p_tanggal date, p_metode varchar, p_item jsonb,
                 INOUT p_kode varchar{$bawaan})
             {$isiBuat};
+
