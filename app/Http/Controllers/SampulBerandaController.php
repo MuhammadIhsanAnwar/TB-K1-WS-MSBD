@@ -56,3 +56,4 @@ class SampulBerandaController extends Controller
             $slug = $request->input("slot.$i.slug");
             if (! $slug) {
                 continue;
+            }
