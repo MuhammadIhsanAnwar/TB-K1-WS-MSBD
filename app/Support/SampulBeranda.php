@@ -76,3 +76,4 @@ class SampulBeranda
             ->filter(fn ($s) => isset($semuaTempat[$s['slug']]))
             ->map(fn ($s) => ['tempat' => $semuaTempat[$s['slug']], 'foto' => self::fotoAda($s['foto'])])
             ->values();
+
