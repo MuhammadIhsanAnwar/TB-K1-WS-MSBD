@@ -27,7 +27,7 @@ class Midtrans
     private const KANAL = [
         'other_qris', 'bca_va', 'bni_va', 'bri_va', 'permata_va', 'cimb_va', 'echannel', 'other_va',
         'gopay', 'shopeepay', 'credit_card',
-        'ewallet' => ['gopay', 'shopeepay'],
+    ];
         'kartu' => ['credit_card'],
     ];
 
