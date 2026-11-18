@@ -154,6 +154,7 @@ final class Database3CatalogWriter
         if (! $m) {
             return null;
         }
+        $jam = fn (int $h, int $i) => sprintf('%02d:%02d:00', $h === 24 ? 23 : $h, $h === 24 ? 59 : $i);
     }
 
     public static function delete(string $slug): void
