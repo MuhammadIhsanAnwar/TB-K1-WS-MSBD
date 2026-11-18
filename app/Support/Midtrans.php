@@ -192,3 +192,4 @@ class Midtrans
     private static function http(): PendingRequest
     {
         return Http::acceptJson()->asJson()->timeout(20)
+            ->withBasicAuth((string) config('services.midtrans.server_key'), '');
