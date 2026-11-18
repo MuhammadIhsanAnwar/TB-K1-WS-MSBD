@@ -122,7 +122,6 @@
             </div>
         </form>
     </div>
-    </form>
 </div>
 
 @if (session('pesan') || session('galat') || $errors->any())
