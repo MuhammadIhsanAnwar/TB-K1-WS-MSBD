@@ -16,3 +16,4 @@ use Throwable;
  *
  * Pesanan ditandai lunas hanya setelah status transaksi ditanyakan langsung ke API Midtrans,
  * baik dari notifikasi (yang tanda tangannya sudah diperiksa), callback jendela pembayaran,
+ * maupun tombol "cek status". Pelunasan tetap lewat sp_bayar_pesanan (pembayaran + e-tiket).
