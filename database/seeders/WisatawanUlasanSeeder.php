@@ -88,3 +88,4 @@ class WisatawanUlasanSeeder extends Seeder
         mt_srand(20261118);
         $jumlah = 0;
         foreach (Katalog::tempat() as $tempat) {
+            $teks = self::TEKS[$tempat['kategori']] ?? self::TEKS['ruang-publik'];
