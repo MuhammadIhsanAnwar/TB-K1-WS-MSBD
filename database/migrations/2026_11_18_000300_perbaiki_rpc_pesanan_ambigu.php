@@ -81,3 +81,4 @@ return new class extends Migration
     private function buatUlang(bool $default): void
     {
         $bawaan = $default ? ' DEFAULT NULL' : '';
+        $peran = self::PERAN;
