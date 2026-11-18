@@ -19,3 +19,4 @@ return new class extends Migration
         if ($ganda) {
             throw new RuntimeException(count($ganda).' pasangan akun dan tempat punya lebih dari satu ulasan. Rapikan dulu sebelum menjalankan migration ini.');
         }
+
