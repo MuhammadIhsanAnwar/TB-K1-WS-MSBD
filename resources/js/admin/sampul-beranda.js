@@ -2,3 +2,4 @@
 // sebelum disimpan. Tanpa skrip, form tetap bekerja dan pratinjau diperbarui setelah simpan.
 document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     const pilih = slot.querySelector('[data-pilih-tempat]');
+    const unggah = slot.querySelector('[data-unggah]');
