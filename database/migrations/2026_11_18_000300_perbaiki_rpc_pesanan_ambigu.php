@@ -71,3 +71,4 @@ return new class extends Migration
     {
         $this->buatUlang(false);
     }
+
