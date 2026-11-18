@@ -9,3 +9,4 @@
 @endphp
 
 @section('isi')
+<div class="p-judul">
