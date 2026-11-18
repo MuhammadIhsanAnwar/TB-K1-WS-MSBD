@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\P2P\PlatformController as P2PPlatformController;
+use App\Http\Controllers\SampulBerandaController;
 use App\Http\Controllers\SitusController;
 use App\Http\Controllers\TiketController;
 use App\Http\Middleware\P2PAuthenticated;
