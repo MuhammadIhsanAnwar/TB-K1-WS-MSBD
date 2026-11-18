@@ -13,6 +13,7 @@ final class Database3CatalogWriter
         PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
         PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
         PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
         SPARQL;
 
     private const CATEGORY_TYPES = [
