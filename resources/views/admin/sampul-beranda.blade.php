@@ -59,3 +59,4 @@
                     </select>
                     @error("slot.$i.slug")<span class="sampul-atur__salah">{{ $message }}</span>@enderror
                 </div>
+                <div class="p-field">
