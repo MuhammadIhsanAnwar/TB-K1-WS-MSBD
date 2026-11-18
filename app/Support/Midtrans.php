@@ -105,3 +105,4 @@ class Midtrans
         Cache::put($kunci, $hasil, $batas->copy()->addMinutes(5));
 
         return $hasil;
+    }
