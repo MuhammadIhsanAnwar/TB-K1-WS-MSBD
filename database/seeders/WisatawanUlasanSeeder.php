@@ -81,3 +81,4 @@ class WisatawanUlasanSeeder extends Seeder
                 'email_verified_at' => now()->toDateTimeString(),
             ]);
             $akun[] = $user;
+        }
