@@ -256,6 +256,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__form .isian input[type="date"] { height: 52px; }
 .akun-atur__sandi { display: flex; gap: 8px; }
 .akun-atur__sandi input { flex: 1; min-width: 0; }
+.alat .akun-atur__sandi .p-btn { height: auto; min-height: 52px; }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
