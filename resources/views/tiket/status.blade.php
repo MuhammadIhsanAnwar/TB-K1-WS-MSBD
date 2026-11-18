@@ -84,6 +84,7 @@
                                 @csrf
                                 <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
                             </form>
+                        </div>
                     <div style="display:grid;justify-items:start;gap:10px">
                         <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
                         <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
