@@ -17,3 +17,4 @@ function aturBantuFoto(teks, galat = false) {
     bantuFoto.classList.toggle('isian__galat', galat);
     bantuFoto.classList.toggle('isian__bantuan', !galat);
 }
+
