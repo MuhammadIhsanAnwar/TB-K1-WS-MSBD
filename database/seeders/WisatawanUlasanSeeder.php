@@ -90,3 +90,4 @@ class WisatawanUlasanSeeder extends Seeder
         foreach (Katalog::tempat() as $tempat) {
             $teks = self::TEKS[$tempat['kategori']] ?? self::TEKS['ruang-publik'];
             $banyak = mt_rand(2, 4);
+            $pengulas = array_slice($this->acak($akun), 0, $banyak);
