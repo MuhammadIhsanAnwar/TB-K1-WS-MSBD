@@ -15,3 +15,4 @@ class SampulBerandaController extends Controller
 {
     public function tampil()
     {
+        $tempat = Katalog::tempat();
