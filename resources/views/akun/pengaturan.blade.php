@@ -117,6 +117,7 @@
                 </fieldset>
             </section>
 
+            <div class="akun-atur__simpan">
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
