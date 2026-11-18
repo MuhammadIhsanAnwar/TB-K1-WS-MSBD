@@ -175,6 +175,7 @@ class TiketController extends Controller
             return response()->json(['status' => $status, 'tersambung' => $hasil !== null]);
         }
         $pesan = match (true) {
+            $hasil === null => ['galat', 'Status pembayaran belum bisa dicek. Coba lagi sebentar lagi.'],
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
