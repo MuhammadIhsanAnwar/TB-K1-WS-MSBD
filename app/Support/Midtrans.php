@@ -202,3 +202,4 @@ class Midtrans
 
     private static function urlApi(): string
     {
+        return self::produksi() ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
