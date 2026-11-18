@@ -156,6 +156,7 @@ final class Database3CatalogWriter
         }
         $jam = fn (int $h, int $i) => sprintf('%02d:%02d:00', $h === 24 ? 23 : $h, $h === 24 ? 59 : $i);
         $buka = min(array_map(fn ($x) => (int) $x[1] * 60 + (int) $x[2], $m));
+        $tutup = max(array_map(fn ($x) => (int) $x[3] * 60 + (int) $x[4], $m));
     }
 
     public static function delete(string $slug): void
