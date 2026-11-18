@@ -180,6 +180,7 @@ class TiketController extends Controller
             default => ['pesan', 'Status pesanan diperbarui.'],
         };
 
+        return redirect()->route('pesanan', $kode)->with(...$pesan);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
