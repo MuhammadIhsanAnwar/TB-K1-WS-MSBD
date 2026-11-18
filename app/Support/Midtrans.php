@@ -49,3 +49,4 @@ class Midtrans
     public static function clientKey(): ?string
     {
         return config('services.midtrans.client_key');
+    }
