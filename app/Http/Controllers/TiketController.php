@@ -198,6 +198,7 @@ class TiketController extends Controller
     public function batal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
+        if ($p['status'] === 'menunggu' && Midtrans::aktif()) {
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
