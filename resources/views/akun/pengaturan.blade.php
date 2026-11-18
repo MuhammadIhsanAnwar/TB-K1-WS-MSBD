@@ -35,6 +35,7 @@
             </div>
             <h2 id="judul-profil">{{ $user['name'] }}</h2>
             <p class="akun-atur__email">{{ $user['email'] }}</p>
+            <dl class="akun-atur__fakta">
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
