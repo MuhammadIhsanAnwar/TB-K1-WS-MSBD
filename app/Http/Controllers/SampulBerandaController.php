@@ -24,3 +24,4 @@ class SampulBerandaController extends Controller
                 ->all(),
             'pilihanTempat' => collect($tempat)->sortBy('nama')->values()->all(),
             'tampilSekarang' => SampulBeranda::slide($tempat),
+            'diatur' => SampulBeranda::diatur($tempat),
