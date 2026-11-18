@@ -51,7 +51,7 @@
             @endif
         </aside>
 
-            @error('foto_profil')<p class="isian__galat">{{ $message }}</p>@enderror
+        {{-- formulir --}}
         </div>
         <div class="isian">
             <label for="nama">Nama</label>
