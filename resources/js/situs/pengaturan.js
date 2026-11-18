@@ -67,3 +67,4 @@ function periksaSandi() {
     const nilai = sandi.value;
     let semua = true;
     for (const [kunci, cek] of Object.entries(SYARAT)) {
+        const terpenuhi = nilai !== '' && cek(nilai);
