@@ -88,3 +88,4 @@ class SampulBerandaController extends Controller
                 File::delete(public_path($jalur));
             }
 
+            return back()->with('galat', 'Sampul beranda gagal disimpan ke Database 1. Coba lagi beberapa saat lagi.');
