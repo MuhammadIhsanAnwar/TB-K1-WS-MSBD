@@ -118,7 +118,7 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek mv:beradaDi ?district }",
         ];
         // jam terstruktur dipakai saringan "buka sekarang": diganti hanya kalau keterangan jam berubah,
-            'DELETE { '.implode(" .\n", $delete)." }\nINSERT { ".implode(" .\n", $insert)." }\nWHERE { ".implode(" .\n", $where)." }",
+        // supaya jam yang sudah dikurasi tidak tertimpa. Operasi ini jalan sebelum mv:keteranganJam
             $slug,
             $harga,
         );
