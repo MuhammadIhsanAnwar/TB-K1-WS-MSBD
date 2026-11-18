@@ -87,6 +87,7 @@
 
             <section class="p-panel" aria-labelledby="judul-keamanan">
                 <header><h2 id="judul-keamanan">Keamanan</h2></header>
+                @if ($akunGoogle)
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
