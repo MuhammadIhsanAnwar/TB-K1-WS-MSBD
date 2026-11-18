@@ -97,3 +97,4 @@ class WisatawanUlasanSeeder extends Seeder
                     'id_pengguna' => (int) $user['id'],
                     'nama' => $user['name'],
                     'email' => $user['email'],
+                    'bintang' => [5, 5, 4, 4, 4, 3][mt_rand(0, 5)],
