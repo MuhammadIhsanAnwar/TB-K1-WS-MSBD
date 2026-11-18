@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
 /**
+ * Akun wisatawan contoh (DB 1) beserta ulasan dan rating untuk semua tempat wisata (DB 2).
