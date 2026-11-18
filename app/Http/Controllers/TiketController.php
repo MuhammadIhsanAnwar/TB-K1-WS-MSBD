@@ -163,6 +163,7 @@ class TiketController extends Controller
             : redirect()->away($snap['redirect_url']);
     }
 
+    /** Tombol "cek status" dan callback jendela pembayaran: samakan status dengan Midtrans. */
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
