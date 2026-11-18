@@ -83,3 +83,4 @@ class SampulBerandaController extends Controller
         try {
             SampulBeranda::simpan($baru, (int) $request->session()->get('pengguna.id') ?: null);
         } catch (Throwable $e) {
+            report($e);
