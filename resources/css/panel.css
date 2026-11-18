@@ -250,6 +250,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .akun-atur__dua .isian + .isian { margin-top: 0; }
 .akun-atur__unggah { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .akun-atur__unggah img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.akun-atur__unggah input[type="file"] { min-width: 0; max-width: 100%; font: inherit; color: var(--muted); }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
