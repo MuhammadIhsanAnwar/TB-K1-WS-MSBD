@@ -157,6 +157,7 @@ class TiketController extends Controller
                 ? response()->json(['pesan' => $pesan], 422)
                 : redirect()->route('pesanan', $kode)->with('galat', $pesan);
         }
+
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
