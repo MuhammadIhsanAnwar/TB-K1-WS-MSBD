@@ -62,3 +62,4 @@ class WisatawanUlasanSeeder extends Seeder
     ];
 
     public function run(): void
+    {
