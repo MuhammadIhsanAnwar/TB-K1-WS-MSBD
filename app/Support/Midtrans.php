@@ -175,3 +175,4 @@ class Midtrans
     /** Tanda tangan notifikasi: SHA512(order_id + status_code + gross_amount + Signature Secret Key). */
     public static function tandaTanganSah(array $n): bool
     {
+        if (! isset($n['order_id'], $n['status_code'], $n['gross_amount'], $n['signature_key'])) {
