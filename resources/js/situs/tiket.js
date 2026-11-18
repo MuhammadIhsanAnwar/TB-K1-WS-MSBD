@@ -147,3 +147,4 @@ if (bayar) {
         try {
             const data = await kirim(formBayar.action);
             if (!data.token) {
+                location.href = data.url || location.href;
