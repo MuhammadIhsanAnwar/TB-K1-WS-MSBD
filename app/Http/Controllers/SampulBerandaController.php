@@ -95,3 +95,4 @@ class SampulBerandaController extends Controller
         $dipakai = array_filter(array_column($baru, 'foto'));
         foreach ($lama as $s) {
             if (($jalur = SampulBeranda::fotoAda($s['foto'])) && ! in_array($jalur, $dipakai, true)) {
+                File::delete(public_path($jalur));
