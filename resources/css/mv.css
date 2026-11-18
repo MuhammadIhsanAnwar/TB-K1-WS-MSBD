@@ -214,6 +214,7 @@
 .mv-kepala__tombol-menu svg { width: 20px; height: 20px; flex: none; }
 /* Saat login (avatar, lencana tiket, atau tombol ruang admin) kepala tidak muat di ponsel 360-414 px:
    tombol Menu jadi ikon saja, teksnya tetap dibaca pembaca layar. */
+@media (max-width: 420px) {
 
 /* Dropdown Akun Wisatawan ([data-ui]) */
 [data-ui].mv-akun-menu { position: relative; }
