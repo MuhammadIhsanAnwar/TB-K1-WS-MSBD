@@ -114,7 +114,7 @@
                         <form method="post" action="{{ route('pesanan.simulasi', $p['kode']) }}">
                             @csrf
                             <button class="mv-btn mv-btn--utama" type="submit">Simulasikan pembayaran berhasil</button>
-                    </form>
+                        </form>
                     <form method="post" action="{{ route('pesanan.batal', $p['kode']) }}">
                         @csrf
                         <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
