@@ -70,3 +70,4 @@ class SampulBerandaController extends Controller
                 $unggahan[] = $foto;
             }
             $baru[] = ['slug' => $slug, 'foto' => $foto];
+        }
