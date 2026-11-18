@@ -207,6 +207,7 @@ class TiketController extends Controller
             if ($p['status'] === 'menunggu') {
                 Midtrans::hentikan($kode);
             }
+        }
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
