@@ -11,7 +11,7 @@
 @endphp
 
 @section('isi')
-<div class="alat">
+<div class="alat" data-pengaturan>
     <div class="alat__judul">
         <div>
             <h1>Pengaturan akun</h1>
