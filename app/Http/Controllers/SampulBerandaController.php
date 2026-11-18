@@ -64,3 +64,4 @@ class SampulBerandaController extends Controller
             if ($berkas = $request->file("slot.$i.foto")) {
                 $folder = public_path(SampulBeranda::FOLDER);
                 File::ensureDirectoryExists($folder);
+                $nama = Str::slug($slug).'-'.Str::lower(Str::random(8)).'.'.$berkas->extension();
