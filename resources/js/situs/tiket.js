@@ -118,3 +118,4 @@ if (bayar) {
     const kirim = async (url) => {
         const r = await fetch(url, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
         const data = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(data.pesan || 'Permintaan ke server gagal. Coba lagi.');
