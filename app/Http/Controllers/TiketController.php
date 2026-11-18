@@ -166,6 +166,7 @@ class TiketController extends Controller
     /** Tombol "cek status" dan callback jendela pembayaran: samakan status dengan Midtrans. */
     public function cekPembayaran(Request $request, string $kode)
     {
+        abort_unless(Midtrans::aktif(), 404);
     public function simulasi(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
