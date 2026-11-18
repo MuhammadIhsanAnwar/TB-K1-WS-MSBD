@@ -47,6 +47,7 @@ return [
     ],
 
     // Pembayaran tiket. Kosongkan server_key untuk kembali ke mode simulasi (pengembangan dan test).
+    'midtrans' => [
     ],
 
     'supabase' => [
