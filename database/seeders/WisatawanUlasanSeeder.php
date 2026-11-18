@@ -71,3 +71,4 @@ class WisatawanUlasanSeeder extends Seeder
         $api = new SupabaseApi;
         $akun = [];
         for ($i = 1; $i <= self::JUMLAH_AKUN; $i++) {
+            $nomor = str_pad((string) $i, 2, '0', STR_PAD_LEFT);
