@@ -266,6 +266,7 @@ class SupabaseApi
     public function ubahMetodePesanan(string $kode, string $metode): void
     {
         $this->request()
+            ->withHeaders(['Prefer' => 'return=minimal'])
     public function pakaiTiket(int $idPesanan, string $waktu): void
     {
         $this->request()
