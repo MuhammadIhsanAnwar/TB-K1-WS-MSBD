@@ -84,3 +84,4 @@ class WisatawanUlasanSeeder extends Seeder
         }
         $this->command?->info(count($akun).' akun wisatawan contoh siap.');
 
+        // urutan acak yang selalu sama, supaya menjalankan ulang menghasilkan ulasan yang sama
