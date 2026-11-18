@@ -94,6 +94,7 @@ class Midtrans
             ],
             'expiry' => ['start_time' => now('Asia/Jakarta')->format('Y-m-d H:i:s O'), 'unit' => 'minute', 'duration' => $menit],
             'callbacks' => ['finish' => route('pesanan', $p['kode'])],
+            'enabled_payments' => self::KANAL,
         ];
         if (isset(self::KANAL[$p['metode']])) {
             $isi['enabled_payments'] = self::KANAL[$p['metode']];
