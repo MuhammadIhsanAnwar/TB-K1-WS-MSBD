@@ -9,3 +9,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
     let urlUnggah = null;
 
     const tampilkan = (src, teks) => {
+        gambar.hidden = !src;
