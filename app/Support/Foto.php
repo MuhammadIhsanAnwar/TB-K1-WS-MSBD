@@ -19,6 +19,6 @@ class Foto
 
     public static function url(?string $berkas): ?string
     {
-        return $berkas ? asset('images/foto/'.$berkas) : null;
+        return $berkas ? asset(self::jalur($berkas)) : null;
     }
 }
