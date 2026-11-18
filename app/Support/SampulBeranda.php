@@ -60,3 +60,4 @@ class SampulBeranda
     public static function lupakanCache(): void
     {
         Cache::forget(self::CACHE);
+    }
