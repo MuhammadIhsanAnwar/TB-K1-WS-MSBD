@@ -55,3 +55,4 @@
                         <option value="" data-foto="">Kosong</option>
                         @foreach ($pilihanTempat as $t)
                             <option value="{{ $t['slug'] }}" data-foto="{{ $fotoKecil($t['foto'] ?? null) }}" data-tanpa-foto="{{ empty($t['foto']) ? '1' : '' }}" @selected($slugTerpilih === $t['slug'])>{{ $t['nama'] }}{{ empty($t['foto']) ? ' (belum ada foto)' : '' }}</option>
+                        @endforeach
