@@ -36,3 +36,4 @@ class MidtransController extends Controller
 
         return response()->json(['pesan' => $p ? 'Diterima.' : 'Pesanan tidak dikenal.', 'status' => $p['status'] ?? null]);
     }
+}
