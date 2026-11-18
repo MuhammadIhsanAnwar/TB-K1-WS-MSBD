@@ -33,3 +33,4 @@ inputFoto?.addEventListener('change', () => {
     if (galat) {
         inputFoto.setCustomValidity(galat);
         aturBantuFoto(galat, true);
+        return;
