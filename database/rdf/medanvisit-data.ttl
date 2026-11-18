@@ -2450,3 +2450,2374 @@ res:relasi-106 a rdf:Statement ;
     rdf:object res:kec-medan-selayang ;
     mv:kalimat "Kolam Renang Primbana berada di Kecamatan Medan Selayang."@id ;
     dcterms:source "BPS Kota Medan" .
+
+res:vihara-borobudur a mv:RumahIbadah ;
+    rdfs:label "Vihara Borobudur"@id ;
+    schema:name "Vihara Borobudur"@id ;
+    schema:description "Vihara Buddha tertua dan terbesar di pusat Kota Medan dengan arsitektur khas yang tenang dan megah."@id ;
+    mv:cerita "Vihara Buddha tertua dan terbesar di pusat Kota Medan dengan arsitektur khas yang tenang dan megah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Imam Bonjol No. 21"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58164"^^xsd:decimal ;
+    geo:long "98.67688"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–16.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "16:30:00"^^xsd:time ;
+    dcterms:source <https://www.viharaborobudur.org/home/tentang.html#sejarah> .
+
+res:masjid-agung-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Agung Medan"@id ;
+    schema:name "Masjid Agung Medan"@id ;
+    schema:description "Masjid ikonik Provinsi Sumatera Utara yang bersebelahan dengan Kantor Gubernur dengan menara menjulang tinggi."@id ;
+    mv:cerita "Masjid ikonik Provinsi Sumatera Utara yang bersebelahan dengan Kantor Gubernur dengan menara menjulang tinggi."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pangeran Diponegoro No. 1"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58176"^^xsd:decimal ;
+    geo:long "98.67233"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://www.detik.com/sumut/berita/d-8371315/masjid-agung-destinasi-religi-termegah-di-pusat-kota-medan> .
+
+res:kuil-shri-batara-kaliamman a mv:RumahIbadah ;
+    rdfs:label "Kuil Shri Batara Kaliamman"@id ;
+    schema:name "Kuil Shri Batara Kaliamman"@id ;
+    schema:description "Kuil Hindu Tamil yang menjadi tempat ibadah dan perayaan keagamaan masyarakat Hindu di kawasan Medan Barat."@id ;
+    mv:cerita "Kuil Hindu Tamil yang menjadi tempat ibadah dan perayaan keagamaan masyarakat Hindu di kawasan Medan Barat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karya No. 63"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.60126"^^xsd:decimal ;
+    geo:long "98.61397"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://www.facebook.com/groups/470525043150857/posts/857369264466431/> .
+
+res:maha-vihara-maitreya a mv:RumahIbadah ;
+    rdfs:label "Maha Vihara Maitreya"@id ;
+    schema:name "Maha Vihara Maitreya"@id ;
+    schema:description "Salah satu vihara terbesar di Indonesia yang terkenal dengan taman asri, patung Maitreya, dan kuliner vegetariannya."@id ;
+    mv:cerita "Salah satu vihara terbesar di Indonesia yang terkenal dengan taman asri, patung Maitreya, dan kuliner vegetariannya."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Cemara Asri, Jl. Cemara Asri Boulevard Raya No. 8"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.64353"^^xsd:decimal ;
+    geo:long "98.70302"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://mahaviharamaitreya.org/> .
+
+res:masjid-al-osmani a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Osmani"@id ;
+    schema:name "Masjid Al-Osmani"@id ;
+    schema:description "Masjid tertua di Kota Medan peninggalan Kesultanan Deli tahun 1854 yang memadukan arsitektur Melayu, Timur Tengah, India, dan Tionghoa."@id ;
+    mv:cerita "Masjid tertua di Kota Medan peninggalan Kesultanan Deli tahun 1854 yang memadukan arsitektur Melayu, Timur Tengah, India, dan Tionghoa."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. K.L. Yos Sudarso Km 19,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.73235"^^xsd:decimal ;
+    geo:long "98.67632"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <http://www.medanwisata.com/2014/03/masjid-raya-al-osmani-medan-sumatera.html> .
+
+res:vihara-siu-san-keng a mv:RumahIbadah ;
+    rdfs:label "Vihara Siu San Keng"@id ;
+    schema:name "Vihara Siu San Keng"@id ;
+    schema:description "Kelenteng bersejarah di kawasan Medan Labuhan yang menjadi pusat ibadah umat Tridharma setempat sejak era kolonial."@id ;
+    mv:cerita "Kelenteng bersejarah di kawasan Medan Labuhan yang menjadi pusat ibadah umat Tridharma setempat sejak era kolonial."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Syahbudin Yatim"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.73327"^^xsd:decimal ;
+    geo:long "98.67518"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.00–10.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:00:00"^^xsd:time ;
+    mv:jamTutup "10:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Vihara_Siu_San_Keng> .
+
+res:gereja-hkbp-sudirman a mv:RumahIbadah ;
+    rdfs:label "Gereja HKBP Sudirman"@id ;
+    schema:name "Gereja HKBP Sudirman"@id ;
+    schema:description "Gereja Huria Kristen Batak Protestan bersejarah di pusat Kota Medan dengan arsitektur klasik yang megah."@id ;
+    mv:cerita "Gereja Huria Kristen Batak Protestan bersejarah di pusat Kota Medan dengan arsitektur klasik yang megah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. H. Misbah No. 18"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.57746"^^xsd:decimal ;
+    geo:long "98.67762"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://hkbpmedansudirman.org/> .
+
+res:gbi-rumah-persembahan a mv:RumahIbadah ;
+    rdfs:label "GBI Rumah Persembahan"@id ;
+    schema:name "GBI Rumah Persembahan"@id ;
+    schema:description "Kompleks gereja Bethel berukuran besar di kawasan Simpang Selayang dengan kapasitas ribuan jemaat."@id ;
+    mv:cerita "Kompleks gereja Bethel berukuran besar di kawasan Simpang Selayang dengan kapasitas ribuan jemaat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Jamin Ginting Km 11,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.51937"^^xsd:decimal ;
+    geo:long "98.62366"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–18.15"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "18:15:00"^^xsd:time ;
+    dcterms:source <https://rumahpersembahan.org> .
+
+res:gereja-katolik-santo-antonius-padua-hayam-wuruk a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Santo Antonius Padua Hayam Wuruk"@id ;
+    schema:name "Gereja Katolik Santo Antonius Padua Hayam Wuruk"@id ;
+    schema:description "Gereja paroki Katolik bersejarah di kawasan Medan Baru yang melayani umat Katolik di pusat kota."@id ;
+    mv:cerita "Gereja paroki Katolik bersejarah di kawasan Medan Baru yang melayani umat Katolik di pusat kota."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Hayam Wuruk No. 3"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58136"^^xsd:decimal ;
+    geo:long "98.66544"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://archdioceseofmedan.or.id/paroki-medan-hayam-wuruk/> .
+
+res:gereja-kristen-indonesia-sumatera-utara a mv:RumahIbadah ;
+    rdfs:label "Gereja Kristen Indonesia Sumatera Utara"@id ;
+    schema:name "Gereja Kristen Indonesia Sumatera Utara"@id ;
+    schema:description "Gereja jemaat GKI Sumut yang berlokasi strategis di kawasan Kampung Madras."@id ;
+    mv:cerita "Gereja jemaat GKI Sumut yang berlokasi strategis di kawasan Kampung Madras."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Zainul Arifin No. 124"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58422"^^xsd:decimal ;
+    geo:long "98.67175"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–19.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "19:00:00"^^xsd:time ;
+    dcterms:source <https://pgi.or.id/synod/detail?id=46> .
+
+res:gereja-hkbp-uskup-agung-sugiopranoto a mv:RumahIbadah ;
+    rdfs:label "Gereja HKBP Uskup Agung Sugiopranoto"@id ;
+    schema:name "Gereja HKBP Uskup Agung Sugiopranoto"@id ;
+    schema:description "Gereja HKBP yang terletak di kawasan Madras Hulu dekat pusat pemerintahan Kota Medan."@id ;
+    mv:cerita "Gereja HKBP yang terletak di kawasan Madras Hulu dekat pusat pemerintahan Kota Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Uskup Agung"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5792"^^xsd:decimal ;
+    geo:long "98.6731"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://hkbp.or.id/gereja/hkbp-sugiopranoto> .
+
+res:gereja-katolik-kristus-raja a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Kristus Raja"@id ;
+    schema:name "Gereja Katolik Kristus Raja"@id ;
+    schema:description "Gereja paroki Katolik di kawasan Pusat Pasar Medan yang melayani misa harian dan mingguan."@id ;
+    mv:cerita "Gereja paroki Katolik di kawasan Pusat Pasar Medan yang melayani misa harian dan mingguan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. M.T. Haryono No. 36"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58726"^^xsd:decimal ;
+    geo:long "98.68637"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://archdioceseofmedan.or.id/paroki-medan-kota/> .
+
+res:gereja-gbkp-rg-sei-batang-serangan a mv:RumahIbadah ;
+    rdfs:label "Gereja GBKP Rg. Sei Batang Serangan"@id ;
+    schema:name "Gereja GBKP Rg. Sei Batang Serangan"@id ;
+    schema:description "Runggun Gereja Batak Karo Protestan utama yang melayani jemaat di kawasan Medan Baru."@id ;
+    mv:cerita "Runggun Gereja Batak Karo Protestan utama yang melayani jemaat di kawasan Medan Baru."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sei Batang Serangan No. 97"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58379"^^xsd:decimal ;
+    geo:long "98.6581"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <http://www.gbkpbatangseranganmedan.or.id/> .
+
+res:gereja-metodis-indonesia-gmi-hang-tuah a mv:RumahIbadah ;
+    rdfs:label "Gereja Metodis Indonesia (GMI) Hang Tuah"@id ;
+    schema:name "Gereja Metodis Indonesia (GMI) Hang Tuah"@id ;
+    schema:description "Salah satu jemaat Gereja Metodis Indonesia tertua dan terbesar di Kota Medan."@id ;
+    mv:cerita "Salah satu jemaat Gereja Metodis Indonesia tertua dan terbesar di Kota Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Hang Tuah No. 8"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5801"^^xsd:decimal ;
+    geo:long "98.6712"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Gereja_Methodist_Indonesia> .
+
+res:gereja-hkbp-belawan-ressort-belawan a mv:RumahIbadah ;
+    rdfs:label "Gereja HKBP Belawan (Ressort Belawan)"@id ;
+    schema:name "Gereja HKBP Belawan (Ressort Belawan)"@id ;
+    schema:description "Gereja induk HKBP Ressort Belawan yang melayani jemaat di kawasan pelabuhan utara Medan."@id ;
+    mv:cerita "Gereja induk HKBP Ressort Belawan yang melayani jemaat di kawasan pelabuhan utara Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Deli No. 6"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.79263"^^xsd:decimal ;
+    geo:long "98.68799"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://hkbp.or.id/resort/cmmnek78u007s0otdsgubh878> .
+
+res:gereja-katolik-santo-yohanes-penginjil-paroki-mandala a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Santo Yohanes Penginjil (Paroki Mandala)"@id ;
+    schema:name "Gereja Katolik Santo Yohanes Penginjil (Paroki Mandala)"@id ;
+    schema:description "Pusat paroki Katolik yang melayani umat di wilayah Mandala dan Medan Tembung."@id ;
+    mv:cerita "Pusat paroki Katolik yang melayani umat di wilayah Mandala dan Medan Tembung."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pukat Banting IV No. 21"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.59168"^^xsd:decimal ;
+    geo:long "98.71356"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–16.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "16:00:00"^^xsd:time ;
+    dcterms:source <https://archdioceseofmedan.or.id/paroki-medan-mandala/> .
+
+res:gereja-katolik-santa-maria-ratu-rosari-paroki-tanjung-selamat a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Santa Maria Ratu Rosari (Paroki Tanjung Selamat)"@id ;
+    schema:name "Gereja Katolik Santa Maria Ratu Rosari (Paroki Tanjung Selamat)"@id ;
+    schema:description "Gereja paroki Katolik utama yang melayani umat di wilayah Tanjung Selamat dan Medan Tuntungan."@id ;
+    mv:cerita "Gereja paroki Katolik utama yang melayani umat di wilayah Tanjung Selamat dan Medan Tuntungan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Flamboyan Raya No. 139"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.54092"^^xsd:decimal ;
+    geo:long "98.60457"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <http://parokisantamaria.com/> .
+
+res:gereja-pentakosta-di-indonesia-gpdi-maranatha a mv:RumahIbadah ;
+    rdfs:label "Gereja Pentakosta di Indonesia (GPdI) Maranatha"@id ;
+    schema:name "Gereja Pentakosta di Indonesia (GPdI) Maranatha"@id ;
+    schema:description "Gereja sidang GPdI besar yang berlokasi di koridor utama Jalan S. Parman Medan."@id ;
+    mv:cerita "Gereja sidang GPdI besar yang berlokasi di koridor utama Jalan S. Parman Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. S. Parman No. 63"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58249"^^xsd:decimal ;
+    geo:long "98.66606"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://gpdi.or.id/gpdi-maranatha-medan> .
+
+res:gereja-banua-niha-keriso-protestan-bnkp-medan a mv:RumahIbadah ;
+    rdfs:label "Gereja Banua Niha Keriso Protestan (BNKP) Medan"@id ;
+    schema:name "Gereja Banua Niha Keriso Protestan (BNKP) Medan"@id ;
+    schema:description "Gereja BNKP yang menjadi wadah ibadah dan persekutuan jemaat asal Kepulauan Nias di Kota Medan."@id ;
+    mv:cerita "Gereja BNKP yang menjadi wadah ibadah dan persekutuan jemaat asal Kepulauan Nias di Kota Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pasundan No. 45"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5882"^^xsd:decimal ;
+    geo:long "98.6612"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Minggu, 07.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://bnkp-teladan.or.id/> .
+
+res:gereja-katolik-stasi-st-yoseph-dr-mansyur a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Stasi St. Yoseph Dr. Mansyur"@id ;
+    schema:name "Gereja Katolik Stasi St. Yoseph Dr. Mansyur"@id ;
+    schema:description "Gereja Katolik di kawasan kampus USU yang ramai dihadiri mahasiswa dan umat sekitar."@id ;
+    mv:cerita "Gereja Katolik di kawasan kampus USU yang ramai dihadiri mahasiswa dan umat sekitar."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Dr. Mansyur No. 75"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.56727"^^xsd:decimal ;
+    geo:long "98.64746"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Gereja_Santo_Yoseph,_Dr_Mansyur> .
+
+res:gereja-katolik-santo-paulus-helvetia a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Santo Paulus Helvetia"@id ;
+    schema:name "Gereja Katolik Santo Paulus Helvetia"@id ;
+    schema:description "Gereja paroki Katolik utama yang melayani umat di kawasan Medan Helvetia."@id ;
+    mv:cerita "Gereja paroki Katolik utama yang melayani umat di kawasan Medan Helvetia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Matahari Raya No.47"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.61068"^^xsd:decimal ;
+    geo:long "98.63314"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://archdioceseofmedan.or.id/paroki-medan-helvetia/> .
+
+res:gereja-katolik-paroki-santo-petrus-medan-timur a mv:RumahIbadah ;
+    rdfs:label "Gereja Katolik Paroki Santo Petrus Medan Timur"@id ;
+    schema:name "Gereja Katolik Paroki Santo Petrus Medan Timur"@id ;
+    schema:description "Paroki Katolik yang melayani ibadah dan kegiatan umat di kawasan Medan Timur."@id ;
+    mv:cerita "Paroki Katolik yang melayani ibadah dan kegiatan umat di kawasan Medan Timur."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pelita 5 No. 1"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.60887"^^xsd:decimal ;
+    geo:long "98.68526"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://archdioceseofmedan.or.id/paroki-medan-timur/> .
+
+res:gpib-kasih-karunia-medan a mv:RumahIbadah ;
+    rdfs:label "GPIB Kasih Karunia Medan"@id ;
+    schema:name "GPIB Kasih Karunia Medan"@id ;
+    schema:description "Jemaat Gereja Protestan di Indonesia bagian Barat yang berlokasi di wilayah Medan Petisah."@id ;
+    mv:cerita "Jemaat Gereja Protestan di Indonesia bagian Barat yang berlokasi di wilayah Medan Petisah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Kapten Muslim No.94A"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.59905"^^xsd:decimal ;
+    geo:long "98.6452"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://gpib.or.id/jemaat/kasih-karunia-medan> .
+
+res:gereja-metodis-indonesia-gmi-gloria a mv:RumahIbadah ;
+    rdfs:label "Gereja Metodis Indonesia (GMI) Gloria"@id ;
+    schema:name "Gereja Metodis Indonesia (GMI) Gloria"@id ;
+    schema:description "Gereja jemaat Metodis yang terletak di pusat kota dekat kawasan Pusat Pasar Medan."@id ;
+    mv:cerita "Gereja jemaat Metodis yang terletak di pusat kota dekat kawasan Pusat Pasar Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. M.T. Haryono No. 38"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58727"^^xsd:decimal ;
+    geo:long "98.68679"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <http://gmigloria.org/> .
+
+res:gereja-hkbp-sei-agul a mv:RumahIbadah ;
+    rdfs:label "Gereja HKBP Sei Agul"@id ;
+    schema:name "Gereja HKBP Sei Agul"@id ;
+    schema:description "Gereja HKBP yang melayani jemaat di kawasan Sei Agul dan Karang Berombak."@id ;
+    mv:cerita "Gereja HKBP yang melayani jemaat di kawasan Sei Agul dan Karang Berombak."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Gereja No. 29"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.60287"^^xsd:decimal ;
+    geo:long "98.66217"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Minggu, 07.30–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:30:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://hkbp.or.id/resort/cmmnek78u00860otd5uhw2nfu> .
+
+res:kawasan-kampung-madras a mv:SitusSejarah ;
+    rdfs:label "Kawasan Kampung Madras"@id ;
+    schema:name "Kawasan Kampung Madras"@id ;
+    schema:description "Kawasan bersejarah Little India di Medan yang kaya akulturasi budaya Tamil, kuil Hindu, masjid tua, dan kuliner khas."@id ;
+    mv:cerita "Kawasan bersejarah Little India di Medan yang kaya akulturasi budaya Tamil, kuil Hindu, masjid tua, dan kuliner khas."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Zainul Arifin"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5825"^^xsd:decimal ;
+    geo:long "98.6715"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://id.wikipedia.org/wiki/Kampung_Madras,_Medan> .
+
+res:wihara-candi-buddha a mv:RumahIbadah ;
+    rdfs:label "Wihara Candi Buddha"@id ;
+    schema:name "Wihara Candi Buddha"@id ;
+    schema:description "Tempat ibadah umat Buddha di kawasan Medan Polonia dengan suasana tenang."@id ;
+    mv:cerita "Tempat ibadah umat Buddha di kawasan Medan Polonia dengan suasana tenang."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. HM. Said No.21"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.60003"^^xsd:decimal ;
+    geo:long "98.68328"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–19.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "19:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/medan> .
+
+res:kelenteng-jit-sien-nio-nio a mv:RumahIbadah ;
+    rdfs:label "Kelenteng Jit Sien Nio Nio"@id ;
+    schema:name "Kelenteng Jit Sien Nio Nio"@id ;
+    schema:description "Kelenteng tradisional Tionghoa tempat sembahyang dan tradisi keagamaan masyarakat setempat."@id ;
+    mv:cerita "Kelenteng tradisional Tionghoa tempat sembahyang dan tradisi keagamaan masyarakat setempat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. H. Adam Malik No. 7"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5952"^^xsd:decimal ;
+    geo:long "98.6689"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari,24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://www.detik.com/sumut/budaya/d-6531880/kelenteng-di-kota-medan> .
+
+res:klenteng-pho-tho-kong-kwan-te-kong a mv:RumahIbadah ;
+    rdfs:label "Klenteng Pho Tho Kong (Kwan Te Kong)"@id ;
+    schema:name "Klenteng Pho Tho Kong (Kwan Te Kong)"@id ;
+    schema:description "Kelenteng penghormatan Kwan Te Kong yang menjadi pusat sembahyang umat Tridharma di Medan."@id ;
+    mv:cerita "Kelenteng penghormatan Kwan Te Kong yang menjadi pusat sembahyang umat Tridharma di Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pertempuran"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.62742"^^xsd:decimal ;
+    geo:long "98.66663"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://id.wikipedia.org/wiki/Vihara_Kwan_Te_Kong> .
+
+res:vihara-mahavira-grha-mahakaruna-buddhist-center a mv:RumahIbadah ;
+    rdfs:label "Vihara Mahavira Grha (Mahakaruna Buddhist Center)"@id ;
+    schema:name "Vihara Mahavira Grha (Mahakaruna Buddhist Center)"@id ;
+    schema:description "Pusat kegiatan dan ibadah umat Buddha dengan bangunan modern dan kegiatan sosial aktif."@id ;
+    mv:cerita "Pusat kegiatan dan ibadah umat Buddha dengan bangunan modern dan kegiatan sosial aktif."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Cemara Abadi, Jalan Haji Anif"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.64307"^^xsd:decimal ;
+    geo:long "98.69976"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://mahaviragrha.com/mahakaruna-buddhist-center/> .
+
+res:vihara-sriwijaya-setia-budi-agung a mv:RumahIbadah ;
+    rdfs:label "Vihara Sriwijaya (Setia Budi Agung)"@id ;
+    schema:name "Vihara Sriwijaya (Setia Budi Agung)"@id ;
+    schema:description "Vihara umat Buddha di koridor Jalan Setia Budi Medan dengan arsitektur khas yang asri."@id ;
+    mv:cerita "Vihara umat Buddha di koridor Jalan Setia Budi Medan dengan arsitektur khas yang asri."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sriwijaya"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58542"^^xsd:decimal ;
+    geo:long "98.66361"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-sriwijaya-medan> .
+
+res:vihara-buddha-sujata-medan a mv:RumahIbadah ;
+    rdfs:label "Vihara Buddha Sujata Medan"@id ;
+    schema:name "Vihara Buddha Sujata Medan"@id ;
+    schema:description "Vihara yang melayani kegiatan kebaktian dan pembinaan umat Buddha di kawasan Medan Area."@id ;
+    mv:cerita "Vihara yang melayani kegiatan kebaktian dan pembinaan umat Buddha di kawasan Medan Area."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Asia No. 142"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5832"^^xsd:decimal ;
+    geo:long "98.6945"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-buddha-sujata> .
+
+res:vihara-vimala-diepa-tian-fu-thang a mv:RumahIbadah ;
+    rdfs:label "Vihara Vimala Diepa (Tian Fu Thang)"@id ;
+    schema:name "Vihara Vimala Diepa (Tian Fu Thang)"@id ;
+    schema:description "Vihara dan tempat ibadah tradisi Buddha-Tionghoa di kawasan Pandau Hulu Medan."@id ;
+    mv:cerita "Vihara dan tempat ibadah tradisi Buddha-Tionghoa di kawasan Pandau Hulu Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Dr. Wahidin No. 78"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5865"^^xsd:decimal ;
+    geo:long "98.6968"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-vimala-diepa> .
+
+res:vihara-dhammadayada a mv:RumahIbadah ;
+    rdfs:label "Vihara Dhammadayada"@id ;
+    schema:name "Vihara Dhammadayada"@id ;
+    schema:description "Vihara Theravada di Medan yang aktif menyelenggarakan puja bakti dan kelas Dhamma."@id ;
+    mv:cerita "Vihara Theravada di Medan yang aktif menyelenggarakan puja bakti dan kelas Dhamma."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. K.L. Yos Sudarso No. 124"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6215"^^xsd:decimal ;
+    geo:long "98.6745"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://sanghatheravadaindonesia.or.id/vihara/vihara-dhammadayada> .
+
+res:maha-vihara-chong-de-chong-de-fo-yuan a mv:RumahIbadah ;
+    rdfs:label "Maha Vihara Chong De (Chong De Fo Yuan)"@id ;
+    schema:name "Maha Vihara Chong De (Chong De Fo Yuan)"@id ;
+    schema:description "Vihara aliran Maitreya berarsitektur megah yang melayani umat di kawasan Medan Deli."@id ;
+    mv:cerita "Vihara aliran Maitreya berarsitektur megah yang melayani umat di kawasan Medan Deli."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Gunung Krakatau No. 188"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6385"^^xsd:decimal ;
+    geo:long "98.6812"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/maha-vihara-chong-de> .
+
+res:vihara-ratana-stupa-agung a mv:RumahIbadah ;
+    rdfs:label "Vihara Ratana Stupa Agung"@id ;
+    schema:name "Vihara Ratana Stupa Agung"@id ;
+    schema:description "Vihara Buddha dengan bangunan stupa ikonik di wilayah Pulo Brayan Medan Timur."@id ;
+    mv:cerita "Vihara Buddha dengan bangunan stupa ikonik di wilayah Pulo Brayan Medan Timur."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bilal No. 85"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6185"^^xsd:decimal ;
+    geo:long "98.6852"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-ratana-stupa-agung> .
+
+res:vihara-dharma-aura a mv:RumahIbadah ;
+    rdfs:label "Vihara Dharma Aura"@id ;
+    schema:name "Vihara Dharma Aura"@id ;
+    schema:description "Tempat ibadah umat Buddha yang berlokasi di kawasan pusat kota Medan Barat."@id ;
+    mv:cerita "Tempat ibadah umat Buddha yang berlokasi di kawasan pusat kota Medan Barat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Putri Hijau No. 14"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5945"^^xsd:decimal ;
+    geo:long "98.6768"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-dharma-aura> .
+
+res:maha-vihara-mestika-abadi a mv:RumahIbadah ;
+    rdfs:label "Maha Vihara Mestika Abadi"@id ;
+    schema:name "Maha Vihara Mestika Abadi"@id ;
+    schema:description "Vihara Maitreya yang melayani kegiatan ibadah dan sosial umat di Medan Perjuangan."@id ;
+    mv:cerita "Vihara Maitreya yang melayani kegiatan ibadah dan sosial umat di Medan Perjuangan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Negara No. 56"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6035"^^xsd:decimal ;
+    geo:long "98.6932"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/maha-vihara-mestika-abadi> .
+
+res:vihara-catur-paramita a mv:RumahIbadah ;
+    rdfs:label "Vihara Catur Paramita"@id ;
+    schema:name "Vihara Catur Paramita"@id ;
+    schema:description "Vihara umat Buddha di kawasan pusat kota dengan suasana khidmat untuk meditasi dan puja bakti."@id ;
+    mv:cerita "Vihara umat Buddha di kawasan pusat kota dengan suasana khidmat untuk meditasi dan puja bakti."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sutomo No. 210"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5912"^^xsd:decimal ;
+    geo:long "98.6848"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-catur-paramita> .
+
+res:vihara-avalokitesvara-medan a mv:RumahIbadah ;
+    rdfs:label "Vihara Avalokitesvara Medan"@id ;
+    schema:name "Vihara Avalokitesvara Medan"@id ;
+    schema:description "Vihara yang didedikasikan bagi Bodhisattva Avalokitesvara di kawasan Medan Timur."@id ;
+    mv:cerita "Vihara yang didedikasikan bagi Bodhisattva Avalokitesvara di kawasan Medan Timur."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Irian Barat No. 34"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5938"^^xsd:decimal ;
+    geo:long "98.6835"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-avalokitesvara-medan> .
+
+res:vihara-maha-sampatti a mv:RumahIbadah ;
+    rdfs:label "Vihara Maha Sampatti"@id ;
+    schema:name "Vihara Maha Sampatti"@id ;
+    schema:description "Salah satu vihara Theravada utama di Kota Medan yang menjadi pusat kegiatan Sangha dan umat Buddha."@id ;
+    mv:cerita "Salah satu vihara Theravada utama di Kota Medan yang menjadi pusat kegiatan Sangha dan umat Buddha."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pajang No. 7"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58244"^^xsd:decimal ;
+    geo:long "98.69373"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.30–19.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:30:00"^^xsd:time ;
+    mv:jamTutup "19:30:00"^^xsd:time ;
+    dcterms:source <https://sanghatheravadaindonesia.or.id/vihara/vihara-maha-sampatti> .
+
+res:vihara-satya-dharma-kwan-im-bio a mv:RumahIbadah ;
+    rdfs:label "Vihara Satya Dharma (Kwan Im Bio)"@id ;
+    schema:name "Vihara Satya Dharma (Kwan Im Bio)"@id ;
+    schema:description "Vihara dan kelenteng penghormatan Dewi Kwan Im di kawasan Medan Belawan."@id ;
+    mv:cerita "Vihara dan kelenteng penghormatan Dewi Kwan Im di kawasan Medan Belawan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. K.L. Yos Sudarso Belawan No. 28"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.7785"^^xsd:decimal ;
+    geo:long "98.6835"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.30–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:30:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-satya-dharma-belawan> .
+
+res:vihara-buddhis-bodhi-gaya a mv:RumahIbadah ;
+    rdfs:label "Vihara Buddhis Bodhi Gaya"@id ;
+    schema:name "Vihara Buddhis Bodhi Gaya"@id ;
+    schema:description "Tempat ibadah dan pusat pembelajaran ajaran Buddha di kawasan Medan Area."@id ;
+    mv:cerita "Tempat ibadah dan pusat pembelajaran ajaran Buddha di kawasan Medan Area."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sutrisno No. 115"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5785"^^xsd:decimal ;
+    geo:long "98.6952"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-buddhis-bodhi-gaya> .
+
+res:vihara-kumala-maitreya a mv:RumahIbadah ;
+    rdfs:label "Vihara Kumala Maitreya"@id ;
+    schema:name "Vihara Kumala Maitreya"@id ;
+    schema:description "Vihara Maitreya dengan lingkungan bersih dan tenang untuk kebaktian umat di Medan Deli."@id ;
+    mv:cerita "Vihara Maitreya dengan lingkungan bersih dan tenang untuk kebaktian umat di Medan Deli."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Gunung Krakatau Ujung No. 90"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6352"^^xsd:decimal ;
+    geo:long "98.6845"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-kumala-maitreya> .
+
+res:vihara-sinar-dharma a mv:RumahIbadah ;
+    rdfs:label "Vihara Sinar Dharma"@id ;
+    schema:name "Vihara Sinar Dharma"@id ;
+    schema:description "Vihara tempat ibadah umat Buddha dan kegiatan keagamaan Tionghoa di kawasan Thamrin."@id ;
+    mv:cerita "Vihara tempat ibadah umat Buddha dan kegiatan keagamaan Tionghoa di kawasan Thamrin."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. M.H. Thamrin No. 64"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5882"^^xsd:decimal ;
+    geo:long "98.6938"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-sinar-dharma> .
+
+res:vihara-padma-graha a mv:RumahIbadah ;
+    rdfs:label "Vihara Padma Graha"@id ;
+    schema:name "Vihara Padma Graha"@id ;
+    schema:description "Vihara modern yang berlokasi di kawasan kompleks Asia Mega Mas Medan."@id ;
+    mv:cerita "Vihara modern yang berlokasi di kawasan kompleks Asia Mega Mas Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Asia Mega Mas Blok DD No. 12"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5815"^^xsd:decimal ;
+    geo:long "98.7022"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-padma-graha> .
+
+res:vihara-dharma-bakti-medan a mv:RumahIbadah ;
+    rdfs:label "Vihara Dharma Bakti Medan"@id ;
+    schema:name "Vihara Dharma Bakti Medan"@id ;
+    schema:description "Vihara bersejarah di pusat kota Medan yang rutin dikunjungi umat untuk sembahyang."@id ;
+    mv:cerita "Vihara bersejarah di pusat kota Medan yang rutin dikunjungi umat untuk sembahyang."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pandu No. 48"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5862"^^xsd:decimal ;
+    geo:long "98.6858"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-dharma-bakti-medan> .
+
+res:vihara-bodhi-chittaram a mv:RumahIbadah ;
+    rdfs:label "Vihara Bodhi Chittaram"@id ;
+    schema:name "Vihara Bodhi Chittaram"@id ;
+    schema:description "Vihara umat Buddha di kawasan Medan Tembung yang aktif dalam kegiatan kebaktian dan sosial."@id ;
+    mv:cerita "Vihara umat Buddha di kawasan Medan Tembung yang aktif dalam kegiatan kebaktian dan sosial."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Aksara No. 154"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5965"^^xsd:decimal ;
+    geo:long "98.7085"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–20.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "20:00:00"^^xsd:time ;
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-bodhi-chittaram> .
+
+res:masjid-al-jihad-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Jihad Medan"@id ;
+    schema:name "Masjid Al-Jihad Medan"@id ;
+    schema:description "Salah satu masjid paling aktif di Medan dengan kajian rutin harian, layanan sosial 24 jam, dan manajemen modern."@id ;
+    mv:cerita "Salah satu masjid paling aktif di Medan dengan kajian rutin harian, layanan sosial 24 jam, dan manajemen modern."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Abdullah Lubis No. 35"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5752"^^xsd:decimal ;
+    geo:long "98.6625"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://masjidaljihadmedan.or.id> .
+
+res:masjid-raya-kedatukan-sunggal-serbanyaman a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Kedatukan Sunggal Serbanyaman"@id ;
+    schema:name "Masjid Raya Kedatukan Sunggal Serbanyaman"@id ;
+    schema:description "Masjid bersejarah peninggalan Kedatukan Sunggal Serbanyaman yang berdiri sejak abad ke-19."@id ;
+    mv:cerita "Masjid bersejarah peninggalan Kedatukan Sunggal Serbanyaman yang berdiri sejak abad ke-19."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. T.B. Simatupang No. 102"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5822"^^xsd:decimal ;
+    geo:long "98.6215"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/kedatukan-sunggal> .
+
+res:masjid-taqarrub a mv:RumahIbadah ;
+    rdfs:label "Masjid Taqarrub"@id ;
+    schema:name "Masjid Taqarrub"@id ;
+    schema:description "Masjid lingkungan yang nyaman dan aktif menyelenggarakan ibadah berjamaah di kawasan Medan Selayang."@id ;
+    mv:cerita "Masjid lingkungan yang nyaman dan aktif menyelenggarakan ibadah berjamaah di kawasan Medan Selayang."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Setia Budi No. 88"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5655"^^xsd:decimal ;
+    geo:long "98.6432"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/taqarrub-medan> .
+
+res:masjid-jami-tanjung-mulia a mv:RumahIbadah ;
+    rdfs:label "Masjid Jami' Tanjung Mulia"@id ;
+    schema:name "Masjid Jami' Tanjung Mulia"@id ;
+    schema:description "Masjid jami bersejarah di jalur utama Medan-Belawan yang menjadi pusat ibadah warga Tanjung Mulia."@id ;
+    mv:cerita "Masjid jami bersejarah di jalur utama Medan-Belawan yang menjadi pusat ibadah warga Tanjung Mulia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. K.L. Yos Sudarso Km 7,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6485"^^xsd:decimal ;
+    geo:long "98.6762"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/jami-tanjung-mulia> .
+
+res:masjid-al-amin-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Amin Medan"@id ;
+    schema:name "Masjid Al-Amin Medan"@id ;
+    schema:description "Masjid strategis di kawasan Medan Amplas yang memudahkan musafir dan warga sekitar beribadah."@id ;
+    mv:cerita "Masjid strategis di kawasan Medan Amplas yang memudahkan musafir dan warga sekitar beribadah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sisingamangaraja Km 5,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5535"^^xsd:decimal ;
+    geo:long "98.7042"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-amin-amplas> .
+
+res:masjid-perjuangan-45 a mv:RumahIbadah ;
+    rdfs:label "Masjid Perjuangan 45"@id ;
+    schema:name "Masjid Perjuangan 45"@id ;
+    schema:description "Masjid bersejarah di Medan Perjuangan yang menjadi simbol semangat perjuangan kemerdekaan warga Medan."@id ;
+    mv:cerita "Masjid bersejarah di Medan Perjuangan yang menjadi simbol semangat perjuangan kemerdekaan warga Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Prof. H. M. Yamin No. 193"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5978"^^xsd:decimal ;
+    geo:long "98.6935"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/perjuangan-45-medan> .
+
+res:masjid-dakwah-usu a mv:RumahIbadah ;
+    rdfs:label "Masjid Dakwah USU"@id ;
+    schema:name "Masjid Dakwah USU"@id ;
+    schema:description "Masjid utama di lingkungan Universitas Sumatera Utara yang menjadi pusat kegiatan keislaman civitas akademika."@id ;
+    mv:cerita "Masjid utama di lingkungan Universitas Sumatera Utara yang menjadi pusat kegiatan keislaman civitas akademika."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Dr. Mansyur Kampus USU"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5658"^^xsd:decimal ;
+    geo:long "98.6562"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://usu.ac.id/id/fasilitas/masjid-dakwah> .
+
+res:masjid-muslimin-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Muslimin Medan"@id ;
+    schema:name "Masjid Muslimin Medan"@id ;
+    schema:description "Masjid besar di koridor Jalan Pancing yang ramai dikunjungi jamaah dan mahasiswa sekitar."@id ;
+    mv:cerita "Masjid besar di koridor Jalan Pancing yang ramai dikunjungi jamaah dan mahasiswa sekitar."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Williem Iskandar No. 14"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6062"^^xsd:decimal ;
+    geo:long "98.7125"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/muslimin-pancing> .
+
+res:masjid-jamik-kebun-bunga a mv:RumahIbadah ;
+    rdfs:label "Masjid Jamik Kebun Bunga"@id ;
+    schema:name "Masjid Jamik Kebun Bunga"@id ;
+    schema:description "Masjid bersejarah yang terletak di sebelah Stadion Kebun Bunga Medan."@id ;
+    mv:cerita "Masjid bersejarah yang terletak di sebelah Stadion Kebun Bunga Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Taruma No. 50"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5852"^^xsd:decimal ;
+    geo:long "98.6655"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/jamik-kebun-bunga> .
+
+res:masjid-raya-miftahul-iman a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Miftahul Iman"@id ;
+    schema:name "Masjid Raya Miftahul Iman"@id ;
+    schema:description "Masjid raya lingkungan yang menjadi pusat kegiatan ibadah masyarakat Medan Denai."@id ;
+    mv:cerita "Masjid raya lingkungan yang menjadi pusat kegiatan ibadah masyarakat Medan Denai."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Panglima Denai No. 72"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5582"^^xsd:decimal ;
+    geo:long "98.7145"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/raya-miftahul-iman> .
+
+res:masjid-ghaudiyah-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Ghaudiyah Medan"@id ;
+    schema:name "Masjid Ghaudiyah Medan"@id ;
+    schema:description "Masjid bersejarah komunitas Muslim India-Tamil di Kampung Madras yang berdiri sejak abad ke-19."@id ;
+    mv:cerita "Masjid bersejarah komunitas Muslim India-Tamil di Kampung Madras yang berdiri sejak abad ke-19."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Zainul Arifin No. 107"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5829"^^xsd:decimal ;
+    geo:long "98.6708"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Masjid_Ghaudiyah> .
+
+res:masjid-baiduzzaman-asam-kumbang a mv:RumahIbadah ;
+    rdfs:label "Masjid Baiduzzaman (Asam Kumbang)"@id ;
+    schema:name "Masjid Baiduzzaman (Asam Kumbang)"@id ;
+    schema:description "Masjid besar dan asri di kawasan Asam Kumbang yang menjadi pusat kegiatan keagamaan warga setempat."@id ;
+    mv:cerita "Masjid besar dan asri di kawasan Asam Kumbang yang menjadi pusat kegiatan keagamaan warga setempat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bunga Raya No. 24"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5592"^^xsd:decimal ;
+    geo:long "98.6245"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/baiduzzaman-medan> .
+
+res:masjid-al-masawah-masjid-arab a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Masawah (Masjid Arab)"@id ;
+    schema:name "Masjid Al-Masawah (Masjid Arab)"@id ;
+    schema:description "Masjid bersejarah peninggalan komunitas keturunan Arab di kawasan kota lama Kesawan Medan."@id ;
+    mv:cerita "Masjid bersejarah peninggalan komunitas keturunan Arab di kawasan kota lama Kesawan Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Temenggung No. 15"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5902"^^xsd:decimal ;
+    geo:long "98.6795"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–21.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "21:30:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/budaya/d-6642180/sejarah-masjid-arab-di-kesawan-medan> .
+
+res:masjid-raya-aceh-sepakat a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Aceh Sepakat"@id ;
+    schema:name "Masjid Raya Aceh Sepakat"@id ;
+    schema:description "Masjid dan pusat kegiatan sosial-budaya masyarakat Aceh di pusat Kota Medan."@id ;
+    mv:cerita "Masjid dan pusat kegiatan sosial-budaya masyarakat Aceh di pusat Kota Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Mengkara No. 2"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5868"^^xsd:decimal ;
+    geo:long "98.6675"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/raya-aceh-sepakat> .
+
+res:masjid-islamic-center-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Islamic Center Medan"@id ;
+    schema:name "Masjid Islamic Center Medan"@id ;
+    schema:description "Kompleks Islamic Center modern di Medan Utara dengan masjid megah berarsitektur kontemporer dan area terbuka luas."@id ;
+    mv:cerita "Kompleks Islamic Center modern di Medan Utara dengan masjid megah berarsitektur kontemporer dan area terbuka luas."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Rawe Raya Tangkahan"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.7025"^^xsd:decimal ;
+    geo:long "98.6885"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://pemkomedan.go.id/fasilitas/islamic-center-medan> .
+
+res:masjid-al-badar a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Badar"@id ;
+    schema:name "Masjid Al-Badar"@id ;
+    schema:description "Masjid strategis di koridor Jalan Gatot Subroto yang nyaman untuk shalat berjamaah dan persinggahan."@id ;
+    mv:cerita "Masjid strategis di koridor Jalan Gatot Subroto yang nyaman untuk shalat berjamaah dan persinggahan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Gatot Subroto Km 5,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5935"^^xsd:decimal ;
+    geo:long "98.6418"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-badar-medan> .
+
+res:masjid-syuhada-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Syuhada Medan"@id ;
+    schema:name "Masjid Syuhada Medan"@id ;
+    schema:description "Masjid masyarakat di kawasan Medan Sunggal dengan kegiatan majelis taklim dan pendidikan Al-Quran aktif."@id ;
+    mv:cerita "Masjid masyarakat di kawasan Medan Sunggal dengan kegiatan majelis taklim dan pendidikan Al-Quran aktif."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sei Batang Hari No. 54"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5788"^^xsd:decimal ;
+    geo:long "98.6475"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/syuhada-sunggal> .
+
+res:masjid-raya-al-hikmah-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Al-Hikmah Medan"@id ;
+    schema:name "Masjid Raya Al-Hikmah Medan"@id ;
+    schema:description "Masjid raya di kawasan Teladan Medan dengan halaman luas dan fasilitas ibadah lengkap."@id ;
+    mv:cerita "Masjid raya di kawasan Teladan Medan dengan halaman luas dan fasilitas ibadah lengkap."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sisingamangaraja No. 168"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5638"^^xsd:decimal ;
+    geo:long "98.6935"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/raya-al-hikmah-teladan> .
+
+res:masjid-jami-kebon-pisang a mv:RumahIbadah ;
+    rdfs:label "Masjid Jami' Kebon Pisang"@id ;
+    schema:name "Masjid Jami' Kebon Pisang"@id ;
+    schema:description "Masjid tua bersejarah di tepian Sungai Deli kawasan Medan Maimun yang erat dengan sejarah Kesultanan Deli."@id ;
+    mv:cerita "Masjid tua bersejarah di tepian Sungai Deli kawasan Medan Maimun yang erat dengan sejarah Kesultanan Deli."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Brigjend Katamso Gang Masjid No. 9"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5785"^^xsd:decimal ;
+    geo:long "98.6838"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/jami-kebon-pisang> .
+
+res:masjid-al-munawwarah-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Munawwarah Medan"@id ;
+    schema:name "Masjid Al-Munawwarah Medan"@id ;
+    schema:description "Masjid besar di kawasan permukiman Medan Johor yang aktif dengan kegiatan kajian dan sosial."@id ;
+    mv:cerita "Masjid besar di kawasan permukiman Medan Johor yang aktif dengan kegiatan kajian dan sosial."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karya Wisata No. 45"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5355"^^xsd:decimal ;
+    geo:long "98.6685"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-munawwarah-johor> .
+
+res:masjid-raya-al-munawarah-medan-marelan a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Al-Munawarah Medan Marelan"@id ;
+    schema:name "Masjid Raya Al-Munawarah Medan Marelan"@id ;
+    schema:description "Salah satu masjid utama di kawasan Medan Marelan yang menjadi pusat ibadah masyarakat sekitar."@id ;
+    mv:cerita "Salah satu masjid utama di kawasan Medan Marelan yang menjadi pusat ibadah masyarakat sekitar."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Marelan Raya Pasar II"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6885"^^xsd:decimal ;
+    geo:long "98.6582"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/raya-al-munawarah-marelan> .
+
+res:masjid-hajjah-helmiaty a mv:RumahIbadah ;
+    rdfs:label "Masjid Hajjah Helmiaty"@id ;
+    schema:name "Masjid Hajjah Helmiaty"@id ;
+    schema:description "Masjid megah di koridor Jalan Ringroad Medan dengan area parkir luas dan desain interior modern."@id ;
+    mv:cerita "Masjid megah di koridor Jalan Ringroad Medan dengan area parkir luas dan desain interior modern."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Ringroad Gagak Hitam No. 28"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5682"^^xsd:decimal ;
+    geo:long "98.6275"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/hajjah-helmiaty-medan> .
+
+res:masjid-raya-taqwa-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Raya Taqwa Medan"@id ;
+    schema:name "Masjid Raya Taqwa Medan"@id ;
+    schema:description "Masjid persyarikatan Muhammadiyah yang bersejarah dan aktif dalam dakwah serta pendidikan di Medan."@id ;
+    mv:cerita "Masjid persyarikatan Muhammadiyah yang bersejarah dan aktif dalam dakwah serta pendidikan di Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Utama No. 170"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5762"^^xsd:decimal ;
+    geo:long "98.6915"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://muhammadiyah.or.id/masjid-raya-taqwa-medan> .
+
+res:masjid-al-muhajirin-medan a mv:RumahIbadah ;
+    rdfs:label "Masjid Al-Muhajirin Medan"@id ;
+    schema:name "Masjid Al-Muhajirin Medan"@id ;
+    schema:description "Masjid komplek yang asri dan aktif menyelenggarakan kegiatan keagamaan warga Medan Helvetia."@id ;
+    mv:cerita "Masjid komplek yang asri dan aktif menyelenggarakan kegiatan keagamaan warga Medan Helvetia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Bumi Asri Blok C No. 1"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6052"^^xsd:decimal ;
+    geo:long "98.6345"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 04.30–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "04:30:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-muhajirin-bumi-asri> .
+
+res:pura-agung-raksa-buana a mv:RumahIbadah ;
+    rdfs:label "Pura Agung Raksa Buana"@id ;
+    schema:name "Pura Agung Raksa Buana"@id ;
+    schema:description "Pura Hindu Dharma terbesar di Sumatera Utara bergaya arsitektur Bali yang menjadi pusat perayaan Nyepi dan Galungan."@id ;
+    mv:cerita "Pura Hindu Dharma terbesar di Sumatera Utara bergaya arsitektur Bali yang menjadi pusat perayaan Nyepi dan Galungan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Polonia No. 216"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5642"^^xsd:decimal ;
+    geo:long "98.6758"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Pura_Agung_Raksa_Buana> .
+
+res:kuil-shri-balaji-venkateshwara a mv:RumahIbadah ;
+    rdfs:label "Kuil Shri Balaji Venkateshwara"@id ;
+    schema:name "Kuil Shri Balaji Venkateshwara"@id ;
+    schema:description "Kuil Hindu megah di kawasan Padang Bulan yang didedikasikan untuk Dewa Venkateshwara dengan ukiran khas India Selatan."@id ;
+    mv:cerita "Kuil Hindu megah di kawasan Padang Bulan yang didedikasikan untuk Dewa Venkateshwara dengan ukiran khas India Selatan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bunga Wijaya Kesuma No. 88"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5565"^^xsd:decimal ;
+    geo:long "98.6458"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/budaya/d-6891204/kemegahan-kuil-shri-balaji-venkateshwara-medan> .
+
+res:shri-hanuman-kuil a mv:RumahIbadah ;
+    rdfs:label "Shri Hanuman Kuil"@id ;
+    schema:name "Shri Hanuman Kuil"@id ;
+    schema:description "Kuil Hindu yang didedikasikan bagi Dewa Hanuman tempat umat Hindu beribadah di kawasan Polonia."@id ;
+    mv:cerita "Kuil Hindu yang didedikasikan bagi Dewa Hanuman tempat umat Hindu beribadah di kawasan Polonia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Teratai No. 14"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5658"^^xsd:decimal ;
+    geo:long "98.6742"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-hanuman-kuil-medan> .
+
+res:shri-nagama-kuil a mv:RumahIbadah ;
+    rdfs:label "Shri Nagama Kuil"@id ;
+    schema:name "Shri Nagama Kuil"@id ;
+    schema:description "Kuil Hindu komunitas Tamil di Medan yang aktif melaksanakan ritual keagamaan tradisional."@id ;
+    mv:cerita "Kuil Hindu komunitas Tamil di Medan yang aktif melaksanakan ritual keagamaan tradisional."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Polonia No. 84"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5665"^^xsd:decimal ;
+    geo:long "98.6735"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-nagama-kuil-medan> .
+
+res:shri-sitthi-vinayagar-koil a mv:RumahIbadah ;
+    rdfs:label "Shri Sitthi Vinayagar Koil"@id ;
+    schema:name "Shri Sitthi Vinayagar Koil"@id ;
+    schema:description "Kuil Hindu penghormatan Dewa Ganesha yang melayani umat di kawasan Sari Rejo Medan Polonia."@id ;
+    mv:cerita "Kuil Hindu penghormatan Dewa Ganesha yang melayani umat di kawasan Sari Rejo Medan Polonia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karang Sari No. 32"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5588"^^xsd:decimal ;
+    geo:long "98.6785"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-sitthi-vinayagar-koil> .
+
+res:shri-maha-shiva-shakti-kovil a mv:RumahIbadah ;
+    rdfs:label "Shri Maha Shiva Shakti Kovil"@id ;
+    schema:name "Shri Maha Shiva Shakti Kovil"@id ;
+    schema:description "Kuil Hindu yang didedikasikan bagi Dewa Siwa dan Dewi Shakti di wilayah Medan Barat."@id ;
+    mv:cerita "Kuil Hindu yang didedikasikan bagi Dewa Siwa dan Dewi Shakti di wilayah Medan Barat."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karya No. 112"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6055"^^xsd:decimal ;
+    geo:long "98.6622"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-maha-shiva-shakti-kovil> .
+
+res:shri-singgama-kali-kovil a mv:RumahIbadah ;
+    rdfs:label "Shri Singgama Kali Kovil"@id ;
+    schema:name "Shri Singgama Kali Kovil"@id ;
+    schema:description "Kuil Hindu bersejarah di kawasan Medan Barat dengan tradisi perayaan keagamaan Tamil yang kental."@id ;
+    mv:cerita "Kuil Hindu bersejarah di kawasan Medan Barat dengan tradisi perayaan keagamaan Tamil yang kental."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karya No. 168"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6085"^^xsd:decimal ;
+    geo:long "98.6645"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-singgama-kali-kovil> .
+
+res:kuil-shri-murugan-polonia a mv:RumahIbadah ;
+    rdfs:label "Kuil Shri Murugan (Polonia)"@id ;
+    schema:name "Kuil Shri Murugan (Polonia)"@id ;
+    schema:description "Kuil Hindu penghormatan Dewa Murugan di Polonia yang ramai dikunjungi saat perayaan Thaipusam."@id ;
+    mv:cerita "Kuil Hindu penghormatan Dewa Murugan di Polonia yang ramai dikunjungi saat perayaan Thaipusam."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Starban No. 40"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5628"^^xsd:decimal ;
+    geo:long "98.6772"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/kuil-shri-murugan-polonia> .
+
+res:shri-kathirvelayutha-swami-kovil a mv:RumahIbadah ;
+    rdfs:label "Shri Kathirvelayutha Swami Kovil"@id ;
+    schema:name "Shri Kathirvelayutha Swami Kovil"@id ;
+    schema:description "Kuil Hindu tradisional di Polonia tempat ibadah dan kegiatan keagamaan masyarakat Hindu Medan."@id ;
+    mv:cerita "Kuil Hindu tradisional di Polonia tempat ibadah dan kegiatan keagamaan masyarakat Hindu Medan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Starban No. 46"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5632"^^xsd:decimal ;
+    geo:long "98.6768"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-kathirvelayutha-swami-kovil> .
+
+res:gurdwara-sahib-medan a mv:RumahIbadah ;
+    rdfs:label "Gurdwara Sahib Medan"@id ;
+    schema:name "Gurdwara Sahib Medan"@id ;
+    schema:description "Tempat ibadah utama umat Sikh di Kota Medan yang terletak di kawasan Kampung Madras."@id ;
+    mv:cerita "Tempat ibadah utama umat Sikh di Kota Medan yang terletak di kawasan Kampung Madras."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Cik Ditiro No. 112"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5815"^^xsd:decimal ;
+    geo:long "98.6702"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 05.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "05:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/budaya/d-6984150/gurdwara-sahib-rumah-ibadah-umat-sikh-di-medan> .
+
+res:khalsa-gurdwara-medan a mv:RumahIbadah ;
+    rdfs:label "Khalsa Gurdwara Medan"@id ;
+    schema:name "Khalsa Gurdwara Medan"@id ;
+    schema:description "Gurdwara bersejarah komunitas Sikh di pusat Kota Medan yang juga memiliki fasilitas pendidikan Khalsa."@id ;
+    mv:cerita "Gurdwara bersejarah komunitas Sikh di pusat Kota Medan yang juga memiliki fasilitas pendidikan Khalsa."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Teuku Umar No. 22"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5842"^^xsd:decimal ;
+    geo:long "98.6695"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 05.30–20.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "05:30:00"^^xsd:time ;
+    mv:jamTutup "20:30:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/sumut/travel/jejak-komunitas-sikh-dan-khalsa-gurdwara-medan> .
+
+res:medan-edu-fun a mv:RuangPublik ;
+    rdfs:label "Medan Edu Fun"@id ;
+    schema:name "Medan Edu Fun"@id ;
+    schema:description "Taman wisata edukasi luar ruang untuk anak-anak dan keluarga dengan berbagai wahana belajar interaktif."@id ;
+    mv:cerita "Taman wisata edukasi luar ruang untuk anak-anak dan keluarga dengan berbagai wahana belajar interaktif."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Jamin Ginting Km 10,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5245"^^xsd:decimal ;
+    geo:long "98.6312"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/medan-edu-fun> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:medan-zoo a mv:RuangPublik ;
+    rdfs:label "Medan Zoo"@id ;
+    schema:name "Medan Zoo"@id ;
+    schema:description "Kebun binatang milik Pemerintah Kota Medan di kawasan Simalingkar B yang rimbun dengan koleksi satwa Sumatera dan nusantara."@id ;
+    mv:cerita "Kebun binatang milik Pemerintah Kota Medan di kawasan Simalingkar B yang rimbun dengan koleksi satwa Sumatera dan nusantara."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bunga Rampai IV"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.4945"^^xsd:decimal ;
+    geo:long "98.6415"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Kebun_Binatang_Medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kenanga-garden a mv:RuangPublik ;
+    rdfs:label "Kenanga Garden"@id ;
+    schema:name "Kenanga Garden"@id ;
+    schema:description "Taman rekreasi keluarga dan kuliner bernuansa hijau dengan spot foto dan saung santai di Medan Tuntungan."@id ;
+    mv:cerita "Taman rekreasi keluarga dan kuliner bernuansa hijau dengan spot foto dan saung santai di Medan Tuntungan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Jamin Ginting Km 12,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5085"^^xsd:decimal ;
+    geo:long "98.6225"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6754321/kenanga-garden-medan-lokasi-harga-tiket> ;
+    mv:hargaTiketMulai 10000 ;
+    mv:hargaContoh false .
+
+res:citraland-gama-city a mv:RuangPublik ;
+    rdfs:label "CitraLand Gama City"@id ;
+    schema:name "CitraLand Gama City"@id ;
+    schema:description "Kawasan kota mandiri modern dengan ruang terbuka hijau, danau buatan, jalur jogging, dan pusat kuliner."@id ;
+    mv:cerita "Kawasan kota mandiri modern dengan ruang terbuka hijau, danau buatan, jalur jogging, dan pusat kuliner."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Boulevard Barat Raya"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6185"^^xsd:decimal ;
+    geo:long "98.7185"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://citralandgamacity.com> .
+
+res:kampung-nelayan-warna-warni-belawan a mv:RuangPublik ;
+    rdfs:label "Kampung Nelayan Warna-Warni Belawan"@id ;
+    schema:name "Kampung Nelayan Warna-Warni Belawan"@id ;
+    schema:description "Permukiman pesisir utara Medan yang dicat warna-warni sebagai destinasi wisata bahari dan fotografi."@id ;
+    mv:cerita "Permukiman pesisir utara Medan yang dicat warna-warni sebagai destinasi wisata bahari dan fotografi."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bagan Deli Belawan"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.7745"^^xsd:decimal ;
+    geo:long "98.6915"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://pariwisata.pemkomedan.go.id/destinasi/kampung-warna-warni-belawan> .
+
+res:the-le-hu-garden a mv:RuangPublik ;
+    rdfs:label "The Le Hu Garden"@id ;
+    schema:name "The Le Hu Garden"@id ;
+    schema:description "Taman wisata keluarga bernuansa pedesaan asri dengan danau, taman bunga, perahu bebek, dan spot foto."@id ;
+    mv:cerita "Taman wisata keluarga bernuansa pedesaan asri dengan danau, taman bunga, perahu bebek, dan spot foto."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pendidikan Deli Tua"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.4962"^^xsd:decimal ;
+    geo:long "98.6785"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6821450/the-le-hu-garden-harga-tiket-dan-wahana> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:kampoeng-ladang-outbound-family-recreation a mv:RuangPublik ;
+    rdfs:label "Kampoeng Ladang Outbound & Family Recreation"@id ;
+    schema:name "Kampoeng Ladang Outbound & Family Recreation"@id ;
+    schema:description "Area wisata alam dan outbound luas dengan danau, wahana flying fox, sampan, dan fasilitas gathering keluarga."@id ;
+    mv:cerita "Area wisata alam dan outbound luas dengan danau, wahana flying fox, sampan, dan fasilitas gathering keluarga."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Tuntungan Tanjung Anom"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5165"^^xsd:decimal ;
+    geo:long "98.5985"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.30–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:30:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.tripadvisor.co.id/Attraction_Review-g297725-d7184920-Kampoeng_Ladang-Medan> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:taman-burung-cemara-asri a mv:RuangPublik ;
+    rdfs:label "Taman Burung Cemara Asri"@id ;
+    schema:name "Taman Burung Cemara Asri"@id ;
+    schema:description "Habitat ribuan burung bangau dan burung air liar di tengah danau komplek Cemara Asri yang ramai dikunjungi sore hari."@id ;
+    mv:cerita "Habitat ribuan burung bangau dan burung air liar di tengah danau komplek Cemara Asri yang ramai dikunjungi sore hari."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Cemara Asri Boulevard Raya"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6305"^^xsd:decimal ;
+    geo:long "98.7035"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.00–19.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "06:00:00"^^xsd:time ;
+    mv:jamTutup "19:00:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/travel/destination/taman-burung-cemara-asri-medan> .
+
+res:penangkaran-buaya-asam-kumbang a mv:RuangPublik ;
+    rdfs:label "Penangkaran Buaya Asam Kumbang"@id ;
+    schema:name "Penangkaran Buaya Asam Kumbang"@id ;
+    schema:description "Penangkaran buaya tertua dan terbesar di Indonesia sejak 1959 dengan ratusan koleksi buaya berbagai ukuran."@id ;
+    mv:cerita "Penangkaran buaya tertua dan terbesar di Indonesia sejak 1959 dengan ratusan koleksi buaya berbagai ukuran."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bunga Raya II No. 8"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.56597"^^xsd:decimal ;
+    geo:long "98.61952"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://www.usu.ac.id/id/kehidupan-kampus/wisata-kota-medan/penangkaran-buaya-asam-kumbang> ;
+    mv:hargaTiketMulai 10000 ;
+    mv:hargaContoh false .
+
+res:danau-siombak a mv:RuangPublik ;
+    rdfs:label "Danau Siombak"@id ;
+    schema:name "Danau Siombak"@id ;
+    schema:description "Danau buatan seluas 40 hektare di antara Sungai Deli dan Sungai Terjun dengan wisata perahu dan ekosistem mangrove."@id ;
+    mv:cerita "Danau buatan seluas 40 hektare di antara Sungai Deli dan Sungai Terjun dengan wisata perahu dan ekosistem mangrove."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pasar Nippon"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.7195"^^xsd:decimal ;
+    geo:long "98.6642"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://id.wikipedia.org/wiki/Danau_Siombak> ;
+    mv:hargaTiketMulai 10000 ;
+    mv:hargaContoh false .
+
+res:kawasan-kuliner-jl-karya-wisata a mv:TempatKuliner ;
+    rdfs:label "Kawasan Kuliner Jl. Karya Wisata"@id ;
+    schema:name "Kawasan Kuliner Jl. Karya Wisata"@id ;
+    schema:description "Koridor kuliner ramai di Medan Johor yang dipenuhi kafe kekinian, warung makan nusantara, hingga jajanan malam."@id ;
+    mv:cerita "Koridor kuliner ramai di Medan Johor yang dipenuhi kafe kekinian, warung makan nusantara, hingga jajanan malam."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Karya Wisata"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5385"^^xsd:decimal ;
+    geo:long "98.6682"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–23.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "23:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6912450/rekomendasi-kuliner-jalan-karya-wisata-medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kawasan-kuliner-komplek-tasbih a mv:TempatKuliner ;
+    rdfs:label "Kawasan Kuliner Komplek Tasbih"@id ;
+    schema:name "Kawasan Kuliner Komplek Tasbih"@id ;
+    schema:description "Sentra kuliner modern di Medan Selayang dengan deretan restoran keluarga, kedai kopi, dan kuliner Asia."@id ;
+    mv:cerita "Sentra kuliner modern di Medan Selayang dengan deretan restoran keluarga, kedai kopi, dan kuliner Asia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Taman Setia Budi Indah I"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5668"^^xsd:decimal ;
+    geo:long "98.6345"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–23.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "23:00:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/food/dining-guide/kuliner-komplek-tasbih-medan> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:rm-garuda-pusat a mv:TempatKuliner ;
+    rdfs:label "RM Garuda Pusat"@id ;
+    schema:name "RM Garuda Pusat"@id ;
+    schema:description "Restoran Minang-Melayu legendaris di Medan sejak 1976 yang terkenal dengan rendang, gulai kepala ikan, dan ayam pop."@id ;
+    mv:cerita "Restoran Minang-Melayu legendaris di Medan sejak 1976 yang terkenal dengan rendang, gulai kepala ikan, dan ayam pop."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pemuda No. 20"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5835"^^xsd:decimal ;
+    geo:long "98.6812"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://restorangaruda.com> ;
+    mv:hargaTiketMulai 40000 ;
+    mv:hargaContoh false .
+
+res:mie-aceh-titi-bobrok a mv:TempatKuliner ;
+    rdfs:label "Mie Aceh Titi Bobrok"@id ;
+    schema:name "Mie Aceh Titi Bobrok"@id ;
+    schema:description "Kuliner Mie Aceh paling ikonik di Medan dengan bumbu rempah pekat dan topping kepiting, udang, maupun daging."@id ;
+    mv:cerita "Kuliner Mie Aceh paling ikonik di Medan dengan bumbu rempah pekat dan topping kepiting, udang, maupun daging."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Setia Budi No. 17D"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5848"^^xsd:decimal ;
+    geo:long "98.6435"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 11.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "11:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6589120/mie-aceh-titi-bobrok-kuliner-legendaris-medan> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:kawasan-kuliner-komplek-cemara-asri a mv:TempatKuliner ;
+    rdfs:label "Kawasan Kuliner Komplek Cemara Asri"@id ;
+    schema:name "Kawasan Kuliner Komplek Cemara Asri"@id ;
+    schema:description "Pusat kuliner terbesar di utara Medan dengan ratusan pilihan makanan halal dan non-halal, kafe, serta street food malam."@id ;
+    mv:cerita "Pusat kuliner terbesar di utara Medan dengan ratusan pilihan makanan halal dan non-halal, kafe, serta street food malam."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Cemara Asri Boulevard Raya"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6288"^^xsd:decimal ;
+    geo:long "98.7025"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–23.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "23:00:00"^^xsd:time ;
+    dcterms:source <https://www.kompas.com/food/read/2023/08/14/wisata-kuliner-cemara-asri-medan> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:durian-house-dh-patisserie a mv:TempatKuliner ;
+    rdfs:label "Durian House (DH Patisserie)"@id ;
+    schema:name "Durian House (DH Patisserie)"@id ;
+    schema:description "Toko kue dan oleh-oleh khas Medan yang terkenal dengan bolu durian, pancake durian, dan olahan patisserie."@id ;
+    mv:cerita "Toko kue dan oleh-oleh khas Medan yang terkenal dengan bolu durian, pancake durian, dan olahan patisserie."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sekip No. 67"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5932"^^xsd:decimal ;
+    geo:long "98.6658"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.tripadvisor.co.id/Restaurant_Review-g297725-d4128940-Durian_House-Medan> ;
+    mv:hargaTiketMulai 35000 ;
+    mv:hargaContoh false .
+
+res:si-bolang-durian-pelawi-durian a mv:TempatKuliner ;
+    rdfs:label "Si Bolang Durian / Pelawi Durian"@id ;
+    schema:name "Si Bolang Durian / Pelawi Durian"@id ;
+    schema:description "Kedai durian populer di Medan dengan area duduk nyaman untuk menikmati durian kupas, pancake durian, dan es durian."@id ;
+    mv:cerita "Kedai durian populer di Medan dengan area duduk nyaman untuk menikmati durian kupas, pancake durian, dan es durian."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Iskandar Muda No. 75C-D"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5758"^^xsd:decimal ;
+    geo:long "98.6602"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 24 jam"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6790123/si-bolang-durian-medan> ;
+    mv:hargaTiketMulai 50000 ;
+    mv:hargaContoh false .
+
+res:lontong-kak-lin a mv:TempatKuliner ;
+    rdfs:label "Lontong Kak Lin"@id ;
+    schema:name "Lontong Kak Lin"@id ;
+    schema:description "Warung sarapan legendaris sejak 1990-an yang menyajikan lontong sayur Medan komplit dengan tauco, telur balado, dan perkedel."@id ;
+    mv:cerita "Warung sarapan legendaris sejak 1990-an yang menyajikan lontong sayur Medan komplit dengan tauco, telur balado, dan perkedel."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Teuku Cik Ditiro No. 8M"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5808"^^xsd:decimal ;
+    geo:long "98.6718"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–15.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "15:00:00"^^xsd:time ;
+    dcterms:source <https://www.kompas.com/food/read/2022/11/05/lontong-kak-lin-medan> ;
+    mv:hargaTiketMulai 18000 ;
+    mv:hargaContoh false .
+
+res:bihun-bebek-asie-kumango a mv:TempatKuliner ;
+    rdfs:label "Bihun Bebek Asie Kumango"@id ;
+    schema:name "Bihun Bebek Asie Kumango"@id ;
+    schema:description "Kuliner legendaris Medan sejak 1930-an berupa bihun dengan suwiran daging bebek melimpah dan kuah kaldu herbal gurih."@id ;
+    mv:cerita "Kuliner legendaris Medan sejak 1930-an berupa bihun dengan suwiran daging bebek melimpah dan kuah kaldu herbal gurih."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Kumango No. 15"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5895"^^xsd:decimal ;
+    geo:long "98.6788"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–11.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "11:30:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6612890/bihun-bebek-asie-kumango-medan> ;
+    mv:hargaTiketMulai 65000 ;
+    mv:hargaContoh false .
+
+res:mie-balap-wahidin a mv:TempatKuliner ;
+    rdfs:label "Mie Balap Wahidin"@id ;
+    schema:name "Mie Balap Wahidin"@id ;
+    schema:description "Sarapan khas Medan berupa kwetiau dan bihun goreng cepat saji di atas kuali besar dengan topping seafood melimpah."@id ;
+    mv:cerita "Sarapan khas Medan berupa kwetiau dan bihun goreng cepat saji di atas kuali besar dengan topping seafood melimpah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Dr. Wahidin No. 28"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5868"^^xsd:decimal ;
+    geo:long "98.6972"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.30–11.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "06:30:00"^^xsd:time ;
+    mv:jamTutup "11:30:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/food/dining-guide/mie-balap-wahidin-medan> ;
+    mv:hargaTiketMulai 18000 ;
+    mv:hargaContoh false .
+
+res:kawasan-kuliner-pasar-hindu a mv:TempatKuliner ;
+    rdfs:label "Kawasan Kuliner Pasar Hindu"@id ;
+    schema:name "Kawasan Kuliner Pasar Hindu"@id ;
+    schema:description "Sentra kuliner legendaris di kawasan kota tua Medan yang terkenal dengan lontong sayur, soto Medan, dan kopi tradisional."@id ;
+    mv:cerita "Sentra kuliner legendaris di kawasan kota tua Medan yang terkenal dengan lontong sayur, soto Medan, dan kopi tradisional."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Hindu"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5882"^^xsd:decimal ;
+    geo:long "98.6782"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 06.30–14.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "06:30:00"^^xsd:time ;
+    mv:jamTutup "14:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6701234/kuliner-pagi-pasar-hindu-medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:manhattan-urban-market-muma a mv:TempatKuliner ;
+    rdfs:label "Manhattan Urban Market (MUMA)"@id ;
+    schema:name "Manhattan Urban Market (MUMA)"@id ;
+    schema:description "Area food court dan kuliner tematik modern di dalam mal Manhattan Times Square dengan puluhan tenant makanan."@id ;
+    mv:cerita "Area food court dan kuliner tematik modern di dalam mal Manhattan Times Square dengan puluhan tenant makanan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Gatot Subroto No. 217"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5912"^^xsd:decimal ;
+    geo:long "98.6275"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://manhattantimessquare.com/tenant/muma> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:dim-sum-nelayan-nelayan-jala-jala a mv:TempatKuliner ;
+    rdfs:label "Dim Sum Nelayan (Nelayan Jala-Jala)"@id ;
+    schema:name "Dim Sum Nelayan (Nelayan Jala-Jala)"@id ;
+    schema:description "Restoran dim sum dan hidangan Kanton paling terkenal di Medan dengan variasi kukus, goreng, dan bubur khas."@id ;
+    mv:cerita "Restoran dim sum dan hidangan Kanton paling terkenal di Medan dengan variasi kukus, goreng, dan bubur khas."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Putri Merak Jingga No. 8"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5832"^^xsd:decimal ;
+    geo:long "98.6712"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–22.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "22:00:00"^^xsd:time ;
+    dcterms:source <https://nelayanrestaurant.com> ;
+    mv:hargaTiketMulai 40000 ;
+    mv:hargaContoh false .
+
+res:sate-padang-al-fresco a mv:TempatKuliner ;
+    rdfs:label "Sate Padang Al-Fresco"@id ;
+    schema:name "Sate Padang Al-Fresco"@id ;
+    schema:description "Kedai sate Padang populer di Medan dengan pilihan daging, lidah, dan usus bersiram kuah kental kaya rempah."@id ;
+    mv:cerita "Kedai sate Padang populer di Medan dengan pilihan daging, lidah, dan usus bersiram kuah kental kaya rempah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Setia Budi No. 213"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5615"^^xsd:decimal ;
+    geo:long "98.6412"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 16.00–23.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "16:00:00"^^xsd:time ;
+    mv:jamTutup "23:30:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6845120/sate-padang-al-fresco-medan> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:nasi-goreng-pemuda a mv:TempatKuliner ;
+    rdfs:label "Nasi Goreng Pemuda"@id ;
+    schema:name "Nasi Goreng Pemuda"@id ;
+    schema:description "Nasi goreng malam legendaris di Medan yang dimasak dengan bumbu khas dan sering dipadukan dengan sate kerang."@id ;
+    mv:cerita "Nasi goreng malam legendaris di Medan yang dimasak dengan bumbu khas dan sering dipadukan dengan sate kerang."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pemuda Baru III"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5825"^^xsd:decimal ;
+    geo:long "98.6808"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 17.00–01.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "17:00:00"^^xsd:time ;
+    mv:jamTutup "01:00:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/food/dining-guide/nasi-goreng-pemuda-medan> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:rumah-makan-pondok-gurih a mv:TempatKuliner ;
+    rdfs:label "Rumah Makan Pondok Gurih"@id ;
+    schema:name "Rumah Makan Pondok Gurih"@id ;
+    schema:description "Rumah makan khas Medan dan Melayu yang terkenal dengan lauk pauk tradisional, sambal teri, dan gulai ikan."@id ;
+    mv:cerita "Rumah makan khas Medan dan Melayu yang terkenal dengan lauk pauk tradisional, sambal teri, dan gulai ikan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Brigjend Katamso No. 33A"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5802"^^xsd:decimal ;
+    geo:long "98.6822"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.tripadvisor.co.id/Restaurant_Review-g297725-d3849210-Pondok_Gurih-Medan> ;
+    mv:hargaTiketMulai 30000 ;
+    mv:hargaContoh false .
+
+res:kedai-pojok-kuliner-medan a mv:TempatKuliner ;
+    rdfs:label "Kedai Pojok Kuliner Medan"@id ;
+    schema:name "Kedai Pojok Kuliner Medan"@id ;
+    schema:description "Tempat makan santai yang menyajikan ragam menu khas Medan mulai dari kopi, roti bakar, hingga hidangan utama."@id ;
+    mv:cerita "Tempat makan santai yang menyajikan ragam menu khas Medan mulai dari kopi, roti bakar, hingga hidangan utama."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Palang Merah No. 18"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5845"^^xsd:decimal ;
+    geo:long "98.6795"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-6899120/kedai-kopi-dan-kuliner-palang-merah-medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:sate-kerang-rahmat a mv:TempatKuliner ;
+    rdfs:label "Sate Kerang Rahmat"@id ;
+    schema:name "Sate Kerang Rahmat"@id ;
+    schema:description "Pelopor oleh-oleh sate kerang khas Medan tanpa tusuk dengan bumbu manis-pedas gurih yang tahan dibawa bepergian."@id ;
+    mv:cerita "Pelopor oleh-oleh sate kerang khas Medan tanpa tusuk dengan bumbu manis-pedas gurih yang tahan dibawa bepergian."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Kruing No. 3D"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5945"^^xsd:decimal ;
+    geo:long "98.6672"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.kompas.com/food/read/2023/04/12/sate-kerang-rahmat-medan> ;
+    mv:hargaTiketMulai 30000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-unimed a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang UNIMED"@id ;
+    schema:name "Kolam Renang UNIMED"@id ;
+    schema:description "Fasilitas kolam renang standar atletik di lingkungan Universitas Negeri Medan yang dibuka untuk mahasiswa dan umum."@id ;
+    mv:cerita "Fasilitas kolam renang standar atletik di lingkungan Universitas Negeri Medan yang dibuka untuk mahasiswa dan umum."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Williem Iskandar Pasar V"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6085"^^xsd:decimal ;
+    geo:long "98.7165"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–17.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    dcterms:source <https://www.unimed.ac.id/fasilitas/kolam-renang> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-graha-helvetia a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Graha Helvetia"@id ;
+    schema:name "Kolam Renang Graha Helvetia"@id ;
+    schema:description "Kolam renang komplek perumahan di kawasan Helvetia yang cocok untuk olahraga renang dan rekreasi anak."@id ;
+    mv:cerita "Kolam renang komplek perumahan di kawasan Helvetia yang cocok untuk olahraga renang dan rekreasi anak."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Graha Helvetia, Jl. Kapten Sumarsono"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.6115"^^xsd:decimal ;
+    geo:long "98.6485"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/daftar-kolam-renang-di-medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-tasbih a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Tasbih"@id ;
+    schema:name "Kolam Renang Tasbih"@id ;
+    schema:description "Kolam renang di dalam kawasan perumahan Tasbih I yang nyaman untuk berenang rutin maupun keluarga."@id ;
+    mv:cerita "Kolam renang di dalam kawasan perumahan Tasbih I yang nyaman untuk berenang rutin maupun keluarga."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Taman Setia Budi Indah I"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5685"^^xsd:decimal ;
+    geo:long "98.6362"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.idntimes.com/travel/destination/kolam-renang-nyaman-di-medan> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-bahagia a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Bahagia"@id ;
+    schema:name "Kolam Renang Bahagia"@id ;
+    schema:description "Salah satu kolam renang legendaris di Medan yang sering digunakan untuk latihan renang maupun rekreasi warga."@id ;
+    mv:cerita "Salah satu kolam renang legendaris di Medan yang sering digunakan untuk latihan renang maupun rekreasi warga."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Bahagia By Pass No. 11"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5565"^^xsd:decimal ;
+    geo:long "98.6975"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.30–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:30:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-bahagia-medan> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-istiqlal a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Istiqlal"@id ;
+    schema:name "Kolam Renang Istiqlal"@id ;
+    schema:description "Kolam renang keluarga di kawasan Deli Tua dengan suasana sejuk dan harga tiket terjangkau."@id ;
+    mv:cerita "Kolam renang keluarga di kawasan Deli Tua dengan suasana sejuk dan harga tiket terjangkau."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Istiqlal Deli Tua"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.4985"^^xsd:decimal ;
+    geo:long "98.6815"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/kolam-renang-istiqlal-deli-tua> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-citra-wisata a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Citra Wisata"@id ;
+    schema:name "Kolam Renang Citra Wisata"@id ;
+    schema:description "Kolam renang dan fasilitas rekreasi air di dalam kompleks perumahan Citra Wisata Medan Johor."@id ;
+    mv:cerita "Kolam renang dan fasilitas rekreasi air di dalam kompleks perumahan Citra Wisata Medan Johor."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Citra Wisata, Jl. Karya Wisata"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5335"^^xsd:decimal ;
+    geo:long "98.6675"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-citra-wisata-medan> ;
+    mv:hargaTiketMulai 20000 ;
+    mv:hargaContoh false .
+
+res:taman-mora-indah-waterpark a mv:RekreasiAir ;
+    rdfs:label "Taman Mora Indah Waterpark"@id ;
+    schema:name "Taman Mora Indah Waterpark"@id ;
+    schema:description "Taman wisata air keluarga di jalur Medan-Tanjung Morawa dengan berbagai seluncuran air dan kolam anak."@id ;
+    mv:cerita "Taman wisata air keluarga di jalur Medan-Tanjung Morawa dengan berbagai seluncuran air dan kolam anak."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sisingamangaraja Km 11,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.53468"^^xsd:decimal ;
+    geo:long "98.74374"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-7853091/mora-waterpark-tanjung-morawa-lokasi-jam-buka-dan-harga-tiket-masuk> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:budaya-resto-themepark a mv:TempatKuliner ;
+    rdfs:label "Budaya Resto & Themepark"@id ;
+    schema:name "Budaya Resto & Themepark"@id ;
+    schema:description "Restoran keluarga bernuansa budaya Sumatera Utara yang dilengkapi taman bermain, danau buatan, dan wahana rekreasi."@id ;
+    mv:cerita "Restoran keluarga bernuansa budaya Sumatera Utara yang dilengkapi taman bermain, danau buatan, dan wahana rekreasi."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Medan - Tanjung Morawa Km 12,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5263"^^xsd:decimal ;
+    geo:long "98.7591"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–21.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 60 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "21:00:00"^^xsd:time ;
+    dcterms:source <https://restauranbudaya.com/> ;
+    mv:hargaTiketMulai 50000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-selayang a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Selayang"@id ;
+    schema:name "Kolam Renang Selayang"@id ;
+    schema:description "Kolam renang standar pembinaan atlet di Medan Selayang yang juga terbuka untuk latihan renang masyarakat umum."@id ;
+    mv:cerita "Kolam renang standar pembinaan atlet di Medan Selayang yang juga terbuka untuk latihan renang masyarakat umum."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Dr. Mansyur No. 142"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5642"^^xsd:decimal ;
+    geo:long "98.6485"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 07.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "07:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://dispora.sumutprov.go.id/fasilitas/kolam-renang-selayang> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
+res:hairos-water-park a mv:RekreasiAir ;
+    rdfs:label "Hairos Water Park"@id ;
+    schema:name "Hairos Water Park"@id ;
+    schema:description "Salah satu waterpark terbesar di sekitar Medan dengan kolam ombak, kolam arus, dan seluncuran air tinggi."@id ;
+    mv:cerita "Salah satu waterpark terbesar di sekitar Medan dengan kolam ombak, kolam arus, dan seluncuran air tinggi."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Jamin Ginting Km 14,5"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.49568"^^xsd:decimal ;
+    geo:long "98.60815"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6789120/hairos-water-park-medan-harga-tiket-dan-wahana> ;
+    mv:hargaTiketMulai 45000 ;
+    mv:hargaContoh false .
+
+res:wisata-merci-themepark-and-resto a mv:RekreasiAir ;
+    rdfs:label "Wisata Merci Themepark and Resto"@id ;
+    schema:name "Wisata Merci Themepark and Resto"@id ;
+    schema:description "Taman wisata air dan restoran bertema arsitektur Belanda dengan kincir angin ikonik dan berbagai wahana kolam."@id ;
+    mv:cerita "Taman wisata air dan restoran bertema arsitektur Belanda dengan kincir angin ikonik dan berbagai wahana kolam."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "komp.Medan Resort City, Jl. Merci Raya"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.50911"^^xsd:decimal ;
+    geo:long "98.67649"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–18.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "18:00:00"^^xsd:time ;
+    dcterms:source <https://www.detik.com/sumut/wisata/d-6812340/wisata-merci-medan-harga-tiket-dan-jam-buka> ;
+    mv:hargaTiketMulai 35000 ;
+    mv:hargaContoh false .
+
+res:central-park-zoo-resort a mv:RuangPublik ;
+    rdfs:label "Central Park Zoo & Resort"@id ;
+    schema:name "Central Park Zoo & Resort"@id ;
+    schema:description "Destinasi wisata terpadu yang menggabungkan kebun binatang interaktif, waterpark, museum, dan penginapan."@id ;
+    mv:cerita "Destinasi wisata terpadu yang menggabungkan kebun binatang interaktif, waterpark, museum, dan penginapan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Jamin Ginting Km 20"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.4485"^^xsd:decimal ;
+    geo:long "98.5895"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 120 ;
+    mv:durasiSinggah 90 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.instagram.com/cpzooandresort/> ;
+    mv:hargaTiketMulai 40000 ;
+    mv:hargaContoh false .
+
+res:nakny-funland a mv:RekreasiAir ;
+    rdfs:label "Nakny Funland"@id ;
+    schema:name "Nakny Funland"@id ;
+    schema:description "Taman rekreasi air dan hiburan keluarga populer di kawasan Medan Marelan dengan beragam kolam bermain anak."@id ;
+    mv:cerita "Taman rekreasi air dan hiburan keluarga populer di kawasan Medan Marelan dengan beragam kolam bermain anak."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jalan Kawasan Industri Jl. Paluh Gelombang"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.71211"^^xsd:decimal ;
+    geo:long "98.73154"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–22.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "22:30:00"^^xsd:time ;
+    dcterms:source <https://nakny.id/nakny-funland/> ;
+    mv:hargaTiketMulai 10000 ;
+    mv:hargaContoh false .
+
+res:tirta-ceria-waterpark a mv:RekreasiAir ;
+    rdfs:label "Tirta Ceria Waterpark"@id ;
+    schema:name "Tirta Ceria Waterpark"@id ;
+    schema:description "Waterpark keluarga di kawasan Tanjung Gusta dengan wahana ember tumpah, seluncuran, dan kolam renang."@id ;
+    mv:cerita "Waterpark keluarga di kawasan Tanjung Gusta dengan wahana ember tumpah, seluncuran, dan kolam renang."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Setia Tirta"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.56966"^^xsd:decimal ;
+    geo:long "98.60729"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.30–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:30:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/tirta-ceria-waterpark> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:kynan-haven-waterpark a mv:RekreasiAir ;
+    rdfs:label "Kynan Haven Waterpark"@id ;
+    schema:name "Kynan Haven Waterpark"@id ;
+    schema:description "Wahana wisata air bernuansa asri di selatan Medan yang cocok untuk liburan keluarga dan anak-anak."@id ;
+    mv:cerita "Wahana wisata air bernuansa asri di selatan Medan yang cocok untuk liburan keluarga dan anak-anak."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Marelan III Gg. Subur"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.70289"^^xsd:decimal ;
+    geo:long "98.65198"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 09.00–17.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "09:00:00"^^xsd:time ;
+    mv:jamTutup "17:30:00"^^xsd:time ;
+    dcterms:source <https://www.instagram.com/kynanhavenmarelan/> ;
+    mv:hargaTiketMulai 25000 ;
+    mv:hargaContoh false .
+
+res:waterpark-citra-garden a mv:RekreasiAir ;
+    rdfs:label "Waterpark Citra Garden"@id ;
+    schema:name "Waterpark Citra Garden"@id ;
+    schema:description "Fasilitas kolam renang dan taman bermain air modern di kawasan perumahan Citra Garden Padang Bulan."@id ;
+    mv:cerita "Fasilitas kolam renang dan taman bermain air modern di kawasan perumahan Citra Garden Padang Bulan."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Komplek Citra Garden, Jl. Jamin Ginting"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.5535"^^xsd:decimal ;
+    geo:long "98.6552"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 10.00–05.00"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "10:00:00"^^xsd:time ;
+    mv:jamTutup "05:00:00"^^xsd:time ;
+    dcterms:source <https://digitiket.com/v/detail/kolam-renang-citra-garden-waterpark-medan> ;
+    mv:hargaTiketMulai 30000 ;
+    mv:hargaContoh false .
+
+res:kolam-renang-sejahtera a mv:RekreasiAir ;
+    rdfs:label "Kolam Renang Sejahtera"@id ;
+    schema:name "Kolam Renang Sejahtera"@id ;
+    schema:description "Kolam renang lokal yang nyaman untuk rekreasi air keluarga dan latihan berenang di kawasan Helvetia."@id ;
+    mv:cerita "Kolam renang lokal yang nyaman untuk rekreasi air keluarga dan latihan berenang di kawasan Helvetia."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Sejahtera Helvetia"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.61313"^^xsd:decimal ;
+    geo:long "98.6576"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–18.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 200 ;
+    mv:durasiSinggah 180 ;
+    schema:isAccessibleForFree false ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "18:30:00"^^xsd:time ;
+    dcterms:source <https://www.instagram.com/kolamrenangsejahtera/?hl=id> ;
+    mv:hargaTiketMulai 15000 ;
+    mv:hargaContoh false .
+
