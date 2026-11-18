@@ -144,3 +144,4 @@ if (bayar) {
         e.preventDefault();
         tombolBayar.disabled = true;
         tulisKabar('Membuka jendela pembayaran...');
+        try {
