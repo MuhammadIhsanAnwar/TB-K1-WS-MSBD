@@ -92,3 +92,4 @@ if (sandi) {
 }
 
 akar?.querySelector('[data-lihat-sandi]')?.addEventListener('click', (e) => {
+    const tombol = e.currentTarget;
