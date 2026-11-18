@@ -216,6 +216,7 @@
    tombol Menu jadi ikon saja, teksnya tetap dibaca pembaca layar. */
 @media (max-width: 420px) {
   .mv-kepala__aksi:has(.mv-akun-menu, .mv-kepala__foto, .mv-btn) .mv-kepala__tombol-menu { flex: none; width: 44px; padding: 0; }
+  .mv-kepala__aksi:has(.mv-akun-menu, .mv-kepala__foto, .mv-btn) .mv-kepala__tombol-menu span {
 
 /* Dropdown Akun Wisatawan ([data-ui]) */
 [data-ui].mv-akun-menu { position: relative; }
