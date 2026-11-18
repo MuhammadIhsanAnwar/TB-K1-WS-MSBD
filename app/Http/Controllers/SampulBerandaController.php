@@ -14,3 +14,4 @@ use Throwable;
 class SampulBerandaController extends Controller
 {
     public function tampil()
+    {
