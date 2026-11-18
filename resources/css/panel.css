@@ -225,6 +225,7 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .sampul-atur__galat { margin: 0; padding-left: 18px; list-style: disc; }
 .sampul-atur__urutan { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
 .sampul-atur__urutan li { display: grid; gap: 6px; min-width: 0; }
+.sampul-atur__urutan img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--p-radius-control); }
 /* peta (alat) */
 .peta-alat { display: grid; grid-template-columns: 400px minmax(0, 1fr); height: calc(100svh - 76px); }
 .peta-alat__samping { display: flex; flex-direction: column; min-height: 0; background: var(--paper); }
