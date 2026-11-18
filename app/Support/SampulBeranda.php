@@ -47,3 +47,4 @@ class SampulBeranda
             $slot = [];
             Cache::put(self::CACHE, $slot, now()->addMinute());
         }
+
