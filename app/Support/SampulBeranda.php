@@ -41,3 +41,4 @@ class SampulBeranda
                 ->map(fn ($s) => ['slug' => $s['slug'], 'foto' => is_string($s['foto'] ?? null) ? $s['foto'] : null])
                 ->take(self::SLOT)->values()->all();
             Cache::put(self::CACHE, $slot, now()->addMinutes(10));
+        } catch (Throwable $e) {
