@@ -94,3 +94,4 @@ class Midtrans
         if ($jawab->status() === 400 && isset($isi['enabled_payments']) && str_contains(strtolower($jawab->body()), 'payment')) {
             // kanal pilihan belum aktif di akun Midtrans: tampilkan semua kanal yang aktif
             unset($isi['enabled_payments']);
+            $jawab = self::http()->post(self::urlSnap(), $isi);
