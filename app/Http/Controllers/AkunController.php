@@ -526,6 +526,7 @@ class AkunController extends Controller
             'akunGoogle' => ! empty($user['google_id']),
             'jumlah' => $wisatawan ? [
                 'pesanan' => count(Penyimpanan::pesanan((int) $user['id'], aman: true)),
+                'ulasan' => count(Penyimpanan::ulasan(idPengguna: (int) $user['id'], aman: true)),
         ]);
     }
 
