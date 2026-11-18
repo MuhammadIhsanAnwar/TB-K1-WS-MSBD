@@ -75,7 +75,6 @@ final class Database3CatalogWriter
             "$subjek rdfs:label ?label",
             "$subjek schema:name ?name",
             "$subjek schema:description ?description",
-            "$subjek mv:cerita ?story",
             "$subjek geo:lat ?lat",
             "$subjek geo:long ?long",
             "$subjek schema:address ?address",
