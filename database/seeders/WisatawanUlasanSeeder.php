@@ -56,3 +56,4 @@ class WisatawanUlasanSeeder extends Seeder
         ],
         'rekreasi-air' => [
             'Kolamnya bersih dan anak-anak senang. Datang pagi supaya tidak terlalu ramai.',
+            'Seru untuk liburan keluarga. Ruang ganti bisa diperbanyak.',
