@@ -82,3 +82,4 @@ return new class extends Migration
     {
         $bawaan = $default ? ' DEFAULT NULL' : '';
         $peran = self::PERAN;
+        $isiBuat = self::ISI_BUAT;
