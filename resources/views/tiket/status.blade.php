@@ -107,7 +107,7 @@
                     <p>Lanjutkan pembayaran melalui aplikasi {{ $p['metode'] === 'ewallet' ? 'dompet digital' : 'bank penerbit kartu' }} sesuai nominal pesanan.</p>
                 @endif
 
-                <div class="p-pesan p-pesan--info" style="margin-top:20px">Mode prototipe: klik tombol simulasi di bawah untuk menerbitkan e-tiket secara langsung.</div>
+                @unless ($midtrans)
 
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
                     <form method="post" action="{{ route('pesanan.simulasi', $p['kode']) }}">
