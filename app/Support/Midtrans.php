@@ -50,3 +50,4 @@ class Midtrans
     {
         return config('services.midtrans.client_key');
     }
+
