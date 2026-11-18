@@ -25,3 +25,4 @@ return new class extends Migration
 
     public function down(): void
     {
+        DB::connection($this->connection)->statement('DROP INDEX IF EXISTS ux_ulasan_pengguna_tempat');
