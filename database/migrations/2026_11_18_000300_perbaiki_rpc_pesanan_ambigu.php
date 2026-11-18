@@ -61,3 +61,4 @@ return new class extends Migration
             END IF;
             INSERT INTO pembayaran (id_pesanan, metode, jumlah, referensi)
             VALUES (p.id_pesanan, p.metode, p.total, p_referensi);
+            UPDATE pesanan SET status = 'lunas', updated_at = now() WHERE id_pesanan = p.id_pesanan;
