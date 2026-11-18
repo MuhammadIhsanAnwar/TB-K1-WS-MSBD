@@ -208,6 +208,7 @@
         <section class="mv-seksi-detail" id="ulasan" aria-labelledby="judul-ulasan">
             <h2 id="judul-ulasan">Ulasan pengunjung</h2>
             @if ($ratingTempat['jumlah'])
+                <p class="mv-rating-ringkas">
             @if ($ulasan)
                 <div class="ulasan-daftar">
                     @foreach ($ulasan as $ul)
