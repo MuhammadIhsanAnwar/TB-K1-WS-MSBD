@@ -43,3 +43,4 @@
                 <figure class="sampul-atur__pratinjau">
                     <img src="{{ $pratinjau }}" alt="" width="640" height="360" data-pratinjau @unless ($pratinjau) hidden @endunless>
                     <div class="p-kosong" data-kosong @if ($pratinjau) hidden @endif>Slot kosong</div>
+                    <figcaption data-sumber>
