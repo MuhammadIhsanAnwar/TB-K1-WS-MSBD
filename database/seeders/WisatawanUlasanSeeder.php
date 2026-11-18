@@ -111,3 +111,4 @@ class WisatawanUlasanSeeder extends Seeder
         for ($i = count($daftar) - 1; $i > 0; $i--) {
             $j = mt_rand(0, $i);
             [$daftar[$i], $daftar[$j]] = [$daftar[$j], $daftar[$i]];
+        }
