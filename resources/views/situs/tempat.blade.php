@@ -234,6 +234,7 @@
                     @csrf
                     @if ($ulasanSaya)
                         <p class="kecil redup" style="margin-bottom:10px">Kamu sudah mengulas tempat ini. Mengirim lagi akan memperbarui ulasanmu, bukan menambah ulasan baru.</p>
+                    @endif
                     <fieldset class="isian">
                         <legend>Penilaian kunjunganmu</legend>
                         <div class="pilih-banyak" style="margin-top:8px">
