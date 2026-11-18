@@ -157,3 +157,4 @@ if (bayar) {
                     if (!(await cekStatus())) {
                         tulisKabar('Pembayaran sedang dikonfirmasi Midtrans. Halaman ini diperbarui otomatis.');
                         mulaiPantau();
+                    }
