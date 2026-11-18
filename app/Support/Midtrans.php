@@ -167,3 +167,4 @@ class Midtrans
         try {
             self::http()->post(self::urlApi()."/v2/{$kode}/expire");
         } catch (Throwable $e) {
+            Log::info("Midtrans: transaksi {$kode} tidak bisa dihentikan: ".$e->getMessage());
