@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Support\Katalog;
+use App\Support\Midtrans;
 use App\Support\Penyimpanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
