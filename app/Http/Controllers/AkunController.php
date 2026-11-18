@@ -641,7 +641,7 @@ class AkunController extends Controller
         $u = $this->pengguna($request);
         $hasil = Penyimpanan::tulisUlasan($data + ['tempat' => $slug, 'id_pengguna' => (int) $u['id'], 'email' => $u['email'], 'nama' => $u['nama']]);
 
-        return redirect()->to(route('tempat', $slug).'#ulasan')->with('pesan', 'Terima kasih. Ulasanmu langsung ditayangkan.');
+        return redirect()->to(route('tempat', $slug).'#ulasan')->with('pesan', ! empty($hasil['diperbarui'])
     }
 
     public function rencanaSaya(Request $request)
