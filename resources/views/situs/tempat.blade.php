@@ -212,6 +212,7 @@
                     <x-bintang :n="(int) round($ratingTempat['rata'])" />
                     <b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> dari 5, dari {{ $ratingTempat['jumlah'] }} ulasan
                 </p>
+            @endif
             @if ($ulasan)
                 <div class="ulasan-daftar">
                     @foreach ($ulasan as $ul)
