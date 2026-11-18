@@ -18,3 +18,4 @@ class SampulBeranda
     public const KUNCI = 'sampul_beranda';
 
     public const SLOT = 4;
+
