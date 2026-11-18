@@ -73,3 +73,4 @@
     </div>
     <div class="sampul-atur__aksi">
         <button class="p-btn p-btn--utama" type="submit">Simpan sampul</button>
+        <button class="p-btn" type="submit" name="otomatis" value="1" formnovalidate>Kembalikan ke otomatis</button>
