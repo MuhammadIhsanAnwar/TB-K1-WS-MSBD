@@ -50,3 +50,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Cocok untuk jalan santai dan berfoto. Bawa air minum sendiri.',
         ],
         'belanja' => [
+            'Tenant-nya lengkap dan mudah dijangkau. Akhir pekan cukup ramai.',
