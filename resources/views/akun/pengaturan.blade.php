@@ -46,6 +46,7 @@
                     <a href="{{ route('tiket.saya') }}"><b>{{ $jumlah['pesanan'] }}</b><span>pesanan tiket</span></a>
                     <a href="{{ route('ulasan.saya') }}"><b>{{ $jumlah['ulasan'] }}</b><span>ulasan</span></a>
                     <a href="{{ route('rencana.saya') }}"><b>{{ $jumlah['rencana'] }}</b><span>rencana</span></a>
+                </div>
             @endif
             <input id="foto_profil" type="file" name="foto_profil" accept="image/*" @error('foto_profil') aria-invalid="true" @enderror>
             <p class="isian__bantuan">JPG, PNG, GIF, atau WEBP; maksimal 2 MB.</p>
