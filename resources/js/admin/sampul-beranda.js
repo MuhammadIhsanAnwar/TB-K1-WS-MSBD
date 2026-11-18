@@ -32,3 +32,4 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         urlUnggah = null;
         const berkas = unggah.files?.[0];
         if (!berkas) return dariTempat();
+        urlUnggah = URL.createObjectURL(berkas);
