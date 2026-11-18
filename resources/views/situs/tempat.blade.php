@@ -37,6 +37,7 @@
 @section('deskripsi', $t['ringkas'])
 @if ($t['foto']) @section('foto-kaki', $t['foto']) @endif
 
+@php
 @push('kepala')
     <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
