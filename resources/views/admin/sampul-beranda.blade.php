@@ -27,3 +27,4 @@
 @endif
 
 <form method="post" action="{{ route('admin.beranda') }}" enctype="multipart/form-data" data-sampul-atur>
+    @csrf
