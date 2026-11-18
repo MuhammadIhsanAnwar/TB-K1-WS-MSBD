@@ -34,6 +34,7 @@ class Midtrans
         'qris' => 'qris',
         'bank_transfer' => 'va', 'echannel' => 'va', 'permata' => 'va',
         'gopay' => 'ewallet', 'shopeepay' => 'ewallet',
+        'credit_card' => 'kartu',
     ];
 
     /** Jendela pembayaran ditutup sebelum batas bayar, supaya pelunasan tidak tercatat setelah pesanan kedaluwarsa. */
