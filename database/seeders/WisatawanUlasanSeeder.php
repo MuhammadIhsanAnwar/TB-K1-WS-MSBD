@@ -16,3 +16,4 @@ use RuntimeException;
  * pengunjung sungguhan. Ulasan ditulis lewat Penyimpanan::tulisUlasan (Supabase REST), jadi berlaku
  * aturan satu akun satu ulasan per tempat dan trigger ringkasan_ulasan menghitung rating. Aman
  * dijalankan berulang: akun yang sudah ada dipakai ulang dan ulasannya hanya diperbarui.
+ *
