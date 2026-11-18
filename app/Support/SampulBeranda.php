@@ -45,3 +45,4 @@ class SampulBeranda
             // DB 1 tidak terjangkau: beranda tetap terbuka dengan sampul otomatis, dicoba lagi semenit kemudian
             Log::warning('Sampul beranda tidak bisa dibaca dari DB 1: '.$e->getMessage());
             $slot = [];
+            Cache::put(self::CACHE, $slot, now()->addMinute());
