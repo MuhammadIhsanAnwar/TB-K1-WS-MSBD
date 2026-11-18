@@ -90,3 +90,4 @@ class SampulBeranda
             'berkas' => $s['foto'] ?? ($s['tempat']['foto'] ?: self::CADANGAN),
             'nama' => $s['tempat']['nama'],
             'sub' => trim(($s['tempat']['kecamatan'] ?? '').(! empty($s['tempat']['ringkas']) ? ' · '.$s['tempat']['ringkas'] : '')),
+            'alt' => $s['tempat']['nama'],
