@@ -58,3 +58,4 @@ const SYARAT = {
     simbol: (s) => /[^A-Za-z\d]/.test(s),
 };
 
+function aturStatusUlang(teks) {
