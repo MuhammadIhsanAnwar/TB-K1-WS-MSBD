@@ -108,3 +108,4 @@ if (bayar) {
     const formBayar = bayar.querySelector('[data-form-bayar]');
     const tombolBayar = formBayar.querySelector('button');
     const kabar = bayar.querySelector('[data-kabar-bayar]');
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
