@@ -8,6 +8,7 @@ use App\Support\Penyimpanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TiketController extends Controller
 {
