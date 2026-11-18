@@ -49,3 +49,4 @@ return new class extends Migration
         BEGIN
             SELECT * INTO p FROM pesanan WHERE kode = p_kode FOR UPDATE;
             IF p.id_pesanan IS NULL THEN
+                RAISE EXCEPTION 'Pesanan % tidak ditemukan', p_kode;
