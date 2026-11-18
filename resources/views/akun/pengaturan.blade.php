@@ -3,6 +3,7 @@
 @section('tanpa-kaki', '1')
 
 @php
+    $punyaFoto = ! empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil']));
 @section('isi')
 <div class="alat">
     <div class="alat__judul">
