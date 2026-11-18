@@ -111,3 +111,4 @@ class Midtrans
     public static function status(string $kode): ?array
     {
         $jawab = self::http()->get(self::urlApi()."/v2/{$kode}/status");
+        $data = $jawab->json() ?? [];
