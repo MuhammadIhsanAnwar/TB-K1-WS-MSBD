@@ -22,3 +22,4 @@ class SampulBerandaController extends Controller
                 ->map(fn ($i) => SampulBeranda::pengaturan()[$i] ?? ['slug' => null, 'foto' => null])
                 ->map(fn ($s) => $s + ['fotoAda' => SampulBeranda::fotoAda($s['foto'])])
                 ->all(),
+            'pilihanTempat' => collect($tempat)->sortBy('nama')->values()->all(),
