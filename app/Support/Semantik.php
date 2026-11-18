@@ -58,6 +58,7 @@ class Semantik
                     $n['aggregateRating'] = [
                         '@type' => 'AggregateRating',
                         'ratingValue' => round((float) $rating['rata'], 1),
+                        'reviewCount' => (int) $rating['jumlah'],
                 return ['@context' => 'https://schema.org'] + $n;
             }
         }
