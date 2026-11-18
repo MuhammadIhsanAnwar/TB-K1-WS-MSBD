@@ -149,3 +149,4 @@ if (bayar) {
             if (!data.token) {
                 location.href = data.url || location.href;
                 return;
+            }
