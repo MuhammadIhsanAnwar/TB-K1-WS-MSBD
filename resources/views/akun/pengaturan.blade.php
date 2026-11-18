@@ -86,6 +86,7 @@
             </section>
 
             <section class="p-panel" aria-labelledby="judul-keamanan">
+                <header><h2 id="judul-keamanan">Keamanan</h2></header>
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
