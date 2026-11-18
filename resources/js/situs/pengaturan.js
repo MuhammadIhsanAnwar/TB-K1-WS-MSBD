@@ -79,3 +79,4 @@ function periksaSandi() {
         aturStatusUlang(teksStatusUlang);
         return;
     }
+    const sama = ulang.value === nilai;
