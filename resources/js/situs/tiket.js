@@ -142,3 +142,4 @@ if (bayar) {
     formBayar.addEventListener('submit', async (e) => {
         if (!window.snap) return;
         e.preventDefault();
+        tombolBayar.disabled = true;
