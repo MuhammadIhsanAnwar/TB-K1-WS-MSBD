@@ -5,3 +5,4 @@ Terima kasih sudah mendaftar di MedanVisit. Konfirmasi alamat emailmu untuk meng
 {!! $url !!}
 
 Tautan ini berlaku selama 24 jam.
+
