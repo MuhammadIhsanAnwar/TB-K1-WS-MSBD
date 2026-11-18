@@ -219,6 +219,7 @@ class TiketController extends Controller
     private function sinkronAman(string $kode): ?array
     {
         try {
+            return Midtrans::sinkron($kode);
     }
 
     public function daftar(Request $request)
