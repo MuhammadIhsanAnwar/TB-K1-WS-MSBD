@@ -40,3 +40,4 @@ class Midtrans
     {
         return (bool) config('services.midtrans.is_production');
     }
+
