@@ -106,6 +106,7 @@ final class PesanLayanan
         // mailer bawaan "failover" jatuh ke "log" saat SMTP gagal, sehingga email tidak terkirim tetapi
         // tampak berhasil. Balasan dikirim langsung lewat SMTP supaya kegagalan tercatat sebagai "gagal".
         $mailer = config('mail.default') === 'failover' ? 'smtp' : config('mail.default');
+
         try {
             Mail::to($pesan['email_pengguna'])->send(new BalasanPesanAdmin(
                 idPesan: $id,
