@@ -8,3 +8,4 @@ Tautan ini berlaku selama 60 menit.
 
 Jika kamu tidak meminta pengaturan ulang kata sandi, abaikan email ini. Kata sandimu tetap aman dan tidak berubah.
 
+MedanVisit, Kota Medan
