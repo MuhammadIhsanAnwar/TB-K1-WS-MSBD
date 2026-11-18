@@ -34,3 +34,4 @@ class SampulBerandaController extends Controller
             return $this->tulis($request, [], [], 'Sampul beranda kembali otomatis: empat tempat pertama yang punya foto.');
         }
 
+        $request->validate([
