@@ -2,6 +2,7 @@
 @section('judul', 'Pengaturan akun')
 @section('tanpa-kaki', '1')
 
+@php
 @section('isi')
 <div class="alat">
     <div class="alat__judul">
