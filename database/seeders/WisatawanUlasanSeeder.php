@@ -58,3 +58,4 @@ class WisatawanUlasanSeeder extends Seeder
             'Kolamnya bersih dan anak-anak senang. Datang pagi supaya tidak terlalu ramai.',
             'Seru untuk liburan keluarga. Ruang ganti bisa diperbanyak.',
             'Airnya jernih dan petugasnya sigap mengawasi.',
+        ],
