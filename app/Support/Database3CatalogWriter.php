@@ -127,6 +127,7 @@ final class Database3CatalogWriter
             "WHERE { FILTER NOT EXISTS { $subjek mv:keteranganJam ?jamLama . FILTER (STR(?jamLama) = $jamBaru) }\n".
             "OPTIONAL { $subjek mv:jamBuka ?buka } OPTIONAL { $subjek mv:jamTutup ?tutup } }"];
 
+        $operasi[] = 'DELETE { '.implode(" .\n", $delete)." }\nINSERT { ".implode(" .\n", $insert)." }\nWHERE { ".implode(" .\n", $where).' }';
     }
 
     public static function delete(string $slug): void
