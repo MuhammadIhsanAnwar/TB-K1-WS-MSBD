@@ -123,3 +123,4 @@ if (bayar) {
     };
     // true kalau status pesanan sudah berubah (lunas, kedaluwarsa, dibatalkan): halaman dimuat ulang
     const cekStatus = async () => {
+        try {
