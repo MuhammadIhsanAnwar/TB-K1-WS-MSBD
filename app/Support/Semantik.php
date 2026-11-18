@@ -47,6 +47,7 @@ class Semantik
 
     /** JSON-LD satu tempat, untuk disematkan di halaman detail. */
     /**
+     * JSON-LD schema.org satu tempat. Rating (dari ulasan di DB 2) ditambahkan sebagai
     {
         foreach (self::jsonld()['@graph'] as $n) {
             if ($n['@id'] === self::BASIS.'id/'.$t['slug']) {
