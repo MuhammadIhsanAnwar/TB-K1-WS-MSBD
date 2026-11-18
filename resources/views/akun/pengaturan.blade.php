@@ -76,6 +76,7 @@
                         <input id="tanggal_lahir" type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $user['tanggal_lahir'] ?? '') }}" max="{{ now()->subDay()->toDateString() }}" autocomplete="bday" required @error('tanggal_lahir') aria-invalid="true" @enderror>
                         @error('tanggal_lahir')<p class="isian__galat">{{ $message }}</p>@enderror
                     </div>
+                    <div class="isian">
             </div>
             <div class="isian">
                 <label for="password_confirmation">Ulangi password baru</label>
