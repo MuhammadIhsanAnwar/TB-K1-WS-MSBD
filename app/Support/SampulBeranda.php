@@ -88,3 +88,4 @@ class SampulBeranda
         return $pilihan->map(fn ($s) => [
             'slug' => $s['tempat']['slug'],
             'berkas' => $s['foto'] ?? ($s['tempat']['foto'] ?: self::CADANGAN),
+            'nama' => $s['tempat']['nama'],
