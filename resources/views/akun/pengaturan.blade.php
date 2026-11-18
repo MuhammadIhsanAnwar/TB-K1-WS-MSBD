@@ -6,6 +6,7 @@
     $punyaFoto = ! empty($user['foto_profil']) && is_file(public_path('storage/'.$user['foto_profil']));
     $urlFoto = $punyaFoto ? asset('storage/'.$user['foto_profil']).'?v='.filemtime(public_path('storage/'.$user['foto_profil'])) : null;
     $inisial = mb_strtoupper(mb_substr($user['name'] ?? '?', 0, 1));
+    $bergabung = ! empty($user['created_at']) ? \Illuminate\Support\Carbon::parse($user['created_at'])->locale('id')->translatedFormat('j F Y') : null;
 @section('isi')
 <div class="alat">
     <div class="alat__judul">
