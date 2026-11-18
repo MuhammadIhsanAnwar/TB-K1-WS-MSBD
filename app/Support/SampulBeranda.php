@@ -55,3 +55,4 @@ class SampulBeranda
     {
         (new SupabaseApi)->simpanPengaturanSitus(self::KUNCI, array_values($slot), $idPengguna);
         Cache::forget(self::CACHE);
+    }
