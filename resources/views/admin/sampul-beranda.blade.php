@@ -84,3 +84,4 @@
     </header>
     <ol class="sampul-atur__urutan">
         @foreach ($tampilSekarang as $n => $h)
+            <li>
