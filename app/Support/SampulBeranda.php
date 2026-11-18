@@ -34,3 +34,4 @@ class SampulBeranda
             return $tersimpan;
         }
 
+        try {
