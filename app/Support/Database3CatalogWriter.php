@@ -123,6 +123,7 @@ final class Database3CatalogWriter
         $jamBaru = json_encode(trim($data['jam']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         $rentang = self::rentangJam($data['jam']);
         $operasi = ["DELETE { $subjek mv:jamBuka ?buka . $subjek mv:jamTutup ?tutup }\n".
+            ($rentang ? "INSERT { $subjek mv:jamBuka \"{$rentang[0]}\"^^xsd:time . $subjek mv:jamTutup \"{$rentang[1]}\"^^xsd:time }\n" : '').
     }
 
     public static function delete(string $slug): void
