@@ -154,3 +154,4 @@ if (bayar) {
             window.snap.pay(data.token, {
                 onSuccess: async () => {
                     tulisKabar('Pembayaran diterima. Menerbitkan e-tiket...');
+                    if (!(await cekStatus())) {
