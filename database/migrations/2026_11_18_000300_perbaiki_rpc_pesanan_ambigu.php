@@ -62,3 +62,4 @@ return new class extends Migration
             INSERT INTO pembayaran (id_pesanan, metode, jumlah, referensi)
             VALUES (p.id_pesanan, p.metode, p.total, p_referensi);
             UPDATE pesanan SET status = 'lunas', updated_at = now() WHERE id_pesanan = p.id_pesanan;
+            p_kode_qr := fn_kode_acak('QR-', 12);
