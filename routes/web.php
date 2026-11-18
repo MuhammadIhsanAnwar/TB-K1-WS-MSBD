@@ -126,3 +126,4 @@ Route::controller(AdminController::class)->prefix('admin')->name('admin.')->grou
 });
 
 Route::controller(SampulBerandaController::class)->middleware('peran:superadmin')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/beranda', 'tampil')->name('beranda');
