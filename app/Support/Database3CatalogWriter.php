@@ -164,6 +164,7 @@ final class Database3CatalogWriter
             if ((int) $x[3] * 60 + (int) $x[4] === $tutup) {
                 $akhir = $jam((int) $x[3], (int) $x[4]);
             }
+        }
     }
 
     public static function delete(string $slug): void
