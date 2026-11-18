@@ -97,3 +97,4 @@ class SampulBerandaController extends Controller
             if (($jalur = SampulBeranda::fotoAda($s['foto'])) && ! in_array($jalur, $dipakai, true)) {
                 File::delete(public_path($jalur));
             }
+        }
