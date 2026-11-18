@@ -387,6 +387,7 @@ class SupabaseApi
             ->post($this->url('pengaturan_situs').'?on_conflict=kunci', [
                 'kunci' => $kunci,
                 'nilai' => $nilai,
+                'diubah_oleh' => $idPengguna,
 
     public function ping(string $table): void
     {
