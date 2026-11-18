@@ -57,3 +57,4 @@ const SYARAT = {
     angka: (s) => /\d/.test(s),
     simbol: (s) => /[^A-Za-z\d]/.test(s),
 };
+
