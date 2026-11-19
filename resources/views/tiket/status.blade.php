@@ -61,7 +61,10 @@
                 <p class="hitung-mundur nums" data-batas="{{ $p['batas_bayar'] }}" role="timer" aria-live="off" style="margin:12px 0 20px">15:00</p>
 
                 @if ($midtrans)
-                    <div class="bayar-midtrans" data-bayar-midtrans data-cek-url="{{ route('pesanan.cek', $p['kode']) }}">
+                    <div class="bayar-midtrans"
+                    data-bayar-midtrans
+                    data-cek-url="{{ route('pesanan.cek', $p['kode']) }}"
+                    data-status-url="{{ route('pesanan.status-lokal', $p['kode']) }}">
                         <p>Tekan <b>Bayar</b>, lalu pilih cara bayar di jendela Midtrans: QRIS, virtual account bank, dompet digital, atau kartu. Nominalnya {{ Katalog::rupiah($p['total']) }}. Untuk virtual account, nomornya muncul setelah bank dipilih.</p>
                         @unless (Midtrans::produksi())
                             <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
