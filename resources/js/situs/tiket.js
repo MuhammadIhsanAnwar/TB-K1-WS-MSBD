@@ -102,71 +102,116 @@ document.querySelectorAll('[data-qr]').forEach(async (el) => {
 });
 
 // ---- pembayaran Midtrans Snap ----
-// Tanpa snap.js (diblokir atau gagal dimuat) form dikirim biasa dan server mengalihkan ke halaman Midtrans.
+// Tanpa snap.js, form dikirim biasa dan server mengalihkan ke halaman Midtrans.
 const bayar = document.querySelector('[data-bayar-midtrans]');
+
 if (bayar) {
     const formBayar = bayar.querySelector('[data-form-bayar]');
     const tombolBayar = formBayar.querySelector('button');
     const kabar = bayar.querySelector('[data-kabar-bayar]');
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
     let pantau = null;
+    let sedangCek = false;
 
     const tulisKabar = (teks) => {
         kabar.hidden = !teks;
         kabar.textContent = teks;
     };
+
     const kirim = async (url) => {
-        const r = await fetch(url, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
+        const r = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrf,
+                Accept: 'application/json',
+            },
+        });
+
         const data = await r.json().catch(() => ({}));
-        if (!r.ok) throw new Error(data.pesan || 'Permintaan ke server gagal. Coba lagi.');
+
+        if (!r.ok) {
+            throw new Error(data.pesan || 'Permintaan ke server gagal. Coba lagi.');
+        }
+
         return data;
     };
-    // true kalau status pesanan sudah berubah (lunas, kedaluwarsa, dibatalkan): halaman dimuat ulang
-    const cekStatus = async () => {
+
+    const cekStatusLokal = async () => {
+        if (sedangCek || document.hidden) return;
+
+        sedangCek = true;
+
         try {
-            const data = await kirim(bayar.dataset.cekUrl);
+            const r = await fetch(bayar.dataset.statusUrl, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                },
+                cache: 'no-store',
+            });
+
+            if (!r.ok) return;
+
+            const data = await r.json();
+
             if (data.status && data.status !== 'menunggu') {
+                clearInterval(pantau);
+                pantau = null;
                 location.reload();
-                return true;
             }
         } catch {
-            /* dicoba lagi pada putaran berikutnya */
+            // Pengecekan dilanjutkan pada interval berikutnya.
+        } finally {
+            sedangCek = false;
         }
-        return false;
     };
+
     const mulaiPantau = () => {
-    if (pantau) return;
-    pantau = setInterval(() => {
-        if (!document.hidden) cekStatus();
-    }, 2000);
-};
+        if (pantau) return;
+
+        cekStatusLokal();
+
+        pantau = setInterval(() => {
+            cekStatusLokal();
+        }, 1000);
+    };
 
     formBayar.addEventListener('submit', async (e) => {
         if (!window.snap) return;
+
         e.preventDefault();
         tombolBayar.disabled = true;
         tulisKabar('Membuka jendela pembayaran...');
+
         try {
             const data = await kirim(formBayar.action);
+
             if (!data.token) {
                 location.href = data.url || location.href;
                 return;
             }
+
             tulisKabar('');
+
             window.snap.pay(data.token, {
-                onSuccess: async () => {
+                onSuccess: () => {
                     tulisKabar('Pembayaran diterima. Menerbitkan e-tiket...');
-                    if (!(await cekStatus())) {
-                        tulisKabar('Pembayaran sedang dikonfirmasi Midtrans. Halaman ini diperbarui otomatis.');
-                        mulaiPantau();
-                    }
-                },
-                onPending: () => {
-                    tulisKabar('Selesaikan pembayaran sesuai petunjuk Midtrans. Halaman ini diperbarui otomatis setelah pembayaran diterima.');
                     mulaiPantau();
                 },
-                onError: () => tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.'),
-                onClose: () => tulisKabar('Jendela pembayaran ditutup. Tekan tombol Bayar untuk melanjutkan.'),
+
+                onPending: () => {
+                    tulisKabar('Pembayaran sedang menunggu konfirmasi. Halaman akan diperbarui otomatis.');
+                    mulaiPantau();
+                },
+
+                onError: () => {
+                    tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.');
+                },
+
+                onClose: () => {
+                    tulisKabar('Jendela pembayaran ditutup. Jika kamu sudah membayar, tunggu konfirmasi.');
+                },
             });
         } catch (err) {
             tulisKabar(err.message);
@@ -175,4 +220,3 @@ if (bayar) {
         }
     });
 }
-

@@ -185,6 +185,16 @@ class TiketController extends Controller
         return redirect()->route('pesanan', $kode)->with(...$pesan);
     }
 
+    /** Cek status pesanan langsung dari database tanpa menghubungi API Midtrans. */
+    public function statusLokal(Request $request, string $kode)
+    {
+        $p = $this->milik($request, $kode);
+
+        return response()
+            ->json(['status' => $p['status']])
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate');
+    }
+
     /** Prototipe tanpa payment gateway: hanya tersedia selama Midtrans belum dikonfigurasi. */
     public function simulasi(Request $request, string $kode)
     {
