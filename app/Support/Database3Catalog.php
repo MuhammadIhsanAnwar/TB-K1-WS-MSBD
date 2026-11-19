@@ -92,7 +92,7 @@ final class Database3Catalog
                     'tiket' => self::offers($properties, $bySubject),
                     'harga_contoh' => self::boolean($properties, 'mv:hargaContoh'),
                     'koordinat_perkiraan' => self::boolean($properties, 'mv:koordinatPerkiraan'),
-                    'jam' => self::first($properties, 'mv:keteranganJam', ''),
+                    'jam' => self::formatJam(self::first($properties, 'mv:keteranganJam', '')),
                     'jam_buka' => self::timeRange($properties),
                     'jam_menit' => self::minuteRange($properties),
                     'jam_contoh' => self::boolean($properties, 'mv:jamContoh'),
@@ -205,6 +205,19 @@ final class Database3Catalog
     {
         return $properties[$key][0] ?? $default;
     }
+
+    private static function formatJam(mixed $jam): string
+{
+    if (! is_string($jam) || $jam === '') {
+        return '';
+    }
+
+    return preg_replace_callback(
+        '/\b(\d{1,2})[.](\d{2})\b/u',
+        fn ($m) => sprintf('%02d:%s', (int) $m[1], $m[2]),
+        $jam
+    );
+}
 
     private static function boolean(array $properties, string $key): bool
     {
