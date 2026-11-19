@@ -30,12 +30,7 @@ class TiketController extends Controller
     private function milik(Request $request, string $kode): array
     {
         $p = Penyimpanan::cariPesanan($kode);
-
-        abort_unless(
-            $p && $p['id_pengguna'] === (int) $request->session()->get('pengguna.id'),
-            404
-        );
-
+        abort_unless($p && $p['id_pengguna'] === (int) $request->session()->get('pengguna.id'), 404);
         if ($p['status'] === 'menunggu' && now()->greaterThan($p['batas_bayar'])) {
             $p = Penyimpanan::ubahPesanan($kode, ['status' => 'kedaluwarsa']);
         }
@@ -48,29 +43,16 @@ class TiketController extends Controller
         $t = $this->tempatBertiket($slug);
         $lama = $request->session()->get('pilihan');
 
-        return view('tiket.pilih', [
-            't' => $t,
-            'lama' => ($lama['tempat'] ?? null) === $slug ? $lama : null,
-        ]);
+        return view('tiket.pilih', ['t' => $t, 'lama' => ($lama['tempat'] ?? null) === $slug ? $lama : null]);
     }
 
     public function simpanPilihan(Request $request, string $slug)
     {
         $t = $this->tempatBertiket($slug);
-
-        $aturan = [
-            'tanggal' => [
-                'required',
-                'date',
-                'after_or_equal:today',
-                'before_or_equal:'.now()->addDays(60)->toDateString(),
-            ],
-        ];
-
+        $aturan = ['tanggal' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:'.now()->addDays(60)->toDateString()]];
         foreach (array_keys($t['tiket']) as $i => $jenis) {
             $aturan["jumlah.$i"] = ['required', 'integer', 'between:0,10'];
         }
-
         $data = $request->validate($aturan, [
             'tanggal.required' => 'Pilih tanggal kunjungan.',
             'tanggal.after_or_equal' => 'Tanggal kunjungan tidak boleh sebelum hari ini.',
@@ -79,31 +61,17 @@ class TiketController extends Controller
 
         $item = [];
         $i = 0;
-
         foreach ($t['tiket'] as $jenis => $harga) {
             $n = (int) $data['jumlah'][$i++];
-
             if ($n > 0) {
-                $item[] = [
-                    'jenis' => $jenis,
-                    'harga' => $harga,
-                    'jumlah' => $n,
-                    'subtotal' => $harga * $n,
-                ];
+                $item[] = ['jenis' => $jenis, 'harga' => $harga, 'jumlah' => $n, 'subtotal' => $harga * $n];
             }
         }
-
         if (! $item) {
-            return back()->withInput()->withErrors([
-                'jumlah' => 'Pilih minimal satu tiket.',
-            ]);
+            return back()->withInput()->withErrors(['jumlah' => 'Pilih minimal satu tiket.']);
         }
 
-        $request->session()->put('pilihan', [
-            'tempat' => $slug,
-            'tanggal' => $data['tanggal'],
-            'item' => $item,
-        ]);
+        $request->session()->put('pilihan', ['tempat' => $slug, 'tanggal' => $data['tanggal'], 'item' => $item]);
 
         return redirect()->route('checkout');
     }
@@ -111,7 +79,6 @@ class TiketController extends Controller
     public function checkout(Request $request)
     {
         $pilihan = $request->session()->get('pilihan');
-
         if (! $pilihan) {
             return redirect()->route('beranda');
         }
@@ -129,12 +96,12 @@ class TiketController extends Controller
     {
         $pilihan = $request->session()->get('pilihan');
         abort_unless($pilihan, 419);
-
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:80'],
             'email' => ['required', 'email'],
             'hp' => ['required', 'regex:/^(\+62|0)8[0-9]{7,11}$/'],
-            'metode' => ['required', 'in:'.implode(',', array_keys(self::METODE))],
+            // dengan Midtrans, cara bayar dipilih di jendela pembayaran, bukan di checkout
+            'metode' => [Midtrans::aktif() ? 'nullable' : 'required', 'in:'.implode(',', array_keys(self::METODE))],
             'setuju' => ['accepted'],
         ], [
             'nama.required' => 'Isi nama pemesan.',
@@ -146,18 +113,14 @@ class TiketController extends Controller
 
         $p = Penyimpanan::buatPesanan([
             'id_pengguna' => (int) $request->session()->get('pengguna.id'),
-            'pemesan' => [
-                'nama' => $data['nama'],
-                'email' => $data['email'],
-                'hp' => $data['hp'],
-            ],
+            'pemesan' => ['nama' => $data['nama'], 'email' => $data['email'], 'hp' => $data['hp']],
             'tempat' => $pilihan['tempat'],
             'tanggal' => $pilihan['tanggal'],
             'item' => $pilihan['item'],
             'total' => array_sum(array_column($pilihan['item'], 'subtotal')),
-            'metode' => $data['metode'],
+            // nilai sementara (kolom wajib diisi); diganti cara bayar yang dipilih di Midtrans saat sinkron
+            'metode' => $data['metode'] ?? 'qris',
         ]);
-
         $request->session()->forget('pilihan');
 
         return redirect()->route('pesanan', $p['kode']);
@@ -166,67 +129,31 @@ class TiketController extends Controller
     public function status(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
-
-        if (
-            $p['status'] === 'menunggu'
-            && Midtrans::aktif()
-            && $request->has('transaction_status')
-        ) {
+        // kembali dari halaman Midtrans (mode tanpa JavaScript): langsung tanyakan statusnya
+        if ($p['status'] === 'menunggu' && Midtrans::aktif() && $request->has('transaction_status')) {
             $p = $this->sinkronAman($kode) ?? $p;
         }
 
-        $qris = $p['status'] === 'menunggu' && $p['metode'] === 'qris'
-            ? Midtrans::qrisTersimpan($kode)
-            : null;
-
-        return view('tiket.status', [
-            'p' => $p,
-            't' => Katalog::get($p['tempat']),
-            'metode' => self::METODE,
-            'qris' => $qris,
-        ]);
+        return view('tiket.status', ['p' => $p, 't' => Katalog::get($p['tempat']), 'metode' => self::METODE]);
     }
 
-    /** Membuat QRIS Core API atau membuka pembayaran Snap untuk metode lainnya. */
+    /** Buka jendela pembayaran Midtrans: token Snap untuk JavaScript, atau alihkan ke halaman Midtrans. */
     public function bayarMidtrans(Request $request, string $kode)
     {
         abort_unless(Midtrans::aktif(), 404);
-
         $p = $this->milik($request, $kode);
-
         if ($p['status'] !== 'menunggu') {
             return $request->expectsJson()
-                ? response()->json([
-                    'status' => $p['status'],
-                    'url' => route('pesanan', $kode),
-                ])
+                ? response()->json(['status' => $p['status'], 'url' => route('pesanan', $kode)])
                 : redirect()->route('pesanan', $kode);
         }
 
         try {
-            if ($p['metode'] === 'qris') {
-                $qris = Midtrans::qris(
-                    $p,
-                    Katalog::get($p['tempat'])['nama'] ?? 'MedanVisit'
-                );
-
-                return response()->json([
-                    'qris' => true,
-                    'qr_image_url' => route('pesanan.qris.gambar', $kode),
-                    'qr_code_image_url' => $qris['qr_image_url'],
-                ]);
-            }
-
-            $snap = Midtrans::snap(
-                $p,
-                Katalog::get($p['tempat'])['nama'] ?? 'MedanVisit'
-            );
+            $snap = Midtrans::snap($p, Katalog::get($p['tempat'])['nama'] ?? 'MedanVisit');
         } catch (Throwable $e) {
             Log::warning("Midtrans: token pembayaran {$kode} gagal dibuat: ".$e->getMessage());
-
-            $pesan = $e instanceof \RuntimeException
-                ? $e->getMessage()
-                : 'Jendela pembayaran belum bisa dibuka. Coba lagi sebentar lagi.';
+            // RuntimeException dari Midtrans::snap berisi pesan untuk pembeli; galat jaringan tidak
+            $pesan = $e instanceof \RuntimeException ? $e->getMessage() : 'Jendela pembayaran belum bisa dibuka. Coba lagi sebentar lagi.';
 
             return $request->expectsJson()
                 ? response()->json(['pesan' => $pesan], 422)
@@ -238,47 +165,17 @@ class TiketController extends Controller
             : redirect()->away($snap['redirect_url']);
     }
 
-    /** Mengirim gambar QRIS dari Midtrans kepada pemilik pesanan. */
-    public function gambarQris(Request $request, string $kode)
-    {
-        $p = $this->milik($request, $kode);
-
-        abort_unless(
-            $p['status'] === 'menunggu' && $p['metode'] === 'qris',
-            404
-        );
-
-        try {
-            $gambar = Midtrans::gambarQris($kode);
-
-            return response($gambar['isi'], 200)
-                ->header('Content-Type', $gambar['tipe'])
-                ->header('Cache-Control', 'private, no-store');
-        } catch (Throwable $e) {
-            Log::warning("Midtrans: gambar QRIS {$kode} gagal diambil: ".$e->getMessage());
-
-            abort(503, 'Gambar QRIS belum tersedia. Coba muat ulang halaman pembayaran.');
-        }
-    }
-
+    /** Tombol "cek status" dan callback jendela pembayaran: samakan status dengan Midtrans. */
     public function cekPembayaran(Request $request, string $kode)
     {
         abort_unless(Midtrans::aktif(), 404);
-
         $p = $this->milik($request, $kode);
-        $hasil = $p['status'] === 'menunggu'
-            ? $this->sinkronAman($kode)
-            : $p;
-
+        $hasil = $p['status'] === 'menunggu' ? $this->sinkronAman($kode) : $p;
         $status = $hasil['status'] ?? $p['status'];
 
         if ($request->expectsJson()) {
-            return response()->json([
-                'status' => $status,
-                'tersambung' => $hasil !== null,
-            ]);
+            return response()->json(['status' => $status, 'tersambung' => $hasil !== null]);
         }
-
         $pesan = match (true) {
             $hasil === null => ['galat', 'Status pembayaran belum bisa dicek. Coba lagi sebentar lagi.'],
             $status === 'menunggu' => ['pesan', 'Pembayaran belum diterima Midtrans. Kalau sudah membayar, tunggu sebentar lalu cek lagi.'],
@@ -288,6 +185,7 @@ class TiketController extends Controller
         return redirect()->route('pesanan', $kode)->with(...$pesan);
     }
 
+    /** Cek status pesanan langsung dari database tanpa menghubungi API Midtrans. */
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
@@ -297,17 +195,13 @@ class TiketController extends Controller
             ->header('Cache-Control', 'no-store, no-cache, must-revalidate');
     }
 
+    /** Prototipe tanpa payment gateway: hanya tersedia selama Midtrans belum dikonfigurasi. */
     public function simulasi(Request $request, string $kode)
     {
         abort_if(Midtrans::aktif(), 404);
-
         $p = $this->milik($request, $kode);
-
         if ($p['status'] === 'menunggu') {
-            Penyimpanan::ubahPesanan($kode, [
-                'status' => 'lunas',
-                'referensi' => 'SIMULASI',
-            ]);
+            Penyimpanan::ubahPesanan($kode, ['status' => 'lunas', 'referensi' => 'SIMULASI']);
         }
 
         return redirect()->route('pesanan', $kode);
@@ -316,30 +210,24 @@ class TiketController extends Controller
     public function batal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
-
         if ($p['status'] === 'menunggu' && Midtrans::aktif()) {
+            // jangan batalkan pesanan yang ternyata sudah dibayar
             $p = $this->sinkronAman($kode) ?? $p;
-
             if ($p['status'] === 'lunas') {
-                return redirect()->route('pesanan', $kode)->with(
-                    'pesan',
-                    'Pembayaran pesanan ini sudah diterima, jadi pesanan tidak dibatalkan.'
-                );
+                return redirect()->route('pesanan', $kode)->with('pesan', 'Pembayaran pesanan ini sudah diterima, jadi pesanan tidak dibatalkan.');
             }
-
             if ($p['status'] === 'menunggu') {
                 Midtrans::hentikan($kode);
             }
         }
-
         if ($p['status'] === 'menunggu') {
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
 
-        return redirect()->route('tiket.saya', ['tab' => 'dibatalkan'])
-            ->with('pesan', 'Pesanan '.$kode.' dibatalkan.');
+        return redirect()->route('tiket.saya', ['tab' => 'dibatalkan'])->with('pesan', 'Pesanan '.$kode.' dibatalkan.');
     }
 
+    /** Sinkron dengan Midtrans; null kalau Midtrans atau DB 2 sedang tidak terjangkau. */
     private function sinkronAman(string $kode): ?array
     {
         try {
@@ -354,53 +242,29 @@ class TiketController extends Controller
     public function daftar(Request $request)
     {
         $tab = $request->query('tab', 'aktif');
-
-        $semua = collect(
-            Penyimpanan::pesanan((int) $request->session()->get('pengguna.id'))
-        )->map(function ($p) {
+        $semua = collect(Penyimpanan::pesanan((int) $request->session()->get('pengguna.id')))->map(function ($p) {
             if ($p['status'] === 'menunggu' && now()->greaterThan($p['batas_bayar'])) {
                 $p = Penyimpanan::ubahPesanan($p['kode'], ['status' => 'kedaluwarsa']);
             }
 
             return $p;
         });
-
         $kelompok = [
-            'aktif' => $semua->filter(
-                fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true)
-                    && empty($p['dipakai'])
-                    && $p['tanggal'] >= now('Asia/Jakarta')->toDateString()
-            ),
-            'selesai' => $semua->filter(
-                fn ($p) => $p['status'] === 'lunas'
-                    && (! empty($p['dipakai']) || $p['tanggal'] < now('Asia/Jakarta')->toDateString())
-            ),
-            'dibatalkan' => $semua->filter(
-                fn ($p) => in_array($p['status'], ['dibatalkan', 'kedaluwarsa'], true)
-            ),
+            'aktif' => $semua->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString()),
+            'selesai' => $semua->filter(fn ($p) => $p['status'] === 'lunas' && (! empty($p['dipakai']) || $p['tanggal'] < now('Asia/Jakarta')->toDateString())),
+            'dibatalkan' => $semua->filter(fn ($p) => in_array($p['status'], ['dibatalkan', 'kedaluwarsa'], true)),
         ];
 
-        return view('tiket.daftar', [
-            'tab' => array_key_exists($tab, $kelompok) ? $tab : 'aktif',
-            'kelompok' => $kelompok,
-        ]);
+        return view('tiket.daftar', ['tab' => array_key_exists($tab, $kelompok) ? $tab : 'aktif', 'kelompok' => $kelompok]);
     }
 
     public function eTiket(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
         abort_unless($p['status'] === 'lunas', 404);
-
         $t = Katalog::get($p['tempat']);
-        $status = ! empty($p['dipakai'])
-            ? 'dipakai'
-            : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
+        $status = ! empty($p['dipakai']) ? 'dipakai' : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
 
-        return view('tiket.etiket', [
-            'p' => $p,
-            't' => $t,
-            'status' => $status,
-            'tanggal' => Carbon::parse($p['tanggal'])->locale('id'),
-        ]);
+        return view('tiket.etiket', ['p' => $p, 't' => $t, 'status' => $status, 'tanggal' => Carbon::parse($p['tanggal'])->locale('id')]);
     }
 }
