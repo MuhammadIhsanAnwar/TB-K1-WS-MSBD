@@ -24,6 +24,13 @@ class TempatFoto extends Command
         'mora-waterpark' => 'taman-mora-indah-waterpark',
         'hairos-waterpark' => 'hairos-water-park',
         'tirta-ceria' => 'tirta-ceria-waterpark',
+        'centre-point' => 'centre-point-mall',
+        'plaza-medan-fari' => 'plaza-medan-fair',
+        'manhattan' => 'manhattan-times-square',
+        'ringroad-citywalk' => 'ringroad-city-walks',
+        'plaza-millennium' => 'plaza-millenium',
+        'lippo-plaza' => 'lippo-plaza-medan',
+        'irian-supermarket-karya' => 'irian-supermarket',
     ];
 
     public function handle(): int
