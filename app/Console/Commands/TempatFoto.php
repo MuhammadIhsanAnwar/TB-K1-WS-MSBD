@@ -38,6 +38,17 @@ class TempatFoto extends Command
         'gedung-balai-kota-lama' => 'balai-kota-lama',
         'gedung-london-sumatra' => 'gedung-lonsum',
         'kantor-pos-besar' => 'pos-bloc-medan',
+        'becak-medan' => 'becak-motor',
+        'dimsum-nelayan' => 'dim-sum-nelayan-nelayan-jala-jala',
+        'durian-house' => 'durian-house-dh-patisserie',
+        'esplanade-medan-arsip' => 'lapangan-merdeka',
+        'gereja-immanuel-arsip' => 'gereja-immanuel',
+        'istana-maimun-1900' => 'istana-maimun',
+        'kawasan-kuliner-selat-panjang' => 'kuliner-selat-panjang',
+        'masjid-raya-potret' => 'masjid-raya-al-mashun',
+        'museum-negeri-sumut' => 'museum-negeri-sumatera-utara',
+        'tembakau-deli-1897' => 'era-tembakau-deli',
+        'tjong-a-fie-arsip' => 'tjong-a-fie',
     ];
 
     public function handle(): int

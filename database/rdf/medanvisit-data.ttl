@@ -746,7 +746,8 @@ res:kuliner-selat-panjang a mv:TempatKuliner ;
     mv:kelurahan "Pasar Baru" ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "23:00:00"^^xsd:time ;
-    dcterms:source <https://www.indonesia.travel/id-id/travel-ideas/gastronomy/culinary-on-jalan-selat-panjang-medan/> .
+    dcterms:source <https://www.indonesia.travel/id-id/travel-ideas/gastronomy/culinary-on-jalan-selat-panjang-medan/> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kawasan-kuliner-selat-panjang.jpg> .
 
 res:kuliner-pagaruyung a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Jl. Pagaruyung"@id ;
@@ -765,7 +766,8 @@ res:kuliner-pagaruyung a mv:TempatKuliner ;
     mv:kelurahan "Petisah Tengah" ;
     mv:jamBuka "18:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
-    dcterms:source <https://www.inews.id/regional/sumut/6-wisata-kuliner-malam-di-medan-nomor-5-ucok-durian-buka-24-jam/all> .
+    dcterms:source <https://www.inews.id/regional/sumut/6-wisata-kuliner-malam-di-medan-nomor-5-ucok-durian-buka-24-jam/all> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kuliner-pagaruyung.jpg> .
 
 res:kuliner-multatuli a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Multatuli"@id ;
@@ -898,7 +900,8 @@ res:kedai-kopi-apek a mv:TempatKuliner ;
     mv:kelurahan "Kesawan" ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "14:00:00"^^xsd:time ;
-    dcterms:source <https://www.goodnewsfromindonesia.id/2023/11/01/mencicipi-kenikmatan-kopi-apek-kedai-legendaris-dari-kota-medan> .
+    dcterms:source <https://www.goodnewsfromindonesia.id/2023/11/01/mencicipi-kenikmatan-kopi-apek-kedai-legendaris-dari-kota-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kedai-kopi-apek.jpg> .
 
 res:tip-top-restaurant a mv:TempatKuliner ;
     rdfs:label "Tip Top Restaurant"@id ;
@@ -4241,7 +4244,8 @@ res:durian-house-dh-patisserie a mv:TempatKuliner ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     dcterms:source <https://www.tripadvisor.co.id/Restaurant_Review-g297725-d4128940-Durian_House-Medan> ;
     mv:hargaTiketMulai 35000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/durian-house.jpg> .
 
 res:si-bolang-durian-pelawi-durian a mv:TempatKuliner ;
     rdfs:label "Si Bolang Durian / Pelawi Durian"@id ;
@@ -4299,7 +4303,8 @@ res:bihun-bebek-asie-kumango a mv:TempatKuliner ;
     mv:jamTutup "11:30:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6612890/bihun-bebek-asie-kumango-medan> ;
     mv:hargaTiketMulai 65000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/bihun-bebek-asie-kumango.jpg> .
 
 res:mie-balap-wahidin a mv:TempatKuliner ;
     rdfs:label "Mie Balap Wahidin"@id ;
@@ -4379,7 +4384,8 @@ res:dim-sum-nelayan-nelayan-jala-jala a mv:TempatKuliner ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://nelayanrestaurant.com> ;
     mv:hargaTiketMulai 40000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/dimsum-nelayan.jpg> .
 
 res:sate-padang-al-fresco a mv:TempatKuliner ;
     rdfs:label "Sate Padang Al-Fresco"@id ;
