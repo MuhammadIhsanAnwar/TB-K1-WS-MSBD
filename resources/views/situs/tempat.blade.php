@@ -78,23 +78,14 @@
                     <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
                 @endunless
                             @unless ($akunPengelola)
-                <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
-                    @csrf
-                    <button
-                        type="submit"
-                        class="mv-btn mv-btn--garis"
-                        @disabled($sudahDisukai)
-                    >
-                        ❤️
-                        @if ($sudahDisukai)
-                            Kamu sudah menyukai
-                        @else
-                            Suka tempat ini
-                        @endif
-                        ({{ number_format($jumlahSuka, 0, ',', '.') }})
-                    </button>
-                </form>
-            @endunless
+    <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
+        @csrf
+        <button type="submit" class="mv-btn mv-btn--garis">
+            {{ $sudahDisukai ? '❤️ Batal suka' : '🤍 Suka tempat ini' }}
+            ({{ number_format($jumlahSuka, 0, ',', '.') }})
+        </button>
+    </form>
+@endunless
             </div>
         </div>
 

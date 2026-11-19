@@ -169,16 +169,27 @@ class SitusController extends Controller
     abort_unless($tempat && ($tempat['jenis'] ?? null) === 'tempat', 404);
 
     $disukai = $request->session()->get('tempat_disukai', []);
+    $kunci = 'medanvisit.favorit.' . $slug;
 
-    if (!in_array($slug, $disukai, true)) {
-        $kunci = 'medanvisit.favorit.' . $slug;
+    if (in_array($slug, $disukai, true)) {
+        $jumlah = max(0, (int) Cache::get($kunci, 0));
 
-        Cache::add($kunci, 0, now()->addYears(10));
-        Cache::increment($kunci);
+        if ($jumlah > 0) {
+            Cache::decrement($kunci);
+        }
 
-        $disukai[] = $slug;
+        $disukai = array_values(array_diff($disukai, [$slug]));
+
         $request->session()->put('tempat_disukai', $disukai);
+
+        return back()->with('status', 'Suka berhasil dibatalkan.');
     }
+
+    Cache::add($kunci, 0, now()->addYears(10));
+    Cache::increment($kunci);
+
+    $disukai[] = $slug;
+    $request->session()->put('tempat_disukai', $disukai);
 
     return back()->with('status', 'Terima kasih sudah menyukai tempat ini.');
 }
