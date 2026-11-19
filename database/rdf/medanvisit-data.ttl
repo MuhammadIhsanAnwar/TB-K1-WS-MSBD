@@ -1091,7 +1091,8 @@ res:delipark-mall a mv:PusatBelanja ;
     mv:kelurahan "Kesawan" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.agungpodomoro.com/group/en/news/delipark-mall-the-new-icon-in-medan> .
+    dcterms:source <https://www.agungpodomoro.com/group/en/news/delipark-mall-the-new-icon-in-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/delipark-mall.jpg> .
 
 res:sun-plaza a mv:PusatBelanja ;
     rdfs:label "Sun Plaza"@id ;
@@ -1110,7 +1111,8 @@ res:sun-plaza a mv:PusatBelanja ;
     mv:kelurahan "Madras Hulu" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> .
+    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/sun-plaza.jpg> .
 
 res:centre-point-mall a mv:PusatBelanja ;
     rdfs:label "Centre Point Mall"@id ;
@@ -1129,7 +1131,8 @@ res:centre-point-mall a mv:PusatBelanja ;
     mv:kelurahan "Gang Buntu" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> .
+    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/centre-point.jpg> .
 
 res:plaza-medan-fair a mv:PusatBelanja ;
     rdfs:label "Plaza Medan Fair"@id ;
@@ -1148,7 +1151,8 @@ res:plaza-medan-fair a mv:PusatBelanja ;
     mv:kelurahan "Sekip" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> .
+    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/plaza-medan-fari.jpg> .
 
 res:manhattan-times-square a mv:PusatBelanja ;
     rdfs:label "Manhattan Times Square"@id ;
@@ -1167,7 +1171,8 @@ res:manhattan-times-square a mv:PusatBelanja ;
     mv:kelurahan "Sei Sikambing B" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/manhattan.jpg> .
 
 res:ringroad-city-walks a mv:PusatBelanja ;
     rdfs:label "Ringroad City Walks"@id ;
@@ -1186,7 +1191,8 @@ res:ringroad-city-walks a mv:PusatBelanja ;
     mv:kelurahan "Sunggal" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/ringroad-citywalk.jpg> .
 
 res:cambridge-city-square a mv:PusatBelanja ;
     rdfs:label "Cambridge City Square"@id ;
@@ -1205,7 +1211,8 @@ res:cambridge-city-square a mv:PusatBelanja ;
     mv:kelurahan "Petisah Tengah" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> .
+    dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/cambridge-city-square.jpg> .
 
 res:focal-point a mv:PusatBelanja ;
     rdfs:label "Focal Point"@id ;
@@ -1224,7 +1231,8 @@ res:focal-point a mv:PusatBelanja ;
     mv:kelurahan "Asam Kumbang" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.rumah123.com/explore/kota-medan/focal-point-medan/> .
+    dcterms:source <https://www.rumah123.com/explore/kota-medan/focal-point-medan/> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/focal-point.jpg> .
 
 res:plaza-millenium a mv:PusatBelanja ;
     rdfs:label "Plaza Millenium"@id ;
@@ -1241,7 +1249,8 @@ res:plaza-millenium a mv:PusatBelanja ;
     mv:durasiSinggah 45 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Dwi Kora" ;
-    dcterms:source <https://www.openstreetmap.org/way/894120597> .
+    dcterms:source <https://www.openstreetmap.org/way/894120597> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/plaza-millennium.jpg> .
 
 res:medan-mall a mv:PusatBelanja ;
     rdfs:label "Medan Mall"@id ;
@@ -1258,7 +1267,8 @@ res:medan-mall a mv:PusatBelanja ;
     mv:durasiSinggah 45 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Pusat Pasar" ;
-    dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> .
+    dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/medan-mall.jpg> .
 
 res:thamrin-plaza a mv:PusatBelanja ;
     rdfs:label "Thamrin Plaza"@id ;
@@ -1275,7 +1285,8 @@ res:thamrin-plaza a mv:PusatBelanja ;
     mv:durasiSinggah 45 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Sei Rengas II" ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-7853535/matahari-thamrin-plaza-tutup-warga-medan-kenang-momen-belanja-semasa-kecil> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-7853535/matahari-thamrin-plaza-tutup-warga-medan-kenang-momen-belanja-semasa-kecil> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/thamrin-plaza.jpg> .
 
 res:lippo-plaza-medan a mv:PusatBelanja ;
     rdfs:label "Lippo Plaza Medan"@id ;
@@ -1294,7 +1305,8 @@ res:lippo-plaza-medan a mv:PusatBelanja ;
     mv:kelurahan "Suka Damai" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> .
+    dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/lippo-plaza.jpg> .
 
 res:suzuya-marelan a mv:PusatBelanja ;
     rdfs:label "Suzuya Mall Marelan"@id ;
@@ -1313,7 +1325,8 @@ res:suzuya-marelan a mv:PusatBelanja ;
     mv:kelurahan "Tanah Enam Ratus" ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.openstreetmap.org/way/645564631> .
+    dcterms:source <https://www.openstreetmap.org/way/645564631> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/suzuya-marelan.jpg> .
 
 res:irian-supermarket a mv:PusatBelanja ;
     rdfs:label "Irian Supermarket Jl. Karya"@id ;
@@ -1330,7 +1343,8 @@ res:irian-supermarket a mv:PusatBelanja ;
     mv:durasiSinggah 45 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Sei Agul" ;
-    dcterms:source <https://www.bca.co.id/id/promo-bca/2025/03/12/02/45/Irian-Supermarket> .
+    dcterms:source <https://www.bca.co.id/id/promo-bca/2025/03/12/02/45/Irian-Supermarket> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/irian-supermarket-karya.jpg> .
 
 res:pasar-ramai a mv:PusatBelanja ;
     rdfs:label "Pasar Ramai"@id ;
@@ -1349,7 +1363,8 @@ res:pasar-ramai a mv:PusatBelanja ;
     mv:kelurahan "Sei Rengas II" ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "17:00:00"^^xsd:time ;
-    dcterms:source <https://www.holidify.com/pages/shopping-in-medan-2705.html> .
+    dcterms:source <https://www.holidify.com/pages/shopping-in-medan-2705.html> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/pasar-ramai.jpg> .
 
 res:kolam-renang-paradiso a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Paradiso"@id ;
@@ -1420,29 +1435,6 @@ res:kolam-renang-tirta-kartika a mv:RekreasiAir ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
     schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-tirta-kartika.jpg> .
-
-res:bumi-asri-waterpark a mv:RekreasiAir ;
-    rdfs:label "Bumi Asri Waterpark"@id ;
-    schema:name "Bumi Asri Waterpark"@id ;
-    schema:description "Kolam renang dan waterpark di Komplek Bumi Asri."@id ;
-    mv:cerita "Kolam renang dan waterpark di Komplek Bumi Asri."@id ;
-    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Blok G, Komplek Bumi Asri" ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
-    geo:lat "3.60029"^^xsd:decimal ;
-    geo:long "98.62379"^^xsd:decimal ;
-    mv:koordinatPerkiraan false ;
-    mv:keteranganJam "Sekitar 08.00–17.00" ;
-    mv:jamContoh true ;
-    mv:radiusCheckin 100 ;
-    mv:durasiSinggah 45 ;
-    schema:isAccessibleForFree false ;
-    mv:kelurahan "Cinta Damai" ;
-    mv:jamBuka "08:00:00"^^xsd:time ;
-    mv:jamTutup "17:00:00"^^xsd:time ;
-    dcterms:source <https://www.rumah123.com/explore/kota-medan/kolam-renang-medan/> ;
-    mv:hargaTiketMulai 21000 ;
-    mv:hargaContoh true ;
-    schema:offers [ a schema:Offer ; schema:name "Hari kerja"@id ; schema:price 21000 ; schema:priceCurrency "IDR" ] ;
-    schema:offers [ a schema:Offer ; schema:name "Akhir pekan"@id ; schema:price 26000 ; schema:priceCurrency "IDR" ] .
 
 res:kolam-renang-primbana a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Primbana"@id ;
@@ -2437,14 +2429,6 @@ res:relasi-104 a rdf:Statement ;
     rdf:predicate mv:beradaDi ;
     rdf:object res:kec-medan-helvetia ;
     mv:kalimat "Kolam Renang Tirta Kartika berada di Kecamatan Medan Helvetia."@id ;
-    dcterms:source "BPS Kota Medan" .
-
-res:bumi-asri-waterpark mv:beradaDi res:kec-medan-helvetia .
-res:relasi-105 a rdf:Statement ;
-    rdf:subject res:bumi-asri-waterpark ;
-    rdf:predicate mv:beradaDi ;
-    rdf:object res:kec-medan-helvetia ;
-    mv:kalimat "Bumi Asri Waterpark berada di Kecamatan Medan Helvetia."@id ;
     dcterms:source "BPS Kota Medan" .
 
 res:kolam-renang-primbana mv:beradaDi res:kec-medan-selayang .
