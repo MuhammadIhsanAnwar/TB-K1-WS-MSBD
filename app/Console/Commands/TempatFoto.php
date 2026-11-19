@@ -111,6 +111,8 @@ class TempatFoto extends Command
                 return self::FAILURE;
             }
 
+            $this->buatKecil($tujuan.'/'.$nama, $tujuan.'/kecil/'.pathinfo($nama, PATHINFO_FILENAME).'.jpg');
+
             $isi = $this->sisipkan($isi, $s, $nama);
         }
 
@@ -118,6 +120,43 @@ class TempatFoto extends Command
         $this->info('Ditulis. Jalankan rdf:kirim --replace agar DB 3 ikut berubah.');
 
         return self::SUCCESS;
+    }
+
+    /** Versi 720 px di images/foto/kecil, dipakai semua slot thumbnail (lihat components/foto.blade.php). */
+    private function buatKecil(string $sumber, string $tujuan): void
+    {
+        if (! is_dir(dirname($tujuan))) {
+            mkdir(dirname($tujuan), 0755, true);
+        }
+
+        $info = @getimagesize($sumber);
+        if (! $info) {
+            $this->warn('  ! bukan gambar: '.basename($sumber));
+
+            return;
+        }
+
+        [$lebar, $tinggi] = $info;
+        $skala = min(1, 720 / max($lebar, $tinggi));
+        $w = max(1, (int) round($lebar * $skala));
+        $h = max(1, (int) round($tinggi * $skala));
+
+        $asal = match ($info[2]) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($sumber),
+            IMAGETYPE_PNG => @imagecreatefrompng($sumber),
+            IMAGETYPE_WEBP => @imagecreatefromwebp($sumber),
+            default => null,
+        };
+
+        if (! $asal) {
+            $this->warn('  ! format tidak didukung: '.basename($sumber));
+
+            return;
+        }
+
+        $kanvas = imagecreatetruecolor($w, $h);
+        imagecopyresampled($kanvas, $asal, 0, 0, 0, 0, $w, $h, $lebar, $tinggi);
+        imagejpeg($kanvas, $tujuan, 82);
     }
 
     private function sudahAda(string $isi, string $slug): bool
