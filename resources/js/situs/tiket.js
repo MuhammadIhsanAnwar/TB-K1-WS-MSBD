@@ -135,9 +135,11 @@ if (bayar) {
         return false;
     };
     const mulaiPantau = () => {
-        if (pantau) return;
-        pantau = setInterval(() => { if (!document.hidden) cekStatus(); }, 15000);
-    };
+    if (pantau) return;
+    pantau = setInterval(() => {
+        if (!document.hidden) cekStatus();
+    }, 2000);
+};
 
     formBayar.addEventListener('submit', async (e) => {
         if (!window.snap) return;
