@@ -67,7 +67,7 @@ final class Database3Catalog
             }
 
             $slug = substr($subject, 4);
-            $nama = self::first($properties, 'rdfs:label', self::first($properties, 'schema:name', $slug));
+            $nama = ucwords(str_replace('-', ' ', $slug));
             $entity = [
                 'slug' => $slug,
                 'jenis' => $type,
