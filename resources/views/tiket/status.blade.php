@@ -77,10 +77,6 @@
                                 @csrf
                                 <button class="mv-btn mv-btn--utama" type="submit">Bayar {{ Katalog::rupiah($p['total']) }}</button>
                             </form>
-                            <form method="post" action="{{ route('pesanan.cek', $p['kode']) }}">
-                                @csrf
-                                <button class="mv-btn mv-btn--garis" type="submit">Saya sudah bayar, cek status</button>
-                            </form>
                             <form method="post" action="{{ route('pesanan.batal', $p['kode']) }}">
                                 @csrf
                                 <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
