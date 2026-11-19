@@ -408,7 +408,8 @@ res:balai-kota-lama a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
     owl:sameAs wd:Q6805113 ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-7045682/sejarah-balai-kota-medan-ada-peran-miliarder-tjong-a-fie> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-7045682/sejarah-balai-kota-medan-ada-peran-miliarder-tjong-a-fie> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-balai-kota-lama.jpg> .
 
 res:gedung-lonsum a mv:SitusSejarah ;
     rdfs:label "Gedung London Sumatra"@id ;
@@ -426,7 +427,8 @@ res:gedung-lonsum a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
     owl:sameAs wd:Q114814144 ;
-    dcterms:source <https://economy.okezone.com/read/2023/04/12/470/2797205/ini-gedung-dengan-lift-pertama-di-sumatera-sudah-ada-sejak-zaman-kolonial> .
+    dcterms:source <https://economy.okezone.com/read/2023/04/12/470/2797205/ini-gedung-dengan-lift-pertama-di-sumatera-sudah-ada-sejak-zaman-kolonial> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-london-sumatra.jpg> .
 
 res:menara-air-tirtanadi a mv:SitusSejarah ;
     rdfs:label "Menara Air Tirtanadi"@id ;
@@ -444,7 +446,8 @@ res:menara-air-tirtanadi a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Pasar Baru" ;
     owl:sameAs wd:Q19746232 ;
-    dcterms:source <https://www.detik.com/sumut/budaya/d-7210677/sejarah-menara-pdam-tirtanadi-medan-dibangun-di-masa-kolonial-belanda> .
+    dcterms:source <https://www.detik.com/sumut/budaya/d-7210677/sejarah-menara-pdam-tirtanadi-medan-dibangun-di-masa-kolonial-belanda> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/menara-air-tirtanadi.jpg> .
 
 res:pos-bloc-medan a mv:SitusSejarah ;
     rdfs:label "Kantor Pos Besar Medan (Pos Bloc)"@id ;
@@ -464,7 +467,8 @@ res:pos-bloc-medan a mv:SitusSejarah ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     owl:sameAs wd:Q12489173 ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-7187048/sejarah-kantor-pos-medan-yang-kini-jadi-pusat-kuliner-milenial> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-7187048/sejarah-kantor-pos-medan-yang-kini-jadi-pusat-kuliner-milenial> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kantor-pos-besar.jpg> .
 
 res:gedung-bank-indonesia-lama a mv:SitusSejarah ;
     rdfs:label "Gedung Bank Indonesia Lama"@id ;
@@ -481,7 +485,8 @@ res:gedung-bank-indonesia-lama a mv:SitusSejarah ;
     mv:durasiSinggah 10 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
-    dcterms:source <https://en.wikipedia.org/wiki/List_of_colonial_buildings_in_Medan> .
+    dcterms:source <https://en.wikipedia.org/wiki/List_of_colonial_buildings_in_Medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-bank-indonesia-lama.jpg> .
 
 res:gedung-avros a mv:SitusSejarah ;
     rdfs:label "Gedung AVROS (BKS-PPS)"@id ;
@@ -498,7 +503,8 @@ res:gedung-avros a mv:SitusSejarah ;
     mv:durasiSinggah 10 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Aur" ;
-    dcterms:source <https://www.penang-traveltips.com/indonesia/medan/bks-pps-building.htm> .
+    dcterms:source <https://www.penang-traveltips.com/indonesia/medan/bks-pps-building.htm> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-avros.jpg> .
 
 res:gedung-warenhuis a mv:SitusSejarah ;
     rdfs:label "Gedung Warenhuis"@id ;
@@ -515,7 +521,8 @@ res:gedung-warenhuis a mv:SitusSejarah ;
     mv:durasiSinggah 30 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
-    dcterms:source <https://fahum.umsu.ac.id/info/gedung-warenhuis-diresmikan/> .
+    dcterms:source <https://fahum.umsu.ac.id/info/gedung-warenhuis-diresmikan/> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-warenhuis.jpg> .
 
 res:monumen-sisingamangaraja-xii a mv:SitusSejarah ;
     rdfs:label "Monumen Sisingamangaraja XII"@id ;
@@ -532,7 +539,8 @@ res:monumen-sisingamangaraja-xii a mv:SitusSejarah ;
     mv:durasiSinggah 15 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Teladan Barat" ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-8267318/monumen-sisingamangaraja-xii-medan-tak-terawat-begini-penampakannya> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-8267318/monumen-sisingamangaraja-xii-medan-tak-terawat-begini-penampakannya> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/monumen-sisingamangaraja-xii.jpg> .
 
 res:museum-perjuangan-tni a mv:Museum ;
     rdfs:label "Museum Perjuangan TNI Bukit Barisan"@id ;
@@ -2898,7 +2906,8 @@ res:kawasan-kampung-madras a mv:SitusSejarah ;
     mv:radiusCheckin 120 ;
     mv:durasiSinggah 60 ;
     schema:isAccessibleForFree true ;
-    dcterms:source <https://id.wikipedia.org/wiki/Kampung_Madras,_Medan> .
+    dcterms:source <https://id.wikipedia.org/wiki/Kampung_Madras,_Medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kawasan-madras.jpg> .
 
 res:wihara-candi-buddha a mv:RumahIbadah ;
     rdfs:label "Wihara Candi Buddha"@id ;
