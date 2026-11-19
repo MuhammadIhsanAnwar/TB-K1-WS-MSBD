@@ -571,7 +571,16 @@ class AdminController extends Controller
             ! $p => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada pesanan dengan kode '.strtoupper($data['kode']).'.'],
             $p['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$p['kode'].' berstatus '.$p['status'].'.'],
             ! empty($p['dipakai']) => ['status' => 'dipakai', 'judul' => 'Sudah dipakai', 'teks' => 'Tiket ini dipakai '.substr($p['dipakai'], 11, 5).'.'],
-            $p['tanggal'] !== now('Asia/Jakarta')->toDateString() => ['status' => 'tidak', 'judul' => 'Bukan untuk hari ini', 'teks' => 'Tiket berlaku tanggal '.$p['tanggal'].'.'],
+            $p['tanggal'] < now('Asia/Jakarta')->toDateString() => [
+            'status' => 'kedaluwarsa',
+            'judul' => 'Tiket kedaluwarsa',
+            'teks' => 'Masa berlaku tiket berakhir pada '.$p['tanggal'].'.',
+        ],
+        $p['tanggal'] > now('Asia/Jakarta')->toDateString() => [
+            'status' => 'tidak',
+            'judul' => 'Belum berlaku',
+            'teks' => 'Tiket baru berlaku tanggal '.$p['tanggal'].'.',
+        ],
             default => ['status' => 'valid', 'judul' => 'Valid', 'teks' => collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.$i['jenis'])->implode(', ').' atas nama '.$p['pemesan']['nama'].'.'],
         };
         if ($hasil['status'] === 'valid') {
