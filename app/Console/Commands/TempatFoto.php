@@ -34,6 +34,10 @@ class TempatFoto extends Command
         'museum-cina' => 'museum-situs-kota-cina',
         'rahmat-international-wildlife-museum-gallery' => 'rahmat-gallery',
         'museum-perjuangan-medan' => 'museum-perjuangan-tni',
+        'kawasan-madras' => 'kawasan-kampung-madras',
+        'gedung-balai-kota-lama' => 'balai-kota-lama',
+        'gedung-london-sumatra' => 'gedung-lonsum',
+        'kantor-pos-besar' => 'pos-bloc-medan',
     ];
 
     public function handle(): int
@@ -115,11 +119,15 @@ class TempatFoto extends Command
             if (! is_dir($tujuan)) {
                 mkdir($tujuan, 0755, true);
             }
-            if (! copy($jalur, $tujuan.'/'.$nama)) {
+            $target = $tujuan.'/'.$nama;
+
+        if (realpath($jalur) !== realpath($target)) {
+            if (! copy($jalur, $target)) {
                 $this->error('Gagal menyalin '.$nama);
 
                 return self::FAILURE;
             }
+        }
 
             $this->buatKecil($tujuan.'/'.$nama, $tujuan.'/kecil/'.pathinfo($nama, PATHINFO_FILENAME).'.jpg');
 
