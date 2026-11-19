@@ -537,17 +537,36 @@ class AdminController extends Controller
     }
 
     public function tiket(Request $request)
-    {
-        return view('admin.tiket', [
-            'pesanan' => collect(Penyimpanan::pesanan())->values(),
-            'bertiket' => Katalog::bertiket(),
-        ]);
+{
+    $milik = $this->slugsKelolaan($request);
+
+    $pesanan = collect(Penyimpanan::pesanan())->values();
+    $bertiket = collect(Katalog::bertiket());
+
+    if ($milik !== null) {
+        $pesanan = $pesanan->filter(
+            fn ($p) => in_array($p['tempat'], $milik, true)
+        )->values();
+
+        $bertiket = $bertiket->filter(
+            fn ($t) => in_array($t['slug'], $milik, true)
+        );
     }
+
+    return view('admin.tiket', [
+        'pesanan' => $pesanan,
+        'bertiket' => $bertiket,
+    ]);
+}
 
     public function validasi(Request $request)
     {
         $data = $request->validate(['kode' => ['required', 'string', 'max:20']], ['kode.required' => 'Pindai atau ketik kode pada e-tiket.']);
         $p = Penyimpanan::cariPesanan(strtoupper(trim($data['kode'])));
+
+        if ($p) {
+            $this->pastikanBolehKelola($request, $p['tempat']);
+        }
         $hasil = match (true) {
             ! $p => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada pesanan dengan kode '.strtoupper($data['kode']).'.'],
             $p['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$p['kode'].' berstatus '.$p['status'].'.'],
