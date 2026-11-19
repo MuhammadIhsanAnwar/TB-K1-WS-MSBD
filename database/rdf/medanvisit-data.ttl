@@ -552,7 +552,8 @@ res:museum-perjuangan-tni a mv:Museum ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "15:00:00"^^xsd:time ;
     owl:sameAs wd:Q86584463 ;
-    dcterms:source <https://mamikos.com/info/museum-terbaik-di-medan-yang-wajib-dikunjungi-gnr/> .
+    dcterms:source <https://mamikos.com/info/museum-terbaik-di-medan-yang-wajib-dikunjungi-gnr/> ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/museum-perjuangan-medan.jpg> .
 
 res:rahmat-gallery a mv:Museum ;
     rdfs:label "Rahmat International Wildlife Museum & Gallery"@id ;
@@ -577,7 +578,8 @@ res:rahmat-gallery a mv:Museum ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Domestik"@id ; schema:price 75000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Pelajar atau rombongan"@id ; schema:price 25000 ; schema:priceCurrency "IDR" ] ;
-    schema:offers [ a schema:Offer ; schema:name "Wisatawan mancanegara"@id ; schema:price 150000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "Wisatawan mancanegara"@id ; schema:price 150000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/Rahmat-International-Wildlife-Museum-Gallery.jpg> .
 
 res:museum-situs-kota-cina a mv:Museum ;
     rdfs:label "Museum Situs Kota Cina"@id ;
@@ -600,7 +602,8 @@ res:museum-situs-kota-cina a mv:Museum ;
     dcterms:source <https://mamikos.com/info/museum-terbaik-di-medan-yang-wajib-dikunjungi-gnr/?halaman=2> ;
     mv:hargaTiketMulai 12000 ;
     mv:hargaContoh true ;
-    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 12000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 12000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/museum-cina.jpg> .
 
 res:masjid-lama-gang-bengkok a mv:RumahIbadah ;
     rdfs:label "Masjid Lama Gang Bengkok"@id ;

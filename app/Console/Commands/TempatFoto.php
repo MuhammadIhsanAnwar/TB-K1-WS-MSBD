@@ -31,6 +31,9 @@ class TempatFoto extends Command
         'plaza-millennium' => 'plaza-millenium',
         'lippo-plaza' => 'lippo-plaza-medan',
         'irian-supermarket-karya' => 'irian-supermarket',
+        'museum-cina' => 'museum-situs-kota-cina',
+        'rahmat-international-wildlife-museum-gallery' => 'rahmat-gallery',
+        'museum-perjuangan-medan' => 'museum-perjuangan-tni',
     ];
 
     public function handle(): int
@@ -65,7 +68,7 @@ class TempatFoto extends Command
 
         foreach ($foto as $jalur) {
             $nama = pathinfo($jalur, PATHINFO_FILENAME);
-            $s = self::ALIAS[$nama] ?? $nama;
+            $s = self::ALIAS[strtolower($nama)] ?? strtolower($nama);
 
             if (! isset($slug[$s])) {
                 $asing[] = basename($jalur);
