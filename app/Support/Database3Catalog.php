@@ -37,7 +37,7 @@ final class Database3Catalog
     public static function forgetCache(): void
     {
         self::$triples = self::$entities = self::$relations = null;
-        Cache::forget('database3.catalog.triples.v6');
+        Cache::forget('database3.catalog.triples.v7');
     }
 
     public static function entities(): array
@@ -162,7 +162,7 @@ final class Database3Catalog
             return self::$triples;
         }
 
-        return self::$triples = Cache::remember('database3.catalog.triples.v6', now()->addMinutes(10), function (): array {
+        return self::$triples = Cache::remember('database3.catalog.triples.v7', now()->addMinutes(10), function (): array {
             $result = SparqlService::jalankan(<<<'SPARQL'
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
