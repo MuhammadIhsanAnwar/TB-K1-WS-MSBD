@@ -2820,7 +2820,7 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
     right: 0;
     bottom: 0;
     z-index: 25;
-    height: 48%;
+    height: 56%;
     border-top: 2px solid var(--mv-hijau);
     transition: height 240ms var(--ease-out);
   }
