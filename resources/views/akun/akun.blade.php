@@ -19,9 +19,6 @@
             </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-            @if (($u['peran'] ?? null) === 'wisatawan')
-                <a class="p-btn" href="{{ route('medanvisit-hub.index') }}">MedanVisit Hub</a>
-            @endif
             <a class="p-btn" href="{{ route('akun.pengaturan') }}">Pengaturan akun</a>
             <form method="post" action="{{ route('keluar') }}">@csrf<button class="p-btn" type="submit">Keluar</button></form>
         </div>

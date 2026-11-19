@@ -91,7 +91,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BmSNzCR-.css",
+    "file": "assets/app-Clpk7BB6.css",
     "name": "app",
     "names": [
       "app.css"
@@ -116,7 +116,7 @@
     "isDynamicEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-U04eS-__.js",
+    "file": "assets/app-BCkF55QR.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -133,15 +133,8 @@
       "resources/js/situs/lorong.js",
       "resources/js/situs/tiket.js",
       "resources/js/situs/sparql.js",
-      "resources/js/panel/panel.js",
-      "resources/js/p2p/index.js"
+      "resources/js/panel/panel.js"
     ]
-  },
-  "resources/js/p2p/index.js": {
-    "file": "assets/p2p-CGiWzeFz.js",
-    "name": "p2p",
-    "src": "resources/js/p2p/index.js",
-    "isDynamicEntry": true
   },
   "resources/js/panel/panel.js": {
     "file": "assets/panel--9njvDEB.js",
@@ -212,7 +205,7 @@
     "isDynamicEntry": true
   },
   "resources/js/situs/tiket.js": {
-    "file": "assets/tiket-DFfsQpcb.js",
+    "file": "assets/tiket-Ccs7cohd.js",
     "name": "tiket",
     "src": "resources/js/situs/tiket.js",
     "isDynamicEntry": true,

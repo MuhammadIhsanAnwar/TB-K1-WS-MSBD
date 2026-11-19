@@ -7,7 +7,6 @@
                 <a href="{{ route('peta') }}">Tempat &amp; peta</a>
                 @unless (in_array(session('pengguna.peran'), ['admin', 'superadmin'], true))
                     <a href="{{ route('rencana') }}">Perencanaan Rute</a>
-                    <a href="{{ route('medanvisit-hub.index') }}">MedanVisit Hub</a>
                     <a href="{{ route('hubungi.admin') }}">Hubungi Admin</a>
                 @endunless
                 <a href="{{ route('ketentuan') }}">Ketentuan &amp; privasi</a>
