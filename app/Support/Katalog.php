@@ -515,7 +515,16 @@ class Katalog
             if ($entity['jenis'] === 'wilayah') {
                 continue;
             }
-            $teks = mb_strtolower($entity['nama'].' '.($entity['ringkas'] ?? '').' '.($entity['kecamatan'] ?? '').' '.($entity['kategori'] ?? ''));
+            $kategori = $entity['kategori'] ?? '';
+$labelKategori = self::KATEGORI[$kategori] ?? '';
+
+$teks = mb_strtolower(
+    $entity['nama'].' '.
+    ($entity['ringkas'] ?? '').' '.
+    ($entity['kecamatan'] ?? '').' '.
+    $kategori.' '.
+    $labelKategori
+);
             $nama = mb_strtolower($entity['nama']);
             $skor = 0;
             foreach (preg_split('/\s+/', $q) as $kata) {
