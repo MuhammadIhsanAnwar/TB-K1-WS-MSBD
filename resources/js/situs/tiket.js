@@ -176,67 +176,7 @@ if (bayar) {
             cekStatusLokal();
         }, 1000);
     };
-    const qrisArea = bayar.querySelector('[data-qris-area]');
-    const qrisImage = bayar.querySelector('[data-qris-image]');
-    const qrisUrlText = bayar.querySelector('[data-qris-url-text]');
-    const salinQris = bayar.querySelector('[data-salin-qris]');
 
-    const tampilkanQris = (data) => {
-        qrisArea.hidden = false;
-        qrisImage.src = data.qr_image_url;
-        qrisUrlText.textContent = data.qr_code_image_url;
-        salinQris.dataset.salin = data.qr_code_image_url;
-
-        tombolBayar.disabled = true;
-        tombolBayar.textContent = 'QRIS berhasil dibuat';
-
-        tulisKabar('QRIS berhasil dibuat. Silakan pindai atau gunakan URL gambar untuk Sandbox Simulator.');
-
-        mulaiPantauMidtrans();
-    };
-
-    const cekStatusMidtrans = async () => {
-        if (sedangCek || document.hidden) return;
-
-        sedangCek = true;
-
-        try {
-            const data = await kirim(bayar.dataset.cekUrl);
-
-            if (data.status && data.status !== 'menunggu') {
-                clearInterval(pantau);
-                pantau = null;
-                location.reload();
-            }
-        } catch {
-            // Coba kembali pada pemeriksaan berikutnya.
-        } finally {
-            sedangCek = false;
-        }
-    };
-
-    const mulaiPantauMidtrans = () => {
-        if (pantau) return;
-
-        cekStatusMidtrans();
-
-        pantau = setInterval(cekStatusMidtrans, 5000);
-    };
-
-    if (qrisArea && !qrisArea.hidden) {
-        tombolBayar.disabled = true;
-        tombolBayar.textContent = 'QRIS berhasil dibuat';
-        mulaiPantauMidtrans();
-    }
-
-    salinQris?.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(salinQris.dataset.salin);
-            tulisKabar('QR Code Image URL berhasil disalin.');
-        } catch {
-            tulisKabar('Gagal menyalin URL. Silakan salin URL secara manual.');
-        }
-    });
     formBayar.addEventListener('submit', async (e) => {
         if (!window.snap) return;
 
@@ -246,11 +186,6 @@ if (bayar) {
 
         try {
             const data = await kirim(formBayar.action);
-
-            if (data.qris) {
-                tampilkanQris(data);
-                return;
-            }
 
             if (!data.token) {
                 location.href = data.url || location.href;
