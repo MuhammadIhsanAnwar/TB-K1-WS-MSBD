@@ -1371,7 +1371,8 @@ res:kolam-renang-paradiso a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/budaya/d-8445606/paradiso-kolam-renang-tertua-di-medan-sejak-1924> ;
     mv:hargaTiketMulai 18000 ;
     mv:hargaContoh true ;
-    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 18000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 18000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-paradiso.jpg> .
 
 res:kolam-renang-deli a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Deli"@id ;
@@ -1394,7 +1395,8 @@ res:kolam-renang-deli a mv:RekreasiAir ;
     mv:hargaTiketMulai 12000 ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Hari kerja"@id ; schema:price 12000 ; schema:priceCurrency "IDR" ] ;
-    schema:offers [ a schema:Offer ; schema:name "Akhir pekan"@id ; schema:price 15000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "Akhir pekan"@id ; schema:price 15000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-deli.jpg> .
 
 res:kolam-renang-tirta-kartika a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Tirta Kartika"@id ;
@@ -1416,7 +1418,8 @@ res:kolam-renang-tirta-kartika a mv:RekreasiAir ;
     dcterms:source <https://renangloka.com/pool/kolam-renang-tirta-kartika/> ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh true ;
-    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-tirta-kartika.jpg> .
 
 res:bumi-asri-waterpark a mv:RekreasiAir ;
     rdfs:label "Bumi Asri Waterpark"@id ;
@@ -1462,7 +1465,8 @@ res:kolam-renang-primbana a mv:RekreasiAir ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Reguler"@id ; schema:price 15000 ; schema:priceCurrency "IDR" ] ;
-    schema:offers [ a schema:Offer ; schema:name "VIP"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] .
+    schema:offers [ a schema:Offer ; schema:name "VIP"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-primbana.jpg> .
 
 # ---------- tokoh, kerajaan, peristiwa, budaya, kuliner, transportasi ----------
 
@@ -4499,7 +4503,8 @@ res:kolam-renang-unimed a mv:RekreasiAir ;
     mv:jamTutup "17:00:00"^^xsd:time ;
     dcterms:source <https://www.unimed.ac.id/fasilitas/kolam-renang> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-unimed.jpg> .
 
 res:kolam-renang-graha-helvetia a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Graha Helvetia"@id ;
@@ -4519,7 +4524,8 @@ res:kolam-renang-graha-helvetia a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/daftar-kolam-renang-di-medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-graha-helvetia.jpg> .
 
 res:kolam-renang-tasbih a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Tasbih"@id ;
@@ -4539,7 +4545,8 @@ res:kolam-renang-tasbih a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.idntimes.com/travel/destination/kolam-renang-nyaman-di-medan> ;
     mv:hargaTiketMulai 20000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-tasbih.jpg> .
 
 res:kolam-renang-bahagia a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Bahagia"@id ;
@@ -4559,7 +4566,8 @@ res:kolam-renang-bahagia a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-bahagia-medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-bahagia.jpg> .
 
 res:kolam-renang-istiqlal a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Istiqlal"@id ;
@@ -4579,7 +4587,8 @@ res:kolam-renang-istiqlal a mv:RekreasiAir ;
     mv:jamTutup "17:30:00"^^xsd:time ;
     dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/kolam-renang-istiqlal-deli-tua> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-istiqlal.jpg> .
 
 res:kolam-renang-citra-wisata a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Citra Wisata"@id ;
@@ -4599,7 +4608,8 @@ res:kolam-renang-citra-wisata a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-citra-wisata-medan> ;
     mv:hargaTiketMulai 20000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-citra-wisata.jpg> .
 
 res:taman-mora-indah-waterpark a mv:RekreasiAir ;
     rdfs:label "Taman Mora Indah Waterpark"@id ;
@@ -4619,7 +4629,8 @@ res:taman-mora-indah-waterpark a mv:RekreasiAir ;
     mv:jamTutup "17:30:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-7853091/mora-waterpark-tanjung-morawa-lokasi-jam-buka-dan-harga-tiket-masuk> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/mora-waterpark.jpg> .
 
 res:budaya-resto-themepark a mv:TempatKuliner ;
     rdfs:label "Budaya Resto & Themepark"@id ;
@@ -4659,7 +4670,8 @@ res:kolam-renang-selayang a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://dispora.sumutprov.go.id/fasilitas/kolam-renang-selayang> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-selayang.jpg> .
 
 res:hairos-water-park a mv:RekreasiAir ;
     rdfs:label "Hairos Water Park"@id ;
@@ -4679,7 +4691,8 @@ res:hairos-water-park a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6789120/hairos-water-park-medan-harga-tiket-dan-wahana> ;
     mv:hargaTiketMulai 45000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/hairos-waterpark.jpg> .
 
 res:wisata-merci-themepark-and-resto a mv:RekreasiAir ;
     rdfs:label "Wisata Merci Themepark and Resto"@id ;
@@ -4699,7 +4712,8 @@ res:wisata-merci-themepark-and-resto a mv:RekreasiAir ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6812340/wisata-merci-medan-harga-tiket-dan-jam-buka> ;
     mv:hargaTiketMulai 35000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/wisata-merci-themepark-and-resto.jpg> .
 
 res:central-park-zoo-resort a mv:RuangPublik ;
     rdfs:label "Central Park Zoo & Resort"@id ;
@@ -4721,7 +4735,7 @@ res:central-park-zoo-resort a mv:RuangPublik ;
     mv:hargaTiketMulai 40000 ;
     mv:hargaContoh false .
 
-res:nakny-funland a mv:RekreasiAir ;
+res:nakny-funland a mv:RuangPublik ;
     rdfs:label "Nakny Funland"@id ;
     schema:name "Nakny Funland"@id ;
     schema:description "Taman rekreasi air dan hiburan keluarga populer di kawasan Medan Marelan dengan beragam kolam bermain anak."@id ;
@@ -4759,7 +4773,8 @@ res:tirta-ceria-waterpark a mv:RekreasiAir ;
     mv:jamTutup "17:30:00"^^xsd:time ;
     dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/tirta-ceria-waterpark> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/tirta-ceria.jpg> .
 
 res:kynan-haven-waterpark a mv:RekreasiAir ;
     rdfs:label "Kynan Haven Waterpark"@id ;
@@ -4779,7 +4794,8 @@ res:kynan-haven-waterpark a mv:RekreasiAir ;
     mv:jamTutup "17:30:00"^^xsd:time ;
     dcterms:source <https://www.instagram.com/kynanhavenmarelan/> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kynan-haven-waterpark.jpg> .
 
 res:waterpark-citra-garden a mv:RekreasiAir ;
     rdfs:label "Waterpark Citra Garden"@id ;
@@ -4799,7 +4815,8 @@ res:waterpark-citra-garden a mv:RekreasiAir ;
     mv:jamTutup "05:00:00"^^xsd:time ;
     dcterms:source <https://digitiket.com/v/detail/kolam-renang-citra-garden-waterpark-medan> ;
     mv:hargaTiketMulai 30000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/waterpark-citra-garden.jpg> .
 
 res:kolam-renang-sejahtera a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Sejahtera"@id ;
@@ -4819,5 +4836,6 @@ res:kolam-renang-sejahtera a mv:RekreasiAir ;
     mv:jamTutup "18:30:00"^^xsd:time ;
     dcterms:source <https://www.instagram.com/kolamrenangsejahtera/?hl=id> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-sejahtera.jpg> .
 

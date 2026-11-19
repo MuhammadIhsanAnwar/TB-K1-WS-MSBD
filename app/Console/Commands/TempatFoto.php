@@ -1,0 +1,142 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+
+/**
+ * Tambahkan schema:image ke medanvisit-data.ttl berdasarkan foto di sebuah folder.
+ *
+ * Nama file dicocokkan dengan slug tempat. Kalau tidak persis, dicoba pencocokan
+ * longgar (nama tempat tanpa "kolam-renang-" dsb). Tempat yang sudah punya gambar
+ * dilewati, jadi aman dijalankan berulang.
+ */
+class TempatFoto extends Command
+{
+    protected $signature = 'tempat:foto
+                            {folder : Folder sumber foto}
+                            {--tulis : Tulis ke TTL dan salin foto ke public/images/foto}';
+
+    protected $description = 'Pasang gambar tempat wisata dari folder foto';
+
+    /** Nama file yang tidak sama persis dengan slug. */
+    private const ALIAS = [
+        'mora-waterpark' => 'taman-mora-indah-waterpark',
+        'hairos-waterpark' => 'hairos-water-park',
+        'tirta-ceria' => 'tirta-ceria-waterpark',
+    ];
+
+    public function handle(): int
+    {
+        $folder = (string) $this->argument('folder');
+        $ttl = database_path('rdf/medanvisit-data.ttl');
+        $tujuan = public_path('images/foto');
+
+        if (! is_dir($folder)) {
+            $this->error('Folder tidak ditemukan: '.$folder);
+
+            return self::FAILURE;
+        }
+
+        $isi = (string) file_get_contents($ttl);
+
+        // Slug yang ada di TTL
+        preg_match_all('/^res:([a-z0-9-]+)\s+a\s+mv:/m', $isi, $m);
+        $slug = array_flip($m[1]);
+
+        $foto = [];
+        foreach (glob($folder.'/*') as $jalur) {
+            if (is_file($jalur) && preg_match('/\.(jpe?g|png|webp)$/i', $jalur)) {
+                $foto[] = $jalur;
+            }
+        }
+        sort($foto);
+
+        $pasang = [];
+        $lewat = [];
+        $asing = [];
+
+        foreach ($foto as $jalur) {
+            $nama = pathinfo($jalur, PATHINFO_FILENAME);
+            $s = self::ALIAS[$nama] ?? $nama;
+
+            if (! isset($slug[$s])) {
+                $asing[] = basename($jalur);
+
+                continue;
+            }
+
+            if ($this->sudahAda($isi, $s)) {
+                $lewat[] = $s;
+
+                continue;
+            }
+
+            $pasang[$s] = $jalur;
+        }
+
+        $this->info('Foto di folder : '.count($foto));
+        $this->info('Akan dipasang  : '.count($pasang));
+        $this->info('Sudah punya    : '.count($lewat));
+        $this->info('Tidak dikenal  : '.count($asing));
+
+        if ($asing !== []) {
+            $this->line('  '.implode(', ', $asing));
+        }
+
+        if ($pasang === []) {
+            $this->warn('Tidak ada yang perlu ditulis.');
+
+            return self::SUCCESS;
+        }
+
+        foreach (array_keys($pasang) as $s) {
+            $this->line('  + '.$s);
+        }
+
+        if (! $this->option('tulis')) {
+            $this->warn('Belum ditulis. Jalankan dengan --tulis.');
+
+            return self::SUCCESS;
+        }
+
+        foreach ($pasang as $s => $jalur) {
+            $nama = basename($jalur);
+            if (! is_dir($tujuan)) {
+                mkdir($tujuan, 0755, true);
+            }
+            if (! copy($jalur, $tujuan.'/'.$nama)) {
+                $this->error('Gagal menyalin '.$nama);
+
+                return self::FAILURE;
+            }
+
+            $isi = $this->sisipkan($isi, $s, $nama);
+        }
+
+        file_put_contents($ttl, $isi);
+        $this->info('Ditulis. Jalankan rdf:kirim --replace agar DB 3 ikut berubah.');
+
+        return self::SUCCESS;
+    }
+
+    private function sudahAda(string $isi, string $slug): bool
+    {
+        // Batasi pencarian sampai blok berikutnya supaya tidak salah cocok.
+        return (bool) preg_match('/^res:'.preg_quote($slug, '/').'\s+a\s+mv:(?:(?!\nres:).)*?schema:image/ms', $isi);
+    }
+
+    /** Sisipkan schema:image sebelum penutup blok (" .") milik slug. */
+    private function sisipkan(string $isi, string $slug, string $berkas): string
+    {
+        $url = 'https://medanvisit.neoverse.my.id/images/foto/'.$berkas;
+        $batas = '(?:(?!\nres:).)*?';
+        $pola = '/^(res:'.preg_quote($slug, '/').'\s+a\s+mv:'.$batas.')(\n\s*\.)/ms';
+
+        if (! preg_match($pola, $isi)) {
+            $pola = '/^(res:'.preg_quote($slug, '/').'\s+a\s+mv:'.$batas.')(\s*\.\s*)$/ms';
+        }
+
+        return preg_replace($pola, '${1} ;'."\n".'    schema:image <'.$url.'>${2}', $isi, 1);
+    }
+}
