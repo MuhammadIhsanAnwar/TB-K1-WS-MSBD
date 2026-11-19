@@ -152,10 +152,14 @@ class SitusController extends Controller
     $t = Katalog::get($slug);
     abort_unless($t && $t['jenis'] === 'tempat', 404);
 
+    $disukai = session('tempat_disukai', []);
+
     return view('situs.tempat', ['e' => $t] + [
         'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
         'ramai' => 0,
         'dekat' => $this->terdekat($t, 4),
+        'jumlahSuka' => (int) Cache::get('medanvisit.favorit.' . $slug, 0),
+        'sudahDisukai' => in_array($slug, $disukai, true),
     ]);
 }
     public function sukai(Request $request, string $slug)
