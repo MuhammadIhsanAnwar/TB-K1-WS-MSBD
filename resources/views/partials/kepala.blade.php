@@ -1,6 +1,7 @@
 @php
     use App\Support\Katalog;
     use App\Support\Penyimpanan;
+
     $u = session('pengguna');
     $akunPengelola = in_array($u['peran'] ?? null, ['admin', 'superadmin'], true);
     $jalurFotoProfil = $u['foto_profil'] ?? null;
@@ -8,20 +9,28 @@
     $urlFotoProfil = $berkasFotoProfil && is_file($berkasFotoProfil)
         ? asset('storage/'.$jalurFotoProfil).'?v='.filemtime($berkasFotoProfil)
         : null;
+
     $adalahBeranda = request()->routeIs('beranda');
+
     $menu = [
         [route('peta'), 'Tempat & Peta', ['peta', 'tempat', 'entitas']],
     ];
+
     if (! $akunPengelola) {
         $menu[] = [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']];
-        $tiketAktif = ($u && $u['peran'] === 'wisatawan')
         $menu[] = [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']];
         $menu[] = [route('beranda').'#tiket', 'Pesan Tiket', ['tiket.*', 'checkout', 'pesanan']];
     }
-    $tiketAktif = ($u && $u['peran'] === 'wisatawan');
-        ? collect(Penyimpanan::pesanan((int) ($u['id'] ?? 0), aman: true))->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString())->count()
+
+    $tiketAktif = ($u && $u['peran'] === 'wisatawan')
+        ? collect(Penyimpanan::pesanan((int) ($u['id'] ?? 0), aman: true))
+            ->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true)
+                && empty($p['dipakai'])
+                && $p['tanggal'] >= now('Asia/Jakarta')->toDateString())
+            ->count()
         : 0;
 @endphp
+
 <header class="mv-kepala {{ $adalahBeranda ? 'mv-kepala--hero' : '' }}" data-kepala>
     <div class="mv-kepala__dalam">
         <a class="mv-kepala__logo" href="{{ route('beranda') }}" aria-label="MedanVisit, ke beranda">
