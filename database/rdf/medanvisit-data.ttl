@@ -579,7 +579,7 @@ res:rahmat-gallery a mv:Museum ;
     schema:offers [ a schema:Offer ; schema:name "Domestik"@id ; schema:price 75000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Pelajar atau rombongan"@id ; schema:price 25000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Wisatawan mancanegara"@id ; schema:price 150000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/Rahmat-International-Wildlife-Museum-Gallery.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/images/foto/rahmat-international-wildlife-museum-gallery.jpg> .
 
 res:museum-situs-kota-cina a mv:Museum ;
     rdfs:label "Museum Situs Kota Cina"@id ;
