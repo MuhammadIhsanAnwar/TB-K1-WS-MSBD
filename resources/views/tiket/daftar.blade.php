@@ -36,6 +36,7 @@
                         <th>Rincian tiket</th>
                         <th class="n">Total</th>
                         <th class="n">Status</th>
+                        <th class="n">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,9 +51,22 @@
                             <td class="sekunder">{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }}</td>
                             <td class="n nums">{{ Katalog::rupiah($p['total']) }}</td>
                             <td class="n">
-                                @php $st = ! empty($p['dipakai']) ? ['Sudah dipakai', ''] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]; @endphp
-                                <span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span>
-                            </td>
+    @php $st = ! empty($p['dipakai']) ? ['Sudah dipakai', ''] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]; @endphp
+    <span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span>
+</td>
+<td class="n">
+    @if ($p['status'] === 'menunggu')
+        <a class="mv-btn mv-btn--utama mv-btn--kecil" href="{{ route('pesanan', $p['kode']) }}">
+            Lanjutkan pembayaran
+        </a>
+    @elseif ($p['status'] === 'lunas')
+        <a class="mv-btn mv-btn--garis mv-btn--kecil" href="{{ route('tiket.e', $p['kode']) }}">
+            Lihat e-tiket
+        </a>
+    @else
+        <span class="sekunder">Tidak tersedia</span>
+    @endif
+</td>
                         </tr>
                     @endforeach
                 </tbody>
