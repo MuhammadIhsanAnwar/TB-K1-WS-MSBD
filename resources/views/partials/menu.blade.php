@@ -7,7 +7,6 @@
     ];
     if (! $akunPengelola) {
         $menuPonsel[] = [route('rencana'), 'Perencanaan Rute', ['rencana', 'rencana.bagikan']];
-        $menuPonsel[] = [route('medanvisit-hub.index'), 'MedanVisit Hub', ['medanvisit-hub.*']];
         $menuPonsel[] = [route('hubungi.admin'), 'Hubungi Admin', ['hubungi.admin', 'hubungi.admin.kirim']];
     }
 @endphp
