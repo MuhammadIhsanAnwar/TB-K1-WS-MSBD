@@ -107,7 +107,7 @@ async function modeRute(el) {
             {
                 icon: ikon('#e3a51c', nomor),
                 title: t.nama,
-                alt: `${i + 1}. ${t.nama}`,
+                alt: `${nomor}. ${t.nama}`,
             }
         )
         .bindPopup(popup(t))
