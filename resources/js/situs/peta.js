@@ -100,6 +100,7 @@ async function modeRute(el) {
                 .bindTooltip('Posisimu', { permanent: true, direction: 'top', offset: [0, -8] })
                 .addTo(penanda);
             return;
+        }
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
