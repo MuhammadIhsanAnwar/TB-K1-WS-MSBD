@@ -217,7 +217,6 @@ if (bayar) {
             const url = detik % 5 === 0 ? bayar.dataset.cekUrl : bayar.dataset.statusUrl;
             const data = await minta(url, detik % 5 === 0 ? 'POST' : 'GET');
             if (!terapkanStatus(data.status) && detik % 10 === 3) muatQris();
-            if (data.status && data.status !== 'menunggu') {
                 clearInterval(pantau);
                 pantau = null;
                 location.reload();
