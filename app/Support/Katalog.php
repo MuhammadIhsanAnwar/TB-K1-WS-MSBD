@@ -348,7 +348,7 @@ class Katalog
             throw new RuntimeException('Durasi perjalanan harus lebih dari 0 jam.');
         }
 
-        $pool = array_filter(self::tempat(), fn ($t) => in_array($t['kategori'], $minat, true) && $t['slug'] !== $mulai);
+        $pool = array_filter(self::tempat(), fn ($t) => in_array($t['kategori'], $minat, true));
         $hari = (int) \Illuminate\Support\Carbon::instance($tanggal ?? now())->setTimezone('Asia/Jakarta')->isoFormat('E');
 
         // mulai pukul 08.30, atau saat tempat awal buka kalau lebih siang
