@@ -231,6 +231,7 @@ class SitusController extends Controller
                 'mulai' => ['required', 'string'],
                 // "lokasi": mulai dari posisi pengguna sekarang (koordinat dari browser)
                 'lat' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-90,90'],
+                'lng' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-180,180'],
             ], [
                 'minat.required' => 'Pilih minimal satu minat.',
                 'moda.required' => 'Pilih minimal satu cara berpindah.',
