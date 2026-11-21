@@ -33,7 +33,6 @@ class PengelolaFeatureAccessTest extends TestCase
             $this->post('/rencana/simpan', [
                 'nama' => 'Rute wisata',
             ])->assertForbidden();
-            ])->assertForbidden();
         }
     }
 }
