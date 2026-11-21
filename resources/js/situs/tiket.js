@@ -125,7 +125,7 @@ if (bayar) {
         kabar.textContent = teks;
     };
 
-    const kirim = async (url) => {
+    const minta = async (url, method = 'GET') => {
         const r = await fetch(url, {
             method: 'POST',
             headers: {
