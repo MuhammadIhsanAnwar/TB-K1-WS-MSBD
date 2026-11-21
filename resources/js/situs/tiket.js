@@ -215,7 +215,7 @@ if (bayar) {
         detik += 1;
         try {
             const url = detik % 5 === 0 ? bayar.dataset.cekUrl : bayar.dataset.statusUrl;
-                method: 'GET',
+            const data = await minta(url, detik % 5 === 0 ? 'POST' : 'GET');
                 headers: {
                     Accept: 'application/json',
                 },
