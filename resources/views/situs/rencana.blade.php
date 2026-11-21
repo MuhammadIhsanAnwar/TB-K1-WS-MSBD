@@ -16,7 +16,7 @@
         ?? collect($tempat)->first(fn ($entity) => ! empty($entity['foto']))
         ?? [];
 
-    $rute = $hasil ? collect($hasil['singgah'])->map(fn ($s) => [
+    // mulai dari posisi pengguna: titik "Posisimu" menjadi awal garis rute di peta
         'nama' => $s['tempat']['nama'],
         'lat' => $s['tempat']['lat'],
         'lng' => $s['tempat']['lng'],
