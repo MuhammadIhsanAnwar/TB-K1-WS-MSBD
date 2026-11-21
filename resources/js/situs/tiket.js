@@ -228,7 +228,6 @@ if (bayar) {
         if (pantau) return;
         pantau = setInterval(tik, 1000);
         tik();
-
         pantau = setInterval(() => {
             cekStatusLokal();
         }, 1000);
