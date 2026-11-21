@@ -34,3 +34,4 @@ if (form) {
         if (!navigator.geolocation) {
             aturKabar();
             pilih.focus();
+            return;
