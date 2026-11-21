@@ -191,6 +191,7 @@ if (bayar) {
         }
         location.reload();
     };
+
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
