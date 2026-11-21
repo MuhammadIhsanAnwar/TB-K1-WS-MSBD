@@ -18,7 +18,6 @@
 @section('isi')
 @if ($p['status'] === 'lunas')
     @include('tiket._sukses', ['siap' => true])
-                <path d="M76 102l16 16 32-36" fill="none" stroke="#f6f1e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <h1>E-tiketmu sudah terbit</h1>
             <p>{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }} untuk {{ $t['nama'] }} pada {{ $tgl->translatedFormat('l, j F Y') }}. Kode pesanan <strong>{{ $p['kode'] }}</strong> siap ditunjukkan di loket masuk.</p>
