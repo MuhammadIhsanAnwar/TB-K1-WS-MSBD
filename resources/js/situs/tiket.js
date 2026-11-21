@@ -189,6 +189,7 @@ if (bayar) {
             }
             await jeda(1000);
         }
+        location.reload();
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
