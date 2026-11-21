@@ -33,3 +33,4 @@ if (form) {
         e.preventDefault();
         if (!navigator.geolocation) {
             aturKabar();
+            pilih.focus();
