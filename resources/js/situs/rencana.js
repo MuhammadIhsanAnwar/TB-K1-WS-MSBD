@@ -47,3 +47,4 @@ if (form) {
             },
             (galat) => {
                 tombol.disabled = false;
+                tulis(galat.code === galat.PERMISSION_DENIED
