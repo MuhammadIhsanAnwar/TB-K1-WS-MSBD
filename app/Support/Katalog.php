@@ -376,6 +376,7 @@ class Katalog
             }
             $pool = array_filter($pool, fn ($t) => $t['slug'] !== $mulai);
 
+            $jadwalAwal = self::jadwal($awal);
         }
 
         $sisaMenit = $durasiJam * 60;
