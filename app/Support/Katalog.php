@@ -368,6 +368,7 @@ class Katalog
             if ($terdekat > self::JARAK_LANGKAH_PERTAMA) {
                 throw new RuntimeException('Lokasimu sekitar '.number_format($terdekat / 1000, 0, ',', '.').' km dari tempat wisata terdekat yang cocok. Pilih tempat awal dari daftar.');
             }
+            $kini = $titikAwal;
         }
 
         $sisaMenit = $durasiJam * 60;
