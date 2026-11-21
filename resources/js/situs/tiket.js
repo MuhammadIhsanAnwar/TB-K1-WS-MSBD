@@ -148,6 +148,7 @@ if (bayar) {
         return lapis;
     };
 
+    // Pesanan sudah lunas di database: tombol e-tiket aktif.
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
