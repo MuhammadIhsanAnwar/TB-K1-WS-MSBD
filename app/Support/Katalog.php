@@ -337,6 +337,7 @@ class Katalog
      * masih muat dalam sisa waktu, dan buka saat didatangi (jam buka dari Database 3).
      *
      * Dengan $posisi (lat, lng pengguna), rute dimulai dari titik itu: persinggahan pertama adalah tempat
+     * terdekat yang cocok, dan hasilnya membawa 'awal' untuk penanda di peta.
      * Calon diurutkan dengan jarak garis lurus, jadi layanan rute online hanya dipanggil sekali per langkah
      * untuk tempat yang terpilih. Kalau layanan itu gagal, perkiraan garis lurus dipakai.
      */
