@@ -218,7 +218,7 @@ if (bayar) {
             const data = await minta(url, detik % 5 === 0 ? 'POST' : 'GET');
             if (!terapkanStatus(data.status) && detik % 10 === 3) muatQris();
         } catch {
-            // Pengecekan dilanjutkan pada interval berikutnya.
+            // dicoba lagi pada putaran berikutnya
         } finally {
             sedangCek = false;
         }
