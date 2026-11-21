@@ -260,7 +260,6 @@ if (bayar) {
                 onError: () => {
                     tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.');
                 },
-
                 onClose: () => {
                     tulisKabar('Jendela pembayaran ditutup. Jika kamu sudah membayar, tunggu konfirmasi.');
                 },
