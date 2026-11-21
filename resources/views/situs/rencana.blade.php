@@ -118,6 +118,7 @@
                         <span class="titik-titik"></span>
                         <span class="kanan">titik awal</span>
                     </div>
+                @endif
                 @foreach ($hasil['singgah'] as $s)
                     @if ($s['pindah'])
                         <div class="slip__baris redup">
