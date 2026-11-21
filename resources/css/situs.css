@@ -413,6 +413,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .bayar-qris__isi ol { margin: 0; padding-left: 1.2em; list-style: decimal; }
 .bayar-qris__isi input { width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid #b9b19c; font: 0.875rem/1.3 var(--font-text); color: var(--ink); background: var(--paper); }
 .bayar-qris__aksi { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+/* layar sukses yang langsung tampil di atas halaman pembayaran (lihat tiket/_sukses.blade.php) */
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
