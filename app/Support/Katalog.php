@@ -329,6 +329,7 @@ class Katalog
     ];
 }
 
+    /** Jarak maksimum dari posisi pengguna ke persinggahan pertama (rumah bisa agak jauh dari pusat kota). */
     /**
      * Susun rute satu hari dari tempat awal: setiap langkah memilih tempat terdekat yang cocok dengan minat,
      * masih muat dalam sisa waktu, dan buka saat didatangi (jam buka dari Database 3).
