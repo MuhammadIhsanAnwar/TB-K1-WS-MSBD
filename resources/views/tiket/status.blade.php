@@ -67,6 +67,7 @@
                                 <img data-qris-gambar alt="Kode QRIS pesanan {{ $p['kode'] }}" width="160" height="160">
                                 <div class="bayar-qris__isi">
                                     <b>Uji QRIS di simulator</b>
+                                    <ol>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
