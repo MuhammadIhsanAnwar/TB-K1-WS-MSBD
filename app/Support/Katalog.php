@@ -336,6 +336,7 @@ class Katalog
      * Susun rute satu hari dari tempat awal: setiap langkah memilih tempat terdekat yang cocok dengan minat,
      * masih muat dalam sisa waktu, dan buka saat didatangi (jam buka dari Database 3).
      *
+     * Dengan $posisi (lat, lng pengguna), rute dimulai dari titik itu: persinggahan pertama adalah tempat
      * Calon diurutkan dengan jarak garis lurus, jadi layanan rute online hanya dipanggil sekali per langkah
      * untuk tempat yang terpilih. Kalau layanan itu gagal, perkiraan garis lurus dipakai.
      */
