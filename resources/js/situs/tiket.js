@@ -160,6 +160,7 @@ if (bayar) {
         l.querySelector('[data-proses-etiket]')?.remove();
         l.querySelector('[data-tombol-etiket]')?.removeAttribute('aria-disabled');
     };
+
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
