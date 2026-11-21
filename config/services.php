@@ -68,7 +68,6 @@ return [
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
-                'turn:asia.relay.metered.ca:80,turn:asia.relay.metered.ca:80?transport=tcp,turn:asia.relay.metered.ca:443,turns:asia.relay.metered.ca:443?transport=tcp'
             ))))),
             'username' => env('METERED_TURN_USERNAME'),
             'credential' => env('METERED_TURN_CREDENTIAL'),
