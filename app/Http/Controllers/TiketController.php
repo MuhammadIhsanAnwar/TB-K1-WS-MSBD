@@ -186,6 +186,7 @@ class TiketController extends Controller
     }
 
     /** Cek status pesanan langsung dari database tanpa menghubungi API Midtrans. */
+    /** Mode sandbox: URL gambar QRIS untuk ditempel di simulator Midtrans, setelah pembeli memilih QRIS. */
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
