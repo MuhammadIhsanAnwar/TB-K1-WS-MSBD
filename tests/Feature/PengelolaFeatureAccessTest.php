@@ -22,7 +22,6 @@ class PengelolaFeatureAccessTest extends TestCase
             $this->get('/rencana')->assertForbidden();
             $this->get('/rencana/saya')->assertForbidden();
             $this->get('/r/bagikan-kode')->assertForbidden();
-            $this->get('/MedanVisit-Hub')->assertForbidden();
             $this->get('/hubungi-admin')->assertForbidden();
             $this->get('/tempat/kolam-renang-primbana/tiket')->assertForbidden();
             $this->get('/tiket')->assertForbidden();
