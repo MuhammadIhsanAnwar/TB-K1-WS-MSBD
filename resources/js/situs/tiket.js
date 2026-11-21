@@ -203,6 +203,7 @@ if (bayar) {
             panelQris.querySelector('[data-salin]').dataset.salin = data.url;
             panelQris.hidden = false;
         } catch {
+            // dicoba lagi pada putaran berikutnya
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
