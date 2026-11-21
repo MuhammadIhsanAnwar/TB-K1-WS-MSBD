@@ -5,3 +5,4 @@
     memastikan pesanan lunas (biasanya kurang dari dua detik).
 --}}
 <div class="sukses @unless ($siap) sukses--lapis @endunless" data-tiket="sukses" @unless ($siap) role="dialog" aria-modal="true" aria-labelledby="judul-sukses" @endunless>
+    <div class="sukses__isi">
