@@ -22,6 +22,7 @@
 @if ($midtrans)
     {{-- layar sukses disiapkan di sini supaya tampil seketika setelah pembayaran berhasil --}}
     <template data-templat-sukses>@include('tiket._sukses', ['siap' => false])</template>
+@endif
 <div class="mv-tiket-ruang" data-tiket="status">
     <div class="alat__judul">
         <div>
