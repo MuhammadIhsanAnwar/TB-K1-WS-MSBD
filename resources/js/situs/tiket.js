@@ -156,6 +156,7 @@ if (bayar) {
             return;
         }
         const judul = l.querySelector('[data-judul-siap]');
+        if (judul) judul.textContent = judul.dataset.judulSiap;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
