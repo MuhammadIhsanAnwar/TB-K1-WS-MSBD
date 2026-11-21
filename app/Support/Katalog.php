@@ -375,6 +375,7 @@ class Katalog
                 throw new RuntimeException('Pilih tempat awal dari daftar tempat wisata.');
             }
             $pool = array_filter($pool, fn ($t) => $t['slug'] !== $mulai);
+
         }
 
         $sisaMenit = $durasiJam * 60;
