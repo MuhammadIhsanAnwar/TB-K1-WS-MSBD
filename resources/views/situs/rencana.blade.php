@@ -172,6 +172,7 @@
                             <label for="judul-rencana">Nama rencana</label>
                             <input id="judul-rencana" type="text" name="judul" value="{{ $judulRute }}" maxlength="80" required @if ($dariLokasi) aria-describedby="catatan-simpan" @endif>
                             @if ($dariLokasi)
+                                <p class="isian__bantuan" id="catatan-simpan">Lokasimu tidak disimpan. Rencana yang disimpan dimulai dari {{ $hasil['singgah'][0]['tempat']['nama'] }}.</p>
                         </div>
 
                         <button class="tombol tombol--hijau" type="submit">Simpan rencana</button>
