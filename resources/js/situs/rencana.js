@@ -44,3 +44,4 @@ if (form) {
                 lat.value = pos.coords.latitude.toFixed(4);
                 lng.value = pos.coords.longitude.toFixed(4);
                 form.submit();
+            },
