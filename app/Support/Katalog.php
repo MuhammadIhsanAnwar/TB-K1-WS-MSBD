@@ -431,6 +431,7 @@ class Katalog
             $kini = $calon;
         }
 
+        if ($urut === []) {
         return [
             'singgah' => $urut,
             'biaya' => $total,
