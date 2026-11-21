@@ -418,6 +418,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .sukses__proses { margin: 0; font-weight: 600; color: var(--on-green); }
 .sukses [aria-disabled="true"] { opacity: 0.6; pointer-events: none; }
 @keyframes sukses-muncul { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .sukses--lapis { animation: none; } }
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
