@@ -92,7 +92,7 @@ async function modeRute(el) {
 
     const penanda = L.featureGroup().addTo(peta);
 
-    valid.forEach((t, i) => {
+    // titik "awal" (posisi pengguna) memakai penanda lokasi seperti di halaman peta; tempat diberi nomor 1, 2, ...
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
