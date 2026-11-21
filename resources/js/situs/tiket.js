@@ -262,6 +262,7 @@ if (bayar) {
                 },
                 onClose: () => {
                     tulisKabar('Jendela pembayaran ditutup. Kalau sudah memilih cara bayar, selesaikan pembayarannya; halaman ini diperbarui otomatis.');
+                    muatQris();
                 },
             });
         } catch (err) {
