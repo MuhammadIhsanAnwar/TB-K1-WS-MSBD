@@ -370,6 +370,7 @@ class Katalog
             }
             $kini = $titikAwal;
         } else {
+            $awal = self::get($mulai);
         }
 
         $sisaMenit = $durasiJam * 60;
