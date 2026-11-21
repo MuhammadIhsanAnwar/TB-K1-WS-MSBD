@@ -157,6 +157,7 @@ if (bayar) {
         }
         const judul = l.querySelector('[data-judul-siap]');
         if (judul) judul.textContent = judul.dataset.judulSiap;
+        l.querySelector('[data-proses-etiket]')?.remove();
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
