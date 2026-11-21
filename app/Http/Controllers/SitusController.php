@@ -238,6 +238,7 @@ class SitusController extends Controller
                 'lat.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
                 'lng.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
             ]);
+            $posisi = $pref['mulai'] === 'lokasi' ? ['lat' => (float) $pref['lat'], 'lng' => (float) $pref['lng']] : null;
             try {
                 $hasil = Katalog::susunRute($pref['minat'], (int) $pref['durasi'], $pref['moda'], $pref['mulai']);
             } catch (\RuntimeException $e) {
