@@ -2,3 +2,4 @@
 // dikirim. Koordinat dibulatkan ke 4 desimal (sekitar 11 m) dan tidak disimpan di server.
 const form = document.querySelector('[data-rencana-form]');
 
+if (form) {
