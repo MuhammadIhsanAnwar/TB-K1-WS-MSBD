@@ -68,6 +68,7 @@
                                 <div class="bayar-qris__isi">
                                     <b>Uji QRIS di simulator</b>
                                     <ol>
+                                        <li>Salin URL gambar QR di bawah.</li>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
