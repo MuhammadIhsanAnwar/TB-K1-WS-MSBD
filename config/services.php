@@ -68,7 +68,6 @@ return [
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
-        'enabled' => env('WEBRTC_ENABLED') === null || env('WEBRTC_ENABLED') === '' ? true : filter_var(env('WEBRTC_ENABLED'), FILTER_VALIDATE_BOOL),
         'stun_url' => env('WEBRTC_STUN_URL') ?: 'stun:stun.l.google.com:19302',
         'turn_provider' => env('WEBRTC_TURN_PROVIDER') ?: 'coturn',
         'metered' => [
