@@ -117,6 +117,7 @@ if (bayar) {
     let pantau = null;
     let detik = 0;
     let sedangCek = false;
+    let konfirmasiJalan = false;
 
     const tulisKabar = (teks) => {
         kabar.hidden = !teks;
