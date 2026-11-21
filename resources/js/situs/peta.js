@@ -101,6 +101,7 @@ async function modeRute(el) {
                 .addTo(penanda);
             return;
         }
+        nomor += 1;
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
