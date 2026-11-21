@@ -146,6 +146,7 @@ if (bayar) {
         lapis.querySelector('#judul-sukses')?.focus();
 
         return lapis;
+    };
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
