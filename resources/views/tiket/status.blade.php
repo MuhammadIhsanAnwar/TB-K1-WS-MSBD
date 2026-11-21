@@ -18,7 +18,6 @@
 @section('isi')
 @if ($p['status'] === 'lunas')
     @include('tiket._sukses', ['siap' => true])
-            <div class="sukses__aksi">
                 <a class="mv-btn mv-btn--utama" href="{{ route('tiket.e', $p['kode']) }}">Buka e-tiket &amp; kode QR</a>
                 <a class="mv-btn mv-btn--garis-terang" href="{{ route('tempat', $t['slug']) }}">Kembali ke {{ $t['nama'] }}</a>
             </div>
