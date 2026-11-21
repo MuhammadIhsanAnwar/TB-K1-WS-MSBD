@@ -25,3 +25,4 @@ if (form) {
     };
     pilih.addEventListener('change', aturKabar);
 
+    form.addEventListener('submit', (e) => {
