@@ -112,6 +112,7 @@ if (bayar) {
     const panelQris = bayar.querySelector('[data-qris-sandbox]');
     const templatSukses = document.querySelector('[data-templat-sukses]');
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+    const jeda = (ms) => new Promise((selesai) => setTimeout(selesai, ms));
 
     let pantau = null;
     let sedangCek = false;
