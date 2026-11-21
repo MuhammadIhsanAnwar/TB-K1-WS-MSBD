@@ -382,6 +382,7 @@ class Katalog
             }
 
             $durasiAwal = (int) ($awal['singgah'] ?? 45);
+            if ($durasiAwal > $sisaMenit) {
         }
 
         $sisaMenit = $durasiJam * 60;
