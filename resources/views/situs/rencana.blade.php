@@ -115,6 +115,7 @@
                 @if ($dariLokasi)
                     <div class="slip__baris">
                         <span>{{ Katalog::jamTeks($hasil['singgah'][0]['mulai'] - $hasil['singgah'][0]['pindah']['menit']) }} Berangkat dari lokasimu</span>
+                        <span class="titik-titik"></span>
                 @foreach ($hasil['singgah'] as $s)
                     @if ($s['pindah'])
                         <div class="slip__baris redup">
