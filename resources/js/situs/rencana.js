@@ -31,3 +31,4 @@ if (form) {
         if (pilih.value !== 'lokasi') return;
 
         e.preventDefault();
+        if (!navigator.geolocation) {
