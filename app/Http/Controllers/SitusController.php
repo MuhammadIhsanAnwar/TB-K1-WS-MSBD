@@ -240,7 +240,7 @@ class SitusController extends Controller
             ]);
             $posisi = $pref['mulai'] === 'lokasi' ? ['lat' => (float) $pref['lat'], 'lng' => (float) $pref['lng']] : null;
             try {
-                $hasil = Katalog::susunRute($pref['minat'], (int) $pref['durasi'], $pref['moda'], $pref['mulai']);
+                $hasil = Katalog::susunRute($pref['minat'], (int) $pref['durasi'], $pref['moda'], $pref['mulai'], posisi: $posisi);
             } catch (\RuntimeException $e) {
                 return view('situs.rencana', ['hasil' => null, 'pref' => $pref, 'tempat' => Katalog::tempat()])
                     ->withErrors(['rute' => $e->getMessage()]);
