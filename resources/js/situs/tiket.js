@@ -139,6 +139,7 @@ if (bayar) {
 
     // Layar sukses sudah ada di halaman (template), jadi tampil seketika tanpa memuat ulang halaman.
     const tampilkanSukses = () => {
+        if (lapis || !templatSukses) return lapis;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
