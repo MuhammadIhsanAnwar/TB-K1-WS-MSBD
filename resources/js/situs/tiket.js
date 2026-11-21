@@ -133,7 +133,6 @@ if (bayar) {
         });
         const data = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(data.pesan || 'Permintaan ke server gagal. Coba lagi.');
-        }
 
         return data;
     };
