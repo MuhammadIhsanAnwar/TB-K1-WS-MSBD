@@ -20,3 +20,4 @@ if (form) {
             return;
         }
         tulis(navigator.geolocation
+            ? 'Browser akan meminta izin membaca lokasimu saat rute disusun.'
