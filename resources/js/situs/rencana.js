@@ -46,3 +46,4 @@ if (form) {
                 form.submit();
             },
             (galat) => {
+                tombol.disabled = false;
