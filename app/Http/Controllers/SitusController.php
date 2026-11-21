@@ -236,6 +236,7 @@ class SitusController extends Controller
                 'minat.required' => 'Pilih minimal satu minat.',
                 'moda.required' => 'Pilih minimal satu cara berpindah.',
                 'lat.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
+                'lng.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
             ]);
             try {
                 $hasil = Katalog::susunRute($pref['minat'], (int) $pref['durasi'], $pref['moda'], $pref['mulai']);
