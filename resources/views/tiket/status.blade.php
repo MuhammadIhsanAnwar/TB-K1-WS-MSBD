@@ -62,6 +62,7 @@
                                 Untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
                                 Halaman ini diperbarui sendiri setelah pembayaran diterima.
                             </div>
+                            {{-- simulator QRIS meminta URL gambar QR; jendela Midtrans hanya menampilkan gambarnya --}}
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
