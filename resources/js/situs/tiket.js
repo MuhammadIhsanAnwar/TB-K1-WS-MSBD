@@ -209,6 +209,7 @@ if (bayar) {
 
     // Pembayaran di luar jendela Midtrans (VA, QRIS): status di database dicek tiap detik, dan tiap
     // 5 detik ditanyakan langsung ke Midtrans supaya tetap jalan walau notifikasi belum diatur.
+    const tik = async () => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
