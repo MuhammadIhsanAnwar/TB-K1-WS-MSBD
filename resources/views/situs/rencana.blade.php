@@ -22,7 +22,7 @@
         ->concat(collect($hasil['singgah'])->map(fn ($s) => [
             'nama' => $s['tempat']['nama'],
             'lat' => $s['tempat']['lat'],
-        'tiket' => ! empty($s['tempat']['tiket']) ? route('tiket.pilih', $s['tempat']['slug']) : null,
+            'lng' => $s['tempat']['lng'],
         'moda' => $s['pindah']['moda'] ?? null,
     ])->values() : null;
 
