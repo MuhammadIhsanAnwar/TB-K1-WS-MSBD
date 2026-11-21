@@ -166,7 +166,7 @@
                             <input type="hidden" name="moda[]" value="{{ $m }}">
                         @endforeach
                         <input type="hidden" name="durasi" value="{{ $durasi }}">
-                        <input type="hidden" name="mulai" value="{{ $mulai }}">
+                        <input type="hidden" name="mulai" value="{{ $mulaiSimpan }}">
 
                         <div class="isian" style="min-width:260px">
                             <label for="judul-rencana">Nama rencana</label>
