@@ -19,6 +19,7 @@
 @if ($p['status'] === 'lunas')
     @include('tiket._sukses', ['siap' => true])
 @else
+@if ($midtrans)
 <div class="mv-tiket-ruang" data-tiket="status">
     <div class="alat__judul">
         <div>
