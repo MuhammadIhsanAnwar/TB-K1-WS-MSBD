@@ -386,6 +386,7 @@ class Katalog
                 throw new RuntimeException('Singgah di '.$awal['nama'].' butuh sekitar '.$durasiAwal.' menit, lebih lama dari waktu yang dipilih. Pilih waktu yang lebih panjang.');
             }
 
+            $urut[] = ['tempat' => $awal, 'mulai' => $jam, 'pindah' => null];
         }
 
         $sisaMenit = $durasiJam * 60;
