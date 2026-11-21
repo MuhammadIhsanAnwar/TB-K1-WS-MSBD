@@ -439,6 +439,7 @@ class Katalog
             'singgah' => $urut,
             'biaya' => $total,
             'selesai' => $jam,
+            'awal' => $titikAwal,
         ];
     }
 
