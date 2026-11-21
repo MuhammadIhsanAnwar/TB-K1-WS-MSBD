@@ -253,6 +253,7 @@ if (bayar) {
                     konfirmasi();
                 },
                 onPending: () => {
+                    tulisKabar('Selesaikan pembayaran sesuai petunjuk Midtrans. Halaman ini diperbarui otomatis setelah pembayaran diterima.');
                     mulaiPantau();
                 },
 
