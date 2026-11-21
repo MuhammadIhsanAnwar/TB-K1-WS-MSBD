@@ -170,6 +170,7 @@ if (bayar) {
     const terapkanStatus = (status) => {
         if (!status || status === 'menunggu') return false;
         hentikanPantau();
+        if (status === 'lunas') tandaiSiap();
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
