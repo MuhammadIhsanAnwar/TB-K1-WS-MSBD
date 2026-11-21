@@ -358,6 +358,7 @@ class Katalog
         $total = 0;
         $titikAwal = null;
 
+        if ($posisi !== null) {
         }
 
         $sisaMenit = $durasiJam * 60;
