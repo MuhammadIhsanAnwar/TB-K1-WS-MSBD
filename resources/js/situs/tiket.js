@@ -197,6 +197,7 @@ if (bayar) {
         if (!panelQris || !panelQris.hidden) return;
         try {
             const data = await minta(panelQris.dataset.qrisUrl);
+            if (!data.url) return;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
