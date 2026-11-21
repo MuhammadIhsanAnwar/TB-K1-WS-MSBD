@@ -207,6 +207,7 @@ if (bayar) {
         }
     };
 
+    // Pembayaran di luar jendela Midtrans (VA, QRIS): status di database dicek tiap detik, dan tiap
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
