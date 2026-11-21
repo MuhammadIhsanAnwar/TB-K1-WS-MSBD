@@ -180,6 +180,7 @@ if (bayar) {
     // tanpa menunggu notifikasi, lalu menerbitkan e-tiket.
     const konfirmasi = async () => {
         if (konfirmasiJalan) return;
+        konfirmasiJalan = true;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
