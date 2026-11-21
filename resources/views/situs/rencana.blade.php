@@ -26,6 +26,7 @@
             'url' => route('tempat', $s['tempat']['slug']),
             'harga' => Katalog::rupiah(Katalog::hargaTermurah($s['tempat'])),
             'tiket' => ! empty($s['tempat']['tiket']) ? route('tiket.pilih', $s['tempat']['slug']) : null,
+            'moda' => $s['pindah']['moda'] ?? null,
 
     $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.(Katalog::get($mulai)['nama'] ?? 'tempat pilihan'));
 
