@@ -179,6 +179,7 @@ class Midtrans
      * URL gambar QR untuk transaksi QRIS yang masih menunggu, atau null. Dipakai di mode sandbox:
      * simulator QRIS Midtrans meminta URL gambar QR, sedangkan jendela Snap hanya menampilkan gambarnya.
      */
+    public static function urlQris(string $kode): ?string
     /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
     public static function hentikan(string $kode): void
     {
