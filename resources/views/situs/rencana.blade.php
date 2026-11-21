@@ -41,7 +41,7 @@
 
 @section('isi')
 <div class="rencana">
-    <form class="rencana__form" action="{{ route('rencana') }}" method="get" novalidate>
+    <form class="rencana__form" action="{{ route('rencana') }}" method="get" novalidate data-rencana-form>
         <h1 style="font-size:var(--s-head);margin-bottom:12px">Rencana perjalanan</h1>
         <p style="margin-bottom:32px">Pilih minat, lama waktu, dan cara berpindah. Rute disusun dari tempat terdekat ke tempat berikutnya, dengan jarak dan ongkos becak dihitung dari letaknya.</p>
 
