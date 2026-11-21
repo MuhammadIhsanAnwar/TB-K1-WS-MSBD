@@ -185,6 +185,7 @@ class Midtrans
         if (($s['payment_type'] ?? null) !== 'qris' || ($s['transaction_status'] ?? null) !== 'pending' || empty($s['transaction_id'])) {
             return null;
         }
+
     /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
     public static function hentikan(string $kode): void
     {
