@@ -182,6 +182,7 @@ class Midtrans
     public static function urlQris(string $kode): ?string
     {
         $s = self::status($kode);
+        if (($s['payment_type'] ?? null) !== 'qris' || ($s['transaction_status'] ?? null) !== 'pending' || empty($s['transaction_id'])) {
     /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
     public static function hentikan(string $kode): void
     {
