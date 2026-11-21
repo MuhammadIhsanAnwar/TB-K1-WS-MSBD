@@ -37,3 +37,4 @@ if (form) {
             return;
         }
 
+        tombol.disabled = true;
