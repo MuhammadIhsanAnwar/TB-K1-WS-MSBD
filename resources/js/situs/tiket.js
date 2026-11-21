@@ -250,6 +250,7 @@ if (bayar) {
             window.snap.pay(data.token, {
                 onSuccess: () => {
                     tampilkanSukses();
+                    konfirmasi();
                     mulaiPantau();
                 },
 
