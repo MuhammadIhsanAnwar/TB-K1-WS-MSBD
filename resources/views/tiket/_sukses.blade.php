@@ -23,3 +23,4 @@
             <a class="mv-btn mv-btn--garis-terang" href="{{ route('tempat', $t['slug']) }}">Kembali ke {{ $t['nama'] }}</a>
         </div>
     </div>
+</div>
