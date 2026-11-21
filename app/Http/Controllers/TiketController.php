@@ -189,6 +189,7 @@ class TiketController extends Controller
     /** Mode sandbox: URL gambar QRIS untuk ditempel di simulator Midtrans, setelah pembeli memilih QRIS. */
     public function qrisSandbox(Request $request, string $kode)
     {
+        abort_unless(Midtrans::aktif() && ! Midtrans::produksi(), 404);
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
