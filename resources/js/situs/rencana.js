@@ -42,3 +42,4 @@ if (form) {
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 lat.value = pos.coords.latitude.toFixed(4);
+                lng.value = pos.coords.longitude.toFixed(4);
