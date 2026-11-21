@@ -18,7 +18,7 @@
 
     // mulai dari posisi pengguna: titik "Posisimu" menjadi awal garis rute di peta
     $dariLokasi = ! empty($hasil['awal']);
-        'lat' => $s['tempat']['lat'],
+    $rute = $hasil ? collect($dariLokasi ? [['nama' => 'Posisimu', 'lat' => $hasil['awal']['lat'], 'lng' => $hasil['awal']['lng'], 'awal' => true]] : [])
         'lng' => $s['tempat']['lng'],
         'url' => route('tempat', $s['tempat']['slug']),
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($s['tempat'])),
