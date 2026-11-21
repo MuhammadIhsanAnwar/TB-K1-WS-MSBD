@@ -202,6 +202,7 @@ if (bayar) {
             panelQris.querySelector('[data-qris-teks]').value = data.url;
             panelQris.querySelector('[data-salin]').dataset.salin = data.url;
             panelQris.hidden = false;
+        } catch {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
