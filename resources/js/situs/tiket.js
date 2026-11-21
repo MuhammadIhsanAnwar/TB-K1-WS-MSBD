@@ -251,6 +251,7 @@ if (bayar) {
                 onSuccess: () => {
                     tampilkanSukses();
                     konfirmasi();
+                },
                     mulaiPantau();
                 },
 
