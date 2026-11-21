@@ -192,6 +192,7 @@ if (bayar) {
         location.reload();
     };
 
+    // Mode sandbox: tampilkan URL gambar QRIS untuk ditempel di simulator Midtrans.
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
