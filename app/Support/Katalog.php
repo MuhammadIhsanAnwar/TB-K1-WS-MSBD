@@ -381,6 +381,7 @@ class Katalog
                 $jam = max($jam, $jadwalAwal['menit'][0]);
             }
 
+            $durasiAwal = (int) ($awal['singgah'] ?? 45);
         }
 
         $sisaMenit = $durasiJam * 60;
