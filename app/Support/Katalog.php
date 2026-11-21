@@ -344,7 +344,6 @@ class Katalog
      */
     public static function susunRute(array $minat, int $durasiJam, array $moda, string $mulai, ?\DateTimeInterface $tanggal = null, ?array $posisi = null): array
     {
-        if (! $awal || $awal['jenis'] !== 'tempat') {
             throw new RuntimeException('Pilih tempat awal dari daftar tempat wisata.');
         }
         if ($durasiJam <= 0) {
