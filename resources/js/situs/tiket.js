@@ -154,6 +154,7 @@ if (bayar) {
         if (!l) {
             location.reload();
             return;
+        }
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
