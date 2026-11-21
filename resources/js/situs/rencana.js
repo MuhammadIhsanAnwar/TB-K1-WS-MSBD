@@ -24,3 +24,4 @@ if (form) {
             : 'Browser ini tidak bisa membaca lokasi. Pilih tempat awal dari daftar.');
     };
     pilih.addEventListener('change', aturKabar);
+
