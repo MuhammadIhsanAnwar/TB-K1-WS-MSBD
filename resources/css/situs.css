@@ -415,6 +415,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .bayar-qris__aksi { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 /* layar sukses yang langsung tampil di atas halaman pembayaran (lihat tiket/_sukses.blade.php) */
 .sukses--lapis { position: fixed; inset: 0; z-index: 10000; overflow-y: auto; animation: sukses-muncul 160ms var(--ease-out) both; }
+.sukses__proses { margin: 0; font-weight: 600; color: var(--on-green); }
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
