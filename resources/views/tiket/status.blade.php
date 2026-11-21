@@ -74,6 +74,7 @@
                                     <input type="text" readonly data-qris-teks aria-label="URL gambar QRIS untuk simulator">
                                     <div class="bayar-qris__aksi">
                                         <button type="button" class="mv-btn mv-btn--garis mv-btn--kecil" data-salin="">Salin URL</button>
+                                        <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com/v2/qris/index" target="_blank" rel="noopener">Buka simulator QRIS</a>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
