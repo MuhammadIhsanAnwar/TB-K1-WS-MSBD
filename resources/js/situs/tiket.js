@@ -127,7 +127,7 @@ if (bayar) {
 
     const minta = async (url, method = 'GET') => {
         const r = await fetch(url, {
-            method: 'POST',
+            method,
             headers: {
                 'X-CSRF-TOKEN': csrf,
                 Accept: 'application/json',
