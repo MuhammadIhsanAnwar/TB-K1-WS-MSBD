@@ -257,7 +257,6 @@ if (bayar) {
                     muatQris();
                     mulaiPantau();
                 },
-                    mulaiPantau();
                 },
 
                 onError: () => {
