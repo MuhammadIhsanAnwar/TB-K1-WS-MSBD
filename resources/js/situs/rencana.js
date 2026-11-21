@@ -3,3 +3,4 @@
 const form = document.querySelector('[data-rencana-form]');
 
 if (form) {
+    const pilih = form.querySelector('[data-pilih-mulai]');
