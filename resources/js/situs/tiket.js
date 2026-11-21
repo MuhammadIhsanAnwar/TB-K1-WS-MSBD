@@ -188,6 +188,7 @@ if (bayar) {
                 // dicoba lagi sedetik kemudian
             }
             await jeda(1000);
+        }
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
