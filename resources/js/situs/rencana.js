@@ -26,3 +26,4 @@ if (form) {
     pilih.addEventListener('change', aturKabar);
 
     form.addEventListener('submit', (e) => {
+        // tempat awal dari daftar: koordinat lama tidak ikut dikirim
