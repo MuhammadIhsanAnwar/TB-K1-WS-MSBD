@@ -17,7 +17,7 @@
         ?? [];
 
     // mulai dari posisi pengguna: titik "Posisimu" menjadi awal garis rute di peta
-        'nama' => $s['tempat']['nama'],
+    $dariLokasi = ! empty($hasil['awal']);
         'lat' => $s['tempat']['lat'],
         'lng' => $s['tempat']['lng'],
         'url' => route('tempat', $s['tempat']['slug']),
