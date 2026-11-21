@@ -10,6 +10,7 @@
     $durasi = (int) ($pref['durasi'] ?? 4);
     $moda = $pref['moda'] ?? ['jalan', 'becak'];
     // bawaan: mulai dari posisi pengguna sekarang (dibaca browser saat rute disusun)
+    $mulai = $pref['mulai'] ?? 'lokasi';
 
     $fotoRute = collect(Katalog::entitas())->first(fn ($entity) => $entity['jenis'] === 'transportasi' && ! empty($entity['foto']))
         ?? collect($tempat)->first(fn ($entity) => ! empty($entity['foto']))
