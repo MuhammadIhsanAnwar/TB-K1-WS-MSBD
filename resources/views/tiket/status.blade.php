@@ -62,6 +62,7 @@
                                 Untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
                                 Halaman ini diperbarui sendiri setelah pembayaran diterima.
                             </div>
+                            </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
