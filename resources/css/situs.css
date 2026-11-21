@@ -406,6 +406,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .bintang { color: var(--gold-text); letter-spacing: 2px; }
 .bayar-midtrans__kabar { margin-top: 16px; font-weight: 600; color: var(--green); }
 /* mode sandbox: URL gambar QRIS untuk simulator Midtrans */
+.bayar-qris { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; margin-top: 16px; padding: 16px; border: 1px solid var(--paper-deep); background: var(--white); }
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
