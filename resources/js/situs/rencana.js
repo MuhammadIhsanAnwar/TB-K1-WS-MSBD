@@ -8,3 +8,4 @@ if (form) {
     const lng = form.querySelector('[data-lng]');
     const kabar = form.querySelector('[data-kabar-lokasi]');
     const tombol = form.querySelector('button[type="submit"]');
+
