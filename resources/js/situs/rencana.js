@@ -30,3 +30,4 @@ if (form) {
         lat.disabled = lng.disabled = pilih.value !== 'lokasi';
         if (pilih.value !== 'lokasi') return;
 
+        e.preventDefault();
