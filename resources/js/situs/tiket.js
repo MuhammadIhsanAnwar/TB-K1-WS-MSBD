@@ -193,6 +193,7 @@ if (bayar) {
     };
 
     // Mode sandbox: tampilkan URL gambar QRIS untuk ditempel di simulator Midtrans.
+    const muatQris = async () => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
