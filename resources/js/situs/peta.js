@@ -96,6 +96,7 @@ async function modeRute(el) {
     let nomor = 0;
     valid.forEach((t) => {
         if (t.awal) {
+            L.circleMarker([Number(t.lat), Number(t.lng)], { radius: 9, color: '#ffffff', weight: 3, fillColor: '#2f6690', fillOpacity: 1 })
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
