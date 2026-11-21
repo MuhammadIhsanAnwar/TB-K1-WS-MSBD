@@ -194,6 +194,7 @@ class TiketController extends Controller
         $url = null;
         if ($p['status'] === 'menunggu') {
             try {
+                $url = Midtrans::urlQris($kode);
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
