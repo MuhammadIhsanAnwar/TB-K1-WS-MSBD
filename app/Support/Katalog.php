@@ -400,7 +400,7 @@ class Katalog
             asort($jarak);
             $slugCalon = null;
             foreach ($jarak as $slug => $meter) {
-                if ($meter > 6000) {
+                if ($meter > $batasMeter) {
                     break;
                 }
                 $kira = self::perpindahan($kini, $pool[$slug], $moda);
