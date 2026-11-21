@@ -52,3 +52,4 @@ if (form) {
                     : 'Lokasimu belum terbaca. Coba lagi, atau pilih tempat awal dari daftar.');
                 pilih.focus();
             },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 },
