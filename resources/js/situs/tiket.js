@@ -137,7 +137,7 @@ if (bayar) {
         return data;
     };
 
-    const cekStatusLokal = async () => {
+    // Layar sukses sudah ada di halaman (template), jadi tampil seketika tanpa memuat ulang halaman.
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
