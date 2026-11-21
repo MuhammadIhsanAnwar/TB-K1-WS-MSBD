@@ -173,6 +173,7 @@ if (bayar) {
         if (status === 'lunas') tandaiSiap();
         else location.reload();
 
+        return true;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
