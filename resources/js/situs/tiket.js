@@ -129,7 +129,7 @@ if (bayar) {
         const r = await fetch(url, {
             method,
             headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' },
-                'X-CSRF-TOKEN': csrf,
+            cache: 'no-store',
                 Accept: 'application/json',
             },
         });
