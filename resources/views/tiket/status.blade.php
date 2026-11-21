@@ -56,7 +56,7 @@
                         <p>Tekan <b>Bayar</b>, lalu pilih cara bayar di jendela Midtrans: QRIS, virtual account bank, dompet digital, atau kartu. Nominalnya {{ Katalog::rupiah($p['total']) }}. Untuk virtual account, nomornya muncul setelah bank dipilih.</p>
                         @unless (Midtrans::produksi())
                             <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
-                                Mode uji coba (sandbox): tidak ada uang yang ditarik. Salin nomor virtual account atau QRIS-nya, lalu bayar di
+                                Mode uji coba (sandbox): tidak ada uang yang ditarik. Untuk virtual account, salin nomornya lalu bayar di
                                 <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>
                                 dengan bank yang sama. Untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
                                 Halaman ini diperbarui sendiri setelah pembayaran diterima.
