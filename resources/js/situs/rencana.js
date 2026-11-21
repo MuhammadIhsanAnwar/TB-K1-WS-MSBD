@@ -14,3 +14,4 @@ if (form) {
         kabar.textContent = teks;
     };
 
+    const aturKabar = () => {
