@@ -206,6 +206,7 @@ if (bayar) {
             // dicoba lagi pada putaran berikutnya
         }
     };
+
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
