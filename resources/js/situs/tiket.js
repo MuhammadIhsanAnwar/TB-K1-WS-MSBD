@@ -166,6 +166,7 @@ if (bayar) {
         pantau = null;
     };
 
+    // true kalau pesanan tidak lagi menunggu pembayaran
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
