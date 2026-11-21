@@ -12,3 +12,4 @@
             <circle cx="100" cy="100" r="84" fill="none" stroke="#e3a51c" stroke-width="1.5"/>
             <text fill="#e3a51c"><textPath href="#lingkar-terbit" startOffset="25%" text-anchor="middle">TIKET RESMI MEDANVISIT</textPath></text>
             <path d="M76 102l16 16 32-36" fill="none" stroke="#f6f1e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
