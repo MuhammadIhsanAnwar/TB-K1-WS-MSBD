@@ -15,3 +15,4 @@ if (form) {
     };
 
     const aturKabar = () => {
+        if (pilih.value !== 'lokasi') {
