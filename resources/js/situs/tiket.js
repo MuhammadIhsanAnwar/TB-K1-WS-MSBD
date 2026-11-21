@@ -167,6 +167,7 @@ if (bayar) {
     };
 
     // true kalau pesanan tidak lagi menunggu pembayaran
+    const terapkanStatus = (status) => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
