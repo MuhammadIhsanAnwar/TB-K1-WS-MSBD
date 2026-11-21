@@ -18,3 +18,4 @@ if (form) {
         if (pilih.value !== 'lokasi') {
             tulis('');
             return;
+        }
