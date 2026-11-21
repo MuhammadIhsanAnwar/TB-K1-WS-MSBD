@@ -174,6 +174,7 @@ if (bayar) {
         else location.reload();
 
         return true;
+    };
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
