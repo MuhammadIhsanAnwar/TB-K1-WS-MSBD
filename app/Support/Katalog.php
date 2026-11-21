@@ -363,6 +363,7 @@ class Katalog
             $titikAwal = ['lat' => round((float) $posisi['lat'], 4), 'lng' => round((float) $posisi['lng'], 4)];
             if (! $pool) {
                 throw new RuntimeException('Belum ada tempat wisata yang cocok dengan minat pilihanmu.');
+            }
         }
 
         $sisaMenit = $durasiJam * 60;
