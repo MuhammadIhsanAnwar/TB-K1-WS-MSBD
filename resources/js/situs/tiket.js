@@ -143,6 +143,7 @@ if (bayar) {
         lapis = templatSukses.content.firstElementChild.cloneNode(true);
         document.body.append(lapis);
         document.documentElement.style.overflow = 'hidden';
+        lapis.querySelector('#judul-sukses')?.focus();
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
