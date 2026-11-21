@@ -6,3 +6,4 @@ if (form) {
     const pilih = form.querySelector('[data-pilih-mulai]');
     const lat = form.querySelector('[data-lat]');
     const lng = form.querySelector('[data-lng]');
+    const kabar = form.querySelector('[data-kabar-lokasi]');
