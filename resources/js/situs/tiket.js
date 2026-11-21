@@ -257,7 +257,6 @@ if (bayar) {
                     muatQris();
                     mulaiPantau();
                 },
-
                 onPending: () => {
                     tulisKabar('Pembayaran sedang menunggu konfirmasi. Halaman akan diperbarui otomatis.');
                     mulaiPantau();
