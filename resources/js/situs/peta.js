@@ -105,7 +105,7 @@ async function modeRute(el) {
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
-                icon: ikon('#e3a51c', i + 1),
+                icon: ikon('#e3a51c', nomor),
                 title: t.nama,
                 alt: `${i + 1}. ${t.nama}`,
             }
