@@ -229,6 +229,7 @@ class SitusController extends Controller
                 'durasi' => ['required', 'integer', 'in:2,4,6,8'],
                 'moda' => ['required', 'array', 'min:1'], 'moda.*' => ['in:jalan,becak'],
                 'mulai' => ['required', 'string'],
+                // "lokasi": mulai dari posisi pengguna sekarang (koordinat dari browser)
             ], [
                 'minat.required' => 'Pilih minimal satu minat.',
                 'moda.required' => 'Pilih minimal satu cara berpindah.',
