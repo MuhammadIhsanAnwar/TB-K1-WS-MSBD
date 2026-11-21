@@ -201,6 +201,7 @@ class TiketController extends Controller
         }
 
         return response()->json(['status' => $p['status'], 'url' => $url])->header('Cache-Control', 'no-store');
+    }
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
