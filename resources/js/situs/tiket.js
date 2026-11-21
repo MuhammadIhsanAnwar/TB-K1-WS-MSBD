@@ -185,6 +185,7 @@ if (bayar) {
             try {
                 if (terapkanStatus((await minta(bayar.dataset.cekUrl, 'POST')).status)) return;
             } catch {
+                // dicoba lagi sedetik kemudian
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
