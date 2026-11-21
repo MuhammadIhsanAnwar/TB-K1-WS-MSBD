@@ -393,7 +393,6 @@ class Katalog
             $kini = $awal;
         }
 
-        $total = self::hargaTermurah($awal) ?? 0;
         $kini = $awal;
 
         while ($pool) {
