@@ -261,7 +261,7 @@ if (bayar) {
                     tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.');
                 },
                 onClose: () => {
-                    tulisKabar('Jendela pembayaran ditutup. Jika kamu sudah membayar, tunggu konfirmasi.');
+                    tulisKabar('Jendela pembayaran ditutup. Kalau sudah memilih cara bayar, selesaikan pembayarannya; halaman ini diperbarui otomatis.');
                 },
             });
         } catch (err) {
