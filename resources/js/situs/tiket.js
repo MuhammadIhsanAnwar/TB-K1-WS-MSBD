@@ -118,6 +118,7 @@ if (bayar) {
     let detik = 0;
     let sedangCek = false;
     let konfirmasiJalan = false;
+    let lapis = null;
 
     const tulisKabar = (teks) => {
         kabar.hidden = !teks;
