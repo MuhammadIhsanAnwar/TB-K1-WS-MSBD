@@ -23,7 +23,7 @@
             'nama' => $s['tempat']['nama'],
             'lat' => $s['tempat']['lat'],
             'lng' => $s['tempat']['lng'],
-        'moda' => $s['pindah']['moda'] ?? null,
+            'url' => route('tempat', $s['tempat']['slug']),
     ])->values() : null;
 
     $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.(Katalog::get($mulai)['nama'] ?? 'tempat pilihan'));
