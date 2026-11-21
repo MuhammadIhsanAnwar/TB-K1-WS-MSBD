@@ -8,3 +8,4 @@
     <div class="sukses__isi">
         <svg class="stempel" viewBox="0 0 200 200" role="img" aria-label="Stempel tiket terbit">
             <defs><path id="lingkar-terbit" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"/></defs>
+            <circle cx="100" cy="100" r="94" fill="none" stroke="#e3a51c" stroke-width="5"/>
