@@ -131,7 +131,6 @@ if (bayar) {
             headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' },
             cache: 'no-store',
         });
-
         const data = await r.json().catch(() => ({}));
 
         if (!r.ok) {
