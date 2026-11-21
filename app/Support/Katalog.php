@@ -355,7 +355,7 @@ class Katalog
         $jam = 8 * 60 + 30;
         $sisaMenit = $durasiJam * 60;
         $urut = [];
-            $jam = max($jam, $jadwalAwal['menit'][0]);
+        $total = 0;
         }
 
         $sisaMenit = $durasiJam * 60;
