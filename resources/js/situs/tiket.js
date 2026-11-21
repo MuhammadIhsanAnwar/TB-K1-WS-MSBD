@@ -153,6 +153,7 @@ if (bayar) {
         const l = tampilkanSukses();
         if (!l) {
             location.reload();
+            return;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
