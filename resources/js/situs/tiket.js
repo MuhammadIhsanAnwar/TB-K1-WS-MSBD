@@ -238,7 +238,7 @@ if (bayar) {
         tulisKabar('Membuka jendela pembayaran...');
 
         try {
-            const data = await kirim(formBayar.action);
+            const data = await minta(formBayar.action, 'POST');
 
             if (!data.token) {
                 location.href = data.url || location.href;
