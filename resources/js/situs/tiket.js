@@ -249,7 +249,7 @@ if (bayar) {
 
             window.snap.pay(data.token, {
                 onSuccess: () => {
-                    tulisKabar('Pembayaran diterima. Menerbitkan e-tiket...');
+                    tampilkanSukses();
                     mulaiPantau();
                 },
 
