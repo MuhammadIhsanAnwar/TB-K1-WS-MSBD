@@ -18,7 +18,6 @@
 @section('isi')
 @if ($p['status'] === 'lunas')
     @include('tiket._sukses', ['siap' => true])
-        </div>
     </div>
 @else
 <div class="mv-tiket-ruang" data-tiket="status">
