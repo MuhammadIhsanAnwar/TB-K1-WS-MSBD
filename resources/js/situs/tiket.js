@@ -212,7 +212,7 @@ if (bayar) {
     const tik = async () => {
         if (sedangCek || document.hidden) return;
         sedangCek = true;
-
+        detik += 1;
         try {
             const r = await fetch(bayar.dataset.statusUrl, {
                 method: 'GET',
