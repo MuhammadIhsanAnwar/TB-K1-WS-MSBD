@@ -182,6 +182,7 @@ if (bayar) {
         if (konfirmasiJalan) return;
         konfirmasiJalan = true;
         for (let i = 0; i < 20; i++) {
+            try {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
