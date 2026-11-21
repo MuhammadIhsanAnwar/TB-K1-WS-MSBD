@@ -354,7 +354,7 @@ class Katalog
         // mulai pukul 08.30, atau saat tempat awal buka kalau lebih siang
         $jam = 8 * 60 + 30;
         $sisaMenit = $durasiJam * 60;
-        if ($jadwalAwal && in_array($hari, $jadwalAwal['hari'], true) && $jadwalAwal['menit'][0] < $jadwalAwal['menit'][1]) {
+        $urut = [];
             $jam = max($jam, $jadwalAwal['menit'][0]);
         }
 
