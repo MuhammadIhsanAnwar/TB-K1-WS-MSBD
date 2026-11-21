@@ -184,6 +184,7 @@ if (bayar) {
         for (let i = 0; i < 20; i++) {
             try {
                 if (terapkanStatus((await minta(bayar.dataset.cekUrl, 'POST')).status)) return;
+            } catch {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
