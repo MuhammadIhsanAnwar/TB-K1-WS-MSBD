@@ -364,6 +364,7 @@ class Katalog
             if (! $pool) {
                 throw new RuntimeException('Belum ada tempat wisata yang cocok dengan minat pilihanmu.');
             }
+            $terdekat = min(array_map(fn ($t) => self::jarakMeter($titikAwal, $t), $pool));
         }
 
         $sisaMenit = $durasiJam * 60;
