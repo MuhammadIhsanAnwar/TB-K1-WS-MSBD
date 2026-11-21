@@ -372,6 +372,7 @@ class Katalog
         } else {
             $awal = self::get($mulai);
             if (! $awal || $awal['jenis'] !== 'tempat') {
+                throw new RuntimeException('Pilih tempat awal dari daftar tempat wisata.');
         }
 
         $sisaMenit = $durasiJam * 60;
