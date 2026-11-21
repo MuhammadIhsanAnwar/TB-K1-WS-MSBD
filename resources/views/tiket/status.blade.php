@@ -18,7 +18,6 @@
 @section('isi')
 @if ($p['status'] === 'lunas')
     @include('tiket._sukses', ['siap' => true])
-                <defs><path id="lingkar-terbit" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"/></defs>
                 <circle cx="100" cy="100" r="94" fill="none" stroke="#e3a51c" stroke-width="5"/>
                 <circle cx="100" cy="100" r="84" fill="none" stroke="#e3a51c" stroke-width="1.5"/>
                 <text fill="#e3a51c"><textPath href="#lingkar-terbit" startOffset="25%" text-anchor="middle">TIKET RESMI MEDANVISIT</textPath></text>
