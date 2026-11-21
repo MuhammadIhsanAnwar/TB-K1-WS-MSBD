@@ -227,7 +227,7 @@ if (bayar) {
     const mulaiPantau = () => {
         if (pantau) return;
         pantau = setInterval(tik, 1000);
-        cekStatusLokal();
+        tik();
 
         pantau = setInterval(() => {
             cekStatusLokal();
