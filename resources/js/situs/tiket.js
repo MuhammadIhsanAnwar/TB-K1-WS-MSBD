@@ -257,7 +257,6 @@ if (bayar) {
                     muatQris();
                     mulaiPantau();
                 },
-                    tulisKabar('Pembayaran sedang menunggu konfirmasi. Halaman akan diperbarui otomatis.');
                     mulaiPantau();
                 },
 
