@@ -33,7 +33,6 @@ class PengelolaFeatureAccessTest extends TestCase
             $this->post('/rencana/simpan', [
                 'nama' => 'Rute wisata',
             ])->assertForbidden();
-                'peer_id' => '54f53d49-a38c-47dd-a627-8d0d83d8c874',
                 'label' => 'Browser test',
             ])->assertForbidden();
         }
