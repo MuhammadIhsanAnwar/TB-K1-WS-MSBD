@@ -228,7 +228,6 @@ if (bayar) {
         if (pantau) return;
         pantau = setInterval(tik, 1000);
         tik();
-        }, 1000);
     };
 
     formBayar.addEventListener('submit', async (e) => {
