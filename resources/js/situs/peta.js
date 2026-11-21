@@ -94,6 +94,7 @@ async function modeRute(el) {
 
     // titik "awal" (posisi pengguna) memakai penanda lokasi seperti di halaman peta; tempat diberi nomor 1, 2, ...
     let nomor = 0;
+    valid.forEach((t) => {
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
