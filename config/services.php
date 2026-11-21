@@ -68,7 +68,6 @@ return [
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
-        'shared_secret' => env('TURN_SHARED_SECRET'),
         'credential_lifetime' => (int) env('TURN_CREDENTIAL_LIFETIME', 3600),
     ],
 
