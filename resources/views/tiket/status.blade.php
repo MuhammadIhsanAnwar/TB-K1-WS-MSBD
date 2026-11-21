@@ -69,6 +69,7 @@
                                     <b>Uji QRIS di simulator</b>
                                     <ol>
                                         <li>Salin URL gambar QR di bawah.</li>
+                                        <li>Buka simulator QRIS, tempel di kolom <i>QR Code Image Url</i>, tekan <i>Scan QR</i>, lalu <i>Pay</i>.</li>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
