@@ -188,6 +188,7 @@ class Midtrans
 
         return self::urlApi().'/v2/qris/'.rawurlencode($s['transaction_id']).'/qr-code';
     }
+
     /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
     public static function hentikan(string $kode): void
     {
