@@ -6,3 +6,4 @@
 --}}
 <div class="sukses @unless ($siap) sukses--lapis @endunless" data-tiket="sukses" @unless ($siap) role="dialog" aria-modal="true" aria-labelledby="judul-sukses" @endunless>
     <div class="sukses__isi">
+        <svg class="stempel" viewBox="0 0 200 200" role="img" aria-label="Stempel tiket terbit">
