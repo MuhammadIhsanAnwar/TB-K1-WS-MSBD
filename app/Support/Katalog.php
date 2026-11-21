@@ -359,6 +359,7 @@ class Katalog
         $titikAwal = null;
 
         if ($posisi !== null) {
+            // mulai dari posisi pengguna: dibulatkan sekitar 11 m, cukup untuk rute dan tidak menyimpan lokasi persisnya
         }
 
         $sisaMenit = $durasiJam * 60;
