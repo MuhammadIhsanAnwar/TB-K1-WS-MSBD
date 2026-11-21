@@ -193,6 +193,7 @@ class TiketController extends Controller
         $p = $this->milik($request, $kode);
         $url = null;
         if ($p['status'] === 'menunggu') {
+            try {
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
