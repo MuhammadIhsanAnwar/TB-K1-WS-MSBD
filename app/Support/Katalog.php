@@ -371,6 +371,7 @@ class Katalog
             $kini = $titikAwal;
         } else {
             $awal = self::get($mulai);
+            if (! $awal || $awal['jenis'] !== 'tempat') {
         }
 
         $sisaMenit = $durasiJam * 60;
