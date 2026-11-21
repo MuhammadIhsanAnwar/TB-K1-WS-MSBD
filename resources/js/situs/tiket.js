@@ -198,6 +198,7 @@ if (bayar) {
         try {
             const data = await minta(panelQris.dataset.qrisUrl);
             if (!data.url) return;
+            panelQris.querySelector('[data-qris-gambar]').src = data.url;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
