@@ -5,3 +5,4 @@ const form = document.querySelector('[data-rencana-form]');
 if (form) {
     const pilih = form.querySelector('[data-pilih-mulai]');
     const lat = form.querySelector('[data-lat]');
+    const lng = form.querySelector('[data-lng]');
