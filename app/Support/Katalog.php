@@ -393,7 +393,6 @@ class Katalog
             $kini = $awal;
         }
 
-        $jam += $durasiAwal;
         $total = self::hargaTermurah($awal) ?? 0;
         $kini = $awal;
 
