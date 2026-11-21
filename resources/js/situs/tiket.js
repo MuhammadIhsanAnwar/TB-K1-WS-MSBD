@@ -214,7 +214,7 @@ if (bayar) {
         sedangCek = true;
         detik += 1;
         try {
-            const r = await fetch(bayar.dataset.statusUrl, {
+            const url = detik % 5 === 0 ? bayar.dataset.cekUrl : bayar.dataset.statusUrl;
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
