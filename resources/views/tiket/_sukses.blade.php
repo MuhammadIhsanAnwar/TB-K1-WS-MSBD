@@ -18,3 +18,4 @@
         @unless ($siap)
             <p class="sukses__proses" data-proses-etiket role="status" aria-live="polite">Menerbitkan e-tiket…</p>
         @endunless
+        <div class="sukses__aksi">
