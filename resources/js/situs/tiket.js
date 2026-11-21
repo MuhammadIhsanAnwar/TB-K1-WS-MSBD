@@ -204,6 +204,7 @@ if (bayar) {
             panelQris.hidden = false;
         } catch {
             // dicoba lagi pada putaran berikutnya
+        }
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
