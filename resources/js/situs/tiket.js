@@ -142,6 +142,7 @@ if (bayar) {
         if (lapis || !templatSukses) return lapis;
         lapis = templatSukses.content.firstElementChild.cloneNode(true);
         document.body.append(lapis);
+        document.documentElement.style.overflow = 'hidden';
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
