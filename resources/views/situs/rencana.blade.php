@@ -83,6 +83,7 @@
                     <option value="{{ $t['slug'] }}" @selected($t['slug'] === $mulai)>{{ $t['nama'] }}</option>
                 @endforeach
             </select>
+            {{-- diisi browser saat "Lokasi saya sekarang" dipilih; dibulatkan sekitar 11 m --}}
         </div>
 
         <button class="tombol tombol--lebar" type="submit">{{ $hasil ? 'Susun ulang rute' : 'Susun rute' }}</button>
