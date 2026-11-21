@@ -149,6 +149,7 @@ if (bayar) {
     };
 
     // Pesanan sudah lunas di database: tombol e-tiket aktif.
+    const tandaiSiap = () => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
