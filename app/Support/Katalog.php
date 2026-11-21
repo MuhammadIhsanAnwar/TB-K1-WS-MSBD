@@ -379,6 +379,7 @@ class Katalog
             $jadwalAwal = self::jadwal($awal);
             if ($jadwalAwal && in_array($hari, $jadwalAwal['hari'], true) && $jadwalAwal['menit'][0] < $jadwalAwal['menit'][1]) {
                 $jam = max($jam, $jadwalAwal['menit'][0]);
+            }
         }
 
         $sisaMenit = $durasiJam * 60;
