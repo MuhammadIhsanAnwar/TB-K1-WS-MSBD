@@ -357,6 +357,7 @@ class Katalog
         $urut = [];
         $total = 0;
         $titikAwal = null;
+
         }
 
         $sisaMenit = $durasiJam * 60;
