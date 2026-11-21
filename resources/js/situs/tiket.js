@@ -161,6 +161,7 @@ if (bayar) {
         l.querySelector('[data-tombol-etiket]')?.removeAttribute('aria-disabled');
     };
 
+    const hentikanPantau = () => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
