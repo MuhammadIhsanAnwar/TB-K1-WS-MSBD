@@ -97,6 +97,7 @@ async function modeRute(el) {
     valid.forEach((t) => {
         if (t.awal) {
             L.circleMarker([Number(t.lat), Number(t.lng)], { radius: 9, color: '#ffffff', weight: 3, fillColor: '#2f6690', fillOpacity: 1 })
+                .bindTooltip('Posisimu', { permanent: true, direction: 'top', offset: [0, -8] })
         L.marker(
             [Number(t.lat), Number(t.lng)],
             {
