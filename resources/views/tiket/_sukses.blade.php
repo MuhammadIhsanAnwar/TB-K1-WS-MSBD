@@ -13,3 +13,4 @@
             <text fill="#e3a51c"><textPath href="#lingkar-terbit" startOffset="25%" text-anchor="middle">TIKET RESMI MEDANVISIT</textPath></text>
             <path d="M76 102l16 16 32-36" fill="none" stroke="#f6f1e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
+        <h1 id="judul-sukses" tabindex="-1" @unless ($siap) data-judul-siap="E-tiketmu sudah terbit" @endunless>{{ $siap ? 'E-tiketmu sudah terbit' : 'Pembayaran berhasil' }}</h1>
