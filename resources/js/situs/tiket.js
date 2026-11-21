@@ -164,6 +164,7 @@ if (bayar) {
     const hentikanPantau = () => {
         clearInterval(pantau);
         pantau = null;
+    };
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
