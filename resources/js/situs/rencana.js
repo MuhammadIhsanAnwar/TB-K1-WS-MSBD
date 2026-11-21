@@ -21,3 +21,4 @@ if (form) {
         }
         tulis(navigator.geolocation
             ? 'Browser akan meminta izin membaca lokasimu saat rute disusun.'
+            : 'Browser ini tidak bisa membaca lokasi. Pilih tempat awal dari daftar.');
