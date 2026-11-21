@@ -12,3 +12,4 @@ if (form) {
     const tulis = (teks) => {
         kabar.hidden = !teks;
         kabar.textContent = teks;
+    };
