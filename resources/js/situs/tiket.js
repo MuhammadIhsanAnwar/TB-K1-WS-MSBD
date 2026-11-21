@@ -115,6 +115,7 @@ if (bayar) {
     const jeda = (ms) => new Promise((selesai) => setTimeout(selesai, ms));
 
     let pantau = null;
+    let detik = 0;
     let sedangCek = false;
 
     const tulisKabar = (teks) => {
