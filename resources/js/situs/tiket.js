@@ -155,6 +155,7 @@ if (bayar) {
             location.reload();
             return;
         }
+        const judul = l.querySelector('[data-judul-siap]');
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
