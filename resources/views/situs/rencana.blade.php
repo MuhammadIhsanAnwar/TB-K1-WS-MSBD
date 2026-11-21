@@ -113,6 +113,7 @@
 
             <div class="slip" aria-label="Urutan singgah">
                 @if ($dariLokasi)
+                    <div class="slip__baris">
                 @foreach ($hasil['singgah'] as $s)
                     @if ($s['pindah'])
                         <div class="slip__baris redup">
