@@ -178,6 +178,7 @@ if (bayar) {
 
     // Setelah Midtrans melaporkan berhasil: server langsung menanyakan status ke API Midtrans,
     // tanpa menunggu notifikasi, lalu menerbitkan e-tiket.
+    const konfirmasi = async () => {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
