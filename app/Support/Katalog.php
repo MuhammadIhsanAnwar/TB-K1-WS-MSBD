@@ -432,6 +432,7 @@ class Katalog
         }
 
         if ($urut === []) {
+            throw new RuntimeException('Dari lokasimu belum ada tempat yang cocok, buka, dan muat dalam waktu yang dipilih. Tambah minat, perpanjang waktu, atau izinkan becak motor.');
         return [
             'singgah' => $urut,
             'biaya' => $total,
