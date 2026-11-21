@@ -23,3 +23,4 @@ if (form) {
             ? 'Browser akan meminta izin membaca lokasimu saat rute disusun.'
             : 'Browser ini tidak bisa membaca lokasi. Pilih tempat awal dari daftar.');
     };
+    pilih.addEventListener('change', aturKabar);
