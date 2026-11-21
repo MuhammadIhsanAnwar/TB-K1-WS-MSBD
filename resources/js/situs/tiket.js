@@ -145,6 +145,7 @@ if (bayar) {
         document.documentElement.style.overflow = 'hidden';
         lapis.querySelector('#judul-sukses')?.focus();
 
+        return lapis;
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
