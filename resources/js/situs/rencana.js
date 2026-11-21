@@ -38,3 +38,4 @@ if (form) {
         }
 
         tombol.disabled = true;
+        tulis('Membaca lokasimu...');
