@@ -177,6 +177,7 @@ if (bayar) {
     };
 
     // Setelah Midtrans melaporkan berhasil: server langsung menanyakan status ke API Midtrans,
+    // tanpa menunggu notifikasi, lalu menerbitkan e-tiket.
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
