@@ -170,7 +170,7 @@
 
                         <div class="isian" style="min-width:260px">
                             <label for="judul-rencana">Nama rencana</label>
-                            <input id="judul-rencana" type="text" name="judul" value="{{ $judulRute }}" maxlength="80" required>
+                            <input id="judul-rencana" type="text" name="judul" value="{{ $judulRute }}" maxlength="80" required @if ($dariLokasi) aria-describedby="catatan-simpan" @endif>
                         </div>
 
                         <button class="tombol tombol--hijau" type="submit">Simpan rencana</button>
