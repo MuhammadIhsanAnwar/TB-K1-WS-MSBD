@@ -366,6 +366,7 @@ class Katalog
             }
             $terdekat = min(array_map(fn ($t) => self::jarakMeter($titikAwal, $t), $pool));
             if ($terdekat > self::JARAK_LANGKAH_PERTAMA) {
+                throw new RuntimeException('Lokasimu sekitar '.number_format($terdekat / 1000, 0, ',', '.').' km dari tempat wisata terdekat yang cocok. Pilih tempat awal dari daftar.');
         }
 
         $sisaMenit = $durasiJam * 60;
