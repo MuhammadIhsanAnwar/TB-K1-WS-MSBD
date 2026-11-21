@@ -257,7 +257,6 @@ if (bayar) {
                     muatQris();
                     mulaiPantau();
                 },
-                },
 
                 onError: () => {
                     tulisKabar('Pembayaran gagal diproses. Coba lagi atau pilih cara bayar lain.');
