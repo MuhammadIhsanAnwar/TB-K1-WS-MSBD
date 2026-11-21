@@ -130,7 +130,6 @@ if (bayar) {
             method,
             headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' },
             cache: 'no-store',
-                Accept: 'application/json',
             },
         });
 
