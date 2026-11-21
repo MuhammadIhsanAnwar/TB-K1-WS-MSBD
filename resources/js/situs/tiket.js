@@ -181,6 +181,7 @@ if (bayar) {
     const konfirmasi = async () => {
         if (konfirmasiJalan) return;
         konfirmasiJalan = true;
+        for (let i = 0; i < 20; i++) {
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
