@@ -176,6 +176,7 @@ if (bayar) {
         return true;
     };
 
+    // Setelah Midtrans melaporkan berhasil: server langsung menanyakan status ke API Midtrans,
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
