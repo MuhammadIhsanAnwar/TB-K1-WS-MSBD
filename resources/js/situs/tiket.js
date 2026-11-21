@@ -196,6 +196,7 @@ if (bayar) {
     const muatQris = async () => {
         if (!panelQris || !panelQris.hidden) return;
         try {
+            const data = await minta(panelQris.dataset.qrisUrl);
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
