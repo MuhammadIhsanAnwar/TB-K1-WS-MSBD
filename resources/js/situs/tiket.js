@@ -110,6 +110,7 @@ if (bayar) {
     const tombolBayar = formBayar.querySelector('button');
     const kabar = bayar.querySelector('[data-kabar-bayar]');
     const panelQris = bayar.querySelector('[data-qris-sandbox]');
+    const templatSukses = document.querySelector('[data-templat-sukses]');
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
     let pantau = null;
