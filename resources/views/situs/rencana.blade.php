@@ -29,7 +29,7 @@
             'moda' => $s['pindah']['moda'] ?? null,
         ]))->values() : null;
 
-    $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.(Katalog::get($mulai)['nama'] ?? 'tempat pilihan'));
+    $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.($mulai === 'lokasi' ? 'lokasimu' : (Katalog::get($mulai)['nama'] ?? 'tempat pilihan')));
 
     $bertiket = $hasil ? collect($hasil['singgah'])->pluck('tempat')->filter(fn ($t) => ! empty($t['tiket'])) : collect();
 @endphp
