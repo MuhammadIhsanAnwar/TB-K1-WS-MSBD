@@ -410,6 +410,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .bayar-qris[hidden] { display: none; }
 .bayar-qris img { width: 160px; height: 160px; flex: none; image-rendering: pixelated; }
 .bayar-qris__isi { display: grid; gap: 8px; flex: 1 1 260px; min-width: 0; }
+.bayar-qris__isi ol { margin: 0; padding-left: 1.2em; list-style: decimal; }
 .mv-rating-ringkas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mv-rating-ringkas b { font-size: 1.25rem; }
 .form-ulasan { margin-top: 36px; padding: 28px; background: var(--paper-deep); }
