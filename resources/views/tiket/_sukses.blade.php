@@ -17,3 +17,4 @@
         <p>{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }} untuk {{ $t['nama'] }} pada {{ $tgl->translatedFormat('l, j F Y') }}. Kode pesanan <strong>{{ $p['kode'] }}</strong> siap ditunjukkan di loket masuk.</p>
         @unless ($siap)
             <p class="sukses__proses" data-proses-etiket role="status" aria-live="polite">Menerbitkan e-tiket…</p>
+        @endunless
