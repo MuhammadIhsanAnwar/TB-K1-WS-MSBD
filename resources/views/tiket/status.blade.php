@@ -17,7 +17,7 @@
 
 @section('isi')
 @if ($p['status'] === 'lunas')
-    <div class="sukses" data-tiket="sukses">
+    @include('tiket._sukses', ['siap' => true])
         <div class="sukses__isi">
             <svg class="stempel" viewBox="0 0 200 200" role="img" aria-label="Stempel tiket terbit">
                 <defs><path id="lingkar-terbit" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"/></defs>
