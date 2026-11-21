@@ -152,6 +152,7 @@ if (bayar) {
     const tandaiSiap = () => {
         const l = tampilkanSukses();
         if (!l) {
+            location.reload();
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
