@@ -344,7 +344,6 @@ class Katalog
      */
     public static function susunRute(array $minat, int $durasiJam, array $moda, string $mulai, ?\DateTimeInterface $tanggal = null, ?array $posisi = null): array
     {
-        }
         if ($durasiJam <= 0) {
             throw new RuntimeException('Durasi perjalanan harus lebih dari 0 jam.');
         }
