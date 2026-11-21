@@ -13,3 +13,4 @@ if (form) {
         kabar.hidden = !teks;
         kabar.textContent = teks;
     };
+
