@@ -27,3 +27,4 @@ if (form) {
 
     form.addEventListener('submit', (e) => {
         // tempat awal dari daftar: koordinat lama tidak ikut dikirim
+        lat.disabled = lng.disabled = pilih.value !== 'lokasi';
