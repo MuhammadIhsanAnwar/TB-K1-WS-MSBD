@@ -78,6 +78,7 @@
         <div class="isian" style="margin-bottom:28px">
             <label for="mulai">Mulai dari</label>
             <select id="mulai" name="mulai" data-pilih-mulai aria-describedby="kabar-lokasi">
+                <option value="lokasi" @selected($mulai === 'lokasi')>Lokasi saya sekarang</option>
                 @foreach ($tempat as $t)
                     <option value="{{ $t['slug'] }}" @selected($t['slug'] === $mulai)>{{ $t['nama'] }}</option>
                 @endforeach
