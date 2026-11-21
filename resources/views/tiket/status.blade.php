@@ -73,6 +73,7 @@
                                     </ol>
                                     <input type="text" readonly data-qris-teks aria-label="URL gambar QRIS untuk simulator">
                                     <div class="bayar-qris__aksi">
+                                        <button type="button" class="mv-btn mv-btn--garis mv-btn--kecil" data-salin="">Salin URL</button>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
