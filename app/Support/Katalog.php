@@ -388,6 +388,7 @@ class Katalog
 
             $urut[] = ['tempat' => $awal, 'mulai' => $jam, 'pindah' => null];
             $sisaMenit -= $durasiAwal;
+            $jam += $durasiAwal;
         }
 
         $sisaMenit = $durasiJam * 60;
