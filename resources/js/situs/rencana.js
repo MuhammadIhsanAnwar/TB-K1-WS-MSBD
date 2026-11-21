@@ -19,3 +19,4 @@ if (form) {
             tulis('');
             return;
         }
+        tulis(navigator.geolocation
