@@ -65,6 +65,7 @@
                             {{-- simulator QRIS meminta URL gambar QR; jendela Midtrans hanya menampilkan gambarnya --}}
                             <div class="bayar-qris" data-qris-sandbox data-qris-url="{{ route('pesanan.qris', $p['kode']) }}" hidden>
                                 <img data-qris-gambar alt="Kode QRIS pesanan {{ $p['kode'] }}" width="160" height="160">
+                                <div class="bayar-qris__isi">
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
