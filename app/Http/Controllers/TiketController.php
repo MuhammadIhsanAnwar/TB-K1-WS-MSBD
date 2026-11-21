@@ -192,6 +192,7 @@ class TiketController extends Controller
         abort_unless(Midtrans::aktif() && ! Midtrans::produksi(), 404);
         $p = $this->milik($request, $kode);
         $url = null;
+        if ($p['status'] === 'menunggu') {
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
