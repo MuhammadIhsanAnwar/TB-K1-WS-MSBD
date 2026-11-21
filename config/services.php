@@ -68,7 +68,6 @@ return [
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
-        'credential_lifetime' => (int) env('TURN_CREDENTIAL_LIFETIME', 3600),
     ],
 
     'webrtc' => [
