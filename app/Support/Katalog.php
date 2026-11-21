@@ -362,6 +362,7 @@ class Katalog
             // mulai dari posisi pengguna: dibulatkan sekitar 11 m, cukup untuk rute dan tidak menyimpan lokasi persisnya
             $titikAwal = ['lat' => round((float) $posisi['lat'], 4), 'lng' => round((float) $posisi['lng'], 4)];
             if (! $pool) {
+                throw new RuntimeException('Belum ada tempat wisata yang cocok dengan minat pilihanmu.');
         }
 
         $sisaMenit = $durasiJam * 60;
