@@ -181,6 +181,7 @@ class Midtrans
      */
     public static function urlQris(string $kode): ?string
     {
+        $s = self::status($kode);
     /** Hentikan transaksi yang belum dibayar (pesanan dibatalkan pembeli). */
     public static function hentikan(string $kode): void
     {
