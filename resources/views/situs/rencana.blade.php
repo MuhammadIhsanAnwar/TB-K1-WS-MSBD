@@ -85,6 +85,7 @@
             </select>
             {{-- diisi browser saat "Lokasi saya sekarang" dipilih; dibulatkan sekitar 11 m --}}
             <input type="hidden" name="lat" value="{{ $pref['lat'] ?? '' }}" data-lat>
+            <input type="hidden" name="lng" value="{{ $pref['lng'] ?? '' }}" data-lng>
         </div>
 
         <button class="tombol tombol--lebar" type="submit">{{ $hasil ? 'Susun ulang rute' : 'Susun rute' }}</button>
