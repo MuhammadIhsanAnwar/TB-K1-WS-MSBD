@@ -9,3 +9,4 @@ if (form) {
     const kabar = form.querySelector('[data-kabar-lokasi]');
     const tombol = form.querySelector('button[type="submit"]');
 
+    const tulis = (teks) => {
