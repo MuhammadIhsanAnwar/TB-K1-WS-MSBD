@@ -68,7 +68,6 @@ return [
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
-        'metered' => [
             'app_name' => env('METERED_APP_NAME') ?: 'medanvisit',
             'urls' => array_values(array_filter(array_map('trim', explode(',', env(
                 'METERED_TURN_URLS',
