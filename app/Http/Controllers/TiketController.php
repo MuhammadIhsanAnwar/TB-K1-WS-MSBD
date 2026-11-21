@@ -197,6 +197,7 @@ class TiketController extends Controller
                 $url = Midtrans::urlQris($kode);
             } catch (Throwable $e) {
                 Log::info("Midtrans: QRIS {$kode} belum bisa dibaca: ".$e->getMessage());
+            }
     public function statusLokal(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
