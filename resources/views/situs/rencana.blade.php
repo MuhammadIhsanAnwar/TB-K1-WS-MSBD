@@ -20,7 +20,7 @@
     $dariLokasi = ! empty($hasil['awal']);
     $rute = $hasil ? collect($dariLokasi ? [['nama' => 'Posisimu', 'lat' => $hasil['awal']['lat'], 'lng' => $hasil['awal']['lng'], 'awal' => true]] : [])
         ->concat(collect($hasil['singgah'])->map(fn ($s) => [
-        'url' => route('tempat', $s['tempat']['slug']),
+            'nama' => $s['tempat']['nama'],
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($s['tempat'])),
         'tiket' => ! empty($s['tempat']['tiket']) ? route('tiket.pilih', $s['tempat']['slug']) : null,
         'moda' => $s['pindah']['moda'] ?? null,
