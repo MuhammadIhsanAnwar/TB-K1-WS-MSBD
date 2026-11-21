@@ -63,6 +63,7 @@
                                 Halaman ini diperbarui sendiri setelah pembayaran diterima.
                             </div>
                             {{-- simulator QRIS meminta URL gambar QR; jendela Midtrans hanya menampilkan gambarnya --}}
+                            <div class="bayar-qris" data-qris-sandbox data-qris-url="{{ route('pesanan.qris', $p['kode']) }}" hidden>
                             </div>
                         @endunless
                         <p class="bayar-midtrans__kabar" data-kabar-bayar role="status" aria-live="polite" hidden></p>
