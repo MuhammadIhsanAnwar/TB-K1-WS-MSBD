@@ -21,3 +21,4 @@
         <div class="sukses__aksi">
             <a class="mv-btn mv-btn--utama" href="{{ route('tiket.e', $p['kode']) }}" @unless ($siap) data-tombol-etiket aria-disabled="true" @endunless>Buka e-tiket &amp; kode QR</a>
             <a class="mv-btn mv-btn--garis-terang" href="{{ route('tempat', $t['slug']) }}">Kembali ke {{ $t['nama'] }}</a>
+        </div>
