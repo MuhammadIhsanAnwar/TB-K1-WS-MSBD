@@ -147,6 +147,7 @@ if (bayar) {
 
         return lapis;
     };
+
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
