@@ -141,6 +141,7 @@ if (bayar) {
     const tampilkanSukses = () => {
         if (lapis || !templatSukses) return lapis;
         lapis = templatSukses.content.firstElementChild.cloneNode(true);
+        document.body.append(lapis);
         if (sedangCek || document.hidden) return;
 
         sedangCek = true;
