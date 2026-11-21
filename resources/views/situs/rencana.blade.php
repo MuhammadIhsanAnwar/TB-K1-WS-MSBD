@@ -30,6 +30,7 @@
         ]))->values() : null;
 
     $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.($mulai === 'lokasi' ? 'lokasimu' : (Katalog::get($mulai)['nama'] ?? 'tempat pilihan')));
+    // lokasi pengguna tidak disimpan: rencana yang disimpan dimulai dari persinggahan pertama
 
     $bertiket = $hasil ? collect($hasil['singgah'])->pluck('tempat')->filter(fn ($t) => ! empty($t['tiket'])) : collect();
 @endphp
