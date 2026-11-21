@@ -15,3 +15,4 @@
         </svg>
         <h1 id="judul-sukses" tabindex="-1" @unless ($siap) data-judul-siap="E-tiketmu sudah terbit" @endunless>{{ $siap ? 'E-tiketmu sudah terbit' : 'Pembayaran berhasil' }}</h1>
         <p>{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }} untuk {{ $t['nama'] }} pada {{ $tgl->translatedFormat('l, j F Y') }}. Kode pesanan <strong>{{ $p['kode'] }}</strong> siap ditunjukkan di loket masuk.</p>
+        @unless ($siap)
