@@ -48,3 +48,4 @@ if (form) {
             (galat) => {
                 tombol.disabled = false;
                 tulis(galat.code === galat.PERMISSION_DENIED
+                    ? 'Izin lokasi ditolak. Izinkan akses lokasi di pengaturan browser, atau pilih tempat awal dari daftar.'
