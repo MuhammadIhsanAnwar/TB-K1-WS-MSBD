@@ -7,3 +7,4 @@ if (form) {
     const lat = form.querySelector('[data-lat]');
     const lng = form.querySelector('[data-lng]');
     const kabar = form.querySelector('[data-kabar-lokasi]');
+    const tombol = form.querySelector('button[type="submit"]');
