@@ -10,3 +10,4 @@ if (form) {
     const tombol = form.querySelector('button[type="submit"]');
 
     const tulis = (teks) => {
+        kabar.hidden = !teks;
