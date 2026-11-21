@@ -360,6 +360,7 @@ class Katalog
 
         if ($posisi !== null) {
             // mulai dari posisi pengguna: dibulatkan sekitar 11 m, cukup untuk rute dan tidak menyimpan lokasi persisnya
+            $titikAwal = ['lat' => round((float) $posisi['lat'], 4), 'lng' => round((float) $posisi['lng'], 4)];
         }
 
         $sisaMenit = $durasiJam * 60;
