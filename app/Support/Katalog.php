@@ -395,6 +395,7 @@ class Katalog
 
         while ($pool) {
             // dari posisi pengguna, langkah pertama boleh lebih jauh; antartempat tetap paling jauh 6 km
+            $batasMeter = $urut === [] ? self::JARAK_LANGKAH_PERTAMA : 6000;
             $jarak = array_map(fn ($t) => self::jarakMeter($kini, $t), $pool);
             asort($jarak);
             $slugCalon = null;
