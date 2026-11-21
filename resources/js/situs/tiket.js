@@ -252,6 +252,7 @@ if (bayar) {
                     tampilkanSukses();
                     konfirmasi();
                 },
+                onPending: () => {
                     mulaiPantau();
                 },
 
