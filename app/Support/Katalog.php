@@ -393,7 +393,6 @@ class Katalog
             $kini = $awal;
         }
 
-
         $urut = [['tempat' => $awal, 'mulai' => $jam, 'pindah' => null]];
         $sisaMenit -= $durasiAwal;
         $jam += $durasiAwal;
