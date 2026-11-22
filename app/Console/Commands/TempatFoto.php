@@ -63,6 +63,11 @@ class TempatFoto extends Command
         'kawasan-kuliner-cemara' => 'kawasan-kuliner-komplek-cemara-asri',
         'kawasan-kuliner-karyawisata' => 'kawasan-kuliner-jl-karya-wisata',
         'manhattanurban-market' => 'manhattan-urban-market-muma',
+        'budaya-resto' => 'budaya-resto-themepark',
+        'kawasan-kuliner-tasbih' => 'kawasan-kuliner-komplek-tasbih',
+        'kampung-nelayan' => 'kampung-nelayan-warna-warni-belawan',
+        'medan-edufun' => 'medan-edu-fun',
+        'naknyfunland' => 'nakny-funland',
     ];
 
     public function handle(): int

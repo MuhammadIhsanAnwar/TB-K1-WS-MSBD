@@ -1026,7 +1026,8 @@ res:taman-teladan a mv:RuangPublik ;
     mv:durasiSinggah 20 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Teladan Barat" ;
-    dcterms:source <https://www.detik.com/sumut/berita/d-8309289/pemkot-klaim-progres-revitalisasi-stadion-teladan-capai-97-terkendala-apbn> .
+    dcterms:source <https://www.detik.com/sumut/berita/d-8309289/pemkot-klaim-progres-revitalisasi-stadion-teladan-capai-97-terkendala-apbn> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-teladan.jpg> .
 
 res:taman-gajah-mada a mv:RuangPublik ;
     rdfs:label "Taman Gajah Mada"@id ;
@@ -3966,7 +3967,8 @@ res:medan-edu-fun a mv:RuangPublik ;
     mv:jamTutup "17:00:00"^^xsd:time ;
     dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/medan-edu-fun> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/medan-edufun.jpg> .
 
 res:medan-zoo a mv:RuangPublik ;
     rdfs:label "Medan Zoo"@id ;
@@ -3986,7 +3988,8 @@ res:medan-zoo a mv:RuangPublik ;
     mv:jamTutup "17:00:00"^^xsd:time ;
     dcterms:source <https://id.wikipedia.org/wiki/Kebun_Binatang_Medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/medan-zoo.jpg> .
 
 res:kenanga-garden a mv:RuangPublik ;
     rdfs:label "Kenanga Garden"@id ;
@@ -4044,7 +4047,8 @@ res:kampung-nelayan-warna-warni-belawan a mv:RuangPublik ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "18:00:00"^^xsd:time ;
-    dcterms:source <https://pariwisata.pemkomedan.go.id/destinasi/kampung-warna-warni-belawan> .
+    dcterms:source <https://pariwisata.pemkomedan.go.id/destinasi/kampung-warna-warni-belawan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kampung-nelayan.jpg> .
 
 res:the-le-hu-garden a mv:RuangPublik ;
     rdfs:label "The Le Hu Garden"@id ;
@@ -4146,7 +4150,8 @@ res:danau-siombak a mv:RuangPublik ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://id.wikipedia.org/wiki/Danau_Siombak> ;
     mv:hargaTiketMulai 10000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/danau-siombak.jpg> .
 
 res:kawasan-kuliner-jl-karya-wisata a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Jl. Karya Wisata"@id ;
@@ -4187,7 +4192,8 @@ res:kawasan-kuliner-komplek-tasbih a mv:TempatKuliner ;
     mv:jamTutup "23:00:00"^^xsd:time ;
     dcterms:source <https://www.idntimes.com/food/dining-guide/kuliner-komplek-tasbih-medan> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-kuliner-tasbih.jpg> .
 
 res:rm-garuda-pusat a mv:TempatKuliner ;
     rdfs:label "RM Garuda Pusat"@id ;
@@ -4688,7 +4694,8 @@ res:budaya-resto-themepark a mv:TempatKuliner ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     dcterms:source <https://restauranbudaya.com/> ;
     mv:hargaTiketMulai 50000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/budaya-resto.jpg> .
 
 res:kolam-renang-selayang a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Selayang"@id ;
@@ -4792,7 +4799,8 @@ res:nakny-funland a mv:RuangPublik ;
     mv:jamTutup "22:30:00"^^xsd:time ;
     dcterms:source <https://nakny.id/nakny-funland/> ;
     mv:hargaTiketMulai 10000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/naknyfunland.jpg> .
 
 res:tirta-ceria-waterpark a mv:RekreasiAir ;
     rdfs:label "Tirta Ceria Waterpark"@id ;
