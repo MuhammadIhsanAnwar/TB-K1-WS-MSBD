@@ -68,6 +68,16 @@ class TempatFoto extends Command
         'kampung-nelayan' => 'kampung-nelayan-warna-warni-belawan',
         'medan-edufun' => 'medan-edu-fun',
         'naknyfunland' => 'nakny-funland',
+        'taman-budaya' => 'taman-budaya-medan',
+        'masjid-albadar' => 'masjid-al-badar',
+        'masjid-aljihad' => 'masjid-al-jihad-medan',
+        'masjid-perjuangan45' => 'masjid-perjuangan-45',
+        'masjid-raya-kedatukan-sunggal' => 'masjid-raya-kedatukan-sunggal-serbanyaman',
+        'masjid-syuhada' => 'masjid-syuhada-medan',
+        'pura-agung-raksabuana' => 'pura-agung-raksa-buana',
+        'shri-hanuman' => 'shri-hanuman-kuil',
+        'vihara-vimala' => 'vihara-vimala-diepa-tian-fu-thang',
+        'hkbp-sudirman' => 'gereja-hkbp-sudirman',
     ];
 
     public function handle(): int

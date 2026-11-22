@@ -1063,7 +1063,8 @@ res:taman-budaya-medan a mv:RuangPublik ;
     mv:durasiSinggah 45 ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Gaharu" ;
-    dcterms:source <https://sumut.idntimes.com/news/sumatra-utara/5-fakta-unik-taman-budaya-kota-medan-01-2j5kq-7ktxm5> .
+    dcterms:source <https://sumut.idntimes.com/news/sumatra-utara/5-fakta-unik-taman-budaya-kota-medan-01-2j5kq-7ktxm5> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-budaya.jpg> .
 
 res:avros-park a mv:RuangPublik ;
     rdfs:label "Avros Park"@id ;
@@ -2556,7 +2557,8 @@ res:masjid-al-osmani a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "04:30:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <http://www.medanwisata.com/2014/03/masjid-raya-al-osmani-medan-sumatera.html> .
+    dcterms:source <http://www.medanwisata.com/2014/03/masjid-raya-al-osmani-medan-sumatera.html> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-al-osmani.jpg> .
 
 res:vihara-siu-san-keng a mv:RumahIbadah ;
     rdfs:label "Vihara Siu San Keng"@id ;
@@ -2590,7 +2592,8 @@ res:gereja-hkbp-sudirman a mv:RumahIbadah ;
     mv:radiusCheckin 100 ;
     mv:durasiSinggah 30 ;
     schema:isAccessibleForFree true ;
-    dcterms:source <https://hkbpmedansudirman.org/> .
+    dcterms:source <https://hkbpmedansudirman.org/> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/hkbp-sudirman.jpg> .
 
 res:gbi-rumah-persembahan a mv:RumahIbadah ;
     rdfs:label "GBI Rumah Persembahan"@id ;
@@ -2608,7 +2611,8 @@ res:gbi-rumah-persembahan a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "09:00:00"^^xsd:time ;
     mv:jamTutup "18:15:00"^^xsd:time ;
-    dcterms:source <https://rumahpersembahan.org> .
+    dcterms:source <https://rumahpersembahan.org> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gbi-rumah-persembahan.jpg> .
 
 res:gereja-katolik-santo-antonius-padua-hayam-wuruk a mv:RumahIbadah ;
     rdfs:label "Gereja Katolik Santo Antonius Padua Hayam Wuruk"@id ;
@@ -2945,7 +2949,8 @@ res:wihara-candi-buddha a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "19:00:00"^^xsd:time ;
-    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/medan> .
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/wihara-candi-buddha.jpg> .
 
 res:kelenteng-jit-sien-nio-nio a mv:RumahIbadah ;
     rdfs:label "Kelenteng Jit Sien Nio Nio"@id ;
@@ -3049,7 +3054,8 @@ res:vihara-vimala-diepa-tian-fu-thang a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "20:00:00"^^xsd:time ;
-    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-vimala-diepa> .
+    dcterms:source <https://buddha.kemenag.go.id/rumah-ibadah/vihara-vimala-diepa> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/vihara-vimala.jpg> .
 
 res:vihara-dhammadayada a mv:RumahIbadah ;
     rdfs:label "Vihara Dhammadayada"@id ;
@@ -3335,7 +3341,8 @@ res:masjid-al-jihad-medan a mv:RumahIbadah ;
     mv:radiusCheckin 100 ;
     mv:durasiSinggah 30 ;
     schema:isAccessibleForFree true ;
-    dcterms:source <https://masjidaljihadmedan.or.id> .
+    dcterms:source <https://masjidaljihadmedan.or.id> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-aljihad.jpg> .
 
 res:masjid-raya-kedatukan-sunggal-serbanyaman a mv:RumahIbadah ;
     rdfs:label "Masjid Raya Kedatukan Sunggal Serbanyaman"@id ;
@@ -3353,7 +3360,8 @@ res:masjid-raya-kedatukan-sunggal-serbanyaman a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "04:30:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://simas.kemenag.go.id/profil/masjid/kedatukan-sunggal> .
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/kedatukan-sunggal> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-raya-kedatukan-sunggal.jpg> .
 
 res:masjid-taqarrub a mv:RumahIbadah ;
     rdfs:label "Masjid Taqarrub"@id ;
@@ -3425,7 +3433,8 @@ res:masjid-perjuangan-45 a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "04:30:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://simas.kemenag.go.id/profil/masjid/perjuangan-45-medan> .
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/perjuangan-45-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-perjuangan45.jpg> .
 
 res:masjid-dakwah-usu a mv:RumahIbadah ;
     rdfs:label "Masjid Dakwah USU"@id ;
@@ -3605,7 +3614,8 @@ res:masjid-al-badar a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "04:30:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-badar-medan> .
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/al-badar-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-albadar.jpg> .
 
 res:masjid-syuhada-medan a mv:RumahIbadah ;
     rdfs:label "Masjid Syuhada Medan"@id ;
@@ -3623,7 +3633,8 @@ res:masjid-syuhada-medan a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "04:30:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://simas.kemenag.go.id/profil/masjid/syuhada-sunggal> .
+    dcterms:source <https://simas.kemenag.go.id/profil/masjid/syuhada-sunggal> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-syuhada.jpg> .
 
 res:masjid-raya-al-hikmah-medan a mv:RumahIbadah ;
     rdfs:label "Masjid Raya Al-Hikmah Medan"@id ;
@@ -3767,7 +3778,8 @@ res:pura-agung-raksa-buana a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "21:00:00"^^xsd:time ;
-    dcterms:source <https://id.wikipedia.org/wiki/Pura_Agung_Raksa_Buana> .
+    dcterms:source <https://id.wikipedia.org/wiki/Pura_Agung_Raksa_Buana> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/pura-agung-raksabuana.jpg> .
 
 res:kuil-shri-balaji-venkateshwara a mv:RumahIbadah ;
     rdfs:label "Kuil Shri Balaji Venkateshwara"@id ;
@@ -3803,7 +3815,8 @@ res:shri-hanuman-kuil a mv:RumahIbadah ;
     schema:isAccessibleForFree true ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "20:30:00"^^xsd:time ;
-    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-hanuman-kuil-medan> .
+    dcterms:source <https://hindu.kemenag.go.id/rumah-ibadah/shri-hanuman-kuil-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/shri-hanuman.jpg> .
 
 res:shri-nagama-kuil a mv:RumahIbadah ;
     rdfs:label "Shri Nagama Kuil"@id ;
