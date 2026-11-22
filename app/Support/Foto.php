@@ -9,7 +9,7 @@ class Foto
     {
         static $cache = [];
         if (! isset($cache[$berkas])) {
-            $path = self::jalurFisik($berkas);
+            $path = public_path(self::jalur($berkas));
             $info = is_file($path) ? @getimagesize($path) : false;
             $cache[$berkas] = $info ? [$info[0], $info[1]] : [1600, 1000];
         }
@@ -23,8 +23,8 @@ class Foto
     }
 
     /**
-     * Foto katalog ada di storage/poto, thumbnail di storage/foto-kecil.
-     * Unggahan lain sudah ditulis lengkap dengan awalan storage/.
+     * Foto tempat ada di public/storage/poto, thumbnail di public/storage/foto-kecil.
+     * Unggahan lain (misalnya sampul beranda) sudah ditulis lengkap dengan awalan storage/.
      */
     private static function jalur(string $berkas): string
     {
@@ -37,19 +37,5 @@ class Foto
         }
 
         return 'storage/poto/'.$berkas;
-    }
-
-    /** Berkas fisiknya di storage/app/public, bukan di public/. */
-    private static function jalurFisik(string $berkas): string
-    {
-        if (str_starts_with($berkas, 'storage/')) {
-            return storage_path('app/public/'.substr($berkas, strlen('storage/')));
-        }
-
-        if (str_starts_with($berkas, 'foto-kecil/')) {
-            return storage_path('app/public/'.$berkas);
-        }
-
-        return storage_path('app/public/poto/'.$berkas);
     }
 }

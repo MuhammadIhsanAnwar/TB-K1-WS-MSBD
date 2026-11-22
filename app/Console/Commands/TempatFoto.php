@@ -15,7 +15,7 @@ class TempatFoto extends Command
 {
     protected $signature = 'tempat:foto
                             {folder : Folder sumber foto}
-                            {--tulis : Tulis ke TTL dan salin foto ke storage/app/public/poto}';
+                            {--tulis : Tulis ke TTL dan salin foto ke public/storage/poto}';
 
     protected $description = 'Pasang gambar tempat wisata dari folder foto';
 
@@ -69,7 +69,7 @@ class TempatFoto extends Command
     {
         $folder = (string) $this->argument('folder');
         $ttl = database_path('rdf/medanvisit-data.ttl');
-        $tujuan = storage_path('app/public/poto');
+        $tujuan = public_path('storage/poto');
 
         if (! is_dir($folder)) {
             $this->error('Folder tidak ditemukan: '.$folder);
@@ -154,7 +154,7 @@ class TempatFoto extends Command
             }
         }
 
-            $this->buatKecil($tujuan.'/'.$nama, storage_path('app/public/foto-kecil/'.pathinfo($nama, PATHINFO_FILENAME).'.jpg'));
+            $this->buatKecil($tujuan.'/'.$nama, public_path('storage/foto-kecil/'.pathinfo($nama, PATHINFO_FILENAME).'.jpg'));
 
             $isi = $this->sisipkan($isi, $s, $nama);
         }
@@ -165,7 +165,7 @@ class TempatFoto extends Command
         return self::SUCCESS;
     }
 
-    /** Versi 720 px di storage/app/public/foto-kecil, dipakai semua slot thumbnail (lihat components/foto.blade.php). */
+    /** Versi 720 px di public/storage/foto-kecil, dipakai semua slot thumbnail (lihat components/foto.blade.php). */
     private function buatKecil(string $sumber, string $tujuan): void
     {
         if (! is_dir(dirname($tujuan))) {

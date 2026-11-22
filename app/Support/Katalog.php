@@ -603,7 +603,7 @@ $teks = mb_strtolower(
     {
         static $kredit = null;
         if ($kredit === null) {
-            $path = storage_path('app/public/poto/credits.json');
+            $path = public_path('storage/poto/credits.json');
             $kredit = [];
             foreach (is_file($path) ? json_decode(file_get_contents($path), true) : [] as $item) {
                 $kredit[basename($item['file'])] = $item;

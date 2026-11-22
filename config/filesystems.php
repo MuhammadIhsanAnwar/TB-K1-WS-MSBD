@@ -73,8 +73,8 @@ return [
     |
     */
 
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-    ],
+    // public/storage dipakai sebagai folder biasa (foto tempat ada di sana),
+    // jadi tidak ada symlink ke storage/app/public.
+    'links' => [],
 
 ];
