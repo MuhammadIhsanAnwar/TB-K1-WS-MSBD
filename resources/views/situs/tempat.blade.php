@@ -187,7 +187,7 @@
             <section class="mv-seksi-detail" id="peta-1930" aria-labelledby="judul-peta-lama">
                 <h2 id="judul-peta-lama">Di peta Medan 1930</h2>
                 <div class="peta-lama" style="--px: {{ round($cx, 2) }}; --py: {{ round($cy, 2) }}; --dx: {{ round(($px - $cx) * 2.2, 2) }}; --dy: {{ round(($py - $cy) * 3.713, 2) }}">
-                    <img src="{{ asset('images/foto/peta-medan-1930.webp') }}" width="1422" height="1600" loading="lazy" decoding="async" alt="Potongan peta Medan tahun 1930 di sekitar {{ $t['nama'] }}">
+                    <img src="{{ asset('storage/poto/peta-medan-1930.webp') }}" width="1422" height="1600" loading="lazy" decoding="async" alt="Potongan peta Medan tahun 1930 di sekitar {{ $t['nama'] }}">
                     <span class="peta-lama__titik" aria-hidden="true"></span>
                 </div>
                 <p class="peta-lama__ket">Lingkaran kuning menandai letak {{ $t['nama'] }} hari ini di atas peta kota tahun 1930.@if (! empty($t['koordinat_perkiraan'])) Titiknya berupa perkiraan kawasan.@endif @if ($kreditPeta) Sumber peta: {{ $kreditPeta }}.@endif</p>

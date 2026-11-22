@@ -114,7 +114,7 @@ res:istana-maimun a mv:SitusSejarah ;
     mv:caraMenuju "Becak motor dari Kesawan, tawar ongkos sebelum naik (sekitar Rp20.000–30.000)"@id ;
     mv:caraMenuju "Bus Listrik Medan koridor K1 melintas di depan istana"@id ;
     mv:caraMenuju "Jalan kaki dari Masjid Raya Al-Mashun, sekitar 6 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/istana-maimun.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/istana-maimun.jpg> ;
     owl:sameAs wd:Q1674833 ;
     mv:hargaTiketMulai 5000 ;
     mv:hargaContoh true ;
@@ -142,7 +142,7 @@ res:masjid-raya-al-mashun a mv:RumahIbadah ;
     mv:fasilitas "Tempat wudu"@id ;
     mv:fasilitas "Peminjaman kain penutup"@id ;
     mv:caraMenuju "Jalan kaki dari Istana Maimun, sekitar 6 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/masjid-raya.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/masjid-raya.jpg> ;
     owl:sameAs wd:Q12497331 .
 
 res:tjong-a-fie-mansion a mv:SitusSejarah ;
@@ -167,7 +167,7 @@ res:tjong-a-fie-mansion a mv:SitusSejarah ;
     mv:fasilitas "Kafe"@id ;
     mv:caraMenuju "Jalan kaki dari Lapangan Merdeka, sekitar 8 menit"@id ;
     mv:caraMenuju "Becak motor dari Istana Maimun, sekitar 10 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/tjong-a-fie-mansion.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/tjong-a-fie-mansion.jpg> ;
     owl:sameAs wd:Q7810631 ;
     mv:hargaTiketMulai 35000 ;
     mv:hargaContoh false ;
@@ -191,7 +191,7 @@ res:meriam-puntung a mv:SitusSejarah ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "17:00:00"^^xsd:time ;
     mv:caraMenuju "Di halaman Istana Maimun"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/meriam-puntung.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/meriam-puntung.jpg> .
 
 res:kuil-shri-mariamman a mv:RumahIbadah ;
     rdfs:label "Kuil Shri Mariamman"@id ;
@@ -212,7 +212,7 @@ res:kuil-shri-mariamman a mv:RumahIbadah ;
     mv:jamTutup "20:00:00"^^xsd:time ;
     mv:fasilitas "Lepas alas kaki di gerbang"@id ;
     mv:caraMenuju "Becak motor dari Lapangan Merdeka, sekitar 10 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kuil-shri-mariamman.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kuil-shri-mariamman.jpg> ;
     owl:sameAs wd:Q12492840 .
 
 res:vihara-gunung-timur a mv:RumahIbadah ;
@@ -235,7 +235,7 @@ res:vihara-gunung-timur a mv:RumahIbadah ;
     mv:fasilitas "Parkir"@id ;
     mv:fasilitas "Wajib berpakaian rapi dan tertutup"@id ;
     mv:caraMenuju "Becak motor dari Kampung Madras, sekitar 5 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/vihara-gunung-timur.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/vihara-gunung-timur.jpg> ;
     owl:sameAs wd:Q14933726 .
 
 res:graha-maria-annai-velangkanni a mv:RumahIbadah ;
@@ -258,7 +258,7 @@ res:graha-maria-annai-velangkanni a mv:RumahIbadah ;
     mv:fasilitas "Parkir"@id ;
     mv:fasilitas "Toilet"@id ;
     mv:caraMenuju "Taksi atau ojek daring dari pusat kota, sekitar 30 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/graha-maria-annai-velangkanni.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/graha-maria-annai-velangkanni.jpg> ;
     owl:sameAs wd:Q4349197 .
 
 res:museum-negeri-sumatera-utara a mv:Museum ;
@@ -282,7 +282,7 @@ res:museum-negeri-sumatera-utara a mv:Museum ;
     mv:fasilitas "Toilet"@id ;
     mv:caraMenuju "Bus Listrik Medan koridor K1, turun di halte Simpang HM Joni lalu jalan kaki"@id ;
     mv:caraMenuju "Becak motor dari Masjid Raya Al-Mashun"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/museum-negeri-sumut.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/museum-negeri-sumut.jpg> ;
     owl:sameAs wd:Q12499672 ;
     mv:hargaTiketMulai 3000 ;
     mv:hargaContoh true ;
@@ -306,7 +306,7 @@ res:soto-kesawan a mv:TempatKuliner ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "14:00:00"^^xsd:time ;
     mv:caraMenuju "Jalan kaki dari Tjong A Fie Mansion"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/soto-medan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/soto-medan.jpg> .
 
 res:bika-ambon-mojopahit a mv:TempatKuliner ;
     rdfs:label "Deretan Bika Ambon Jl. Mojopahit"@id ;
@@ -326,7 +326,7 @@ res:bika-ambon-mojopahit a mv:TempatKuliner ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     mv:caraMenuju "Becak motor dari Kuil Shri Mariamman, sekitar 5 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/bika-ambon.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/bika-ambon.jpg> .
 
 res:lapangan-merdeka a mv:RuangPublik ;
     rdfs:label "Lapangan Merdeka"@id ;
@@ -347,7 +347,7 @@ res:lapangan-merdeka a mv:RuangPublik ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     mv:caraMenuju "Stasiun Medan ada di sisi timur lapangan"@id ;
     mv:caraMenuju "Halte Bus Listrik Lapangan Merdeka, titik transit koridor K3, K4, dan K5"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/lapangan-merdeka.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/lapangan-merdeka.jpg> ;
     owl:sameAs wd:Q12498196 .
 
 res:taman-sri-deli a mv:RuangPublik ;
@@ -368,7 +368,7 @@ res:taman-sri-deli a mv:RuangPublik ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     mv:caraMenuju "Di seberang Masjid Raya Al-Mashun"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-sri-deli.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-sri-deli.jpg> ;
     owl:sameAs wd:Q12518862 .
 
 res:gereja-immanuel a mv:RumahIbadah ;
@@ -389,7 +389,7 @@ res:gereja-immanuel a mv:RumahIbadah ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "16:00:00"^^xsd:time ;
     mv:caraMenuju "Jalan kaki dari Kuil Shri Mariamman, sekitar 8 menit"@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gereja-immanuel.jpg> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gereja-immanuel.jpg> ;
     owl:sameAs wd:Q113648754 .
 
 res:balai-kota-lama a mv:SitusSejarah ;
@@ -409,7 +409,7 @@ res:balai-kota-lama a mv:SitusSejarah ;
     mv:kelurahan "Kesawan" ;
     owl:sameAs wd:Q6805113 ;
     dcterms:source <https://www.detik.com/sumut/berita/d-7045682/sejarah-balai-kota-medan-ada-peran-miliarder-tjong-a-fie> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-balai-kota-lama.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gedung-balai-kota-lama.jpg> .
 
 res:gedung-lonsum a mv:SitusSejarah ;
     rdfs:label "Gedung London Sumatra"@id ;
@@ -428,7 +428,7 @@ res:gedung-lonsum a mv:SitusSejarah ;
     mv:kelurahan "Kesawan" ;
     owl:sameAs wd:Q114814144 ;
     dcterms:source <https://economy.okezone.com/read/2023/04/12/470/2797205/ini-gedung-dengan-lift-pertama-di-sumatera-sudah-ada-sejak-zaman-kolonial> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-london-sumatra.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gedung-london-sumatra.jpg> .
 
 res:menara-air-tirtanadi a mv:SitusSejarah ;
     rdfs:label "Menara Air Tirtanadi"@id ;
@@ -447,7 +447,7 @@ res:menara-air-tirtanadi a mv:SitusSejarah ;
     mv:kelurahan "Pasar Baru" ;
     owl:sameAs wd:Q19746232 ;
     dcterms:source <https://www.detik.com/sumut/budaya/d-7210677/sejarah-menara-pdam-tirtanadi-medan-dibangun-di-masa-kolonial-belanda> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/menara-air-tirtanadi.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/menara-air-tirtanadi.jpg> .
 
 res:pos-bloc-medan a mv:SitusSejarah ;
     rdfs:label "Kantor Pos Besar Medan (Pos Bloc)"@id ;
@@ -468,7 +468,7 @@ res:pos-bloc-medan a mv:SitusSejarah ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     owl:sameAs wd:Q12489173 ;
     dcterms:source <https://www.detik.com/sumut/berita/d-7187048/sejarah-kantor-pos-medan-yang-kini-jadi-pusat-kuliner-milenial> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kantor-pos-besar.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kantor-pos-besar.jpg> .
 
 res:gedung-bank-indonesia-lama a mv:SitusSejarah ;
     rdfs:label "Gedung Bank Indonesia Lama"@id ;
@@ -486,7 +486,7 @@ res:gedung-bank-indonesia-lama a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
     dcterms:source <https://en.wikipedia.org/wiki/List_of_colonial_buildings_in_Medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-bank-indonesia-lama.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gedung-bank-indonesia-lama.jpg> .
 
 res:gedung-avros a mv:SitusSejarah ;
     rdfs:label "Gedung AVROS (BKS-PPS)"@id ;
@@ -504,7 +504,7 @@ res:gedung-avros a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Aur" ;
     dcterms:source <https://www.penang-traveltips.com/indonesia/medan/bks-pps-building.htm> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-avros.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gedung-avros.jpg> .
 
 res:gedung-warenhuis a mv:SitusSejarah ;
     rdfs:label "Gedung Warenhuis"@id ;
@@ -522,7 +522,7 @@ res:gedung-warenhuis a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Kesawan" ;
     dcterms:source <https://fahum.umsu.ac.id/info/gedung-warenhuis-diresmikan/> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/gedung-warenhuis.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/gedung-warenhuis.jpg> .
 
 res:monumen-sisingamangaraja-xii a mv:SitusSejarah ;
     rdfs:label "Monumen Sisingamangaraja XII"@id ;
@@ -540,7 +540,7 @@ res:monumen-sisingamangaraja-xii a mv:SitusSejarah ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Teladan Barat" ;
     dcterms:source <https://www.detik.com/sumut/berita/d-8267318/monumen-sisingamangaraja-xii-medan-tak-terawat-begini-penampakannya> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/monumen-sisingamangaraja-xii.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/monumen-sisingamangaraja-xii.jpg> .
 
 res:museum-perjuangan-tni a mv:Museum ;
     rdfs:label "Museum Perjuangan TNI Bukit Barisan"@id ;
@@ -561,7 +561,7 @@ res:museum-perjuangan-tni a mv:Museum ;
     mv:jamTutup "15:00:00"^^xsd:time ;
     owl:sameAs wd:Q86584463 ;
     dcterms:source <https://mamikos.com/info/museum-terbaik-di-medan-yang-wajib-dikunjungi-gnr/> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/museum-perjuangan-medan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/museum-perjuangan-medan.jpg> .
 
 res:rahmat-gallery a mv:Museum ;
     rdfs:label "Rahmat International Wildlife Museum & Gallery"@id ;
@@ -587,7 +587,7 @@ res:rahmat-gallery a mv:Museum ;
     schema:offers [ a schema:Offer ; schema:name "Domestik"@id ; schema:price 75000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Pelajar atau rombongan"@id ; schema:price 25000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Wisatawan mancanegara"@id ; schema:price 150000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/rahmat-international-wildlife-museum-gallery.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/rahmat-international-wildlife-museum-gallery.jpg> .
 
 res:museum-situs-kota-cina a mv:Museum ;
     rdfs:label "Museum Situs Kota Cina"@id ;
@@ -611,7 +611,7 @@ res:museum-situs-kota-cina a mv:Museum ;
     mv:hargaTiketMulai 12000 ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 12000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/museum-cina.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/museum-cina.jpg> .
 
 res:masjid-lama-gang-bengkok a mv:RumahIbadah ;
     rdfs:label "Masjid Lama Gang Bengkok"@id ;
@@ -747,7 +747,7 @@ res:kuliner-selat-panjang a mv:TempatKuliner ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "23:00:00"^^xsd:time ;
     dcterms:source <https://www.indonesia.travel/id-id/travel-ideas/gastronomy/culinary-on-jalan-selat-panjang-medan/> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kawasan-kuliner-selat-panjang.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-kuliner-selat-panjang.jpg> .
 
 res:kuliner-pagaruyung a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Jl. Pagaruyung"@id ;
@@ -767,7 +767,7 @@ res:kuliner-pagaruyung a mv:TempatKuliner ;
     mv:jamBuka "18:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
     dcterms:source <https://www.inews.id/regional/sumut/6-wisata-kuliner-malam-di-medan-nomor-5-ucok-durian-buka-24-jam/all> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kuliner-pagaruyung.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kuliner-pagaruyung.jpg> .
 
 res:kuliner-multatuli a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Multatuli"@id ;
@@ -901,7 +901,7 @@ res:kedai-kopi-apek a mv:TempatKuliner ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "14:00:00"^^xsd:time ;
     dcterms:source <https://www.goodnewsfromindonesia.id/2023/11/01/mencicipi-kenikmatan-kopi-apek-kedai-legendaris-dari-kota-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kedai-kopi-apek.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kedai-kopi-apek.jpg> .
 
 res:tip-top-restaurant a mv:TempatKuliner ;
     rdfs:label "Tip Top Restaurant"@id ;
@@ -959,7 +959,7 @@ res:taman-cadika a mv:RuangPublik ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://sumut.antaranews.com/berita/588991/bobby-apresiasi-wajah-baru-taman-cadika-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-cadika.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-cadika.jpg> .
 
 res:taman-ahmad-yani a mv:RuangPublik ;
     rdfs:label "Taman Ahmad Yani"@id ;
@@ -979,7 +979,7 @@ res:taman-ahmad-yani a mv:RuangPublik ;
     mv:jamBuka "00:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
     dcterms:source <https://sumut.idntimes.com/travel/destination/8-taman-kota-di-medan-tempat-terbaik-untuk-bersantai-dan-rekreasi-c1c2-01-2j5kq-dt7jcc> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-ahmad-yani.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-ahmad-yani.jpg> .
 
 res:taman-beringin a mv:RuangPublik ;
     rdfs:label "Taman Beringin"@id ;
@@ -999,7 +999,7 @@ res:taman-beringin a mv:RuangPublik ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/berita/d-8455293/warga-berharap-fasilitas-di-taman-beringin-medan-lebih-terawat> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-beringin.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-beringin.jpg> .
 
 res:taman-teladan a mv:RuangPublik ;
     rdfs:label "Taman Teladan"@id ;
@@ -1035,7 +1035,7 @@ res:taman-gajah-mada a mv:RuangPublik ;
     mv:jamBuka "00:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
     dcterms:source <https://sumut.idntimes.com/travel/destination/5-fakta-unik-taman-gajah-mada-medan-ruang-hijau-favorit-warga-kota-c1c2-01-2j5kq-dst53d> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-gajah-mada.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-gajah-mada.jpg> .
 
 res:taman-budaya-medan a mv:RuangPublik ;
     rdfs:label "Taman Budaya Medan"@id ;
@@ -1072,7 +1072,7 @@ res:avros-park a mv:RuangPublik ;
     mv:jamBuka "09:00:00"^^xsd:time ;
     mv:jamTutup "23:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-7399272/avros-park-daya-tarik-lokasi-jam-buka-harga-dan-rute> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/avros-park.webp> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/avros-park.webp> .
 
 res:lapangan-benteng a mv:RuangPublik ;
     rdfs:label "Lapangan Benteng"@id ;
@@ -1092,7 +1092,7 @@ res:lapangan-benteng a mv:RuangPublik ;
     mv:jamBuka "00:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
     dcterms:source <https://kumparan.com/jendela-dunia/lapangan-benteng-medan-untuk-olahraga-fasilitas-alamat-jam-buka-dan-aksesnya-21iDvKcam1P> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/lapangan-benteng.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/lapangan-benteng.jpg> .
 
 res:delipark-mall a mv:PusatBelanja ;
     rdfs:label "DeliPark Mall"@id ;
@@ -1112,7 +1112,7 @@ res:delipark-mall a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.agungpodomoro.com/group/en/news/delipark-mall-the-new-icon-in-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/delipark-mall.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/delipark-mall.jpg> .
 
 res:sun-plaza a mv:PusatBelanja ;
     rdfs:label "Sun Plaza"@id ;
@@ -1132,7 +1132,7 @@ res:sun-plaza a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/sun-plaza.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/sun-plaza.jpg> .
 
 res:centre-point-mall a mv:PusatBelanja ;
     rdfs:label "Centre Point Mall"@id ;
@@ -1152,7 +1152,7 @@ res:centre-point-mall a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/centre-point.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/centre-point.jpg> .
 
 res:plaza-medan-fair a mv:PusatBelanja ;
     rdfs:label "Plaza Medan Fair"@id ;
@@ -1172,7 +1172,7 @@ res:plaza-medan-fair a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/plaza-medan-fari.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/plaza-medan-fari.jpg> .
 
 res:manhattan-times-square a mv:PusatBelanja ;
     rdfs:label "Manhattan Times Square"@id ;
@@ -1192,7 +1192,7 @@ res:manhattan-times-square a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/manhattan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/manhattan.jpg> .
 
 res:ringroad-city-walks a mv:PusatBelanja ;
     rdfs:label "Ringroad City Walks"@id ;
@@ -1212,7 +1212,7 @@ res:ringroad-city-walks a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/berita/d-6526632/deretan-mal-mewah-di-kota-medan-salah-satunya-terbaik-se-indonesia> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/ringroad-citywalk.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/ringroad-citywalk.jpg> .
 
 res:cambridge-city-square a mv:PusatBelanja ;
     rdfs:label "Cambridge City Square"@id ;
@@ -1232,7 +1232,7 @@ res:cambridge-city-square a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/cambridge-city-square.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/cambridge-city-square.jpg> .
 
 res:focal-point a mv:PusatBelanja ;
     rdfs:label "Focal Point"@id ;
@@ -1252,7 +1252,7 @@ res:focal-point a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.rumah123.com/explore/kota-medan/focal-point-medan/> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/focal-point.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/focal-point.jpg> .
 
 res:plaza-millenium a mv:PusatBelanja ;
     rdfs:label "Plaza Millenium"@id ;
@@ -1270,7 +1270,7 @@ res:plaza-millenium a mv:PusatBelanja ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Dwi Kora" ;
     dcterms:source <https://www.openstreetmap.org/way/894120597> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/plaza-millennium.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/plaza-millennium.jpg> .
 
 res:medan-mall a mv:PusatBelanja ;
     rdfs:label "Medan Mall"@id ;
@@ -1288,7 +1288,7 @@ res:medan-mall a mv:PusatBelanja ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Pusat Pasar" ;
     dcterms:source <https://economy.okezone.com/read/2023/04/27/470/2804438/9-mall-paling-mewah-dan-terkenal-di-kota-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/medan-mall.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/medan-mall.jpg> .
 
 res:thamrin-plaza a mv:PusatBelanja ;
     rdfs:label "Thamrin Plaza"@id ;
@@ -1306,7 +1306,7 @@ res:thamrin-plaza a mv:PusatBelanja ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Sei Rengas II" ;
     dcterms:source <https://www.detik.com/sumut/berita/d-7853535/matahari-thamrin-plaza-tutup-warga-medan-kenang-momen-belanja-semasa-kecil> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/thamrin-plaza.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/thamrin-plaza.jpg> .
 
 res:lippo-plaza-medan a mv:PusatBelanja ;
     rdfs:label "Lippo Plaza Medan"@id ;
@@ -1326,7 +1326,7 @@ res:lippo-plaza-medan a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.jawapos.com/travelling/2605120204/liburan-tidak-lengkap-tanpa-mampir-ke-12-mall-terbaik-di-medan-ini-surga-belanja-sampai-tempat-hangout-viral-yang-wajib-anda-kunjungi> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/lippo-plaza.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/lippo-plaza.jpg> .
 
 res:suzuya-marelan a mv:PusatBelanja ;
     rdfs:label "Suzuya Mall Marelan"@id ;
@@ -1346,7 +1346,7 @@ res:suzuya-marelan a mv:PusatBelanja ;
     mv:jamBuka "10:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.openstreetmap.org/way/645564631> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/suzuya-marelan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/suzuya-marelan.jpg> .
 
 res:irian-supermarket a mv:PusatBelanja ;
     rdfs:label "Irian Supermarket Jl. Karya"@id ;
@@ -1364,7 +1364,7 @@ res:irian-supermarket a mv:PusatBelanja ;
     schema:isAccessibleForFree true ;
     mv:kelurahan "Sei Agul" ;
     dcterms:source <https://www.bca.co.id/id/promo-bca/2025/03/12/02/45/Irian-Supermarket> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/irian-supermarket-karya.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/irian-supermarket-karya.jpg> .
 
 res:pasar-ramai a mv:PusatBelanja ;
     rdfs:label "Pasar Ramai"@id ;
@@ -1384,7 +1384,7 @@ res:pasar-ramai a mv:PusatBelanja ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "17:00:00"^^xsd:time ;
     dcterms:source <https://www.holidify.com/pages/shopping-in-medan-2705.html> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/pasar-ramai.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/pasar-ramai.jpg> .
 
 res:kolam-renang-paradiso a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Paradiso"@id ;
@@ -1407,7 +1407,7 @@ res:kolam-renang-paradiso a mv:RekreasiAir ;
     mv:hargaTiketMulai 18000 ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 18000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-paradiso.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-paradiso.jpg> .
 
 res:kolam-renang-deli a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Deli"@id ;
@@ -1431,7 +1431,7 @@ res:kolam-renang-deli a mv:RekreasiAir ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Hari kerja"@id ; schema:price 12000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "Akhir pekan"@id ; schema:price 15000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-deli.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-deli.jpg> .
 
 res:kolam-renang-tirta-kartika a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Tirta Kartika"@id ;
@@ -1454,7 +1454,7 @@ res:kolam-renang-tirta-kartika a mv:RekreasiAir ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Umum"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-tirta-kartika.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-tirta-kartika.jpg> .
 
 res:kolam-renang-primbana a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Primbana"@id ;
@@ -1478,7 +1478,7 @@ res:kolam-renang-primbana a mv:RekreasiAir ;
     mv:hargaContoh true ;
     schema:offers [ a schema:Offer ; schema:name "Reguler"@id ; schema:price 15000 ; schema:priceCurrency "IDR" ] ;
     schema:offers [ a schema:Offer ; schema:name "VIP"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-primbana.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-primbana.jpg> .
 
 # ---------- tokoh, kerajaan, peristiwa, budaya, kuliner, transportasi ----------
 
@@ -1493,7 +1493,7 @@ res:tjong-a-fie a mv:Tokoh ;
     schema:name "Tjong A Fie"@id ;
     schema:description "Saudagar dan pemimpin komunitas Tionghoa Medan, 1860–1921."@id ;
     mv:masa "1860–1921" ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/tjong-a-fie-arsip.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/tjong-a-fie-arsip.jpg> .
 
 res:jacob-nienhuys a mv:Tokoh ;
     rdfs:label "Jacob Nienhuys"@id ;
@@ -1523,7 +1523,7 @@ res:era-tembakau-deli a mv:Peristiwa ;
     schema:name "Era Tembakau Deli"@id ;
     schema:description "Masa perkebunan tembakau yang membuat Medan tumbuh menjadi kota."@id ;
     mv:masa "sejak 1863" ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/tembakau-deli-1897.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/tembakau-deli-1897.jpg> .
 
 res:legenda-putri-hijau a mv:Peristiwa ;
     rdfs:label "Legenda Putri Hijau"@id ;
@@ -1555,31 +1555,31 @@ res:bubur-pedas a mv:Kuliner ;
     rdfs:label "Bubur pedas"@id ;
     schema:name "Bubur pedas"@id ;
     schema:description "Bubur rempah Melayu Deli, biasa disajikan saat Ramadan."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/bubur-pedas.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/bubur-pedas.jpg> .
 
 res:roti-jala a mv:Kuliner ;
     rdfs:label "Roti jala"@id ;
     schema:name "Roti jala"@id ;
     schema:description "Roti berbentuk jaring, dimakan dengan kari."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/roti-jala.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/roti-jala.jpg> .
 
 res:bika-ambon a mv:Kuliner ;
     rdfs:label "Bika ambon"@id ;
     schema:name "Bika ambon"@id ;
     schema:description "Kue bersarang beraroma pandan, oleh-oleh khas Medan."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/bika-ambon.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/bika-ambon.jpg> .
 
 res:soto-medan a mv:Kuliner ;
     rdfs:label "Soto Medan"@id ;
     schema:name "Soto Medan"@id ;
     schema:description "Soto berkuah santan kuning."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/soto-medan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/soto-medan.jpg> .
 
 res:becak-motor a mv:ModaTransportasi ;
     rdfs:label "Becak motor"@id ;
     schema:name "Becak motor"@id ;
     schema:description "Sepeda motor bergandeng kabin, angkutan khas Medan."@id ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/becak-medan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/becak-medan.jpg> .
 
 res:bus-listrik-medan a mv:ModaTransportasi ;
     rdfs:label "Bus Listrik Medan"@id ;
@@ -2916,7 +2916,7 @@ res:kawasan-kampung-madras a mv:SitusSejarah ;
     mv:durasiSinggah 60 ;
     schema:isAccessibleForFree true ;
     dcterms:source <https://id.wikipedia.org/wiki/Kampung_Madras,_Medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kawasan-madras.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-madras.jpg> .
 
 res:wihara-candi-buddha a mv:RumahIbadah ;
     rdfs:label "Wihara Candi Buddha"@id ;
@@ -3997,7 +3997,7 @@ res:kenanga-garden a mv:RuangPublik ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6754321/kenanga-garden-medan-lokasi-harga-tiket> ;
     mv:hargaTiketMulai 10000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kenanga-garden.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kenanga-garden.jpg> .
 
 res:citraland-gama-city a mv:RuangPublik ;
     rdfs:label "CitraLand Gama City"@id ;
@@ -4016,7 +4016,7 @@ res:citraland-gama-city a mv:RuangPublik ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://citralandgamacity.com> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/citraland-gamacity.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/citraland-gamacity.jpg> .
 
 res:kampung-nelayan-warna-warni-belawan a mv:RuangPublik ;
     rdfs:label "Kampung Nelayan Warna-Warni Belawan"@id ;
@@ -4055,7 +4055,7 @@ res:the-le-hu-garden a mv:RuangPublik ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6821450/the-le-hu-garden-harga-tiket-dan-wahana> ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/the-le-hu-garden.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/the-le-hu-garden.jpg> .
 
 res:kampoeng-ladang-outbound-family-recreation a mv:RuangPublik ;
     rdfs:label "Kampoeng Ladang Outbound & Family Recreation"@id ;
@@ -4076,7 +4076,7 @@ res:kampoeng-ladang-outbound-family-recreation a mv:RuangPublik ;
     dcterms:source <https://www.tripadvisor.co.id/Attraction_Review-g297725-d7184920-Kampoeng_Ladang-Medan> ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kampoeng-ladang-outbound.webp> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kampoeng-ladang-outbound.webp> .
 
 res:taman-burung-cemara-asri a mv:RuangPublik ;
     rdfs:label "Taman Burung Cemara Asri"@id ;
@@ -4095,7 +4095,7 @@ res:taman-burung-cemara-asri a mv:RuangPublik ;
     mv:jamBuka "06:00:00"^^xsd:time ;
     mv:jamTutup "19:00:00"^^xsd:time ;
     dcterms:source <https://www.idntimes.com/travel/destination/taman-burung-cemara-asri-medan> ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/taman-burung-cemara-asri.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/taman-burung-cemara-asri.jpg> .
 
 res:penangkaran-buaya-asam-kumbang a mv:RuangPublik ;
     rdfs:label "Penangkaran Buaya Asam Kumbang"@id ;
@@ -4116,7 +4116,7 @@ res:penangkaran-buaya-asam-kumbang a mv:RuangPublik ;
     dcterms:source <https://www.usu.ac.id/id/kehidupan-kampus/wisata-kota-medan/penangkaran-buaya-asam-kumbang> ;
     mv:hargaTiketMulai 10000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/penangkaran-buaya-asam-kumbang.jpeg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/penangkaran-buaya-asam-kumbang.jpeg> .
 
 res:danau-siombak a mv:RuangPublik ;
     rdfs:label "Danau Siombak"@id ;
@@ -4257,7 +4257,7 @@ res:durian-house-dh-patisserie a mv:TempatKuliner ;
     dcterms:source <https://www.tripadvisor.co.id/Restaurant_Review-g297725-d4128940-Durian_House-Medan> ;
     mv:hargaTiketMulai 35000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/durian-house.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/durian-house.jpg> .
 
 res:si-bolang-durian-pelawi-durian a mv:TempatKuliner ;
     rdfs:label "Si Bolang Durian / Pelawi Durian"@id ;
@@ -4316,7 +4316,7 @@ res:bihun-bebek-asie-kumango a mv:TempatKuliner ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6612890/bihun-bebek-asie-kumango-medan> ;
     mv:hargaTiketMulai 65000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/bihun-bebek-asie-kumango.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/bihun-bebek-asie-kumango.jpg> .
 
 res:mie-balap-wahidin a mv:TempatKuliner ;
     rdfs:label "Mie Balap Wahidin"@id ;
@@ -4397,7 +4397,7 @@ res:dim-sum-nelayan-nelayan-jala-jala a mv:TempatKuliner ;
     dcterms:source <https://nelayanrestaurant.com> ;
     mv:hargaTiketMulai 40000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/dimsum-nelayan.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/dimsum-nelayan.jpg> .
 
 res:sate-padang-al-fresco a mv:TempatKuliner ;
     rdfs:label "Sate Padang Al-Fresco"@id ;
@@ -4518,7 +4518,7 @@ res:kolam-renang-unimed a mv:RekreasiAir ;
     dcterms:source <https://www.unimed.ac.id/fasilitas/kolam-renang> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-unimed.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-unimed.jpg> .
 
 res:kolam-renang-graha-helvetia a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Graha Helvetia"@id ;
@@ -4539,7 +4539,7 @@ res:kolam-renang-graha-helvetia a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/daftar-kolam-renang-di-medan> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-graha-helvetia.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-graha-helvetia.jpg> .
 
 res:kolam-renang-tasbih a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Tasbih"@id ;
@@ -4560,7 +4560,7 @@ res:kolam-renang-tasbih a mv:RekreasiAir ;
     dcterms:source <https://www.idntimes.com/travel/destination/kolam-renang-nyaman-di-medan> ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-tasbih.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-tasbih.jpg> .
 
 res:kolam-renang-bahagia a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Bahagia"@id ;
@@ -4581,7 +4581,7 @@ res:kolam-renang-bahagia a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-bahagia-medan> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-bahagia.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-bahagia.jpg> .
 
 res:kolam-renang-istiqlal a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Istiqlal"@id ;
@@ -4602,7 +4602,7 @@ res:kolam-renang-istiqlal a mv:RekreasiAir ;
     dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/kolam-renang-istiqlal-deli-tua> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-istiqlal.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-istiqlal.jpg> .
 
 res:kolam-renang-citra-wisata a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Citra Wisata"@id ;
@@ -4623,7 +4623,7 @@ res:kolam-renang-citra-wisata a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6901245/kolam-renang-citra-wisata-medan> ;
     mv:hargaTiketMulai 20000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-citra-wisata.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-citra-wisata.jpg> .
 
 res:taman-mora-indah-waterpark a mv:RekreasiAir ;
     rdfs:label "Taman Mora Indah Waterpark"@id ;
@@ -4644,7 +4644,7 @@ res:taman-mora-indah-waterpark a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-7853091/mora-waterpark-tanjung-morawa-lokasi-jam-buka-dan-harga-tiket-masuk> ;
     mv:hargaTiketMulai 25000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/mora-waterpark.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/mora-waterpark.jpg> .
 
 res:budaya-resto-themepark a mv:TempatKuliner ;
     rdfs:label "Budaya Resto & Themepark"@id ;
@@ -4685,7 +4685,7 @@ res:kolam-renang-selayang a mv:RekreasiAir ;
     dcterms:source <https://dispora.sumutprov.go.id/fasilitas/kolam-renang-selayang> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-selayang.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-selayang.jpg> .
 
 res:hairos-water-park a mv:RekreasiAir ;
     rdfs:label "Hairos Water Park"@id ;
@@ -4706,7 +4706,7 @@ res:hairos-water-park a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6789120/hairos-water-park-medan-harga-tiket-dan-wahana> ;
     mv:hargaTiketMulai 45000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/hairos-waterpark.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/hairos-waterpark.jpg> .
 
 res:wisata-merci-themepark-and-resto a mv:RekreasiAir ;
     rdfs:label "Wisata Merci Themepark and Resto"@id ;
@@ -4727,7 +4727,7 @@ res:wisata-merci-themepark-and-resto a mv:RekreasiAir ;
     dcterms:source <https://www.detik.com/sumut/wisata/d-6812340/wisata-merci-medan-harga-tiket-dan-jam-buka> ;
     mv:hargaTiketMulai 35000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/wisata-merci-themepark-and-resto.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/wisata-merci-themepark-and-resto.jpg> .
 
 res:central-park-zoo-resort a mv:RuangPublik ;
     rdfs:label "Central Park Zoo & Resort"@id ;
@@ -4748,7 +4748,7 @@ res:central-park-zoo-resort a mv:RuangPublik ;
     dcterms:source <https://www.instagram.com/cpzooandresort/> ;
     mv:hargaTiketMulai 40000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/central-zoo-park-resort.webp> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/central-zoo-park-resort.webp> .
 
 res:nakny-funland a mv:RuangPublik ;
     rdfs:label "Nakny Funland"@id ;
@@ -4789,7 +4789,7 @@ res:tirta-ceria-waterpark a mv:RekreasiAir ;
     dcterms:source <https://www.traveloka.com/id-id/activities/indonesia/product/tirta-ceria-waterpark> ;
     mv:hargaTiketMulai 25000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/tirta-ceria.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/tirta-ceria.jpg> .
 
 res:kynan-haven-waterpark a mv:RekreasiAir ;
     rdfs:label "Kynan Haven Waterpark"@id ;
@@ -4810,7 +4810,7 @@ res:kynan-haven-waterpark a mv:RekreasiAir ;
     dcterms:source <https://www.instagram.com/kynanhavenmarelan/> ;
     mv:hargaTiketMulai 25000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kynan-haven-waterpark.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kynan-haven-waterpark.jpg> .
 
 res:waterpark-citra-garden a mv:RekreasiAir ;
     rdfs:label "Waterpark Citra Garden"@id ;
@@ -4831,7 +4831,7 @@ res:waterpark-citra-garden a mv:RekreasiAir ;
     dcterms:source <https://digitiket.com/v/detail/kolam-renang-citra-garden-waterpark-medan> ;
     mv:hargaTiketMulai 30000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/waterpark-citra-garden.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/waterpark-citra-garden.jpg> .
 
 res:kolam-renang-sejahtera a mv:RekreasiAir ;
     rdfs:label "Kolam Renang Sejahtera"@id ;
@@ -4852,5 +4852,5 @@ res:kolam-renang-sejahtera a mv:RekreasiAir ;
     dcterms:source <https://www.instagram.com/kolamrenangsejahtera/?hl=id> ;
     mv:hargaTiketMulai 15000 ;
     mv:hargaContoh false ;
-    schema:image <https://medanvisit.neoverse.my.id/images/foto/kolam-renang-sejahtera.jpg> .
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kolam-renang-sejahtera.jpg> .
 

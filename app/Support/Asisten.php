@@ -90,7 +90,7 @@ class Asisten
             'nama' => $e['nama'],
             'jenis' => Katalog::KELAS[$e['jenis']],
             'keterangan' => $e['ringkas'] ?? '',
-            'foto' => ! empty($e['foto']) ? asset('images/foto/'.$e['foto']) : null,
+            'foto' => ! empty($e['foto']) ? asset('storage/poto/'.$e['foto']) : null,
             'url' => SitusController::urlEntitas($e),
             'harga' => $e['jenis'] === 'tempat' ? Katalog::rupiah(Katalog::hargaTermurah($e)) : null,
             'tiket' => ! empty($e['tiket']) ? route('tiket.pilih', $e['slug']) : null,

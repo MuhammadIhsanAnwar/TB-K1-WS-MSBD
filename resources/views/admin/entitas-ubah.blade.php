@@ -286,7 +286,7 @@
                            placeholder="nama-file.jpg">
 
                     <span class="bantu">
-                        File foto harus tersedia di public/images/foto.
+                        File foto harus tersedia di storage/app/public/poto.
                     </span>
 
                     @error('foto')

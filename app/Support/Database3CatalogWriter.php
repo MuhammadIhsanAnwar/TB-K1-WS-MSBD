@@ -241,6 +241,6 @@ final class Database3CatalogWriter
 
     private static function urlFoto(string $file): string
     {
-        return Semantik::BASIS.'images/foto/'.$file;
+        return Semantik::BASIS.'storage/poto/'.$file;
     }
 }

@@ -1,2 +1,11 @@
 *
 !.gitignore
+
+!poto/
+!poto/**
+!foto-kecil/
+!foto-kecil/**
+!logo_app/
+!logo_app/**
+!maskotAIAgent/
+!maskotAIAgent/**
