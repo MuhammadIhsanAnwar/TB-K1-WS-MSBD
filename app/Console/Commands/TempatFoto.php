@@ -53,6 +53,16 @@ class TempatFoto extends Command
         'citraland-gamacity' => 'citraland-gama-city',
         'kampoeng-ladang-outbound' => 'kampoeng-ladang-outbound-family-recreation',
         'central-zoo-park-resort' => 'central-park-zoo-resort',
+        'kulinersemarang' => 'kuliner-jalan-semarang',
+        'rm-graruda' => 'rm-garuda-pusat',
+        'sibolang-durian' => 'si-bolang-durian-pelawi-durian',
+        'sate-padang-fresco' => 'sate-padang-al-fresco',
+        'tip-top' => 'tip-top-restaurant',
+        'senghap-1881' => 'seng-hap-1881',
+        'bolu-meranti' => 'bolu-meranti-kruing',
+        'kawasan-kuliner-cemara' => 'kawasan-kuliner-komplek-cemara-asri',
+        'kawasan-kuliner-karyawisata' => 'kawasan-kuliner-jl-karya-wisata',
+        'manhattanurban-market' => 'manhattan-urban-market-muma',
     ];
 
     public function handle(): int

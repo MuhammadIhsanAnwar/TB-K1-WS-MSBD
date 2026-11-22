@@ -708,7 +708,8 @@ res:seng-hap-1881 a mv:TempatKuliner ;
     mv:kelurahan "Kesawan" ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
-    dcterms:source <https://rri.co.id/medan/iptek/2772486/seng-hap-1881-dari-bangunan-bersejarah-hingga-ruang-umkm-dan-kuliner> .
+    dcterms:source <https://rri.co.id/medan/iptek/2772486/seng-hap-1881-dari-bangunan-bersejarah-hingga-ruang-umkm-dan-kuliner> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/senghap-1881.jpg> .
 
 res:kuliner-jalan-semarang a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Jl. Semarang"@id ;
@@ -727,7 +728,8 @@ res:kuliner-jalan-semarang a mv:TempatKuliner ;
     mv:kelurahan "Pasar Baru" ;
     mv:jamBuka "17:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
-    dcterms:source <https://gopay.co.id/blog/street-food-medan> .
+    dcterms:source <https://gopay.co.id/blog/street-food-medan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kulinersemarang.jpg> .
 
 res:kuliner-selat-panjang a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Jl. Selat Panjang"@id ;
@@ -786,7 +788,8 @@ res:kuliner-multatuli a mv:TempatKuliner ;
     mv:kelurahan "Hamdan" ;
     mv:jamBuka "00:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
-    dcterms:source <https://www.detik.com/sumut/kuliner/d-8079041/rekomendasi-wisata-kuliner-malam-di-medan-buka-hingga-tengah-malam> .
+    dcterms:source <https://www.detik.com/sumut/kuliner/d-8079041/rekomendasi-wisata-kuliner-malam-di-medan-buka-hingga-tengah-malam> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kuliner-multatuli.jpg> .
 
 res:bolu-meranti-kruing a mv:TempatKuliner ;
     rdfs:label "Bolu Meranti Jl. Kruing"@id ;
@@ -805,7 +808,8 @@ res:bolu-meranti-kruing a mv:TempatKuliner ;
     mv:kelurahan "Sekip" ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "20:00:00"^^xsd:time ;
-    dcterms:source <https://infopublik.id/kategori/ponxxi/870956/bolu-meranti-primadona-oleh-oleh-medan-di-pon-xxi-aceh-sumut> .
+    dcterms:source <https://infopublik.id/kategori/ponxxi/870956/bolu-meranti-primadona-oleh-oleh-medan-di-pon-xxi-aceh-sumut> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/bolu-meranti.jpg> .
 
 res:ucok-durian a mv:TempatKuliner ;
     rdfs:label "Ucok Durian"@id ;
@@ -824,7 +828,8 @@ res:ucok-durian a mv:TempatKuliner ;
     mv:kelurahan "Babura" ;
     mv:jamBuka "00:00:00"^^xsd:time ;
     mv:jamTutup "23:59:00"^^xsd:time ;
-    dcterms:source <https://fahum.umsu.ac.id/info/ucok-durian-medan-surga-durian-legendaris-yang-wajib-dikunjungi/> .
+    dcterms:source <https://fahum.umsu.ac.id/info/ucok-durian-medan-surga-durian-legendaris-yang-wajib-dikunjungi/> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/ucok-durian.jpg> .
 
 res:soto-sinar-pagi a mv:TempatKuliner ;
     rdfs:label "Soto Sinar Pagi"@id ;
@@ -843,7 +848,8 @@ res:soto-sinar-pagi a mv:TempatKuliner ;
     mv:kelurahan "Silalas" ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "15:00:00"^^xsd:time ;
-    dcterms:source <https://www.jawapos.com/kuliner/2509260364/menjelajahi-3-kuliner-legendaris-di-medan-yang-tak-lekang-waktu> .
+    dcterms:source <https://www.jawapos.com/kuliner/2509260364/menjelajahi-3-kuliner-legendaris-di-medan-yang-tak-lekang-waktu> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/soto-sinar-pagi.jpg> .
 
 res:rumah-makan-tabona a mv:TempatKuliner ;
     rdfs:label "Rumah Makan Tabona"@id ;
@@ -862,7 +868,8 @@ res:rumah-makan-tabona a mv:TempatKuliner ;
     mv:kelurahan "Aur" ;
     mv:jamBuka "07:00:00"^^xsd:time ;
     mv:jamTutup "16:00:00"^^xsd:time ;
-    dcterms:source <https://koran-jakarta.com/2024-09-23/tak-berdaya-di-rumah-makan-tabona/amp> .
+    dcterms:source <https://koran-jakarta.com/2024-09-23/tak-berdaya-di-rumah-makan-tabona/amp> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/rumah-makan-tabona.jpg> .
 
 res:sate-memeng a mv:TempatKuliner ;
     rdfs:label "Sate Memeng"@id ;
@@ -881,7 +888,8 @@ res:sate-memeng a mv:TempatKuliner ;
     mv:kelurahan "Gang Buntu" ;
     mv:jamBuka "17:00:00"^^xsd:time ;
     mv:jamTutup "23:00:00"^^xsd:time ;
-    dcterms:source <https://www.idntimes.com/food/dining-guide/rekomendasi-tempat-makan-halal-di-medan-c1c2-01-491ts-yd2zs6> .
+    dcterms:source <https://www.idntimes.com/food/dining-guide/rekomendasi-tempat-makan-halal-di-medan-c1c2-01-491ts-yd2zs6> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/sate-memeng.jpg> .
 
 res:kedai-kopi-apek a mv:TempatKuliner ;
     rdfs:label "Kedai Kopi Apek"@id ;
@@ -920,7 +928,8 @@ res:tip-top-restaurant a mv:TempatKuliner ;
     mv:kelurahan "Kesawan" ;
     mv:jamBuka "08:00:00"^^xsd:time ;
     mv:jamTutup "22:00:00"^^xsd:time ;
-    dcterms:source <https://www.goodnewsfromindonesia.id/2025/12/05/tip-top-restaurant-tempat-kuliner-legendaris-di-medan-sejak-zaman-penjajahan> .
+    dcterms:source <https://www.goodnewsfromindonesia.id/2025/12/05/tip-top-restaurant-tempat-kuliner-legendaris-di-medan-sejak-zaman-penjajahan> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/tip-top.jpg> .
 
 res:rumah-makan-sipirok a mv:TempatKuliner ;
     rdfs:label "Rumah Makan Sipirok"@id ;
@@ -939,7 +948,8 @@ res:rumah-makan-sipirok a mv:TempatKuliner ;
     mv:kelurahan "Sei Sikambing B" ;
     mv:jamBuka "11:00:00"^^xsd:time ;
     mv:jamTutup "16:00:00"^^xsd:time ;
-    dcterms:source <https://www.idntimes.com/food/dining-guide/rekomendasi-tempat-makan-halal-di-medan-c1c2-01-491ts-yd2zs6> .
+    dcterms:source <https://www.idntimes.com/food/dining-guide/rekomendasi-tempat-makan-halal-di-medan-c1c2-01-491ts-yd2zs6> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/rumah-makan-sipirok.jpg> .
 
 res:taman-cadika a mv:RuangPublik ;
     rdfs:label "Taman Cadika Pramuka"@id ;
@@ -4156,7 +4166,8 @@ res:kawasan-kuliner-jl-karya-wisata a mv:TempatKuliner ;
     mv:jamTutup "23:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6912450/rekomendasi-kuliner-jalan-karya-wisata-medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-kuliner-karyawisata.jpg> .
 
 res:kawasan-kuliner-komplek-tasbih a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Komplek Tasbih"@id ;
@@ -4196,7 +4207,8 @@ res:rm-garuda-pusat a mv:TempatKuliner ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://restorangaruda.com> ;
     mv:hargaTiketMulai 40000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/rm-graruda.jpg> .
 
 res:mie-aceh-titi-bobrok a mv:TempatKuliner ;
     rdfs:label "Mie Aceh Titi Bobrok"@id ;
@@ -4216,7 +4228,8 @@ res:mie-aceh-titi-bobrok a mv:TempatKuliner ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6589120/mie-aceh-titi-bobrok-kuliner-legendaris-medan> ;
     mv:hargaTiketMulai 20000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/mie-aceh-titi-bobrok.jpg> .
 
 res:kawasan-kuliner-komplek-cemara-asri a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Komplek Cemara Asri"@id ;
@@ -4236,7 +4249,8 @@ res:kawasan-kuliner-komplek-cemara-asri a mv:TempatKuliner ;
     mv:jamTutup "23:00:00"^^xsd:time ;
     dcterms:source <https://www.kompas.com/food/read/2023/08/14/wisata-kuliner-cemara-asri-medan> ;
     mv:hargaTiketMulai 20000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-kuliner-cemara.jpg> .
 
 res:durian-house-dh-patisserie a mv:TempatKuliner ;
     rdfs:label "Durian House (DH Patisserie)"@id ;
@@ -4275,7 +4289,8 @@ res:si-bolang-durian-pelawi-durian a mv:TempatKuliner ;
     schema:isAccessibleForFree false ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6790123/si-bolang-durian-medan> ;
     mv:hargaTiketMulai 50000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/sibolang-durian.jpg> .
 
 res:lontong-kak-lin a mv:TempatKuliner ;
     rdfs:label "Lontong Kak Lin"@id ;
@@ -4295,7 +4310,8 @@ res:lontong-kak-lin a mv:TempatKuliner ;
     mv:jamTutup "15:00:00"^^xsd:time ;
     dcterms:source <https://www.kompas.com/food/read/2022/11/05/lontong-kak-lin-medan> ;
     mv:hargaTiketMulai 18000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/lontong-kak-lin.jpg> .
 
 res:bihun-bebek-asie-kumango a mv:TempatKuliner ;
     rdfs:label "Bihun Bebek Asie Kumango"@id ;
@@ -4336,7 +4352,8 @@ res:mie-balap-wahidin a mv:TempatKuliner ;
     mv:jamTutup "11:30:00"^^xsd:time ;
     dcterms:source <https://www.idntimes.com/food/dining-guide/mie-balap-wahidin-medan> ;
     mv:hargaTiketMulai 18000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/mie-balap-wahidin.jpg> .
 
 res:kawasan-kuliner-pasar-hindu a mv:TempatKuliner ;
     rdfs:label "Kawasan Kuliner Pasar Hindu"@id ;
@@ -4356,7 +4373,8 @@ res:kawasan-kuliner-pasar-hindu a mv:TempatKuliner ;
     mv:jamTutup "14:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6701234/kuliner-pagi-pasar-hindu-medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kawasan-kuliner-pasar-hindu.jpg> .
 
 res:manhattan-urban-market-muma a mv:TempatKuliner ;
     rdfs:label "Manhattan Urban Market (MUMA)"@id ;
@@ -4376,7 +4394,8 @@ res:manhattan-urban-market-muma a mv:TempatKuliner ;
     mv:jamTutup "22:00:00"^^xsd:time ;
     dcterms:source <https://manhattantimessquare.com/tenant/muma> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/manhattanurban-market.webp> .
 
 res:dim-sum-nelayan-nelayan-jala-jala a mv:TempatKuliner ;
     rdfs:label "Dim Sum Nelayan (Nelayan Jala-Jala)"@id ;
@@ -4417,7 +4436,8 @@ res:sate-padang-al-fresco a mv:TempatKuliner ;
     mv:jamTutup "23:30:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6845120/sate-padang-al-fresco-medan> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/sate-padang-fresco.jpg> .
 
 res:nasi-goreng-pemuda a mv:TempatKuliner ;
     rdfs:label "Nasi Goreng Pemuda"@id ;
@@ -4437,7 +4457,8 @@ res:nasi-goreng-pemuda a mv:TempatKuliner ;
     mv:jamTutup "01:00:00"^^xsd:time ;
     dcterms:source <https://www.idntimes.com/food/dining-guide/nasi-goreng-pemuda-medan> ;
     mv:hargaTiketMulai 25000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/nasi-goreng-pemuda.jpg> .
 
 res:rumah-makan-pondok-gurih a mv:TempatKuliner ;
     rdfs:label "Rumah Makan Pondok Gurih"@id ;
@@ -4457,7 +4478,8 @@ res:rumah-makan-pondok-gurih a mv:TempatKuliner ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     dcterms:source <https://www.tripadvisor.co.id/Restaurant_Review-g297725-d3849210-Pondok_Gurih-Medan> ;
     mv:hargaTiketMulai 30000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/rumah-makan-pondok-gurih.jpg> .
 
 res:kedai-pojok-kuliner-medan a mv:TempatKuliner ;
     rdfs:label "Kedai Pojok Kuliner Medan"@id ;
@@ -4477,7 +4499,8 @@ res:kedai-pojok-kuliner-medan a mv:TempatKuliner ;
     mv:jamTutup "21:00:00"^^xsd:time ;
     dcterms:source <https://www.detik.com/sumut/kuliner/d-6899120/kedai-kopi-dan-kuliner-palang-merah-medan> ;
     mv:hargaTiketMulai 15000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/kedai-pojok-kuliner-medan.jpg> .
 
 res:sate-kerang-rahmat a mv:TempatKuliner ;
     rdfs:label "Sate Kerang Rahmat"@id ;
@@ -4497,7 +4520,8 @@ res:sate-kerang-rahmat a mv:TempatKuliner ;
     mv:jamTutup "18:00:00"^^xsd:time ;
     dcterms:source <https://www.kompas.com/food/read/2023/04/12/sate-kerang-rahmat-medan> ;
     mv:hargaTiketMulai 30000 ;
-    mv:hargaContoh false .
+    mv:hargaContoh false ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/poto/sate-kerang-rahmat.jpg> .
 
 res:kolam-renang-unimed a mv:RekreasiAir ;
     rdfs:label "Kolam Renang UNIMED"@id ;
