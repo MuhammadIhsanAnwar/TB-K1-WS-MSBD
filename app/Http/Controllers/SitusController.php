@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
-use App\Support\Asisten;
 use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
 use App\Support\Semantik;
+use App\Services\TanyaMasNonovService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -123,11 +123,30 @@ class SitusController extends Controller
         ]);
     }
 
-    public function jawab(Request $request)
+    public function jawab(Request $request, TanyaMasNonovService $asisten)
     {
         $data = $request->validate(['pesan' => ['required', 'string', 'max:300']]);
+        $pengguna = $request->session()->get('pengguna');
+        $pemilikKonteks = (string) ($pengguna['id'] ?? 'anonim');
+        $riwayat = $request->session()->get('tanya_mas_nonov', []);
+        if (($riwayat['pemilik'] ?? null) !== $pemilikKonteks) {
+            $riwayat = ['pemilik' => $pemilikKonteks, 'giliran' => []];
+        }
 
-        return response()->json(Asisten::jawab($data['pesan']));
+        $jawaban = $asisten->jawab($data['pesan'], $pengguna, $riwayat['giliran'] ?? []);
+        $routing = TanyaMasNonovService::klasifikasi($data['pesan']);
+        if (in_array($routing['source'], ['sparql', 'general'], true)) {
+            $riwayat['giliran'][] = [
+                'pertanyaan' => $data['pesan'],
+                'jawaban' => mb_substr(implode(' ', $jawaban['teks'] ?? []), 0, 600),
+            ];
+            $riwayat['giliran'] = array_slice($riwayat['giliran'], -4);
+        } else {
+            $riwayat['giliran'] = [];
+        }
+        $request->session()->put('tanya_mas_nonov', $riwayat);
+
+        return response()->json($jawaban);
     }
 
         public function peta()
@@ -275,7 +294,9 @@ class SitusController extends Controller
     public function rencanaBagikan(string $kode)
     {
         $r = Penyimpanan::cariRencana($kode);
-        abort_unless($r, 404);
+        if ($r === null) {
+            abort(404);
+        }
 
         try {
             $hasil = Katalog::susunRute($r['minat'], $r['durasi'], $r['moda'], $r['mulai']);
