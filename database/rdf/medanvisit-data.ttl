@@ -680,8 +680,26 @@ res:masjid-lama-gang-bengkok a mv:RumahIbadah ;
     dcterms:source <https://www.detik.com/sumut/budaya/d-8271055/mengenal-10-masjid-bersejarah-di-medan-dari-arsitektur-hingga-ceritanya> ;
     schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/masjid-lama-gang-bengkok.jpg> .
 
-1 ;
-    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/katedral-medan.jpg>2
+res:katedral-medan a mv:RumahIbadah ;
+    rdfs:label "Katedral Medan"@id ;
+    schema:name "Katedral Medan"@id ;
+    schema:description "Gereja Katedral Santa Perawan Maria yang Dikandung Tanpa Noda di Jl. Pemuda."@id ;
+    mv:cerita "Nama resminya Gereja Katedral Santa Perawan Maria yang Dikandung Tanpa Noda. Gereja pertamanya berdiri 1879, bangunan sekarang dari 1905 dan diperluas pada 1928."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Pemuda No. 1" ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58425"^^xsd:decimal ;
+    geo:long "98.68145"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Di luar jam misa (Minggu 06.30, 08.00, 10.00, 17.30)" ;
+    mv:jamContoh true ;
+    mv:radiusCheckin 80 ;
+    mv:durasiSinggah 20 ;
+    schema:isAccessibleForFree true ;
+    mv:kelurahan "Aur" ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "17:00:00"^^xsd:time ;
+    owl:sameAs wd:Q16951164 ;
+    dcterms:source <https://gcatholic.org/churches/asia/3538.htm> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/katedral-medan.jpg> .
 res:vihara-setia-budi a mv:RumahIbadah ;
     rdfs:label "Vihara Setia Budi"@id ;
     schema:name "Vihara Setia Budi"@id ;
@@ -2505,8 +2523,24 @@ res:relasi-106 a rdf:Statement ;
     mv:kalimat "Kolam Renang Primbana berada di Kecamatan Medan Selayang."@id ;
     dcterms:source "BPS Kota Medan" .
 
-1 ;
-    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/vihara-borobudur.jpg>2
+res:vihara-borobudur a mv:RumahIbadah ;
+    rdfs:label "Vihara Borobudur"@id ;
+    schema:name "Vihara Borobudur"@id ;
+    schema:description "Vihara Buddha tertua dan terbesar di pusat Kota Medan dengan arsitektur khas yang tenang dan megah."@id ;
+    mv:cerita "Vihara Buddha tertua dan terbesar di pusat Kota Medan dengan arsitektur khas yang tenang dan megah."@id ;
+    schema:address [ a schema:PostalAddress ; schema:streetAddress "Jl. Imam Bonjol No. 21"@id ; schema:addressLocality "Medan" ; schema:addressRegion "Sumatera Utara" ; schema:addressCountry "ID" ] ;
+    geo:lat "3.58164"^^xsd:decimal ;
+    geo:long "98.67688"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Setiap hari, 08.00–16.30"@id ;
+    mv:jamContoh false ;
+    mv:radiusCheckin 100 ;
+    mv:durasiSinggah 30 ;
+    schema:isAccessibleForFree true ;
+    mv:jamBuka "08:00:00"^^xsd:time ;
+    mv:jamTutup "16:30:00"^^xsd:time ;
+    dcterms:source <https://www.viharaborobudur.org/home/tentang.html#sejarah> ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/vihara-borobudur.jpg> .
 res:masjid-agung-medan a mv:RumahIbadah ;
     rdfs:label "Masjid Agung Medan"@id ;
     schema:name "Masjid Agung Medan"@id ;
