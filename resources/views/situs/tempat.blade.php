@@ -48,7 +48,7 @@
 @endpush
 
 @section('isi')
-<section class="mv-tempat-atas" aria-labelledby="judul-tempat-detail" typeof="TouristAttraction" resource="{{ \App\Support\Semantik::BASIS.'id/'.$t['slug'] }}">
+<section class="mv-tempat-atas" aria-labelledby="judul-tempat-detail" property="mainEntity" typeof="TouristAttraction" resource="{{ \App\Support\Semantik::BASIS.'id/'.$t['slug'] }}">
     <div class="mv-wadah">
         <nav class="mv-remah" aria-label="Jejak halaman">
             <a href="{{ route('beranda') }}">Beranda</a>

@@ -36,7 +36,7 @@ return [
         'username' => env('SPARQL_USERNAME'),
         'password' => env('SPARQL_PASSWORD'),
         'endpoint' => env('SPARQL_ENDPOINT'),
-        'statements_endpoint' => env('SPARQL_STATEMENTS_ENDPOINT', env('SPARQL_HOST').'/repositories/'.env('SPARQL_DATABASE').'/statements'),
+        'statements_endpoint' => env('SPARQL_STATEMENTS_ENDPOINT', env('SPARQL_HOST') . '/repositories/' . env('SPARQL_DATABASE') . '/statements'),
         'timeout' => (int) env('SPARQL_TIMEOUT', 60),
     ],
 
@@ -83,5 +83,13 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'base_url' => env(
+            'OPENROUTER_BASE_URL',
+            'https://openrouter.ai/api/v1'
+        ),
+        'model' => env('OPENROUTER_MODEL', 'openrouter/free'),
+        'timeout' => (int) env('OPENROUTER_TIMEOUT', 120),
+    ],
 ];

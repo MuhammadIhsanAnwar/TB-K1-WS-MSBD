@@ -9,12 +9,16 @@ use App\Support\PesanLayanan;
 use App\Support\Penyimpanan;
 use App\Support\SupabaseApi;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
+use Throwable;
 
 class AdminController extends Controller
 {
@@ -379,7 +383,7 @@ class AdminController extends Controller
                 'sumber' => ['required', 'string', 'min:3', 'max:240'],
                 'kategori' => ['required', 'in:'.implode(',', array_keys(Katalog::KATEGORI))],
                 'kecamatan' => ['required', 'string', 'max:100'],
-                'foto' => ['required', 'string', 'max:160', 'regex:/^[A-Za-z0-9][A-Za-z0-9._-]*$/'],
+                'foto' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
                 'harga' => ['nullable', 'array'], 'harga.*' => ['nullable', 'integer', 'min:0'],
             ];
         } else {
@@ -396,12 +400,14 @@ class AdminController extends Controller
                     throw ValidationException::withMessages(['kecamatan' => 'Kecamatan tidak ditemukan di Database 3.']);
                 }
             }
-            $data['foto'] = (string) $data['foto'];
-            if (! is_file(public_path('storage/foto_wisata/'.$data['foto']))) {
-                throw ValidationException::withMessages(['foto' => 'Berkas foto tidak ditemukan di penyimpanan publik. Unggah foto tempat terlebih dahulu.']);
-            }
+            $fotoUnggahan = $data['foto'] ?? null;
+            $data['foto'] = (string) ($e['foto'] ?? '');
             $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');
-            Database3CatalogWriter::update($slug, $data, $data['harga'] ?? []);
+            if ($fotoUnggahan instanceof UploadedFile) {
+                $this->simpanFotoTempat($fotoUnggahan, $slug, $data, $data['harga'] ?? [], $e['foto'] ?? null);
+            } else {
+                Database3CatalogWriter::update($slug, $data, $data['harga'] ?? []);
+            }
 
             return back()->with('pesan', 'Perubahan '.$data['nama'].' berhasil disimpan ke Database 3.');
         }
@@ -409,6 +415,82 @@ class AdminController extends Controller
         Cache::forever('medanvisit.draf_entitas.'.$slug, $data + ['waktu' => now('Asia/Jakarta')->toIso8601String()]);
 
         return back()->with('pesan', 'Perubahan '.$data['nama'].' tersimpan sebagai draf.');
+    }
+
+    private function simpanFotoTempat(UploadedFile $unggahan, string $slug, array $data, array $harga, ?string $fotoLama): void
+    {
+        $folder = public_path('storage/foto_wisata');
+        $sementara = storage_path('app/tmp');
+        File::ensureDirectoryExists($folder);
+        File::ensureDirectoryExists($sementara);
+
+        $ekstensi = strtolower($unggahan->extension());
+        if ($ekstensi === 'jpeg') {
+            $ekstensi = 'jpg';
+        }
+        $dasarNama = Str::slug($data['nama']) ?: $slug;
+        $namaFoto = $dasarNama.'.'.$ekstensi;
+        $fotoLama = $fotoLama !== null && $fotoLama !== '' ? basename($fotoLama) : null;
+        $tempatLain = Katalog::tempat();
+        $dipakaiTempatLain = static fn (string $nama): bool => collect($tempatLain)->contains(
+            fn (array $tempat): bool => $tempat['slug'] !== $slug && basename((string) ($tempat['foto'] ?? '')) === $nama
+        );
+
+        while ($dipakaiTempatLain($namaFoto)) {
+            $namaFoto = $dasarNama.'-'.Str::lower(Str::random(8)).'.'.$ekstensi;
+        }
+
+        $jalurFoto = $folder.DIRECTORY_SEPARATOR.$namaFoto;
+        $jalurSementara = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-'.Str::uuid().'.'.$ekstensi;
+        $jalurCadangan = null;
+        $fotoTerpasang = false;
+
+        try {
+            $unggahan->move($sementara, basename($jalurSementara));
+            if (File::exists($jalurFoto)) {
+                $jalurCadangan = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-cadangan-'.Str::uuid().'.'.$ekstensi;
+                File::move($jalurFoto, $jalurCadangan);
+            }
+            File::move($jalurSementara, $jalurFoto);
+            $fotoTerpasang = true;
+
+            $data['foto'] = $namaFoto;
+            Database3CatalogWriter::update($slug, $data, $harga);
+        } catch (Throwable $exception) {
+            try {
+                if ($fotoTerpasang) {
+                    $this->hapusFotoJikaAda($jalurFoto, 'foto baru saat memulihkan perubahan');
+                }
+                if ($jalurCadangan !== null && File::exists($jalurCadangan)) {
+                    File::move($jalurCadangan, $jalurFoto);
+                }
+            } catch (Throwable $rollbackException) {
+                throw new RuntimeException(
+                    'Perubahan Database 3 gagal dan pemulihan file foto juga gagal: '.$rollbackException->getMessage(),
+                    0,
+                    $exception,
+                );
+            }
+
+            throw $exception;
+        } finally {
+            $this->hapusFotoJikaAda($jalurSementara, 'file unggahan sementara');
+        }
+
+        if ($jalurCadangan !== null && File::exists($jalurCadangan)) {
+            $this->hapusFotoJikaAda($jalurCadangan, 'cadangan foto yang sudah diganti');
+        }
+        if ($fotoLama !== null && $fotoLama !== $namaFoto && ! $dipakaiTempatLain($fotoLama)) {
+            $jalurFotoLama = $folder.DIRECTORY_SEPARATOR.$fotoLama;
+            $this->hapusFotoJikaAda($jalurFotoLama, 'foto lama');
+        }
+    }
+
+    private function hapusFotoJikaAda(string $path, string $deskripsi): void
+    {
+        if (File::exists($path) && ! File::delete($path) && File::exists($path)) {
+            throw new RuntimeException('Gagal menghapus '.$deskripsi.': '.basename($path));
+        }
     }
 
     public function buatTempat()
@@ -543,27 +625,61 @@ class AdminController extends Controller
     }
 
     public function tiket(Request $request)
-{
-    $milik = $this->slugsKelolaan($request);
+    {
+        $milik = $this->slugsKelolaan($request);
+        $pesanan = collect(Penyimpanan::pesanan())->values();
+        $tempat = collect(Katalog::tempat());
+        $bertiket = collect(Katalog::bertiket());
 
-    $pesanan = collect(Penyimpanan::pesanan())->values();
-    $bertiket = collect(Katalog::bertiket());
+        if ($milik !== null) {
+            $pesanan = $pesanan->filter(fn ($p) => in_array($p['tempat'], $milik, true))->values();
+            $tempat = $tempat->filter(fn ($t) => in_array($t['slug'], $milik, true));
+            $bertiket = $bertiket->filter(fn ($t) => in_array($t['slug'], $milik, true));
+        }
 
-    if ($milik !== null) {
-        $pesanan = $pesanan->filter(
-            fn ($p) => in_array($p['tempat'], $milik, true)
-        )->values();
+        $lunas = $pesanan->where('status', 'lunas');
+        $penjualanPerTempat = $tempat->mapWithKeys(function (array $t) use ($lunas) {
+            $pesananTempat = $lunas->where('tempat', $t['slug']);
 
-        $bertiket = $bertiket->filter(
-            fn ($t) => in_array($t['slug'], $milik, true)
-        );
+            return [$t['slug'] => [
+                'slug' => $t['slug'],
+                'nama' => $t['nama'],
+                'pesanan' => $pesananTempat->count(),
+                'tiket' => $pesananTempat->sum(fn ($p) => array_sum(array_column($p['item'], 'jumlah'))),
+                'pendapatan' => $pesananTempat->sum('total'),
+            ]];
+        })->sortBy('nama');
+
+        $pilihan = $request->query('tempat');
+        $fokus = is_string($pilihan) && $tempat->has($pilihan) ? $pilihan : null;
+        $pesananTerpilih = $fokus === null ? collect() : $lunas->where('tempat', $fokus)->values();
+        $tiketPerJenis = $pesananTerpilih
+            ->flatMap(fn ($p) => $p['item'])
+            ->groupBy('jenis')
+            ->map(fn ($item) => [
+                'jumlah' => $item->sum('jumlah'),
+                'pendapatan' => $item->sum('subtotal'),
+            ])->sortKeys();
+        $transaksiTerpilih = $pesananTerpilih
+            ->sortByDesc(fn ($p) => $p['dibayar'] ?? $p['waktu'])
+            ->map(fn ($p) => [
+                'kode' => $p['kode'],
+                'waktu' => $p['dibayar'] ?? $p['waktu'],
+                'item' => $p['item'],
+                'total' => $p['total'],
+            ]);
+
+        return view('admin.tiket', [
+            'pesanan' => $pesanan,
+            'bertiket' => $bertiket,
+            'superadmin' => $request->session()->get('pengguna.peran') === 'superadmin',
+            'tempatLaporan' => $tempat,
+            'penjualanPerTempat' => $penjualanPerTempat,
+            'fokusLaporan' => $fokus,
+            'tiketPerJenis' => $tiketPerJenis,
+            'transaksiTerpilih' => $transaksiTerpilih,
+        ]);
     }
-
-    return view('admin.tiket', [
-        'pesanan' => $pesanan,
-        'bertiket' => $bertiket,
-    ]);
-}
 
     public function validasi(Request $request)
     {

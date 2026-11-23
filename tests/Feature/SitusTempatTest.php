@@ -64,6 +64,10 @@ class SitusTempatTest extends TestCase
 
         $this->get('/tempat/kolam-renang-primbana')
             ->assertOk()
-            ->assertSee('Kolam Renang Primbana');
+            ->assertSee('Kolam Renang Primbana')
+            ->assertSee('property="og:title"', false)
+            ->assertSee('property="og:image"', false)
+            ->assertSee('property="mainEntity" typeof="TouristAttraction" resource="'.$place.'"', false)
+            ->assertDontSee('property="mainEntityOfPage"', false);
     }
 }

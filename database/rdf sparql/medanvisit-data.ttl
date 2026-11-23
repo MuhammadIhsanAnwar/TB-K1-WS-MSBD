@@ -1544,6 +1544,94 @@ res:kolam-renang-primbana a mv:RekreasiAir ;
     schema:offers [ a schema:Offer ; schema:name "VIP"@id ; schema:price 20000 ; schema:priceCurrency "IDR" ] ;
     schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/kolam-renang-primbana.jpg> .
 
+# ---------- tempat tambahan ----------
+
+res:taman-kebun-bunga a mv:RuangPublik ;
+    rdfs:label "Taman Kebun Bunga (Urban Community Park)"@id ;
+    schema:name "Taman Kebun Bunga (Urban Community Park)"@id ;
+    schema:description "Taman dan ruang publik di Kota Medan."@id ;
+    mv:cerita "Wikidata mencatat Taman Kebun Bunga sebagai taman dan ruang publik di Medan."@id ;
+    schema:address "Kota Medan, Sumatera Utara"@id ;
+    geo:lat "3.5885256"^^xsd:decimal ;
+    geo:long "98.6697834"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Jam operasional belum terverifikasi"@id ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://www.wikidata.org/wiki/Q135898916> ;
+    owl:sameAs wd:Q135898916 ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/taman-kebun-bunga.jpg> .
+
+res:taman-tjong-yong-hian a mv:SitusSejarah ;
+    rdfs:label "Taman Tjong Yong Hian"@id ;
+    schema:name "Taman Tjong Yong Hian"@id ;
+    schema:description "Taman dan ruang terbuka publik di kawasan Petisah Tengah, Medan."@id ;
+    mv:cerita "Taman ini ditautkan ke entitas Tjong Yong Hian Garden di Wikidata."@id ;
+    schema:address "Petisah Tengah, Medan Petisah, Kota Medan"@id ;
+    geo:lat "3.5869425"^^xsd:decimal ;
+    geo:long "98.6690103"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Jam operasional belum terverifikasi"@id ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://www.wikidata.org/wiki/Q136803476> ;
+    owl:sameAs wd:Q136803476 ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/taman-tjong-yong-hian.jpg> .
+
+res:pasar-petisah a mv:PusatBelanja ;
+    rdfs:label "Pasar Petisah"@id ;
+    schema:name "Pasar Petisah"@id ;
+    schema:description "Pasar di Petisah Tengah, Medan Petisah."@id ;
+    mv:cerita "Lokasi pasar terpetakan di kawasan Jalan Rotan, Kota Medan."@id ;
+    schema:address "Jalan Rotan, Petisah Tengah, Medan Petisah, Kota Medan"@id ;
+    geo:lat "3.5904531"^^xsd:decimal ;
+    geo:long "98.6664283"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Jam operasional belum terverifikasi"@id ;
+    schema:isAccessibleForFree true ;
+    dcterms:source <https://www.openstreetmap.org/relation/12561574> .
+
+res:stasiun-kereta-api-medan a mv:SitusSejarah ;
+    rdfs:label "Stasiun Kereta Api Medan"@id ;
+    schema:name "Stasiun Kereta Api Medan"@id ;
+    schema:description "Stasiun kereta api di Medan yang dikelola PT Kereta Api Indonesia; Wikidata mencatat pendiriannya pada 1883."@id ;
+    mv:cerita "Stasiun ini terhubung ke jaringan kereta api Indonesia dan memiliki kode stasiun MDN."@id ;
+    schema:address "Jalan Stasiun Kereta Api, Kota Medan"@id ;
+    geo:lat "3.5910480"^^xsd:decimal ;
+    geo:long "98.6798540"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Jadwal layanan mengikuti perjalanan kereta; jam kunjungan umum belum terverifikasi"@id ;
+    dcterms:source <https://www.openstreetmap.org/node/7913372797> ;
+    dcterms:source <https://www.wikidata.org/wiki/Q2304047> ;
+    owl:sameAs wd:Q2304047 ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/stasiun-kereta-api-medan.jpg> .
+
+res:pekan-raya-sumatera-utara a mv:RuangPublik ;
+    rdfs:label "Pekan Raya Sumatera Utara"@id ;
+    schema:name "Pekan Raya Sumatera Utara"@id ;
+    schema:description "Wadah kegiatan kebudayaan dan hiburan rakyat di Kota Medan."@id ;
+    mv:cerita "Lokasi PRSU terpetakan di Jalan Jenderal Gatot Subroto, Kecamatan Medan Helvetia."@id ;
+    schema:address "Jalan Jenderal Gatot Subroto, Medan Helvetia, Kota Medan"@id ;
+    geo:lat "3.5922189"^^xsd:decimal ;
+    geo:long "98.6319128"^^xsd:decimal ;
+    mv:koordinatPerkiraan false ;
+    mv:keteranganJam "Jadwal mengikuti acara; jam operasional umum belum terverifikasi"@id ;
+    dcterms:source <https://www.openstreetmap.org/way/960662676> ;
+    dcterms:source <https://www.wikidata.org/wiki/Q137582860> ;
+    owl:sameAs wd:Q137582860 .
+
+res:kawasan-kota-lama-kesawan a mv:SitusSejarah ;
+    rdfs:label "Kawasan Kota Lama Kesawan"@id ;
+    schema:name "Kawasan Kota Lama Kesawan"@id ;
+    schema:description "Kawasan Kesawan di Kecamatan Medan Barat, Kota Medan."@id ;
+    mv:cerita "Kesawan tercatat sebagai kawasan di Medan Barat pada OpenStreetMap."@id ;
+    schema:address "Kesawan, Medan Barat, Kota Medan"@id ;
+    geo:lat "3.6006792"^^xsd:decimal ;
+    geo:long "98.6731588"^^xsd:decimal ;
+    mv:koordinatPerkiraan true ;
+    mv:keteranganJam "Kawasan publik; jam operasional tempat-tempat di dalamnya berbeda"@id ;
+    schema:image <https://medanvisit.neoverse.my.id/storage/foto_wisata/kesawan.jpg> ;
+    dcterms:source <https://www.openstreetmap.org/relation/19993170> ;
+    dcterms:source <https://www.wikidata.org/wiki/Q12491371> .
+
 # ---------- tokoh, kerajaan, peristiwa, budaya, kuliner, transportasi ----------
 
 res:sultan-maamun-al-rasyid a mv:Tokoh ;
@@ -4983,4 +5071,53 @@ res:kolam-renang-sejahtera a mv:RekreasiAir ;
 
 res:museum-perkebunan-indonesia-musperin mv:beradaDi res:kec-medan-maimun .
 res:museum-perjuangan-pers-sumatera-utara mv:beradaDi res:kec-medan-sunggal .
+
+res:taman-kebun-bunga mv:beradaDi res:kec-medan-petisah .
+res:taman-tjong-yong-hian mv:beradaDi res:kec-medan-petisah .
+res:pasar-petisah mv:beradaDi res:kec-medan-petisah .
+res:stasiun-kereta-api-medan mv:beradaDi res:kec-medan-barat .
+res:pekan-raya-sumatera-utara mv:beradaDi res:kec-medan-helvetia .
+res:kawasan-kota-lama-kesawan mv:beradaDi res:kec-medan-barat .
+
+res:relasi-taman-kebun-bunga-kecamatan a rdf:Statement ;
+    rdf:subject res:taman-kebun-bunga ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-petisah ;
+    mv:kalimat "Taman Kebun Bunga berada di Kecamatan Medan Petisah."@id ;
+    dcterms:source "Daftar lokasi yang diberikan pengguna"@id .
+
+res:relasi-taman-tjong-yong-hian-kecamatan a rdf:Statement ;
+    rdf:subject res:taman-tjong-yong-hian ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-petisah ;
+    mv:kalimat "Taman Tjong Yong Hian berada di Kecamatan Medan Petisah."@id ;
+    dcterms:source <https://www.wikidata.org/wiki/Q136803476> .
+
+res:relasi-pasar-petisah-kecamatan a rdf:Statement ;
+    rdf:subject res:pasar-petisah ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-petisah ;
+    mv:kalimat "Pasar Petisah berada di Kecamatan Medan Petisah."@id ;
+    dcterms:source <https://www.openstreetmap.org/relation/12561574> .
+
+res:relasi-stasiun-kereta-api-medan-kecamatan a rdf:Statement ;
+    rdf:subject res:stasiun-kereta-api-medan ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-barat ;
+    mv:kalimat "Stasiun Kereta Api Medan berada di Kecamatan Medan Barat."@id ;
+    dcterms:source "Daftar lokasi yang diberikan pengguna"@id .
+
+res:relasi-pekan-raya-sumatera-utara-kecamatan a rdf:Statement ;
+    rdf:subject res:pekan-raya-sumatera-utara ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-helvetia ;
+    mv:kalimat "Pekan Raya Sumatera Utara berada di Kecamatan Medan Helvetia."@id ;
+    dcterms:source <https://www.openstreetmap.org/way/960662676> .
+
+res:relasi-kawasan-kota-lama-kesawan-kecamatan a rdf:Statement ;
+    rdf:subject res:kawasan-kota-lama-kesawan ;
+    rdf:predicate mv:beradaDi ;
+    rdf:object res:kec-medan-barat ;
+    mv:kalimat "Kawasan Kota Lama Kesawan berada di Kecamatan Medan Barat."@id ;
+    dcterms:source <https://www.openstreetmap.org/relation/19993170> .
 

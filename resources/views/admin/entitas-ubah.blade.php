@@ -48,6 +48,7 @@
 
 <form method="post"
       action="{{ route('admin.entitas.ubah', $e['slug']) }}"
+      enctype="multipart/form-data"
       novalidate>
 
     @csrf
@@ -277,18 +278,27 @@
 
                 {{-- FOTO --}}
                 <div class="p-field">
-                    <label for="foto">Nama file foto</label>
+                    <label for="foto">Unggah foto baru (opsional)</label>
 
                     <input id="foto"
+                           type="file"
                            name="foto"
-                           value="{{ $v('foto', $e['foto']) }}"
-                           maxlength="160"
-                           required
-                           placeholder="nama-file.jpg">
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           @error('foto') aria-invalid="true" @enderror>
 
                     <span class="bantu">
-                        File foto harus tersedia di storage/app/public/poto dan menggambarkan tempat ini.
+                        JPG, PNG, atau WEBP; maksimal 8 MB. Nama file dibuat dari nama tempat wisata.
+                        Foto lama akan diganti setelah perubahan berhasil disimpan.
                     </span>
+
+                    @if (! empty($e['foto']))
+                        <div style="margin-top:8px">
+                            <img src="{{ asset('storage/foto_wisata/'.$e['foto']) }}"
+                                 alt="Foto saat ini: {{ $e['nama'] }}"
+                                 style="max-width:220px;max-height:150px;object-fit:cover;border-radius:8px">
+                            <span class="bantu">Foto saat ini: {{ $e['foto'] }}</span>
+                        </div>
+                    @endif
 
                     @error('foto')
                         <span class="galat">{{ $message }}</span>

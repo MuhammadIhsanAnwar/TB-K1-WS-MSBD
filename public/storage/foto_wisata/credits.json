@@ -63,5 +63,32 @@
         "creator": "Pratyeka",
         "source": "https://commons.wikimedia.org/wiki/File%3AVihara_Borobudur%2C_Medan.jpg",
         "license": "CC BY-SA 3.0"
+    },
+    {
+        "file": "taman-kebun-bunga.jpg",
+        "title": "Papan Nama Taman Kebun Bunga Medan",
+        "creator": "Ruth Silitonga",
+        "source": "https://commons.wikimedia.org/wiki/File:Papan_Nama_Taman_Kebun_Bunga_Medan.jpg",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "credit": "Ruth Silitonga / Wikimedia Commons (CC BY 4.0)"
+    },
+    {
+        "file": "taman-tjong-yong-hian.jpg",
+        "title": "印尼蘇北棉蘭茂榕園 Taman Tjong Yong Hian di Medan",
+        "creator": "Cun Cun",
+        "source": "https://commons.wikimedia.org/wiki/File:%E5%8D%B0%E5%B0%BC%E8%98%87%E5%8C%97%E6%A3%89%E8%98%AD%E8%8C%82%E6%A6%95%E5%9C%92_Taman_Tjong_Yong_Hian_di_Medan.jpg",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "credit": "Cun Cun / Wikimedia Commons (CC BY-SA 4.0)"
+    },
+    {
+        "file": "stasiun-kereta-api-medan.jpg",
+        "title": "Papan nama Stasiun KAI Medan",
+        "creator": "Nafisathallah",
+        "source": "https://commons.wikimedia.org/wiki/File:Papan_nama_Stasiun_KAI_Medan.jpg",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "credit": "Nafisathallah / Wikimedia Commons (CC BY-SA 4.0)"
     }
 ]

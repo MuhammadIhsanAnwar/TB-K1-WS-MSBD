@@ -56,7 +56,7 @@
         @endunless
     @endunless
     @include('partials.sambutan-login')
-    <main id="isi" property="mainEntityOfPage">
+    <main id="isi">
         @yield('isi')
     </main>
     @hasSection('tanpa-kaki')
