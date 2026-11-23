@@ -8,6 +8,7 @@ use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
+use App\Support\Semantik;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -146,6 +147,27 @@ class SitusController extends Controller
         unset($t);
 
         return view('situs.peta', compact('tempat'));
+    }
+
+    /** Endpoint publik JSON-LD untuk pemakai data eksternal dan pengindeks. */
+    public function wisataJson()
+    {
+        return response()->json(Semantik::jsonld(), 200, [
+            'Content-Type' => 'application/ld+json; charset=UTF-8',
+            'Access-Control-Allow-Origin' => '*',
+        ]);
+    }
+
+    /** Dokumen JSON-LD satu destinasi. */
+    public function tempatJson(string $slug)
+    {
+        $tempat = Katalog::get($slug);
+        abort_unless($tempat && $tempat['jenis'] === 'tempat', 404);
+
+        return response()->json(Semantik::jsonldTempat($tempat), 200, [
+            'Content-Type' => 'application/ld+json; charset=UTF-8',
+            'Access-Control-Allow-Origin' => '*',
+        ]);
     }
     public function tempat(string $slug)
 {

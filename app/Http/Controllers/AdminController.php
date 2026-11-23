@@ -378,8 +378,8 @@ class AdminController extends Controller
                 'alamat' => ['required', 'string', 'max:160'], 'jam' => ['required', 'string', 'max:80'],
                 'sumber' => ['required', 'string', 'min:3', 'max:240'],
                 'kategori' => ['required', 'in:'.implode(',', array_keys(Katalog::KATEGORI))],
-                'kecamatan' => ['nullable', 'string', 'max:100'],
-                'foto' => ['nullable', 'string', 'max:160', 'regex:/^[A-Za-z0-9][A-Za-z0-9._-]*$/'],
+                'kecamatan' => ['required', 'string', 'max:100'],
+                'foto' => ['required', 'string', 'max:160', 'regex:/^[A-Za-z0-9][A-Za-z0-9._-]*$/'],
                 'harga' => ['nullable', 'array'], 'harga.*' => ['nullable', 'integer', 'min:0'],
             ];
         } else {
@@ -396,7 +396,10 @@ class AdminController extends Controller
                     throw ValidationException::withMessages(['kecamatan' => 'Kecamatan tidak ditemukan di Database 3.']);
                 }
             }
-            $data['foto'] = (string) ($data['foto'] ?? '');
+            $data['foto'] = (string) $data['foto'];
+            if (! is_file(public_path('storage/poto/'.$data['foto']))) {
+                throw ValidationException::withMessages(['foto' => 'Berkas foto tidak ditemukan di penyimpanan publik. Unggah foto tempat terlebih dahulu.']);
+            }
             $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');
             Database3CatalogWriter::update($slug, $data, $data['harga'] ?? []);
 
@@ -419,13 +422,13 @@ class AdminController extends Controller
             'nama' => ['required', 'string', 'max:120'],
             'ringkas' => ['required', 'string', 'max:240'],
             'kategori' => ['required', 'in:'.implode(',', array_keys(Katalog::KATEGORI))],
-            'kecamatan' => ['nullable', 'string', 'max:100'],
+            'kecamatan' => ['required', 'string', 'max:100'],
             'lat' => ['required', 'numeric', 'between:3.4,3.8'],
             'lng' => ['required', 'numeric', 'between:98.5,98.8'],
             'alamat' => ['required', 'string', 'max:160'],
             'jam' => ['required', 'string', 'max:80'],
             'sumber' => ['required', 'string', 'min:3', 'max:240'],
-            'foto' => ['nullable', 'string', 'max:160', 'regex:/^[A-Za-z0-9][A-Za-z0-9._-]*$/'],
+            'foto' => ['required', 'string', 'max:160', 'regex:/^[A-Za-z0-9][A-Za-z0-9._-]*$/'],
             'harga' => ['nullable', 'integer', 'min:0'],
         ], [
             'lat.between' => 'Lintang harus di wilayah Kota Medan (3,4 sampai 3,8).',
@@ -443,7 +446,10 @@ class AdminController extends Controller
             throw ValidationException::withMessages(['nama' => 'Nama tempat sudah digunakan atau tidak dapat dijadikan alamat.']);
         }
         $harga = isset($data['harga']) && $data['harga'] !== '' ? ['Reguler' => (int) $data['harga']] : [];
-        $data['foto'] = (string) ($data['foto'] ?? '');
+        $data['foto'] = (string) $data['foto'];
+        if (! is_file(public_path('storage/poto/'.$data['foto']))) {
+            throw ValidationException::withMessages(['foto' => 'Berkas foto tidak ditemukan di penyimpanan publik. Unggah foto tempat terlebih dahulu.']);
+        }
         $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');
         Database3CatalogWriter::create($slug, $data, $harga);
         $pengguna = $request->session()->get('pengguna', []);

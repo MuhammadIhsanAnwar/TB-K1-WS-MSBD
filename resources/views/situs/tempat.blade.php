@@ -36,6 +36,7 @@
 @section('judul', $t['nama'])
 @section('deskripsi', $t['ringkas'])
 @if ($t['foto']) @section('foto-kaki', $t['foto']) @endif
+@if ($t['foto']) @section('foto-og', Foto::url($t['foto'])) @endif
 
 @php
     // rating dari ulasan yang tayang (DB 2); ulasan milik pengguna yang sedang masuk dipakai untuk form "perbarui"
@@ -47,7 +48,7 @@
 @endpush
 
 @section('isi')
-<section class="mv-tempat-atas" aria-labelledby="judul-tempat-detail">
+<section class="mv-tempat-atas" aria-labelledby="judul-tempat-detail" typeof="TouristAttraction" resource="{{ \App\Support\Semantik::BASIS.'id/'.$t['slug'] }}">
     <div class="mv-wadah">
         <nav class="mv-remah" aria-label="Jejak halaman">
             <a href="{{ route('beranda') }}">Beranda</a>
@@ -59,8 +60,8 @@
 
         <div class="mv-tempat-kepala">
             <div class="mv-tempat-kepala__teks">
-                <h1 id="judul-tempat-detail">{{ $t['nama'] }}</h1>
-                <p class="mv-tempat-kepala__ringkas">{{ $t['ringkas'] }}</p>
+                <h1 id="judul-tempat-detail" property="name">{{ $t['nama'] }}</h1>
+                <p class="mv-tempat-kepala__ringkas" property="description">{{ $t['ringkas'] }}</p>
                 <div class="mv-tempat-tanda">
                     <x-kelas jenis="tempat" :label="$kategori" />
                     <span class="kecil">{{ implode(', ', array_filter([$t['kelurahan'], $t['kecamatan']])) }}</span>

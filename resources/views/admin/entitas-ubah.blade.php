@@ -233,8 +233,8 @@
                     <div class="p-field">
                         <label for="kecamatan">Kecamatan</label>
 
-                        <select id="kecamatan" name="kecamatan">
-                            <option value="">Belum ditentukan</option>
+                        <select id="kecamatan" name="kecamatan" required>
+                            <option value="">Pilih kecamatan</option>
 
                             @foreach ($kecamatan as $wilayah)
                                 <option value="{{ $wilayah['slug'] }}"
@@ -277,16 +277,17 @@
 
                 {{-- FOTO --}}
                 <div class="p-field">
-                    <label for="foto">Nama file foto (opsional)</label>
+                    <label for="foto">Nama file foto</label>
 
                     <input id="foto"
                            name="foto"
                            value="{{ $v('foto', $e['foto']) }}"
                            maxlength="160"
+                           required
                            placeholder="nama-file.jpg">
 
                     <span class="bantu">
-                        File foto harus tersedia di storage/app/public/poto.
+                        File foto harus tersedia di storage/app/public/poto dan menggambarkan tempat ini.
                     </span>
 
                     @error('foto')

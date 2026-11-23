@@ -41,6 +41,7 @@ final class Database3CatalogWriter
             "$subjek schema:address ".self::literal($data['alamat']),
             "$subjek mv:keteranganJam ".self::literal($data['jam']),
             "$subjek dcterms:source ".self::sumber($data['sumber']),
+            "$subjek schema:isAccessibleForFree ".(empty($harga) ? 'true' : 'false'),
         ];
         if ($data['kecamatan'] !== '') {
             $triples[] = "$subjek mv:beradaDi ".self::subjek($data['kecamatan']);
@@ -81,6 +82,7 @@ final class Database3CatalogWriter
             "$subjek schema:image ?image",
             "$subjek dcterms:source ?source",
             "$subjek mv:beradaDi ?district",
+            "$subjek schema:isAccessibleForFree ?gratis",
         ];
         $insert = [
             "$subjek a ".self::tipe($data['kategori']),
@@ -91,6 +93,7 @@ final class Database3CatalogWriter
             "$subjek geo:long ".self::angka($data['lng']),
             "$subjek mv:keteranganJam ".self::literal($data['jam']),
             "$subjek dcterms:source ".self::sumber($data['sumber']),
+            "$subjek schema:isAccessibleForFree ".(empty($harga) ? 'true' : 'false'),
         ];
         if ($data['foto'] !== '') {
             $insert[] = "$subjek schema:image <".self::urlFoto($data['foto']).'>';
@@ -116,6 +119,7 @@ final class Database3CatalogWriter
             "OPTIONAL { $subjek schema:image ?image }",
             "OPTIONAL { $subjek dcterms:source ?source }",
             "OPTIONAL { $subjek mv:beradaDi ?district }",
+            "OPTIONAL { $subjek schema:isAccessibleForFree ?gratis }",
         ];
         // jam terstruktur dipakai saringan "buka sekarang": diganti hanya kalau keterangan jam berubah,
         // supaya jam yang sudah dikurasi tidak tertimpa. Operasi ini jalan sebelum mv:keteranganJam

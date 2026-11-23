@@ -9,6 +9,13 @@ use App\Http\Controllers\TiketController;
 use Illuminate\Support\Facades\Route;
 
 
+// Dokumen Linked Data publik. Tidak memakai pencatatan kunjungan supaya crawler
+// dan pemakai data tidak membuat statistik kunjungan HTML.
+Route::controller(SitusController::class)->group(function () {
+    Route::get('/data/wisata.json', 'wisataJson')->name('data.wisata');
+    Route::get('/data/wisata/{slug}.json', 'tempatJson')->name('data.tempat');
+});
+
 // ---------- publik ----------
 Route::controller(SitusController::class)->middleware('kunjungan')->group(function () {
     Route::get('/', 'beranda')->name('beranda');
