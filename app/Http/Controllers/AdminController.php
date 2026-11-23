@@ -645,6 +645,8 @@ class AdminController extends Controller
             return [$t['slug'] => [
                 'slug' => $t['slug'],
                 'nama' => $t['nama'],
+                'harga' => $t['tiket'],
+                'harga_contoh' => $t['harga_contoh'],
                 'pesanan' => $pesananTempat->count(),
                 'tiket' => $pesananTempat->sum(fn ($p) => array_sum(array_column($p['item'], 'jumlah'))),
                 'pendapatan' => $pesananTempat->sum('total'),

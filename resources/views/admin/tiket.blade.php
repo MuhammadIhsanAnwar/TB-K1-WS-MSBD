@@ -47,11 +47,17 @@
             @if ($penjualanPerTempat->isNotEmpty())
                 <div class="p-tabel-bungkus">
                     <table class="p-tabel jadi-daftar">
-                        <thead><tr><th>Lokasi</th><th class="n">Pesanan lunas</th><th class="n">Tiket terjual</th><th class="n">Pendapatan</th></tr></thead>
+                        <thead><tr><th>Lokasi</th><th>Harga tiket</th><th class="n">Pesanan lunas</th><th class="n">Tiket terjual</th><th class="n">Pendapatan</th></tr></thead>
                         <tbody>
                             @foreach ($penjualanPerTempat as $penjualan)
                                 <tr>
                                     <td><a class="p-tautan-kartu" href="{{ route('admin.tiket', ['tempat' => $penjualan['slug']]) }}">{{ $penjualan['nama'] }}</a></td>
+                                    <td class="sekunder">
+                                        {{ collect($penjualan['harga'])->map(fn ($harga, $jenis) => $jenis.': '.Katalog::rupiah((int) $harga))->implode(' · ') }}
+                                        @if ($penjualan['harga_contoh'])
+                                            <span class="sub">Harga contoh, konfirmasi ke pengelola</span>
+                                        @endif
+                                    </td>
                                     <td class="n">{{ number_format($penjualan['pesanan'], 0, ',', '.') }}</td>
                                     <td class="n">{{ number_format($penjualan['tiket'], 0, ',', '.') }}</td>
                                     <td class="n">{{ Katalog::rupiah($penjualan['pendapatan']) }}</td>

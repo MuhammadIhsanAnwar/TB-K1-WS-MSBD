@@ -55,6 +55,7 @@ class AdminTiketLaporanTest extends TestCase
         $bindings[] = $triple($base.'id/istana-maimun', 'https://schema.org/offers', $offer, 'uri');
         $bindings[] = $triple($offer, 'https://schema.org/name', 'Dewasa');
         $bindings[] = $triple($offer, 'https://schema.org/price', '10000');
+        $bindings[] = $triple($base.'id/istana-maimun', $ontology.'hargaContoh', 'true');
 
         $orders = [
             $this->order(1, 'MV-ISTANA1', 'istana-maimun', 25000, 'lunas'),
@@ -100,14 +101,16 @@ class AdminTiketLaporanTest extends TestCase
             ->assertSee('<b>3</b>', false)
             ->assertSee('Rp35.000')
             ->assertSee('Dewasa')
+            ->assertSee('Harga tiket')
+            ->assertSee('Dewasa: Rp10.000')
+            ->assertSee('Harga contoh, konfirmasi ke pengelola')
             ->assertSee('Anak')
             ->assertSee('MV-ISTANA1')
             ->assertSee('MV-ISTANA2')
             ->assertDontSee('MV-MUSEUM1')
             ->assertDontSee('MV-UNPAID1')
             ->assertDontSee('Pembeli Rahasia')
-            ->assertDontSee('Validasi di loket')
-            ->assertDontSee('Harga tiket');
+            ->assertDontSee('Validasi di loket');
     }
 
     private function order(int $id, string $code, string $place, int $total, string $status): array
