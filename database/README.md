@@ -65,6 +65,8 @@ sebagai agregat harian pada cache database; alamat IP tidak disimpan.
 ```bash
 php artisan migrate      # akun/Laravel di DB 1 dan transaksi di DB 2
 php artisan rdf:kirim    # kirim berkas RDF sumber ke Database 3
+php artisan db3:validasi # periksa 198 tempat dan identitas wajibnya
+php artisan db3:migrate  # validasi lalu sinkronkan RDF ke Database 3
 ```
 
 ### Migration Supabase dari server hosting

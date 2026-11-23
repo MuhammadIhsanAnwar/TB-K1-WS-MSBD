@@ -647,16 +647,46 @@ if (saringBeranda) {
     const grid = document.querySelector('[data-grid-beranda]');
     const kartu = [...(grid?.querySelectorAll('[data-kategori]') ?? [])];
     const tombol = [...saringBeranda.querySelectorAll('button[data-filter]')];
+    const paginasi = document.querySelector('[data-paginasi-beranda]');
+    const sebelum = paginasi?.querySelector('[data-halaman-sebelum]');
+    const sesudah = paginasi?.querySelector('[data-halaman-sesudah]');
+    const status = paginasi?.querySelector('[data-halaman-status]');
+    const perHalaman = 9;
+    let filterAktif = 'semua';
+    let halaman = 0;
+
+    const tampilkanHalaman = ({ fokus = false } = {}) => {
+        const hasil = kartu.filter((k) => filterAktif === 'semua' || k.dataset.kategori === filterAktif);
+        const jumlahHalaman = Math.max(1, Math.ceil(hasil.length / perHalaman));
+        halaman = Math.min(halaman, jumlahHalaman - 1);
+        const awal = halaman * perHalaman;
+        const akhir = Math.min(awal + perHalaman, hasil.length);
+
+        kartu.forEach((k) => { k.hidden = true; });
+        hasil.slice(awal, akhir).forEach((k) => { k.hidden = false; });
+        grid?.classList.toggle('terfilter', filterAktif !== 'semua');
+
+        if (paginasi) {
+            paginasi.hidden = hasil.length <= perHalaman;
+            if (status) status.textContent = `Menampilkan ${hasil.length ? awal + 1 : 0}–${akhir} dari ${hasil.length} tempat`;
+            if (sebelum) sebelum.disabled = halaman === 0;
+            if (sesudah) sesudah.disabled = halaman >= jumlahHalaman - 1;
+        }
+        if (fokus) grid?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     tombol.forEach((b) => {
         b.addEventListener('click', () => {
             const f = b.dataset.filter;
             tombol.forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
-            grid?.classList.toggle('terfilter', f !== 'semua');
-            kartu.forEach((k) => {
-                k.hidden = f !== 'semua' && k.dataset.kategori !== f;
-            });
+            filterAktif = f;
+            halaman = 0;
+            tampilkanHalaman();
         });
     });
+    sebelum?.addEventListener('click', () => { halaman -= 1; tampilkanHalaman({ fokus: true }); });
+    sesudah?.addEventListener('click', () => { halaman += 1; tampilkanHalaman({ fokus: true }); });
+    tampilkanHalaman();
 }
 
 // ---- Tampilkan/Sembunyikan Sandi & Indikator Kekuatan ----

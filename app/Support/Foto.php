@@ -23,7 +23,7 @@ class Foto
     }
 
     /**
-     * Foto tempat ada di public/storage/poto, thumbnail di public/storage/foto-kecil.
+     * Semua foto tempat ada di public/storage/foto_wisata.
      * Unggahan lain (misalnya sampul beranda) sudah ditulis lengkap dengan awalan storage/.
      */
     private static function jalur(string $berkas): string
@@ -32,10 +32,6 @@ class Foto
             return $berkas;
         }
 
-        if (str_starts_with($berkas, 'foto-kecil/')) {
-            return 'storage/'.$berkas;
-        }
-
-        return 'storage/poto/'.$berkas;
+        return 'storage/foto_wisata/'.$berkas;
     }
 }

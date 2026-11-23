@@ -15,7 +15,7 @@ class TempatFoto extends Command
 {
     protected $signature = 'tempat:foto
                             {folder : Folder sumber foto}
-                            {--tulis : Tulis ke TTL dan salin foto ke public/storage/poto}';
+                            {--tulis : Tulis ke TTL dan salin foto ke public/storage/foto_wisata}';
 
     protected $description = 'Pasang gambar tempat wisata dari folder foto';
 
@@ -84,7 +84,7 @@ class TempatFoto extends Command
     {
         $folder = (string) $this->argument('folder');
         $ttl = database_path('rdf/medanvisit-data.ttl');
-        $tujuan = public_path('storage/poto');
+        $tujuan = public_path('storage/foto_wisata');
 
         if (! is_dir($folder)) {
             $this->error('Folder tidak ditemukan: '.$folder);
@@ -169,8 +169,6 @@ class TempatFoto extends Command
             }
         }
 
-            $this->buatKecil($tujuan.'/'.$nama, public_path('storage/foto-kecil/'.pathinfo($nama, PATHINFO_FILENAME).'.jpg'));
-
             $isi = $this->sisipkan($isi, $s, $nama);
         }
 
@@ -178,43 +176,6 @@ class TempatFoto extends Command
         $this->info('Ditulis. Jalankan rdf:kirim --replace agar DB 3 ikut berubah.');
 
         return self::SUCCESS;
-    }
-
-    /** Versi 720 px di public/storage/foto-kecil, dipakai semua slot thumbnail (lihat components/foto.blade.php). */
-    private function buatKecil(string $sumber, string $tujuan): void
-    {
-        if (! is_dir(dirname($tujuan))) {
-            mkdir(dirname($tujuan), 0755, true);
-        }
-
-        $info = @getimagesize($sumber);
-        if (! $info) {
-            $this->warn('  ! bukan gambar: '.basename($sumber));
-
-            return;
-        }
-
-        [$lebar, $tinggi] = $info;
-        $skala = min(1, 720 / max($lebar, $tinggi));
-        $w = max(1, (int) round($lebar * $skala));
-        $h = max(1, (int) round($tinggi * $skala));
-
-        $asal = match ($info[2]) {
-            IMAGETYPE_JPEG => @imagecreatefromjpeg($sumber),
-            IMAGETYPE_PNG => @imagecreatefrompng($sumber),
-            IMAGETYPE_WEBP => @imagecreatefromwebp($sumber),
-            default => null,
-        };
-
-        if (! $asal) {
-            $this->warn('  ! format tidak didukung: '.basename($sumber));
-
-            return;
-        }
-
-        $kanvas = imagecreatetruecolor($w, $h);
-        imagecopyresampled($kanvas, $asal, 0, 0, 0, 0, $w, $h, $lebar, $tinggi);
-        imagejpeg($kanvas, $tujuan, 82);
     }
 
     private function sudahAda(string $isi, string $slug): bool
@@ -226,7 +187,7 @@ class TempatFoto extends Command
     /** Sisipkan schema:image sebelum penutup blok (" .") milik slug. */
     private function sisipkan(string $isi, string $slug, string $berkas): string
     {
-        $url = 'https://medanvisit.neoverse.my.id/storage/poto/'.$berkas;
+        $url = 'https://medanvisit.neoverse.my.id/storage/foto_wisata/'.$berkas;
         $batas = '(?:(?!\nres:).)*?';
         $pola = '/^(res:'.preg_quote($slug, '/').'\s+a\s+mv:'.$batas.')(\n\s*\.)/ms';
 

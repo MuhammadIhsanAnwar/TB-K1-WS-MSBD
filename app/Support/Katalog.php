@@ -478,7 +478,7 @@ class Katalog
 
     /**
      * Jadwal buka sebuah tempat: jam buka dan tutup dalam menit, dan hari buka (1 = Senin ... 7 = Minggu).
-     * Hari dibaca dari keterangan jam, misalnya "Selasa–Minggu, 09.00–16.00 (Senin tutup)". Nama hari hanya
+     * Hari dibaca dari keterangan jam, misalnya "Selasaâ€“Minggu, 09.00â€“16.00 (Senin tutup)". Nama hari hanya
      * dihitung kalau diikuti rentang jam, jadi "Di luar jam misa (Minggu 06.30, ...)" tidak membatasi hari.
      * Tanpa jam terstruktur hasilnya null, artinya jam buka tidak diketahui.
      */
@@ -492,7 +492,7 @@ class Katalog
         $nama = implode('|', array_keys(self::HARI));
         $hari = [];
         if (! str_contains($teks, 'setiap hari')) {
-            preg_match_all("/\b($nama)(?:\s*[–-]\s*($nama))?,?\s+\d{1,2}\.\d{2}\s*[–-]/u", $teks, $cocok, PREG_SET_ORDER);
+            preg_match_all("/\b($nama)(?:\s*[â€“-]\s*($nama))?,?\s+\d{1,2}\.\d{2}\s*[â€“-]/u", $teks, $cocok, PREG_SET_ORDER);
             foreach ($cocok as $c) {
                 $awal = self::HARI[$c[1]];
                 $akhir = isset($c[2]) && $c[2] !== '' ? self::HARI[$c[2]] : $awal;
@@ -603,7 +603,7 @@ $teks = mb_strtolower(
     {
         static $kredit = null;
         if ($kredit === null) {
-            $path = public_path('storage/poto/credits.json');
+            $path = public_path('storage/foto_wisata/credits.json');
             $kredit = [];
             foreach (is_file($path) ? json_decode(file_get_contents($path), true) : [] as $item) {
                 $kredit[basename($item['file'])] = $item;

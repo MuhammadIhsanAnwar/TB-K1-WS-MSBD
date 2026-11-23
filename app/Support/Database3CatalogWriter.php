@@ -145,8 +145,8 @@ final class Database3CatalogWriter
     }
 
     /**
-     * Jam buka dan tutup dari keterangan seperti "Setiap hari, 08.00–17.00" atau
-     * "Senin–Sabtu 06.00–11.00 dan 17.00–20.00" (diambil buka paling awal dan tutup paling akhir).
+     * Jam buka dan tutup dari keterangan seperti "Setiap hari, 08.00â€“17.00" atau
+     * "Seninâ€“Sabtu 06.00â€“11.00 dan 17.00â€“20.00" (diambil buka paling awal dan tutup paling akhir).
      * "24 jam" menjadi 00.00 sampai 23.59. Tanpa rentang jam yang bisa dibaca, hasilnya null.
      */
     public static function rentangJam(string $keterangan): ?array
@@ -154,7 +154,7 @@ final class Database3CatalogWriter
         if (preg_match('/24\s*jam/i', $keterangan)) {
             return ['00:00:00', '23:59:00'];
         }
-        preg_match_all('/(\d{1,2})[.:](\d{2})\s*[–-]\s*(\d{1,2})[.:](\d{2})/u', $keterangan, $m, PREG_SET_ORDER);
+        preg_match_all('/(\d{1,2})[.:](\d{2})\s*[â€“-]\s*(\d{1,2})[.:](\d{2})/u', $keterangan, $m, PREG_SET_ORDER);
         if (! $m) {
             return null;
         }
@@ -245,6 +245,6 @@ final class Database3CatalogWriter
 
     private static function urlFoto(string $file): string
     {
-        return Semantik::BASIS.'storage/poto/'.$file;
+        return Semantik::BASIS.'storage/foto_wisata/'.$file;
     }
 }

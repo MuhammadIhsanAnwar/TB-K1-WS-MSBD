@@ -5,7 +5,7 @@
         $judulMeta = trim($__env->yieldContent('judul', 'Jelajahi Kota Medan'));
         $deskripsiMeta = trim($__env->yieldContent('deskripsi', 'Jelajahi wisata Kota Medan melalui MedanVisit. Temukan tempat bersejarah, kuliner, informasi tiket, dan rute perjalanan.'));
         $urlMeta = url()->current();
-        $fotoMeta = trim($__env->yieldContent('foto-og')) ?: asset('storage/poto/peta-medan-1930-kota-lama.jpg');
+        $fotoMeta = trim($__env->yieldContent('foto-og')) ?: asset('storage/foto_wisata/peta-medan-1930-kota-lama.jpg');
     @endphp
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

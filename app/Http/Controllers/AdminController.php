@@ -397,7 +397,7 @@ class AdminController extends Controller
                 }
             }
             $data['foto'] = (string) $data['foto'];
-            if (! is_file(public_path('storage/poto/'.$data['foto']))) {
+            if (! is_file(public_path('storage/foto_wisata/'.$data['foto']))) {
                 throw ValidationException::withMessages(['foto' => 'Berkas foto tidak ditemukan di penyimpanan publik. Unggah foto tempat terlebih dahulu.']);
             }
             $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');
@@ -447,7 +447,7 @@ class AdminController extends Controller
         }
         $harga = isset($data['harga']) && $data['harga'] !== '' ? ['Reguler' => (int) $data['harga']] : [];
         $data['foto'] = (string) $data['foto'];
-        if (! is_file(public_path('storage/poto/'.$data['foto']))) {
+        if (! is_file(public_path('storage/foto_wisata/'.$data['foto']))) {
             throw ValidationException::withMessages(['foto' => 'Berkas foto tidak ditemukan di penyimpanan publik. Unggah foto tempat terlebih dahulu.']);
         }
         $data['kecamatan'] = (string) ($data['kecamatan'] ?? '');

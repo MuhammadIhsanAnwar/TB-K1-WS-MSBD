@@ -1482,6 +1482,16 @@
 .mv-kartu-tempat--lebar { grid-column: span 2; }
 .mv-grid-tempat.terfilter .mv-kartu-tempat--lebar { grid-column: span 1; }
 .mv-kartu-tempat[hidden] { display: none; }
+.mv-paginasi-tempat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 32px;
+}
+.mv-paginasi-tempat__status { margin: 0; color: var(--mv-redup); font-size: var(--mv-s-ui); }
+.mv-paginasi-tempat button:disabled { cursor: not-allowed; opacity: .45; }
 .mv-kartu-tempat:hover { transform: translateY(-4px); }
 .mv-kartu-tempat__media {
   position: relative;

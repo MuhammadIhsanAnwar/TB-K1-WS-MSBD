@@ -4,7 +4,7 @@
 @php
     use App\Support\Foto;
     $cadangan = 'peta-medan-1930-kota-lama.jpg';
-    $fotoKecil = fn (?string $berkas) => Foto::url('foto-kecil/'.pathinfo($berkas ?: $cadangan, PATHINFO_FILENAME).'.jpg');
+    $fotoKecil = fn (?string $berkas) => Foto::url($berkas ?: $cadangan);
     $tempatPerSlug = collect($pilihanTempat)->keyBy('slug');
 @endphp
 

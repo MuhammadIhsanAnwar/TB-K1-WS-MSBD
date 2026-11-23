@@ -22,7 +22,14 @@
         'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
         'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
     ])->values();
-    $urutTempat = collect($semuaTempat)->sortBy('nama')->values();
+    // Tiga pilihan sampul selalu muncul lebih dulu, lalu enam destinasi berikutnya
+    // melengkapi halaman unggulan pertama.
+    $urutTempat = collect($unggulan)
+        ->map(fn ($slug) => $semuaTempat[$slug] ?? null)
+        ->filter()
+        ->concat(collect($semuaTempat)->reject(fn ($t) => in_array($t['slug'], $unggulan, true))->sortBy('nama'))
+        ->values();
+    $perHalamanTempat = 9;
     $jumlahGaleri = $urutTempat->countBy('kategori');
     // bahan saran "Dekat denganmu": jarak dihitung di peramban dari lokasi pengunjung
     $dekatJson = collect($semuaTempat)->filter(fn ($t) => ($t['lat'] ?? 0) > 0)->map(fn ($t) => [
@@ -122,7 +129,7 @@
             @endforeach
         </div>
 
-        <div class="mv-grid-tempat" data-grid-beranda>
+        <div class="mv-grid-tempat" data-grid-beranda aria-live="polite">
             @foreach ($urutTempat as $idx => $t)
                 @php
                     $adalahLebar = in_array($t['slug'], $unggulan, true);
@@ -130,7 +137,7 @@
                     $sedangBuka = Katalog::bukaSekarang($t);
                     $berkasFoto = $t['foto'] ?: 'peta-medan-1930-kota-lama.jpg';
                 @endphp
-                <a class="mv-kartu-tempat {{ $adalahLebar ? 'mv-kartu-tempat--lebar' : '' }}" href="{{ route('tempat', $t['slug']) }}" data-kategori="{{ $t['kategori'] }}">
+                <a class="mv-kartu-tempat {{ $adalahLebar ? 'mv-kartu-tempat--lebar' : '' }}" href="{{ route('tempat', $t['slug']) }}" data-kategori="{{ $t['kategori'] }}" @if ($idx >= $perHalamanTempat) hidden @endif>
                     <div class="mv-kartu-tempat__media">
                         <x-foto :berkas="$berkasFoto" :alt="$t['nama']" :kecil="true" />
                     </div>
@@ -151,6 +158,13 @@
                 </a>
             @endforeach
         </div>
+        @if ($urutTempat->count() > $perHalamanTempat)
+            <nav class="mv-paginasi-tempat" data-paginasi-beranda aria-label="Halaman tempat wisata">
+                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sebelum disabled>← Sebelumnya</button>
+                <p class="mv-paginasi-tempat__status" data-halaman-status>Menampilkan 1–{{ min($perHalamanTempat, $urutTempat->count()) }} dari {{ $urutTempat->count() }} tempat</p>
+                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sesudah>Berikutnya →</button>
+            </nav>
+        @endif
     </div>
 </section>
 
