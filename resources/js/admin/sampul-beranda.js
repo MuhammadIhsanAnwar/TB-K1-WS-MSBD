@@ -1,6 +1,12 @@
-// Panel Sampul beranda: pratinjau setiap slot ikut berubah saat tempat dipilih atau foto dipilih,
-// sebelum disimpan. Tanpa skrip, form tetap bekerja dan pratinjau diperbarui setelah simpan.
-document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
+// Panel Sampul beranda: pratinjau diperbarui sebelum disimpan dan slot dapat ditambah dinamis.
+const form = document.querySelector('[data-sampul-atur]');
+const kumpulanSlot = form?.querySelector('[data-kumpulan-slot]');
+const templateSlot = form?.querySelector('[data-template-slot]');
+const tombolTambah = form?.querySelector('[data-tambah-slot]');
+const jumlahSlot = form?.querySelector('[data-jumlah-slot]');
+const batasSlot = Number(form?.dataset.maksSlot || 100);
+
+const siapkanSlot = (slot) => {
     const pilih = slot.querySelector('[data-pilih-tempat]');
     const unggah = slot.querySelector('[data-unggah]');
     const gambar = slot.querySelector('[data-pratinjau]');
@@ -35,4 +41,27 @@ document.querySelectorAll('[data-sampul-atur] [data-slot]').forEach((slot) => {
         urlUnggah = URL.createObjectURL(berkas);
         tampilkan(urlUnggah, `${berkas.name}, belum disimpan`);
     });
-});
+};
+
+const perbaruiJumlah = () => {
+    const jumlah = kumpulanSlot.querySelectorAll('[data-slot]').length;
+    jumlahSlot.textContent = `${jumlah} dari ${batasSlot} slot`;
+    tombolTambah.disabled = jumlah >= batasSlot;
+};
+
+if (form && kumpulanSlot && templateSlot && tombolTambah && jumlahSlot) {
+    kumpulanSlot.querySelectorAll('[data-slot]').forEach(siapkanSlot);
+    perbaruiJumlah();
+
+    tombolTambah.addEventListener('click', () => {
+        const index = kumpulanSlot.querySelectorAll('[data-slot]').length;
+        if (index >= batasSlot) return;
+
+        const markup = templateSlot.innerHTML
+            .replace(/__INDEX__/g, String(index))
+            .replace(/__NOMOR__/g, String(index + 1));
+        kumpulanSlot.insertAdjacentHTML('beforeend', markup);
+        siapkanSlot(kumpulanSlot.lastElementChild);
+        perbaruiJumlah();
+    });
+}

@@ -51,6 +51,10 @@ class AdminTiketLaporanTest extends TestCase
             $bindings[] = $triple($place, 'https://schema.org/name', $name);
             $bindings[] = $triple($place, 'https://schema.org/description', 'Tempat wisata.');
         }
+        $offer = $base.'id/tiket-istana-maimun';
+        $bindings[] = $triple($base.'id/istana-maimun', 'https://schema.org/offers', $offer, 'uri');
+        $bindings[] = $triple($offer, 'https://schema.org/name', 'Dewasa');
+        $bindings[] = $triple($offer, 'https://schema.org/price', '10000');
 
         $orders = [
             $this->order(1, 'MV-ISTANA1', 'istana-maimun', 25000, 'lunas'),
@@ -90,7 +94,7 @@ class AdminTiketLaporanTest extends TestCase
         ]])->get('/admin/tiket?tempat=istana-maimun')
             ->assertOk()
             ->assertSee('Istana Maimun')
-            ->assertSee('Museum Negeri')
+            ->assertDontSee('Museum Negeri')
             ->assertSee('2 transaksi')
             ->assertSee('<div class="nilai">4</div>', false)
             ->assertSee('<b>3</b>', false)

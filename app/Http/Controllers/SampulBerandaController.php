@@ -13,18 +13,26 @@ use Throwable;
 /** Panel super admin: memilih foto sampul (hero) beranda. Disimpan di DB 1 tabel pengaturan_situs. */
 class SampulBerandaController extends Controller
 {
-    public function tampil()
+    public function tampil(Request $request)
     {
         $tempat = Katalog::tempat();
+        $pengaturan = SampulBeranda::pengaturan();
+        $slotLama = $request->old('slot', []);
+        $jumlahSlot = min(SampulBeranda::MAKS_SLOT, max(
+            SampulBeranda::SLOT,
+            count($pengaturan),
+            is_array($slotLama) ? count($slotLama) : 0,
+        ));
 
         return view('admin.sampul-beranda', [
-            'slot' => collect(range(0, SampulBeranda::SLOT - 1))
-                ->map(fn ($i) => SampulBeranda::pengaturan()[$i] ?? ['slug' => null, 'foto' => null])
+            'slot' => collect(range(0, $jumlahSlot - 1))
+                ->map(fn ($i) => $pengaturan[$i] ?? ['slug' => null, 'foto' => null])
                 ->map(fn ($s) => $s + ['fotoAda' => SampulBeranda::fotoAda($s['foto'])])
                 ->all(),
             'pilihanTempat' => collect($tempat)->sortBy('nama')->values()->all(),
             'tampilSekarang' => SampulBeranda::slide($tempat),
             'diatur' => SampulBeranda::diatur($tempat),
+            'maksSlot' => SampulBeranda::MAKS_SLOT,
         ]);
     }
 
@@ -35,7 +43,7 @@ class SampulBerandaController extends Controller
         }
 
         $request->validate([
-            'slot' => ['required', 'array', 'max:'.SampulBeranda::SLOT],
+            'slot' => ['required', 'array', 'max:'.SampulBeranda::MAKS_SLOT],
             'slot.*.slug' => ['nullable', 'string', Rule::in(array_keys(Katalog::tempat())), 'distinct', 'required_with:slot.*.foto'],
             'slot.*.foto' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096', 'dimensions:min_width=1200,min_height=600'],
             'slot.*.hapus_foto' => ['nullable', 'boolean'],
@@ -52,8 +60,8 @@ class SampulBerandaController extends Controller
         $lama = SampulBeranda::pengaturan();
         $baru = [];
         $unggahan = [];
-        foreach (range(0, SampulBeranda::SLOT - 1) as $i) {
-            $slug = $request->input("slot.$i.slug");
+        foreach ($request->input('slot', []) as $i => $dataSlot) {
+            $slug = $dataSlot['slug'] ?? null;
             if (! $slug) {
                 continue;
             }

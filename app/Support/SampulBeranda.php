@@ -19,6 +19,8 @@ class SampulBeranda
 
     public const SLOT = 4;
 
+    public const MAKS_SLOT = 100;
+
     /** Folder unggahan di dalam public/, sama seperti foto profil di public/storage/profil_picture. */
     public const FOLDER = 'storage/sampul_beranda';
 
@@ -39,7 +41,7 @@ class SampulBeranda
             $slot = collect(is_array($nilai) ? $nilai : [])
                 ->filter(fn ($s) => is_array($s) && is_string($s['slug'] ?? null) && $s['slug'] !== '')
                 ->map(fn ($s) => ['slug' => $s['slug'], 'foto' => is_string($s['foto'] ?? null) ? $s['foto'] : null])
-                ->take(self::SLOT)->values()->all();
+                ->take(self::MAKS_SLOT)->values()->all();
             Cache::put(self::CACHE, $slot, now()->addMinutes(10));
         } catch (Throwable $e) {
             // DB 1 tidak terjangkau: beranda tetap terbuka dengan sampul otomatis, dicoba lagi semenit kemudian

@@ -628,8 +628,9 @@ class AdminController extends Controller
     {
         $milik = $this->slugsKelolaan($request);
         $pesanan = collect(Penyimpanan::pesanan())->values();
-        $tempat = collect(Katalog::tempat());
         $bertiket = collect(Katalog::bertiket());
+        $superadmin = $request->session()->get('pengguna.peran') === 'superadmin';
+        $tempat = $superadmin ? $bertiket : collect(Katalog::tempat());
 
         if ($milik !== null) {
             $pesanan = $pesanan->filter(fn ($p) => in_array($p['tempat'], $milik, true))->values();
@@ -672,7 +673,7 @@ class AdminController extends Controller
         return view('admin.tiket', [
             'pesanan' => $pesanan,
             'bertiket' => $bertiket,
-            'superadmin' => $request->session()->get('pengguna.peran') === 'superadmin',
+            'superadmin' => $superadmin,
             'tempatLaporan' => $tempat,
             'penjualanPerTempat' => $penjualanPerTempat,
             'fokusLaporan' => $fokus,

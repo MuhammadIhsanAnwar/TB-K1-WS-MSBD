@@ -26,9 +26,9 @@
     </div>
 @endif
 
-<form method="post" action="{{ route('admin.beranda') }}" enctype="multipart/form-data" data-sampul-atur>
+<form method="post" action="{{ route('admin.beranda') }}" enctype="multipart/form-data" data-sampul-atur data-maks-slot="{{ $maksSlot }}">
     @csrf
-    <div class="p-grid sampul-atur">
+    <div class="p-grid sampul-atur" data-kumpulan-slot>
         @foreach ($slot as $i => $s)
             @php
                 $slugTerpilih = old("slot.$i.slug", $s['slug']);
@@ -71,7 +71,33 @@
             </section>
         @endforeach
     </div>
+    <template data-template-slot>
+        <section class="p-panel s6" aria-labelledby="slot-__INDEX__" data-slot>
+            <header><h2 id="slot-__INDEX__">Slot __NOMOR__</h2></header>
+            <figure class="sampul-atur__pratinjau">
+                <img src="" alt="" width="640" height="360" data-pratinjau hidden>
+                <div class="p-kosong" data-kosong>Slot kosong</div>
+                <figcaption data-sumber></figcaption>
+            </figure>
+            <div class="p-field">
+                <label for="slot-__INDEX__-slug">Tempat wisata</label>
+                <select id="slot-__INDEX__-slug" name="slot[__INDEX__][slug]" data-pilih-tempat>
+                    <option value="" data-foto="">Kosong</option>
+                    @foreach ($pilihanTempat as $t)
+                        <option value="{{ $t['slug'] }}" data-foto="{{ $fotoKecil($t['foto'] ?? null) }}" data-tanpa-foto="{{ empty($t['foto']) ? '1' : '' }}">{{ $t['nama'] }}{{ empty($t['foto']) ? ' (belum ada foto)' : '' }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="p-field">
+                <label for="slot-__INDEX__-foto">Ganti dengan foto sendiri (opsional)</label>
+                <input id="slot-__INDEX__-foto" type="file" name="slot[__INDEX__][foto]" accept="image/jpeg,image/png,image/webp" data-unggah aria-describedby="slot-__INDEX__-bantu">
+                <span class="bantu" id="slot-__INDEX__-bantu">JPG, PNG, atau WEBP, minimal 1200 x 600 piksel, maksimal 4 MB. Bagian tengah foto paling aman karena tepinya terpotong di ponsel.</span>
+            </div>
+        </section>
+    </template>
     <div class="sampul-atur__aksi">
+        <button class="p-btn" type="button" data-tambah-slot>Tambah slot</button>
+        <span class="bantu" data-jumlah-slot aria-live="polite">{{ count($slot) }} dari {{ $maksSlot }} slot</span>
         <button class="p-btn p-btn--utama" type="submit">Simpan sampul</button>
         <button class="p-btn" type="submit" name="otomatis" value="1" formnovalidate>Kembalikan ke otomatis</button>
     </div>
