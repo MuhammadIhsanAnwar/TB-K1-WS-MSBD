@@ -1,0 +1,2 @@
+# Query konektivitas AllegroGraph yang dijalankan halaman kesehatan admin.
+ASK { ?s ?p ?o }

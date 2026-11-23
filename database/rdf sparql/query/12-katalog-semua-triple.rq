@@ -1,0 +1,31 @@
+# Query runtime Database3Catalog::triples().
+# Mengambil triple relevan dari resource MedanVisit dan blank node alamat/offer.
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?s ?p ?o WHERE {
+  ?s ?p ?o .
+  FILTER (
+    STRSTARTS(STR(?s), "https://medanvisit.neoverse.my.id/id/")
+    || isBlank(?s)
+  )
+  FILTER (?p IN (
+    rdf:type, rdf:subject, rdf:predicate, rdf:object, rdfs:label,
+    schema:name, schema:description, schema:address, schema:containedInPlace,
+    schema:image, schema:offers, owl:sameAs, geo:lat, geo:long,
+    schema:streetAddress, mv:cerita, mv:kelurahan, mv:keteranganJam,
+    mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
+    mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh,
+    mv:koordinatPerkiraan, mv:masa, mv:kalimat, dcterms:source,
+    mv:dibangunOleh, mv:memimpin, mv:terlibatDalam, mv:merepresentasikan,
+    mv:khasDari, mv:dekatDengan, mv:bergaya, mv:bagianDari,
+    mv:berkaitanDengan, mv:memilikiSejarah, mv:menjual, mv:dilayaniOleh,
+    mv:beradaDi, schema:price, schema:priceCurrency
+  ))
+}
+LIMIT 10000

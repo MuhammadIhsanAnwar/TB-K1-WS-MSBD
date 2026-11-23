@@ -6,6 +6,36 @@ use Illuminate\Support\Facades\DB;
 
 class PostgreSQLService
 {
+    public function ringkasanUlasanTempat(string $slug): ?array
+    {
+        $baris = DB::connection('transaksi')->select(
+            'SELECT tempat_slug, jumlah_ulasan, rata_rata_bintang
+             FROM ringkasan_ulasan
+             WHERE tempat_slug = ?
+             LIMIT 1',
+            [$slug],
+        );
+
+        return isset($baris[0]) ? (array) $baris[0] : null;
+    }
+
+    public function peringkatUlasan(int $batas = 5): array
+    {
+        $batas = max(1, min($batas, 100));
+
+        return array_map(
+            fn ($baris) => (array) $baris,
+            DB::connection('transaksi')->select(
+                'SELECT tempat_slug, jumlah_ulasan, rata_rata_bintang
+                 FROM ringkasan_ulasan
+                 WHERE jumlah_ulasan > 0
+                 ORDER BY jumlah_ulasan DESC, rata_rata_bintang DESC NULLS LAST
+                 LIMIT ?',
+                [$batas],
+            ),
+        );
+    }
+
     public function jumlahPesanan(int $idPengguna): int
     {
         $baris = DB::connection('transaksi')->select(

@@ -55,4 +55,37 @@ class TanyaMasNonovRoutingTest extends TestCase
         $this->assertSame('sparql', TanyaMasNonovService::klasifikasi('Apa saja taman di Kota Medan?')['source']);
         $this->assertSame('general', TanyaMasNonovService::klasifikasi('Apa itu Web Semantik?')['source']);
     }
+
+    public function test_ticket_price_question_routes_to_tourism_data(): void
+    {
+        $routing = TanyaMasNonovService::klasifikasi('Berapa harga tiket Istana Maimun?');
+
+        $this->assertSame('sparql', $routing['source']);
+        $this->assertTrue($routing['requires_database']);
+    }
+
+    public function test_review_and_like_rankings_route_to_operational_and_semantic_data(): void
+    {
+        $routing = TanyaMasNonovService::klasifikasi('Mana tempat yang paling banyak diulas dan banyak dilike?');
+
+        $this->assertSame('tourism_popularity', $routing['intent']);
+        $this->assertSame('hybrid', $routing['source']);
+        $this->assertTrue($routing['requires_database']);
+    }
+
+    public function test_place_rating_questions_use_the_operational_data_route(): void
+    {
+        $routing = TanyaMasNonovService::klasifikasi('Berapa rating dan jumlah suka Istana Maimun?');
+
+        $this->assertSame('tourism_popularity', $routing['intent']);
+        $this->assertSame('hybrid', $routing['source']);
+    }
+
+    public function test_nearby_recommendations_keep_the_geographic_route(): void
+    {
+        $routing = TanyaMasNonovService::klasifikasi('Rekomendasikan wisata terdekat dari Istana Maimun');
+
+        $this->assertSame('tourism_knowledge', $routing['intent']);
+        $this->assertSame('sparql', $routing['source']);
+    }
 }

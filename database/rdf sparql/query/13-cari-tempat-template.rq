@@ -1,0 +1,26 @@
+# Template query SparqlService::cariTempat().
+# Ganti {{KELAS}} dengan satu atau lebih class wisata.
+# Tambahkan fragmen filter dinamis di tempat {{FILTER_PENCARIAN}}:
+# - nama: FILTER (CONTAINS(LCASE(STR(?nama)), "kata") || REGEX(LCASE(STR(?nama)), "pola"))
+# - kecamatan: FILTER EXISTS { ?tempat mv:beradaDi ?w . ?w schema:name ?nw .
+#                             FILTER(CONTAINS(LCASE(STR(?nw)), "nama kecamatan")) }
+# - fasilitas: FILTER EXISTS { ?tempat mv:fasilitas ?f .
+#                             FILTER(CONTAINS(LCASE(STR(?f)), "fasilitas")) }
+# Batas aktual service: LIMIT 1..50, OFFSET 0..500.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT DISTINCT ?tempat ?kelas ?nama ?deskripsi ?kecamatan ?foto ?lat ?long WHERE {
+  VALUES ?kelas { {{KELAS}} }
+  ?tempat a ?kelas ; schema:name ?nama .
+  OPTIONAL { ?tempat schema:description ?deskripsi }
+  OPTIONAL { ?tempat mv:beradaDi ?wilayah . ?wilayah schema:name ?kecamatan }
+  OPTIONAL { ?tempat schema:image ?foto }
+  OPTIONAL { ?tempat geo:lat ?lat }
+  OPTIONAL { ?tempat geo:long ?long }
+  {{FILTER_PENCARIAN}}
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}
+OFFSET {{OFFSET}}

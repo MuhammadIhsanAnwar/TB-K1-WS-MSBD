@@ -1,0 +1,18 @@
+# Template query SparqlService::rekomendasikanSatuKecamatan().
+# Ganti {{IRI_TEMPAT}} dan {{KELAS}} sebelum dijalankan.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT DISTINCT ?tempat ?kelas ?nama ?kecamatan ?lat ?long ?dasar WHERE {
+  <{{IRI_TEMPAT}}> mv:beradaDi ?wilayah .
+  VALUES ?kelas { {{KELAS}} }
+  ?tempat mv:beradaDi ?wilayah ; a ?kelas ; schema:name ?nama .
+  FILTER (?tempat != <{{IRI_TEMPAT}}>)
+  ?wilayah schema:name ?kecamatan .
+  OPTIONAL { ?tempat geo:lat ?lat }
+  OPTIONAL { ?tempat geo:long ?long }
+  BIND("kecamatan yang sama" AS ?dasar)
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}

@@ -10,6 +10,45 @@ use Tests\TestCase;
 
 class PostgreSQLServiceTest extends TestCase
 {
+    public function test_review_summary_looks_up_a_place_with_a_bound_slug(): void
+    {
+        $query = 'SELECT tempat_slug, jumlah_ulasan, rata_rata_bintang
+             FROM ringkasan_ulasan
+             WHERE tempat_slug = ?
+             LIMIT 1';
+        $connection = Mockery::mock(Connection::class);
+        $connection->shouldReceive('select')
+            ->once()
+            ->with($query, ['istana-maimun'])
+            ->andReturn([(object) ['tempat_slug' => 'istana-maimun', 'jumlah_ulasan' => 9, 'rata_rata_bintang' => '4.7']]);
+        DB::shouldReceive('connection')->once()->with('transaksi')->andReturn($connection);
+
+        $this->assertSame(
+            ['tempat_slug' => 'istana-maimun', 'jumlah_ulasan' => 9, 'rata_rata_bintang' => '4.7'],
+            app(PostgreSQLService::class)->ringkasanUlasanTempat('istana-maimun'),
+        );
+    }
+
+    public function test_review_ranking_uses_summary_table_and_bounded_limit(): void
+    {
+        $query = 'SELECT tempat_slug, jumlah_ulasan, rata_rata_bintang
+                 FROM ringkasan_ulasan
+                 WHERE jumlah_ulasan > 0
+                 ORDER BY jumlah_ulasan DESC, rata_rata_bintang DESC NULLS LAST
+                 LIMIT ?';
+        $connection = Mockery::mock(Connection::class);
+        $connection->shouldReceive('select')
+            ->once()
+            ->with($query, [5])
+            ->andReturn([(object) ['tempat_slug' => 'istana-maimun', 'jumlah_ulasan' => 17, 'rata_rata_bintang' => '4.8']]);
+        DB::shouldReceive('connection')->once()->with('transaksi')->andReturn($connection);
+
+        $this->assertSame(
+            [['tempat_slug' => 'istana-maimun', 'jumlah_ulasan' => 17, 'rata_rata_bintang' => '4.8']],
+            app(PostgreSQLService::class)->peringkatUlasan(5),
+        );
+    }
+
     public function test_order_count_uses_authenticated_user_id_binding(): void
     {
         $connection = Mockery::mock(Connection::class);

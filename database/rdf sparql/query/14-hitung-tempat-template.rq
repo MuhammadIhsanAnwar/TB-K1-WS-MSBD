@@ -1,0 +1,12 @@
+# Template query SparqlService::hitungTempat().
+# Ganti {{KELAS}} dengan daftar class wisata yang diminta.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+
+SELECT ?kelas (COUNT(DISTINCT ?tempat) AS ?jumlah) WHERE {
+  VALUES ?kelas { {{KELAS}} }
+  ?tempat a ?kelas ; schema:name ?nama .
+}
+GROUP BY ?kelas
+HAVING (COUNT(DISTINCT ?tempat) > 0)
+ORDER BY DESC(?jumlah)

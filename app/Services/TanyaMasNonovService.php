@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Support\Katalog;
 use App\Support\SparqlService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -38,7 +39,23 @@ class TanyaMasNonovService
             return ['intent' => 'user_transaction_history', 'source' => 'sql', 'requires_database' => true];
         }
 
-        if (preg_match('/\b(wisata|tempat|taman|museum|sejarah|religi|masjid|gereja|vihara|kuil|kuliner|kecamatan|fasilitas|terdekat|dekat|kota medan|statistik|jumlah wisata)\b/u', $teks)) {
+        if (preg_match('/\b(dekat|terdekat|sekitar)\b/u', $teks)) {
+            return ['intent' => 'tourism_knowledge', 'source' => 'sparql', 'requires_database' => true];
+        }
+
+        if (preg_match('/\b(rekomendasi|rekomendasikan|sarankan|saran|paling banyak diulas|banyak diulas|ulasan terbanyak|terbanyak ulasan|jumlah ulasan|paling banyak ulasan|rating tertinggi|rating|ulasan|review|bintang|paling disukai|banyak disukai|paling banyak disukai|paling banyak dilike|banyak dilike|like terbanyak|jumlah suka|jumlah like|wisata populer|wisata terpopuler|wisata paling ramai|paling ramai)\b/u', $teks)) {
+            return ['intent' => 'tourism_popularity', 'source' => 'hybrid', 'requires_database' => true];
+        }
+
+        if (preg_match('/\b(wisata|tempat|taman|museum|istana|sejarah|religi|masjid|gereja|vihara|kuil|kuliner|kecamatan|fasilitas|tiket|harga|tarif|biaya|bayar|jam buka|jam|lokasi|alamat|terdekat|dekat|kota medan|statistik|jumlah wisata|ulasan|diulas|review|rating|bintang|dilike|di-like|disukai|suka|like|favorit|populer|ramai)\b/u', $teks)) {
+            return ['intent' => 'tourism_knowledge', 'source' => 'sparql', 'requires_database' => true];
+        }
+
+        if (preg_match('/\b(web semantik|rdf|sparql|teknologi ai|kecerdasan buatan|machine learning|sql)\b/u', $teks)) {
+            return ['intent' => 'general_knowledge', 'source' => 'general', 'requires_database' => false];
+        }
+
+        if (self::entitasRdfDisebut($pertanyaan) !== null) {
             return ['intent' => 'tourism_knowledge', 'source' => 'sparql', 'requires_database' => true];
         }
 
@@ -53,6 +70,10 @@ class TanyaMasNonovService
             return $this->jawabSql($pertanyaan, $pengguna, $riwayat);
         }
         if ($routing['source'] === 'hybrid') {
+            if ($routing['intent'] === 'tourism_popularity') {
+                return $this->jawabPopularitas($pertanyaan, $riwayat);
+            }
+
             return $this->jawabHybrid($pertanyaan, $pengguna, $riwayat);
         }
         if ($routing['source'] === 'sparql') {
@@ -64,6 +85,164 @@ class TanyaMasNonovService
         }
 
         return ['teks' => [$this->ai->jawabBerbasisKonteks($pertanyaan, 'pengetahuan umum', [], $riwayat)], 'tempat' => []];
+    }
+
+    private static function entitasRdfDisebut(string $pertanyaan): ?array
+    {
+        preg_match_all('/\b\p{Lu}[\p{L}\p{N}-]{2,}\b/u', $pertanyaan, $kataBerhurufBesar);
+        $kataUmum = ['apa', 'siapa', 'mana', 'kota', 'medan', 'sumatera', 'utara', 'wisata', 'tempat', 'taman', 'museum', 'sejarah', 'religi', 'kuliner', 'gereja', 'masjid'];
+        $namaKandidat = array_filter(
+            array_map('mb_strtolower', $kataBerhurufBesar[0] ?? []),
+            fn (string $kata) => ! in_array($kata, $kataUmum, true),
+        );
+        if (count($namaKandidat) < 2) {
+            return null;
+        }
+
+        $teks = mb_strtolower($pertanyaan);
+        foreach (Katalog::entitas() as $entitas) {
+            $nama = mb_strtolower(trim((string) ($entitas['nama'] ?? '')));
+            if (mb_strlen($nama) >= 4 && str_contains($teks, $nama)) {
+                return $entitas;
+            }
+        }
+
+        return null;
+    }
+
+    private function jawabPopularitas(string $pertanyaan, array $riwayat): array
+    {
+        $teks = mb_strtolower($pertanyaan);
+        $rekomendasi = (bool) preg_match('/\b(rekomendasi|rekomendasikan|sarankan|saran|populer|terpopuler|paling ramai)\b/u', $teks);
+        $mintaUlasan = $rekomendasi || (bool) preg_match('/\b(ulasan|diulas|review|rating|bintang)\b/u', $teks);
+        $mintaSuka = $rekomendasi || (bool) preg_match('/\b(dilike|di-like|disukai|suka|like|favorit|populer|terpopuler|paling ramai)\b/u', $teks);
+        [$kategori] = $this->filterPertanyaan($pertanyaan);
+        $kategori = $kategori === null ? null : (array) $kategori;
+        $sesuaiKategori = fn (array $tempat): bool => $kategori === null
+            || in_array($tempat['kategori'] ?? null, $kategori, true);
+        $konteks = [];
+        $bagianFallback = [];
+        $kartu = [];
+        $tempatTerkait = null;
+        $semuaTempat = Katalog::tempat();
+        foreach ($semuaTempat as $tempat) {
+            if (str_contains($teks, mb_strtolower($tempat['nama']))) {
+                $tempatTerkait = $tempat;
+                break;
+            }
+        }
+        $mintaPeringkat = $rekomendasi
+            || (bool) preg_match('/\b(paling|terbanyak|tertinggi|terbesar|populer|terpopuler|ranking|urutan|top)\b/u', $teks)
+            || ($tempatTerkait === null && (bool) preg_match('/\b(mana|banyak|ramai)\b/u', $teks));
+
+        if ($tempatTerkait !== null && ! $mintaPeringkat) {
+            $detail = ['nama' => $tempatTerkait['nama']];
+            $fallbackDetail = [];
+            if ($mintaUlasan) {
+                $ringkasan = $this->postgres->ringkasanUlasanTempat($tempatTerkait['slug']);
+                $detail['ulasan'] = [
+                    'jumlah' => (int) ($ringkasan['jumlah_ulasan'] ?? 0),
+                    'rata_rata_bintang' => isset($ringkasan['rata_rata_bintang'])
+                        ? (float) $ringkasan['rata_rata_bintang']
+                        : null,
+                ];
+                $fallbackDetail[] = $detail['ulasan']['jumlah'] > 0
+                    ? $tempatTerkait['nama'].' memiliki '.$detail['ulasan']['jumlah'].' ulasan publik'.($detail['ulasan']['rata_rata_bintang'] === null ? '.' : ' dengan rata-rata '.number_format($detail['ulasan']['rata_rata_bintang'], 1, ',', '.').'/5.')
+                    : 'Belum ada ulasan publik yang tercatat untuk '.$tempatTerkait['nama'].'.';
+            }
+            if ($mintaSuka) {
+                $detail['jumlah_suka_cache_aplikasi'] = (int) Cache::get('medanvisit.favorit.'.$tempatTerkait['slug'], 0);
+                $fallbackDetail[] = $tempatTerkait['nama'].' mendapat '.$detail['jumlah_suka_cache_aplikasi'].' suka yang tercatat pada aplikasi.';
+            }
+
+            return [
+                'teks' => [$this->jawabAiAtauFallback(
+                    $pertanyaan,
+                    'AllegroGraph RDF untuk tempat dan PostgreSQL/cache aplikasi untuk metrik',
+                    $detail,
+                    $riwayat,
+                    implode(' ', $fallbackDetail),
+                )],
+                'tempat' => [\App\Support\Asisten::kartu($tempatTerkait)],
+            ];
+        }
+
+        if ($mintaUlasan) {
+            $peringkat = $this->postgres->peringkatUlasan(100);
+            $ulasan = [];
+            foreach ($peringkat as $baris) {
+                $tempat = Katalog::get((string) $baris['tempat_slug']);
+                if (! $tempat || ($tempat['jenis'] ?? null) !== 'tempat' || ! $sesuaiKategori($tempat)) {
+                    continue;
+                }
+
+                $ulasan[] = [
+                    'nama' => $tempat['nama'],
+                    'jumlah_ulasan' => (int) $baris['jumlah_ulasan'],
+                    'rata_rata_bintang' => $baris['rata_rata_bintang'] === null
+                        ? null
+                        : (float) $baris['rata_rata_bintang'],
+                ];
+                $kartu[] = \App\Support\Asisten::kartu($tempat);
+            }
+            $konteks['peringkat_ulasan_postgresql'] = $ulasan;
+            $bagianFallback[] = $ulasan === []
+                ? 'Belum ada ulasan publik yang tercatat untuk dibandingkan.'
+                : 'Tempat dengan ulasan terbanyak: '.implode('; ', array_map(
+                    fn (array $baris) => $baris['nama'].' ('.$baris['jumlah_ulasan'].' ulasan'.($baris['rata_rata_bintang'] === null ? '' : ', rata-rata '.number_format($baris['rata_rata_bintang'], 1, ',', '.').'/5').')',
+                    $ulasan,
+                )).'.';
+        }
+
+        if ($mintaSuka) {
+            $peringkatSuka = [];
+            foreach ($semuaTempat as $tempat) {
+                $jumlah = (int) Cache::get('medanvisit.favorit.'.$tempat['slug'], 0);
+                if ($jumlah > 0 && $sesuaiKategori($tempat)) {
+                    $peringkatSuka[] = ['nama' => $tempat['nama'], 'jumlah_suka' => $jumlah];
+                }
+            }
+            usort($peringkatSuka, fn (array $a, array $b) => $b['jumlah_suka'] <=> $a['jumlah_suka']);
+            $peringkatSuka = array_slice($peringkatSuka, 0, 5);
+            $konteks['peringkat_suka_cache_aplikasi'] = $peringkatSuka;
+            $bagianFallback[] = $peringkatSuka === []
+                ? 'Belum ada jumlah suka yang tercatat pada cache aplikasi.'
+                : 'Tempat dengan suka terbanyak: '.implode('; ', array_map(
+                    fn (array $baris) => $baris['nama'].' ('.$baris['jumlah_suka'].' suka)',
+                    $peringkatSuka,
+                )).'.';
+        }
+
+        if ($rekomendasi) {
+            $kandidat = array_values(array_filter(Katalog::tempat(), $sesuaiKategori));
+            $konteks['kandidat_rdf'] = array_map(fn (array $tempat) => [
+                'nama' => $tempat['nama'],
+                'kategori' => $tempat['kategori'],
+                'kecamatan' => $tempat['kecamatan'],
+                'deskripsi' => $tempat['ringkas'],
+            ], array_slice($kandidat, 0, 8));
+            $konteks['dasar_rekomendasi'] = 'tempat dan kategori dari RDF MedanVisit; jumlah ulasan publik dari PostgreSQL dan jumlah suka dari cache; metrik ditampilkan terpisah tanpa skor gabungan';
+            if ($kartu === []) {
+                $kartu = array_map(fn (array $tempat) => \App\Support\Asisten::kartu($tempat), array_slice($kandidat, 0, 5));
+            }
+            if ($bagianFallback === []) {
+                $bagianFallback[] = $kandidat === []
+                    ? 'Belum ada tempat yang sesuai dengan kategori tersebut di RDF MedanVisit.'
+                    : 'Berikut pilihan dari kategori yang tercatat di RDF MedanVisit; data pembanding ulasan dan suka belum tersedia.';
+            }
+        }
+        $fallback = implode(' ', $bagianFallback);
+
+        return [
+            'teks' => [$this->jawabAiAtauFallback(
+                $pertanyaan,
+                'RDF MedanVisit untuk nama tempat, PostgreSQL untuk ringkasan ulasan, dan cache aplikasi untuk jumlah suka',
+                $konteks,
+                $riwayat,
+                $fallback,
+            )],
+            'tempat' => array_slice($kartu, 0, 5),
+        ];
     }
 
     private function jawabSql(string $pertanyaan, ?array $pengguna, array $riwayat): array
@@ -202,6 +381,50 @@ class TanyaMasNonovService
             $fallback = 'Jumlah tempat wisata'.($kategori ? ' kategori '.implode(', ', (array) $kategori) : '').' yang tercatat di AllegroGraph adalah '.$jumlah.'.';
 
             return ['teks' => [$this->jawabAiAtauFallback($pertanyaan, 'AllegroGraph SPARQL COUNT', $konteks, $riwayat, $fallback)], 'tempat' => []];
+        }
+
+        $entitas = self::entitasRdfDisebut($pertanyaan);
+        if ($entitas !== null) {
+            $jawabanKatalog = \App\Support\Asisten::jawab($pertanyaan);
+            $relasi = array_slice(Katalog::tetangga($entitas['slug'], false), 0, 8);
+            $konteks = [
+                'entitas_rdf' => [
+                    'nama' => $entitas['nama'],
+                    'jenis' => $entitas['jenis'],
+                    'kategori' => $entitas['kategori'] ?? null,
+                    'deskripsi' => $entitas['ringkas'] ?? '',
+                    'cerita' => $entitas['cerita'] ?? [],
+                    'alamat' => $entitas['alamat'] ?? null,
+                    'kecamatan' => $entitas['kecamatan'] ?? null,
+                    'jam_buka' => $entitas['jam'] ?? null,
+                    'fasilitas' => $entitas['fasilitas'] ?? [],
+                    'tiket' => $entitas['tiket'] ?? [],
+                ],
+                'relasi_rdf' => array_map(
+                    fn (array $tetangga) => Katalog::kalimat($tetangga['relasi'], $entitas['slug']),
+                    $relasi,
+                ),
+                'jawaban_katalog' => $jawabanKatalog['teks'] ?? [],
+                'entitas' => array_map(fn (array $tempat) => [
+                    'nama' => $tempat['nama'] ?? '',
+                    'kategori' => $tempat['jenis'] ?? '',
+                    'deskripsi' => $tempat['keterangan'] ?? '',
+                    'harga' => $tempat['harga'] ?? null,
+                    'jarak_meter' => $tempat['jarak'] ?? null,
+                ], $jawabanKatalog['tempat'] ?? []),
+            ];
+            $fallback = implode(' ', $jawabanKatalog['teks'] ?? []);
+
+            return [
+                'teks' => [$this->jawabAiAtauFallback(
+                    $pertanyaan,
+                    'AllegroGraph RDF melalui katalog wisata MedanVisit',
+                    $konteks,
+                    $riwayat,
+                    $fallback !== '' ? $fallback : 'Informasi entitas tersebut belum tersedia di katalog MedanVisit.',
+                )],
+                'tempat' => $jawabanKatalog['tempat'] ?? [],
+            ];
         }
 
         $kataKunci = $this->kataKunci($pertanyaan, $kategori, $kecamatan, $fasilitas);

@@ -1,0 +1,8 @@
+# Template query SparqlService::grafikTempat().
+# Ganti {{IRI_TEMPAT}} dan {{BATAS}} sebelum dijalankan.
+CONSTRUCT { ?s ?p ?o } WHERE {
+  { BIND(<{{IRI_TEMPAT}}> AS ?s) ?s ?p ?o }
+  UNION
+  { ?s ?p <{{IRI_TEMPAT}}> . BIND(<{{IRI_TEMPAT}}> AS ?o) }
+}
+LIMIT {{BATAS}}
