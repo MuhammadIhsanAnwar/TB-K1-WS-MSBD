@@ -593,9 +593,12 @@ class SupabaseApi
 
         $this->request()
             ->retry(
-                [500, 1000, 2000],
+                [1000, 2000, 5000, 10000],
                 when: static fn (Throwable $exception): bool => $exception instanceof ConnectionException
-                    || ($exception instanceof RequestException && $exception->response->serverError()),
+                    || ($exception instanceof RequestException && (
+                        $exception->response->serverError()
+                        || $exception->response->tooManyRequests()
+                    )),
             )
             ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
             ->post($this->url($table).'?'.http_build_query(['on_conflict' => $konflik]), $rows)
@@ -635,7 +638,11 @@ class SupabaseApi
                 'apikey' => $config['secret_key'],
                 'Authorization' => 'Bearer '.$config['secret_key'],
             ])
-            ->timeout(15);
+            // connectTimeout membatasi tahap membuka koneksi; timeout membatasi seluruh request.
+            // Seeder mengirim banyak batch ke Supabase sehingga keduanya perlu lebih longgar dari
+            // nilai bawaan cURL (10 detik) dan dapat disetel tanpa mengubah kode.
+            ->connectTimeout($config['connect_timeout'] ?? 30)
+            ->timeout($config['timeout'] ?? 120);
     }
 
     private function url(string $path): string

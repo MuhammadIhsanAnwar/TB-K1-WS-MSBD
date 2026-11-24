@@ -62,12 +62,16 @@ return [
             'publishable_key' => env('SUPABASE_DB1_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB1_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB1_JWKS_URL'),
+            'connect_timeout' => (int) env('SUPABASE_CONNECT_TIMEOUT', 30),
+            'timeout' => (int) env('SUPABASE_TIMEOUT', 120),
         ],
         'transaksi' => [
             'url' => env('SUPABASE_DB2_URL'),
             'publishable_key' => env('SUPABASE_DB2_PUBLISHABLE_KEY'),
             'secret_key' => env('SUPABASE_DB2_SECRET_KEY'),
             'jwks_url' => env('SUPABASE_DB2_JWKS_URL'),
+            'connect_timeout' => (int) env('SUPABASE_CONNECT_TIMEOUT', 30),
+            'timeout' => (int) env('SUPABASE_TIMEOUT', 120),
         ],
     ],
 
