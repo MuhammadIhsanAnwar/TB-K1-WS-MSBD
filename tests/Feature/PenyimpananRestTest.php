@@ -162,7 +162,7 @@ class PenyimpananRestTest extends TestCase
         Http::fake([
             'https://transaksi.test/rest/v1/rpc/sp_buat_transaksi_demo' => Http::sequence()
                 ->pushFailedConnection('Connection reset')
-                ->push('MV-DEMO1234'),
+                ->push('"MV-DEMO1234"'),
         ]);
 
         $referensi = 'SEED-DEMO-abc123-1';
