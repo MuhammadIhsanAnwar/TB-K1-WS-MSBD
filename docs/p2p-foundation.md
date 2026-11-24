@@ -26,27 +26,16 @@
 
 Jangan memakai `service_role`, Supabase secret key, atau private signing key di JavaScript. Token Realtime Laravel berlaku lima menit dan diperbarui saat halaman aktif.
 
-## Migrasi dan uji dua browser
+## Status implementasi
 
-Migration `2026_11_17_000100_buat_peer_foundation.php` menambahkan `peer_devices`, `peer_sessions`, dan `peer_blocks` pada DB1. Tidak ada perubahan pada tabel akun yang sudah ada dan tidak ada migration DB2 pada fase ini.
+Fitur peer-to-peer di dokumen ini belum aktif di website: belum ada route/API, UI Hub,
+modul browser, atau test yang menggunakannya. Karena itu migration pembuat tabel peer
+dihapus dan fitur ini tidak perlu disiapkan atau diuji saat deployment. Migration
+`2026_11_24_000100_hapus_peer_foundation.php` tetap dipertahankan untuk membersihkan
+tabel dan kebijakan Realtime dari database yang pernah menjalankan migration lama.
 
-Jalankan migration dari komputer/deployment job yang bisa mengakses PostgreSQL DB1:
-
-```powershell
-php artisan migrate --database=katalog
-npm run build
-php artisan test --filter=P2PFoundationTest
-```
-
-Jika cPanel tidak dapat menjangkau port PostgreSQL, jalankan migration dari komputer pengembang atau terapkan migration DB1 lewat Supabase SQL Editor. Jangan menjalankan `migrate:fresh` pada database yang berisi data.
-
-Setelah signing key, migration, dan Realtime disiapkan:
-
-1. Buka `/MedanVisit-Hub` pada dua browser dengan akun MedanVisit berbeda.
-2. Pastikan masing-masing browser terlihat pada daftar **Peer online**.
-3. Browser pertama memilih **Minta koneksi**; browser kedua menekan **Terima**.
-4. Tunggu status WebRTC menjadi `connected`. Jenis jalur menampilkan `Direct` atau `Relay (TURN)` jika browser menyediakan statistik ICE.
-5. Kirim pesan. Pesan hanya memakai `RTCDataChannel`; Laravel/Supabase hanya menangani autentikasi, permintaan koneksi, Presence, dan signaling.
+Bagian berikut adalah catatan rancangan jika fitur ini diimplementasikan nanti, bukan
+petunjuk deployment untuk website saat ini.
 
 ## Batasan dan deployment
 

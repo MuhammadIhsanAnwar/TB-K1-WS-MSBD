@@ -21,6 +21,7 @@ use RuntimeException;
  */
 class AdminTempatSeeder extends Seeder
 {
+    private const DEFAULT_PASSWORD = '@Admin1234';
     private const DOMAIN = 'medanvisit.neoverse.my.id';
 
     /** Kelas RDF yang termasuk mv:TempatWisata (lihat medanvisit-ontologi.ttl). */
@@ -31,7 +32,8 @@ class AdminTempatSeeder extends Seeder
 
     public function run(): void
     {
-        $sandi = (string) env('SEED_ADMIN_TEMPAT_PASSWORD', 'admin123');
+        $sandi = env('SEED_ADMIN_TEMPAT_PASSWORD', self::DEFAULT_PASSWORD);
+        $sandi = is_string($sandi) && $sandi !== '' ? $sandi : self::DEFAULT_PASSWORD;
         $tempat = $this->daftarTempat();
 
         $baru = 0;
@@ -48,7 +50,6 @@ class AdminTempatSeeder extends Seeder
 
             $user->name = 'Admin '.$nama;
             $user->peran = 'admin';
-            $user->tempat_slug = $slug;
             $user->save();
 
             $waktu = now();

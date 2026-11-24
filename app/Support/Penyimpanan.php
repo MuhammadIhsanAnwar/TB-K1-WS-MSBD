@@ -14,7 +14,7 @@ use Throwable;
  * Pesanan tiket, ulasan, log pencarian, dan rencana disimpan di DB 2 (Supabase, project transaksi)
  * dan diakses lewat Supabase REST API (PostgREST), bukan koneksi PostgreSQL langsung: hosting
  * tidak membuka port 5432. Aturan bisnisnya tetap di database — sp_buat_pesanan, sp_bayar_pesanan,
- * fn_simpan_rencana, dan trigger (total pesanan, rating tempat, poin).
+ * fn_simpan_rencana, dan trigger total pesanan. Rating disimpan di rating_tempat.
  *
  * Pengguna dirujuk lewat id_pengguna (users.id di DB 1), tempat lewat slug resource Database 3.
  *
@@ -151,25 +151,32 @@ class Penyimpanan
 
     // ---------- ulasan ----------
 
-    /** Ulasan (terbaru dulu), bisa disaring per tempat dan status. Rating dihitung trigger ke ringkasan_ulasan. */
+    /** Ulasan (terbaru dulu), bisa disaring per tempat dan status. */
     public static function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null, bool $aman = false): array
     {
-        $baca = fn () => array_map(fn ($u) => [
-            'id' => (string) $u['id_ulasan'],
-            'id_pengguna' => (int) $u['id_pengguna'],
-            'tempat' => $u['tempat_slug'],
-            'nama' => $u['nama_pengguna'],
-            'email' => $u['email_pengguna'],
-            'bintang' => (int) $u['bintang'],
-            'teks' => $u['teks'],
-            'status' => $u['status'],
-            'waktu' => self::waktu($u['created_at']),
-        ], self::api()->ulasan($tempat, $status, $idPengguna));
+        $baca = fn () => array_map(function ($u): array {
+            $rating = $u['rating_tempat'] ?? [];
+            if (isset($rating[0])) {
+                $rating = $rating[0];
+            }
+
+            return [
+                'id' => (string) $u['id_ulasan'],
+                'id_pengguna' => (int) $u['id_pengguna'],
+                'tempat' => $u['tempat_slug'],
+                'nama' => $u['nama_pengguna'],
+                'email' => $u['email_pengguna'],
+                'bintang' => (int) ($rating['bintang'] ?? 0),
+                'teks' => $u['teks'],
+                'status' => $u['status'],
+                'waktu' => self::waktu($u['created_at']),
+            ];
+        }, self::api()->ulasan($tempat, $status, $idPengguna));
 
         return $aman ? self::aman($baca, []) : $baca();
     }
 
-    /** Rating per tempat dari tabel ringkasan_ulasan (diisi trigger ulasan_ringkasan). */
+    /** Ringkasan ulasan dihitung dari ulasan dan rating yang terkait. */
     public static function ringkasanUlasan(): array
     {
         return self::aman(fn () => collect(self::api()->ringkasanUlasan())
@@ -220,49 +227,48 @@ class Penyimpanan
 
     /**
      * Satu akun satu ulasan per tempat: kalau sudah pernah mengulas, ulasan lamanya diperbarui
-     * (tanggal tulis awal dipertahankan). Trigger ulasan_ringkasan menghitung ulang rating.
+     * (tanggal tulis awal dipertahankan). Rating disimpan satu kali di rating_tempat.
      */
     public static function tulisUlasan(array $data): array
     {
         $lama = collect(self::api()->ulasan($data['tempat'], null, (int) $data['id_pengguna']))
             ->first(fn ($u) => (int) ($u['id_pengguna'] ?? 0) === (int) $data['id_pengguna'] && ($u['tempat_slug'] ?? null) === $data['tempat']);
         if ($lama) {
-            $row = self::api()->ubahUlasan((int) $lama['id_ulasan'], [
-                'nama_pengguna' => Str::limit($data['nama'] ?? 'Wisatawan', 77),
-                'bintang' => $data['bintang'],
-                'teks' => $data['teks'],
-                'status' => 'tayang',
-                'updated_at' => now()->toIso8601String(),
-            ]);
+            $waktu = now()->toIso8601String();
             self::api()->upsertRatingTempat([[
                 'id_pengguna' => (int) $data['id_pengguna'],
                 'tempat_slug' => $data['tempat'],
                 'bintang' => (int) $data['bintang'],
-                'updated_at' => now()->toIso8601String(),
+                'updated_at' => $waktu,
             ]]);
+            $row = self::api()->ubahUlasan((int) $lama['id_ulasan'], [
+                'nama_pengguna' => Str::limit($data['nama'] ?? 'Wisatawan', 77),
+                'teks' => $data['teks'],
+                'status' => 'tayang',
+                'updated_at' => $waktu,
+            ]);
 
             return ['id' => (string) $row['id_ulasan'], 'diperbarui' => true] + $data;
         }
 
         $waktu = now()->toIso8601String();
+        self::api()->upsertRatingTempat([[
+            'id_pengguna' => (int) $data['id_pengguna'],
+            'tempat_slug' => $data['tempat'],
+            'bintang' => (int) $data['bintang'],
+            'created_at' => $waktu,
+            'updated_at' => $waktu,
+        ]]);
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
             'nama_pengguna' => Str::limit($data['nama'] ?? 'Wisatawan', 77),
             'email_pengguna' => $data['email'] ?? null,
-            'bintang' => $data['bintang'],
             'teks' => $data['teks'],
             'status' => 'tayang',
             'created_at' => $waktu,
             'updated_at' => $waktu,
         ]);
-        self::api()->upsertRatingTempat([[
-            'id_pengguna' => (int) $data['id_pengguna'],
-            'tempat_slug' => $data['tempat'],
-            'bintang' => (int) $data['bintang'],
-            'updated_at' => $waktu,
-        ]]);
-
         return ['id' => (string) $row['id_ulasan']] + $data;
     }
 
@@ -309,8 +315,7 @@ class Penyimpanan
             'p_id_pengguna' => $data['id_pengguna'],
             'p_judul' => $data['judul'],
             'p_durasi_jam' => (int) $data['durasi'],
-            'p_moda_jalan' => in_array('jalan', $data['moda'], true),
-            'p_moda_becak' => in_array('becak', $data['moda'], true),
+            'p_moda' => array_values(array_unique($data['moda'])),
             'p_tempat_mulai_slug' => $data['mulai'],
             'p_minat' => array_values(array_unique($data['minat'])),
         ]);
@@ -329,6 +334,7 @@ class Penyimpanan
             return [];
         }
         $minat = collect(self::api()->rencanaMinat(array_column($baris, 'id_rencana')))->groupBy('id_rencana');
+        $moda = collect(self::api()->rencanaModa(array_column($baris, 'id_rencana')))->groupBy('id_rencana');
 
         return array_map(fn ($r) => [
             'id' => (string) $r['id_rencana'],
@@ -337,7 +343,7 @@ class Penyimpanan
             'judul' => $r['judul'],
             'minat' => ($minat[$r['id_rencana']] ?? collect())->pluck('kode_kategori')->all(),
             'durasi' => (int) $r['durasi_jam'],
-            'moda' => array_keys(array_filter(['jalan' => (bool) $r['moda_jalan'], 'becak' => (bool) $r['moda_becak']])),
+            'moda' => ($moda[$r['id_rencana']] ?? collect())->pluck('moda')->all(),
             'mulai' => $r['tempat_mulai_slug'],
             'waktu' => self::waktu($r['created_at']),
         ], $baris);

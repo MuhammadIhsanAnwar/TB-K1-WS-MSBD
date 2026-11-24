@@ -192,7 +192,6 @@ class AdminController extends Controller
             'name' => $data['nama'],
             'email' => strtolower($data['email']),
             'peran' => 'admin',
-            'tempat_slug' => $data['tempat_slug'],
             'password' => Hash::make($data['password']),
             'email_verified_at' => $waktu,
             'created_at' => $waktu,
@@ -289,9 +288,6 @@ class AdminController extends Controller
             throw ValidationException::withMessages(['tempat_slug' => 'Tempat wisata ini sudah ditautkan ke akun tersebut.']);
         }
         $api->assignTempatAdmin($id, $data['tempat_slug']);
-        if (empty($user['tempat_slug'])) {
-            $api->updateUser($id, ['tempat_slug' => $data['tempat_slug']]);
-        }
 
         return redirect()->route('admin.akun')->with('pesan', $tempat['nama'].' ditautkan ke akun '.$user['email'].'.');
     }
@@ -305,10 +301,6 @@ class AdminController extends Controller
         abort_unless(in_array($slug, $tempatAdmin, true), 404);
         abort_if(count($tempatAdmin) <= 1, 422, 'Setiap akun admin harus tetap memiliki minimal satu tempat wisata.');
 
-        $pengganti = collect($tempatAdmin)->first(fn ($tempat) => $tempat !== $slug);
-        if (($user['tempat_slug'] ?? null) === $slug) {
-            $api->updateUser($id, ['tempat_slug' => $pengganti]);
-        }
         $api->hapusTempatAdmin($id, $slug);
 
         return redirect()->route('admin.akun')->with('pesan', 'Tempat wisata berhasil dilepas dari akun '.$user['email'].'.');
@@ -615,9 +607,6 @@ class AdminController extends Controller
         if (($pengguna['peran'] ?? null) === 'admin') {
             $api = new SupabaseApi;
             $api->assignTempatAdmin($pengguna['id'], $slug);
-            if (empty($pengguna['tempat_slug'])) {
-                $api->updateUser($pengguna['id'], ['tempat_slug' => $slug]);
-            }
         }
 
         return redirect()->route('admin.entitas.ubah', $slug)->with('pesan', 'Tempat wisata berhasil dibuat dan ditautkan ke akun pengelola.');
@@ -639,12 +628,6 @@ class AdminController extends Controller
 
         Database3CatalogWriter::delete($slug);
         if ($pemilik) {
-            $user = collect($api->users())->first(fn ($user) => (string) $user['id'] === (string) $pemilik['id_admin']);
-            if (($user['tempat_slug'] ?? null) === $slug) {
-                $api->updateUser($pemilik['id_admin'], [
-                    'tempat_slug' => collect($tempatPemilik)->first(fn ($tempat) => $tempat !== $slug),
-                ]);
-            }
             $api->hapusTempatAdmin($pemilik['id_admin'], $slug);
         }
 

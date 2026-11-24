@@ -28,7 +28,6 @@ class AdminTempatSeederTest extends TestCase
             $table->string('email')->unique();
             $table->string('password');
             $table->string('peran');
-            $table->string('tempat_slug')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
@@ -54,9 +53,8 @@ class AdminTempatSeederTest extends TestCase
         foreach ($admins as $admin) {
             $relasi = $tautan->firstWhere('id_admin', $admin->id);
             $this->assertNotNull($relasi);
-            $this->assertSame($admin->tempat_slug, $relasi->tempat_slug);
             $this->assertSame(
-                $admin->tempat_slug.'@medanvisit.neoverse.my.id',
+                $relasi->tempat_slug.'@medanvisit.neoverse.my.id',
                 $admin->email
             );
         }

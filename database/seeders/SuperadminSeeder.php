@@ -5,16 +5,15 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use RuntimeException;
 
 class SuperadminSeeder extends Seeder
 {
+    private const DEFAULT_PASSWORD = '@Adminmedanvisit1';
+
     public function run(): void
     {
-        $password = env('SEED_SUPERADMIN_PASSWORD');
-        if (! is_string($password) || $password === '') {
-            throw new RuntimeException('SEED_SUPERADMIN_PASSWORD harus diisi di .env sebelum menjalankan seeder.');
-        }
+        $password = env('SEED_SUPERADMIN_PASSWORD', self::DEFAULT_PASSWORD);
+        $password = is_string($password) && $password !== '' ? $password : self::DEFAULT_PASSWORD;
 
         $user = User::query()->firstOrNew([
             'email' => 'administrator@medanvisit.neoverse.my.id',

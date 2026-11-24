@@ -11,9 +11,13 @@ SELECT *
 FROM rencana_minat
 WHERE id_rencana = ANY($1::bigint[]);
 
+SELECT id_rencana, moda
+FROM rencana_moda
+WHERE id_rencana = ANY($1::bigint[]);
+
 -- Menyimpan rencana dan minat secara atomik melalui RPC fn_simpan_rencana().
 SELECT *
 FROM public.fn_simpan_rencana(
   $1::varchar, $2::bigint, $3::varchar, $4::smallint,
-  $5::boolean, $6::boolean, $7::varchar, $8::text[]
+  $5::text[], $6::varchar, $7::text[]
 );

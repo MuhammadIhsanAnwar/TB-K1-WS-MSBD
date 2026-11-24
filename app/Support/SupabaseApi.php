@@ -26,7 +26,7 @@ class SupabaseApi
 
     public function users(): array
     {
-        return $this->semua('users', 'id,name,email,peran,tempat_slug,tanggal_lahir,no_hp,email_verified_at,created_at,ditangguhkan_pada,alasan_tangguh');
+        return $this->semua('users', 'id,name,email,peran,tanggal_lahir,no_hp,email_verified_at,created_at,ditangguhkan_pada,alasan_tangguh');
     }
 
     public function createUser(array $user): array
@@ -353,7 +353,7 @@ class SupabaseApi
 
     public function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null): array
     {
-        $filters = ['order' => 'created_at.desc,id_ulasan.desc'];
+        $filters = ['select' => '*,rating_tempat(bintang)', 'order' => 'created_at.desc,id_ulasan.desc'];
         $tempat === null || $filters['tempat_slug'] = 'eq.'.$tempat;
         $status === null || $filters['status'] = 'eq.'.$status;
         $idPengguna === null || $filters['id_pengguna'] = 'eq.'.$idPengguna;
@@ -387,7 +387,24 @@ class SupabaseApi
     /** Upsert ulasan batch untuk seeder; konflik ditangani oleh indeks unik akun-tempat. */
     public function upsertUlasan(array $rows): void
     {
-        $this->upsertRows('ulasan', 'id_pengguna,tempat_slug', $rows);
+        $ratings = [];
+        $ulasan = [];
+        foreach ($rows as $row) {
+            if (isset($row['bintang'])) {
+                $ratings[] = [
+                    'id_pengguna' => $row['id_pengguna'],
+                    'tempat_slug' => $row['tempat_slug'],
+                    'bintang' => $row['bintang'],
+                    'created_at' => $row['created_at'] ?? now()->toIso8601String(),
+                    'updated_at' => $row['updated_at'] ?? now()->toIso8601String(),
+                ];
+                unset($row['bintang']);
+            }
+            $ulasan[] = $row;
+        }
+
+        $this->upsertRatingTempat($ratings);
+        $this->upsertRows('ulasan', 'id_pengguna,tempat_slug', $ulasan);
     }
 
     /** Upsert suka batch; memerlukan tabel suka_tempat pada DB 2. */
@@ -467,10 +484,27 @@ class SupabaseApi
         ]);
     }
 
+    public function rencanaModa(array $idRencana): array
+    {
+        if (! $idRencana) {
+            return [];
+        }
+
+        return $this->getRows('rencana_moda', [
+            'select' => 'id_rencana,moda',
+            'id_rencana' => 'in.('.implode(',', array_map('intval', $idRencana)).')',
+            'order' => 'id_rencana.asc,moda.asc',
+        ]);
+    }
+
     /** Rencana + minatnya dibuat dalam satu function database (transaksi). */
     public function simpanRencana(array $arg): array
     {
-        return (array) $this->rpc('fn_simpan_rencana', $arg);
+        $rows = $this->rpc('fn_simpan_rencana', $arg);
+
+        return is_array($rows) && isset($rows[0]) && is_array($rows[0])
+            ? $rows[0]
+            : (array) $rows;
     }
 
     // ---------- utilitas ----------

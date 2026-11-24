@@ -30,8 +30,6 @@ return new class extends Migration
             -- kolom: angka menjadi slug (index dan unique ikut pindah ke kolom baru)
             ALTER TABLE pesanan          RENAME COLUMN id_tempat TO tempat_slug;
             ALTER TABLE pesanan          ALTER COLUMN tempat_slug TYPE varchar(80) USING tempat_slug::text;
-            ALTER TABLE checkin          RENAME COLUMN id_tempat TO tempat_slug;
-            ALTER TABLE checkin          ALTER COLUMN tempat_slug TYPE varchar(80) USING tempat_slug::text;
             ALTER TABLE ulasan           RENAME COLUMN id_tempat TO tempat_slug;
             ALTER TABLE ulasan           ALTER COLUMN tempat_slug TYPE varchar(80) USING tempat_slug::text;
             ALTER TABLE ringkasan_ulasan RENAME COLUMN id_tempat TO tempat_slug;
@@ -39,7 +37,6 @@ return new class extends Migration
             ALTER TABLE rencana          RENAME COLUMN id_tempat_mulai TO tempat_mulai_slug;
             ALTER TABLE rencana          ALTER COLUMN tempat_mulai_slug TYPE varchar(80) USING tempat_mulai_slug::text;
 
-            ALTER TABLE checkin RENAME CONSTRAINT checkin_id_pengguna_id_tempat_tanggal_unique TO checkin_id_pengguna_tempat_slug_tanggal_unique;
             ALTER TABLE pesanan ADD CONSTRAINT ck_pesanan_tempat CHECK (tempat_slug ~ '^[a-z0-9-]+$');
 
             -- nama dan email pengulas disimpan saat menulis ulasan (DB 2 tidak bisa membaca users di DB 1)
@@ -57,13 +54,6 @@ return new class extends Migration
                   ON i.id_pesanan = p.id_pesanan
                 WHERE p.status = 'lunas'
                 GROUP BY p.tempat_slug, date_trunc('month', p.tanggal_kunjungan);
-
-            CREATE OR REPLACE FUNCTION trg_checkin_poin() RETURNS trigger LANGUAGE plpgsql AS $$
-            BEGIN
-                INSERT INTO riwayat_poin (id_pengguna, poin, sumber, id_sumber, keterangan)
-                VALUES (NEW.id_pengguna, 10, 'checkin', NEW.id_checkin, 'Check-in di ' || NEW.tempat_slug);
-                RETURN NULL;
-            END $$;
 
             CREATE OR REPLACE FUNCTION fn_hitung_ringkasan_ulasan(p_tempat_slug varchar)
             RETURNS void LANGUAGE sql AS $$
@@ -127,7 +117,7 @@ return new class extends Migration
     public function down(): void
     {
         $db = DB::connection($this->connection);
-        foreach (['pesanan', 'checkin', 'ulasan', 'ringkasan_ulasan', 'rencana'] as $tabel) {
+        foreach (['pesanan', 'ulasan', 'ringkasan_ulasan', 'rencana'] as $tabel) {
             if ($db->table($tabel)->exists()) {
                 throw new RuntimeException("Tabel $tabel sudah berisi data: slug tempat tidak bisa diubah kembali menjadi angka.");
             }
@@ -142,11 +132,8 @@ return new class extends Migration
             ALTER TABLE pesanan DROP CONSTRAINT IF EXISTS ck_pesanan_tempat;
             ALTER TABLE ulasan DROP COLUMN IF EXISTS nama_pengguna, DROP COLUMN IF EXISTS email_pengguna;
 
-            ALTER TABLE checkin RENAME CONSTRAINT checkin_id_pengguna_tempat_slug_tanggal_unique TO checkin_id_pengguna_id_tempat_tanggal_unique;
             ALTER TABLE pesanan          ALTER COLUMN tempat_slug TYPE integer USING NULL;
             ALTER TABLE pesanan          RENAME COLUMN tempat_slug TO id_tempat;
-            ALTER TABLE checkin          ALTER COLUMN tempat_slug TYPE integer USING NULL;
-            ALTER TABLE checkin          RENAME COLUMN tempat_slug TO id_tempat;
             ALTER TABLE ulasan           ALTER COLUMN tempat_slug TYPE integer USING NULL;
             ALTER TABLE ulasan           RENAME COLUMN tempat_slug TO id_tempat;
             ALTER TABLE ringkasan_ulasan ALTER COLUMN tempat_slug TYPE integer USING NULL;
@@ -163,13 +150,6 @@ return new class extends Migration
                   ON i.id_pesanan = p.id_pesanan
                 WHERE p.status = 'lunas'
                 GROUP BY p.id_tempat, date_trunc('month', p.tanggal_kunjungan);
-
-            CREATE OR REPLACE FUNCTION trg_checkin_poin() RETURNS trigger LANGUAGE plpgsql AS $$
-            BEGIN
-                INSERT INTO riwayat_poin (id_pengguna, poin, sumber, id_sumber, keterangan)
-                VALUES (NEW.id_pengguna, 10, 'checkin', NEW.id_checkin, 'Check-in di tempat #' || NEW.id_tempat);
-                RETURN NULL;
-            END $$;
 
             CREATE OR REPLACE FUNCTION fn_hitung_ringkasan_ulasan(p_id_tempat integer)
             RETURNS void LANGUAGE sql AS $$

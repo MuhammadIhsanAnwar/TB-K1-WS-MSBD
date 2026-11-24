@@ -8,11 +8,15 @@ FROM users
 WHERE email = lower($1)
 LIMIT 1;
 
-SELECT id, name, email, peran, tempat_slug, tanggal_lahir, no_hp,
+SELECT id, name, email, peran, tanggal_lahir, no_hp,
        email_verified_at, created_at, ditangguhkan_pada, alasan_tangguh
 FROM users
 ORDER BY id DESC
 LIMIT $1 OFFSET $2;
+
+SELECT id_admin, tempat_slug
+FROM admin_tempat
+ORDER BY id_admin ASC, tempat_slug ASC;
 
 -- Contoh signup AkunController; SupabaseApi::createUser() meneruskan atribut yang diterima.
 INSERT INTO users

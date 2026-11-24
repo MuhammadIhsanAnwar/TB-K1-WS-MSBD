@@ -49,7 +49,15 @@ class AdminTempatRestTest extends TestCase
 
     public function test_admin_without_a_managed_place_cannot_open_admin_pages(): void
     {
-        Http::fake(['https://katalog.test/rest/v1/admin_tempat*' => Http::response([])]);
+        Http::fake([
+            'https://katalog.test/rest/v1/admin_tempat*' => Http::response([]),
+            'https://katalog.test/rest/v1/users*' => Http::response([[
+                'id' => 7,
+                'name' => 'Admin',
+                'email' => 'admin@example.test',
+                'peran' => 'admin',
+            ]]),
+        ]);
 
         $this->withoutExceptionHandling();
         $this->expectException(HttpException::class);
@@ -114,7 +122,7 @@ class AdminTempatRestTest extends TestCase
                     'tempat_slug' => 'istana-maimun',
                     'nama_pengguna' => 'Wisatawan',
                     'email_pengguna' => 'wisatawan@example.test',
-                    'bintang' => 5,
+                    'rating_tempat' => ['bintang' => 5],
                     'teks' => 'Bagus',
                     'status' => 'tayang',
                     'created_at' => '2026-11-15T10:00:00Z',
@@ -149,7 +157,7 @@ class AdminTempatRestTest extends TestCase
                     'tempat_slug' => 'masjid-raya',
                     'nama_pengguna' => 'Wisatawan',
                     'email_pengguna' => 'wisatawan@example.test',
-                    'bintang' => 5,
+                    'rating_tempat' => ['bintang' => 5],
                     'teks' => 'Bagus',
                     'status' => 'tayang',
                     'created_at' => '2026-11-15T10:00:00Z',

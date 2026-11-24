@@ -43,8 +43,12 @@ class PenyimpananRestTest extends TestCase
         $api->upsertUlasan([$barisBaru]);
 
         $requests = Http::recorded()->map(static fn (array $recorded) => $recorded[0])->values();
-        $this->assertCount(2, $requests);
-        foreach ($requests as $request) {
+        $this->assertCount(4, $requests);
+        $ratingRequests = $requests->filter(fn (Request $request) => str_contains($request->url(), '/rating_tempat?'))->values();
+        $ulasanRequests = $requests->filter(fn (Request $request) => str_contains($request->url(), '/ulasan?'))->values();
+        $this->assertCount(2, $ratingRequests);
+        $this->assertCount(2, $ulasanRequests);
+        foreach ($ulasanRequests as $request) {
             $this->assertSame('POST', $request->method());
             $this->assertStringContainsString(
                 '/ulasan?on_conflict=id_pengguna%2Ctempat_slug',
@@ -53,9 +57,10 @@ class PenyimpananRestTest extends TestCase
             $this->assertStringContainsString('resolution=merge-duplicates', $request->header('Prefer')[0]);
         }
 
-        $this->assertSame('Teks ulasan lama.', $requests[0][0]['teks']);
-        $this->assertSame('Teks ulasan terbaru.', $requests[1][0]['teks']);
-        $this->assertSame(5, $requests[1][0]['bintang']);
+        $this->assertSame('Teks ulasan lama.', $ulasanRequests[0][0]['teks']);
+        $this->assertSame('Teks ulasan terbaru.', $ulasanRequests[1][0]['teks']);
+        $this->assertArrayNotHasKey('bintang', $ulasanRequests[1][0]);
+        $this->assertSame(5, $ratingRequests[1][0]['bintang']);
     }
 
     public function test_orders_are_read_through_postgrest_with_embedded_payment_and_ticket(): void
@@ -260,7 +265,8 @@ class PenyimpananRestTest extends TestCase
         $this->assertSame('42', $ulasan['id']);
         Http::assertSent(fn (Request $request) => $request->method() === 'POST'
             && str_ends_with($request->url(), '/ulasan')
-            && $request['status'] === 'tayang');
+            && $request['status'] === 'tayang'
+            && ! array_key_exists('bintang', $request->data()));
         Http::assertSent(fn (Request $request) => $request->method() === 'POST'
             && str_contains($request->url(), '/rating_tempat?')
             && $request[0]['id_pengguna'] === 7
@@ -269,5 +275,70 @@ class PenyimpananRestTest extends TestCase
         Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
             && str_contains($request->url(), '/ulasan?')
             && str_contains($request->url(), 'id_ulasan=eq.42'));
+    }
+
+    public function test_reviews_read_their_rating_from_the_normalized_rating_relation(): void
+    {
+        Http::fake([
+            'https://transaksi.test/rest/v1/ulasan?*' => Http::response([[
+                'id_ulasan' => 12,
+                'id_pengguna' => 7,
+                'tempat_slug' => 'istana-maimun',
+                'nama_pengguna' => 'Rina',
+                'email_pengguna' => 'rina@example.test',
+                'rating_tempat' => ['bintang' => 4],
+                'teks' => 'Tempatnya menarik dan informasinya berguna.',
+                'status' => 'tayang',
+                'created_at' => '2026-11-15T10:00:00Z',
+            ]]),
+        ]);
+
+        $ulasan = Penyimpanan::ulasan('istana-maimun', 'tayang');
+
+        $this->assertSame(4, $ulasan[0]['bintang']);
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/ulasan?')
+            && str_contains($request->url(), 'rating_tempat'));
+    }
+
+    public function test_saved_plans_send_and_read_normalized_travel_modes(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_ends_with($request->url(), '/rpc/fn_simpan_rencana')) {
+                return Http::response([[
+                    'id_rencana' => 9,
+                    'kode' => 'mdn-abcd',
+                    'id_pengguna' => 7,
+                    'judul' => 'Rute sejarah',
+                    'durasi_jam' => 4,
+                    'tempat_mulai_slug' => 'istana-maimun',
+                    'created_at' => '2026-11-15T10:00:00Z',
+                ]]);
+            }
+            if (str_contains($request->url(), '/rencana_minat?')) {
+                return Http::response([['id_rencana' => 9, 'kode_kategori' => 'sejarah']]);
+            }
+            if (str_contains($request->url(), '/rencana_moda?')) {
+                return Http::response([
+                    ['id_rencana' => 9, 'moda' => 'becak'],
+                    ['id_rencana' => 9, 'moda' => 'jalan'],
+                ]);
+            }
+
+            return Http::response([]);
+        });
+
+        $rencana = Penyimpanan::simpanRencana([
+            'id_pengguna' => 7,
+            'judul' => 'Rute sejarah',
+            'durasi' => 4,
+            'moda' => ['jalan', 'becak'],
+            'mulai' => 'istana-maimun',
+            'minat' => ['sejarah'],
+        ]);
+
+        $this->assertSame(['becak', 'jalan'], $rencana['moda']);
+        Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/rpc/fn_simpan_rencana')
+            && $request['p_moda'] === ['jalan', 'becak']);
     }
 }

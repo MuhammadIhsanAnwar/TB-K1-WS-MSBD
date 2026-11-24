@@ -31,7 +31,6 @@ class Peran
                 $pengguna['nama'] = $akun['name'];
                 $pengguna['peran'] = $akun['peran'];
                 $pengguna['foto_profil'] = $akun['foto_profil'] ?? null;
-                $pengguna['tempat_slug'] = $akun['tempat_slug'] ?? null;
                 $request->session()->put('pengguna', $pengguna);
             }
         }

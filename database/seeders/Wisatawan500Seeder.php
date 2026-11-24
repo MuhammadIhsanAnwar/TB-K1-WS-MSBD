@@ -14,7 +14,8 @@ use RuntimeException;
 /**
  * Membuat 10.000 akun wisatawan contoh di database katalog.
  *
- * Atur SEED_WISATAWAN_PASSWORD di environment, lalu jalankan:
+ * Password default akun adalah @User1234. Atur SEED_WISATAWAN_PASSWORD untuk
+ * menggunakan password lain, lalu jalankan:
  * php artisan db:seed --class=Wisatawan500Seeder
  *
  * Seeder ini sengaja tidak dipanggil dari DatabaseSeeder agar akun contoh tidak
@@ -23,6 +24,7 @@ use RuntimeException;
  */
 class Wisatawan500Seeder extends Seeder
 {
+    private const DEFAULT_PASSWORD = '@User1234';
     private const JUMLAH_AKUN = 10000;
     private const DOMAIN = 'medanvisit.neoverse.my.id';
     private const NOMOR_TELEPON = '081234567890';
@@ -45,10 +47,8 @@ class Wisatawan500Seeder extends Seeder
 
     public function run(): void
     {
-        $password = env('SEED_WISATAWAN_PASSWORD');
-        if (! is_string($password) || $password === '') {
-            throw new RuntimeException('SEED_WISATAWAN_PASSWORD harus diatur sebelum menjalankan seeder ini.');
-        }
+        $password = env('SEED_WISATAWAN_PASSWORD', self::DEFAULT_PASSWORD);
+        $password = is_string($password) && $password !== '' ? $password : self::DEFAULT_PASSWORD;
 
         $akun = $this->buatAkun($password);
         $koneksi = DB::connection('katalog');

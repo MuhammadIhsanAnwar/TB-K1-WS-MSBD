@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /*
- * DB 2 (koneksi "transaksi"): pesanan tiket, check-in, poin, ulasan, voucher, rencana, log pencarian.
+ * DB 2 (koneksi "transaksi"): pesanan tiket, ulasan/rating, suka, rencana, dan log pencarian.
  * Menggantikan penyimpanan sementara di App\Support\Penyimpanan (cache berkas).
  *
- * Kolom id_pengguna, id_tempat, dan kode_kategori merujuk ke DB 1 (katalog).
- * Foreign key tidak bisa melintasi database, jadi kecocokannya dijaga aplikasi.
+ * id_pengguna merujuk ke DB 1; tempat dan kategori merujuk ke RDF di Database 3.
+ * Relasi lintas database dijaga aplikasi karena tidak dapat memakai foreign key.
  */
 return new class extends Migration
 {
@@ -18,25 +18,6 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::connection($this->connection)->create('usaha_mitra', function (Blueprint $t) {
-            $t->increments('id_usaha');
-            $t->foreignId('id_pengguna')->unique();
-            $t->string('nama_usaha', 80);
-            $t->string('jenis', 20);
-            $t->string('alamat', 160);
-            $t->string('jam', 80);
-            $t->string('deskripsi', 400)->nullable();
-            $t->timestampsTz();
-        });
-
-        Schema::connection($this->connection)->create('menu_usaha', function (Blueprint $t) {
-            $t->increments('id_menu');
-            $t->integer('id_usaha');
-            $t->string('nama_menu', 60);
-            $t->integer('harga');
-            $t->foreign('id_usaha')->references('id_usaha')->on('usaha_mitra')->cascadeOnDelete();
-        });
-
         Schema::connection($this->connection)->create('pesanan', function (Blueprint $t) {
             $t->bigIncrements('id_pesanan');
             $t->string('kode', 20)->unique();
@@ -82,26 +63,6 @@ return new class extends Migration
             $t->foreign('id_pesanan')->references('id_pesanan')->on('pesanan')->cascadeOnDelete();
         });
 
-        Schema::connection($this->connection)->create('checkin', function (Blueprint $t) {
-            $t->bigIncrements('id_checkin');
-            $t->foreignId('id_pengguna');
-            $t->integer('id_tempat');
-            $t->smallInteger('jarak_m');
-            $t->date('tanggal')->default(DB::raw("((now() AT TIME ZONE 'Asia/Jakarta')::date)"));
-            $t->timestampTz('waktu')->useCurrent();
-            $t->unique(['id_pengguna', 'id_tempat', 'tanggal']);
-        });
-
-        Schema::connection($this->connection)->create('riwayat_poin', function (Blueprint $t) {
-            $t->bigIncrements('id_riwayat');
-            $t->foreignId('id_pengguna');
-            $t->integer('poin');
-            $t->string('sumber', 12);
-            $t->bigInteger('id_sumber')->nullable();
-            $t->string('keterangan', 120);
-            $t->timestampTz('waktu')->useCurrent();
-        });
-
         Schema::connection($this->connection)->create('ulasan', function (Blueprint $t) {
             $t->bigIncrements('id_ulasan');
             $t->foreignId('id_pengguna');
@@ -118,30 +79,6 @@ return new class extends Migration
             $t->integer('jumlah_ulasan')->default(0);
             $t->decimal('rata_rata_bintang', 3, 2)->nullable();
             $t->timestampTz('diperbarui_pada')->useCurrent();
-        });
-
-        Schema::connection($this->connection)->create('voucher', function (Blueprint $t) {
-            $t->increments('id_voucher');
-            $t->integer('id_usaha');
-            $t->string('nama', 60);
-            $t->smallInteger('poin');
-            $t->smallInteger('stok');
-            $t->smallInteger('stok_awal');
-            $t->date('berlaku_sampai');
-            $t->timestampsTz();
-            $t->foreign('id_usaha')->references('id_usaha')->on('usaha_mitra')->cascadeOnDelete();
-        });
-
-        Schema::connection($this->connection)->create('penukaran', function (Blueprint $t) {
-            $t->bigIncrements('id_penukaran');
-            $t->foreignId('id_pengguna');
-            $t->integer('id_voucher');
-            $t->smallInteger('poin');
-            $t->string('kode', 12)->unique();
-            $t->boolean('dipakai')->default(false);
-            $t->timestampTz('waktu')->useCurrent();
-            $t->timestampTz('dipakai_pada')->nullable();
-            $t->foreign('id_voucher')->references('id_voucher')->on('voucher')->restrictOnDelete();
         });
 
         Schema::connection($this->connection)->create('rencana', function (Blueprint $t) {
@@ -171,8 +108,6 @@ return new class extends Migration
         });
 
         DB::connection($this->connection)->unprepared(<<<'SQL'
-            ALTER TABLE usaha_mitra  ADD CONSTRAINT ck_usaha_jenis     CHECK (jenis IN ('kuliner', 'oleh-oleh', 'kerajinan', 'penginapan'));
-            ALTER TABLE menu_usaha   ADD CONSTRAINT ck_menu_harga      CHECK (harga >= 0);
             ALTER TABLE pesanan
                 ADD CONSTRAINT ck_pesanan_metode CHECK (metode IN ('qris', 'va', 'ewallet', 'kartu')),
                 ADD CONSTRAINT ck_pesanan_status CHECK (status IN ('menunggu', 'lunas', 'dibatalkan', 'kedaluwarsa')),
@@ -182,15 +117,10 @@ return new class extends Migration
                 ADD CONSTRAINT ck_item_harga  CHECK (harga >= 0),
                 ADD CONSTRAINT ck_item_jumlah CHECK (jumlah BETWEEN 1 AND 20);
             ALTER TABLE pembayaran   ADD CONSTRAINT ck_bayar_jumlah    CHECK (jumlah >= 0);
-            ALTER TABLE checkin      ADD CONSTRAINT ck_checkin_jarak   CHECK (jarak_m >= 0);
-            ALTER TABLE riwayat_poin ADD CONSTRAINT ck_poin_sumber     CHECK (sumber IN ('checkin', 'bonus', 'penukaran'));
             ALTER TABLE ulasan
                 ADD CONSTRAINT ck_ulasan_bintang CHECK (bintang BETWEEN 1 AND 5),
                 ADD CONSTRAINT ck_ulasan_teks    CHECK (char_length(teks) >= 10),
                 ADD CONSTRAINT ck_ulasan_status  CHECK (status IN ('menunggu', 'tayang', 'ditolak'));
-            ALTER TABLE voucher
-                ADD CONSTRAINT ck_voucher_poin CHECK (poin BETWEEN 10 AND 500),
-                ADD CONSTRAINT ck_voucher_stok CHECK (stok >= 0 AND stok <= stok_awal);
             ALTER TABLE rencana      ADD CONSTRAINT ck_rencana_durasi  CHECK (durasi_jam IN (2, 4, 6, 8)),
                                      ADD CONSTRAINT ck_rencana_moda    CHECK (moda_jalan OR moda_becak);
             SQL);
@@ -198,7 +128,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        foreach (['log_pencarian', 'rencana_minat', 'rencana', 'penukaran', 'voucher', 'ringkasan_ulasan', 'ulasan', 'riwayat_poin', 'checkin', 'e_tiket', 'pembayaran', 'pesanan_item', 'pesanan', 'menu_usaha', 'usaha_mitra'] as $tabel) {
+        foreach (['log_pencarian', 'rencana_minat', 'rencana', 'ringkasan_ulasan', 'ulasan', 'e_tiket', 'pembayaran', 'pesanan_item', 'pesanan'] as $tabel) {
             Schema::connection($this->connection)->dropIfExists($tabel);
         }
     }

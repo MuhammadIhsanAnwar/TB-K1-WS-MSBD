@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 /*
- * DB 2 (koneksi "transaksi"): index, view, function, trigger, dan procedure.
+ * DB 2 (koneksi "transaksi"): index, view, function, trigger, dan procedure aktif.
  * Aturan bisnis yang dulu ditulis di App\Support\Penyimpanan dipindah ke sini supaya tetap berlaku
  * walaupun data diubah dari luar aplikasi (misalnya lewat DBeaver).
  */
@@ -19,10 +19,7 @@ return new class extends Migration
             CREATE INDEX ix_pesanan_pengguna   ON pesanan (id_pengguna);
             CREATE INDEX ix_pesanan_menunggu   ON pesanan (batas_bayar) WHERE status = 'menunggu';
             CREATE INDEX ix_pesanan_tempat     ON pesanan (id_tempat, tanggal_kunjungan);
-            CREATE INDEX ix_checkin_tempat     ON checkin (id_tempat);
-            CREATE INDEX ix_riwayat_pengguna   ON riwayat_poin (id_pengguna);
             CREATE INDEX ix_ulasan_tempat      ON ulasan (id_tempat, status);
-            CREATE INDEX ix_penukaran_pengguna ON penukaran (id_pengguna);
             CREATE INDEX ix_log_tanpa_hasil    ON log_pencarian (kata_kunci) WHERE jumlah_hasil = 0;
 
             -- ---------- function ----------
@@ -32,21 +29,7 @@ return new class extends Migration
                 SELECT p_awalan || upper(substr(md5(random()::text || clock_timestamp()::text), 1, p_panjang))
             $$;
 
-            -- saldo poin satu pengguna
-            CREATE OR REPLACE FUNCTION fn_saldo_poin(p_id_pengguna bigint)
-            RETURNS integer LANGUAGE sql STABLE AS $$
-                SELECT COALESCE(sum(poin), 0)::integer FROM riwayat_poin WHERE id_pengguna = p_id_pengguna
-            $$;
-
             -- ---------- view ----------
-            CREATE OR REPLACE VIEW v_saldo_poin AS
-                SELECT r.id_pengguna,
-                       COALESCE(sum(r.poin) FILTER (WHERE r.poin > 0), 0) AS poin_didapat,
-                       COALESCE(-sum(r.poin) FILTER (WHERE r.poin < 0), 0) AS poin_dipakai,
-                       COALESCE(sum(r.poin), 0) AS saldo
-                FROM riwayat_poin r
-                GROUP BY r.id_pengguna;
-
             CREATE OR REPLACE VIEW v_penjualan_tiket AS
                 SELECT p.id_tempat, date_trunc('month', p.tanggal_kunjungan)::date AS bulan,
                        count(*) AS jumlah_pesanan,
@@ -82,16 +65,6 @@ return new class extends Migration
                 AFTER INSERT OR UPDATE OR DELETE ON pesanan_item
                 FOR EACH ROW EXECUTE FUNCTION trg_pesanan_hitung_total();
 
-            -- setiap check-in memberi 10 poin
-            CREATE OR REPLACE FUNCTION trg_checkin_poin() RETURNS trigger LANGUAGE plpgsql AS $$
-            BEGIN
-                INSERT INTO riwayat_poin (id_pengguna, poin, sumber, id_sumber, keterangan)
-                VALUES (NEW.id_pengguna, 10, 'checkin', NEW.id_checkin, 'Check-in di tempat #' || NEW.id_tempat);
-                RETURN NULL;
-            END $$;
-
-            CREATE TRIGGER checkin_poin AFTER INSERT ON checkin FOR EACH ROW EXECUTE FUNCTION trg_checkin_poin();
-
             -- rating tempat dihitung ulang setiap ada ulasan baru, diubah statusnya, atau dihapus
             CREATE OR REPLACE FUNCTION fn_hitung_ringkasan_ulasan(p_id_tempat integer)
             RETURNS void LANGUAGE sql AS $$
@@ -118,41 +91,6 @@ return new class extends Migration
             CREATE TRIGGER ulasan_ringkasan
                 AFTER INSERT OR UPDATE OF status, bintang, id_tempat OR DELETE ON ulasan
                 FOR EACH ROW EXECUTE FUNCTION trg_ulasan_ringkasan();
-
-            -- penukaran voucher: cek masa berlaku, stok, dan saldo poin; kurangi stok; catat poin keluar
-            CREATE OR REPLACE FUNCTION trg_penukaran_cek() RETURNS trigger LANGUAGE plpgsql AS $$
-            DECLARE
-                v voucher%ROWTYPE;
-            BEGIN
-                SELECT * INTO v FROM voucher WHERE id_voucher = NEW.id_voucher FOR UPDATE;
-                IF v.id_voucher IS NULL THEN
-                    RAISE EXCEPTION 'Voucher #% tidak ditemukan', NEW.id_voucher;
-                END IF;
-                IF v.berlaku_sampai < current_date THEN
-                    RAISE EXCEPTION 'Voucher "%" sudah tidak berlaku', v.nama;
-                END IF;
-                IF v.stok <= 0 THEN
-                    RAISE EXCEPTION 'Stok voucher "%" habis', v.nama;
-                END IF;
-                IF fn_saldo_poin(NEW.id_pengguna) < v.poin THEN
-                    RAISE EXCEPTION 'Poin tidak cukup: perlu %, saldo %', v.poin, fn_saldo_poin(NEW.id_pengguna);
-                END IF;
-                UPDATE voucher SET stok = stok - 1, updated_at = now() WHERE id_voucher = v.id_voucher;
-                NEW.poin := v.poin;
-                NEW.kode := COALESCE(NEW.kode, fn_kode_acak('V-', 6));
-                RETURN NEW;
-            END $$;
-
-            CREATE TRIGGER penukaran_cek BEFORE INSERT ON penukaran FOR EACH ROW EXECUTE FUNCTION trg_penukaran_cek();
-
-            CREATE OR REPLACE FUNCTION trg_penukaran_poin() RETURNS trigger LANGUAGE plpgsql AS $$
-            BEGIN
-                INSERT INTO riwayat_poin (id_pengguna, poin, sumber, id_sumber, keterangan)
-                VALUES (NEW.id_pengguna, -NEW.poin, 'penukaran', NEW.id_penukaran, 'Tukar voucher ' || NEW.kode);
-                RETURN NULL;
-            END $$;
-
-            CREATE TRIGGER penukaran_poin AFTER INSERT ON penukaran FOR EACH ROW EXECUTE FUNCTION trg_penukaran_poin();
 
             -- ---------- procedure ----------
             -- buat pesanan beserta item tiketnya dalam satu transaksi; batas bayar 15 menit
@@ -229,27 +167,16 @@ return new class extends Migration
             DROP PROCEDURE IF EXISTS sp_kedaluwarsakan_pesanan();
             DROP PROCEDURE IF EXISTS sp_bayar_pesanan(varchar, varchar, varchar);
             DROP PROCEDURE IF EXISTS sp_buat_pesanan(bigint, varchar, varchar, varchar, integer, date, varchar, jsonb, varchar);
-            DROP TRIGGER IF EXISTS penukaran_poin ON penukaran;
-            DROP TRIGGER IF EXISTS penukaran_cek ON penukaran;
             DROP TRIGGER IF EXISTS ulasan_ringkasan ON ulasan;
-            DROP TRIGGER IF EXISTS checkin_poin ON checkin;
             DROP TRIGGER IF EXISTS pesanan_item_total ON pesanan_item;
-            DROP FUNCTION IF EXISTS trg_penukaran_poin();
-            DROP FUNCTION IF EXISTS trg_penukaran_cek();
             DROP FUNCTION IF EXISTS trg_ulasan_ringkasan();
             DROP FUNCTION IF EXISTS fn_hitung_ringkasan_ulasan(integer);
-            DROP FUNCTION IF EXISTS trg_checkin_poin();
             DROP FUNCTION IF EXISTS trg_pesanan_hitung_total();
             DROP VIEW IF EXISTS v_celah_konten;
             DROP VIEW IF EXISTS v_penjualan_tiket;
-            DROP VIEW IF EXISTS v_saldo_poin;
-            DROP FUNCTION IF EXISTS fn_saldo_poin(bigint);
             DROP FUNCTION IF EXISTS fn_kode_acak(text, integer);
             DROP INDEX IF EXISTS ix_log_tanpa_hasil;
-            DROP INDEX IF EXISTS ix_penukaran_pengguna;
             DROP INDEX IF EXISTS ix_ulasan_tempat;
-            DROP INDEX IF EXISTS ix_riwayat_pengguna;
-            DROP INDEX IF EXISTS ix_checkin_tempat;
             DROP INDEX IF EXISTS ix_pesanan_tempat;
             DROP INDEX IF EXISTS ix_pesanan_menunggu;
             DROP INDEX IF EXISTS ix_pesanan_pengguna;
