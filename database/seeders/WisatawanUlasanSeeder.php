@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 /**
- * Seeds demo reviews, likes, and paid ticket orders.
+ * Seeds demo reviews and likes.
  *
  * Run after applying database migrations:
  * php artisan db:seed --class=WisatawanUlasanSeeder

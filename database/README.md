@@ -138,15 +138,17 @@ Akun pengguna disimpan di DB 1 dengan role `wisatawan`, `admin`, atau `superadmi
 php artisan db:seed --class=Wisatawan500Seeder   # 10.000 akun wisatawan
 php artisan db:seed --class=AdminTempatSeeder    # satu admin per tempat dalam RDF
 php artisan db:seed --class=WisatawanRatingSeeder # rating simulasi untuk semua tempat
-php artisan db:seed --class=WisatawanUlasanSeeder # ulasan/suka/transaksi simulasi
+php artisan db:seed --class=WisatawanUlasanSeeder # ulasan dan suka simulasi
+php artisan db:seed --class=WisatawanTransaksiSeeder # transaksi tiket demo
 ```
 
 `WisatawanUlasanSeeder` juga menjalankan seeder akun wisatawan. Teks ulasan dibuat natural
 tanpa penanda di isi pesan, tetapi seluruh ulasan dan metrik yang dibuat seeder tetap data
 demo, bukan ulasan pengunjung sungguhan. Sepuluh tempat yang diberikan memiliki
 jumlah ulasan dan rata-rata rating sesuai target; jumlah suka dibuat bervariasi dan banyak
-untuk tempat populer. Transaksi demo ditandai referensi `SEED-DEMO-` dan menggunakan tiket
-termurah di RDF untuk tanggal berjalan. Rating disimpan satu kali per akun-tempat di
+untuk tempat populer. `WisatawanTransaksiSeeder` membuat transaksi demo bertanda referensi
+`SEED-DEMO-` dengan tiket termurah di RDF untuk tanggal berjalan. Rating disimpan satu
+kali per akun-tempat di
 `rating_tempat`; ulasan merujuk rating itu dengan kunci gabungan pengguna-tempat.
 Jalankan migration DB 2 sebelum seeder interaksi. Jika dijalankan ulang, pasangan akun-tempat
 yang sama akan diperbarui, bukan dibuat sebagai baris duplikat.
