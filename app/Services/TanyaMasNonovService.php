@@ -146,14 +146,15 @@ class TanyaMasNonovService
         if ($tempatTerkait !== null && ! $mintaPeringkat) {
             $detail = ['nama' => $tempatTerkait['nama']];
             $fallbackDetail = [];
+            $popularitas = ($mintaUlasan || $mintaSuka)
+                ? $this->postgres->ringkasanPopularitasTempat($tempatTerkait['slug'])
+                : null;
             if ($mintaUlasan) {
-                $ringkasan = $this->postgres->ringkasanUlasanTempat($tempatTerkait['slug']);
-                $rating = Penyimpanan::ringkasanRatingTempat()[$tempatTerkait['slug']] ?? null;
                 $detail['ulasan'] = [
-                    'jumlah' => (int) ($ringkasan['jumlah_ulasan'] ?? 0),
-                    'jumlah_rating' => (int) ($rating['jumlahRating'] ?? 0),
-                    'rata_rata_bintang' => isset($rating['rating'])
-                        ? (float) $rating['rating']
+                    'jumlah' => (int) ($popularitas['jumlah_ulasan'] ?? 0),
+                    'jumlah_rating' => (int) ($popularitas['jumlah_rating'] ?? 0),
+                    'rata_rata_bintang' => isset($popularitas['rata_rata_bintang'])
+                        ? (float) $popularitas['rata_rata_bintang']
                         : null,
                 ];
                 $fallbackDetail[] = $detail['ulasan']['jumlah_rating'] > 0
@@ -161,7 +162,7 @@ class TanyaMasNonovService
                     : 'Belum ada rating publik yang tercatat untuk '.$tempatTerkait['nama'].'.';
             }
             if ($mintaSuka) {
-                $detail['jumlah_suka_db2'] = Penyimpanan::ringkasanSukaTempat()[$tempatTerkait['slug']] ?? 0;
+                $detail['jumlah_suka_db2'] = (int) ($popularitas['jumlah_suka'] ?? 0);
                 $fallbackDetail[] = $tempatTerkait['nama'].' mendapat '.$detail['jumlah_suka_db2'].' suka yang tercatat di DB 2.';
             }
 
@@ -179,7 +180,6 @@ class TanyaMasNonovService
 
         if ($mintaUlasan) {
             $peringkat = $this->postgres->peringkatUlasan(100);
-            $ratingTempat = Penyimpanan::ringkasanRatingTempat();
             $ulasan = [];
             foreach ($peringkat as $baris) {
                 $tempat = Katalog::get((string) $baris['tempat_slug']);
@@ -190,8 +190,10 @@ class TanyaMasNonovService
                 $ulasan[] = [
                     'nama' => $tempat['nama'],
                     'jumlah_ulasan' => (int) $baris['jumlah_ulasan'],
-                    'jumlah_rating' => (int) ($ratingTempat[$tempat['slug']]['jumlahRating'] ?? 0),
-                    'rata_rata_bintang' => $ratingTempat[$tempat['slug']]['rating'] ?? null,
+                    'jumlah_rating' => (int) ($baris['jumlah_rating'] ?? 0),
+                    'rata_rata_bintang' => isset($baris['rata_rata_bintang'])
+                        ? (float) $baris['rata_rata_bintang']
+                        : null,
                 ];
                 $kartu[] = \App\Support\Asisten::kartu($tempat);
             }
@@ -205,16 +207,23 @@ class TanyaMasNonovService
         }
 
         if ($mintaSuka) {
-            $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
             $peringkatSuka = [];
-            foreach ($semuaTempat as $tempat) {
-                $jumlah = $jumlahSukaTempat[$tempat['slug']] ?? 0;
-                if ($jumlah > 0 && $sesuaiKategori($tempat)) {
-                    $peringkatSuka[] = ['nama' => $tempat['nama'], 'jumlah_suka' => $jumlah];
+            foreach ($this->postgres->peringkatSuka(1000) as $baris) {
+                $tempat = Katalog::get((string) $baris['tempat_slug']);
+                if (
+                    $tempat
+                    && ($tempat['jenis'] ?? null) === 'tempat'
+                    && $sesuaiKategori($tempat)
+                ) {
+                    $peringkatSuka[] = [
+                        'nama' => $tempat['nama'],
+                        'jumlah_suka' => (int) $baris['jumlah_suka'],
+                    ];
+                }
+                if (count($peringkatSuka) === 5) {
+                    break;
                 }
             }
-            usort($peringkatSuka, fn (array $a, array $b) => $b['jumlah_suka'] <=> $a['jumlah_suka']);
-            $peringkatSuka = array_slice($peringkatSuka, 0, 5);
             $konteks['peringkat_suka_db2'] = $peringkatSuka;
             $bagianFallback[] = $peringkatSuka === []
                 ? 'Belum ada jumlah suka yang tercatat di DB 2.'

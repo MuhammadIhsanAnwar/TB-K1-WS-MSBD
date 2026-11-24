@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class TanyaMasNonovServiceTest extends TestCase
 {
-    public function test_review_and_like_ranking_combines_postgresql_and_rdf_names(): void
+    public function test_review_and_like_ranking_uses_postgresql_view_and_rdf_names(): void
     {
         config([
             'services.openrouter.api_key' => 'test-openrouter-key',
@@ -28,12 +28,6 @@ class TanyaMasNonovServiceTest extends TestCase
                     $this->triple('istana-maimun', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#SitusSejarah', 'uri'),
                     $this->triple('istana-maimun', 'https://schema.org/name', 'Istana Maimun', 'literal'),
                 ]],
-            ]),
-            'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
-                ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
-            ]),
-            'https://transaksi.test/rest/v1/ringkasan_rating_tempat*' => Http::response([
-                ['tempat_slug' => 'istana-maimun', 'rata_rata_bintang' => '4.7', 'jumlah_rating' => 12],
             ]),
         ]);
 
@@ -55,7 +49,18 @@ class TanyaMasNonovServiceTest extends TestCase
             ->andReturn([[
                 'tempat_slug' => 'istana-maimun',
                 'jumlah_ulasan' => 9,
+                'rata_rata_ulasan' => '4.7',
+                'jumlah_rating' => 12,
                 'rata_rata_bintang' => '4.7',
+                'peringkat_ulasan' => 1,
+            ]]);
+        $postgres->shouldReceive('peringkatSuka')
+            ->once()
+            ->with(1000)
+            ->andReturn([[
+                'tempat_slug' => 'istana-maimun',
+                'jumlah_suka' => 5,
+                'peringkat_suka' => 1,
             ]]);
 
         $jawaban = (new TanyaMasNonovService($ai, $postgres))
@@ -65,7 +70,7 @@ class TanyaMasNonovServiceTest extends TestCase
         $this->assertSame('Istana Maimun', $jawaban['tempat'][0]['nama']);
     }
 
-    public function test_place_rating_and_likes_use_rdf_identity_postgresql_and_database_2(): void
+    public function test_place_rating_and_likes_use_postgresql_popularity_view_and_rdf_identity(): void
     {
         config([
             'services.openrouter.api_key' => 'test-openrouter-key',
@@ -82,12 +87,6 @@ class TanyaMasNonovServiceTest extends TestCase
                     $this->triple('istana-maimun', 'https://schema.org/name', 'Istana Maimun', 'literal'),
                 ]],
             ]),
-            'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
-                ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
-            ]),
-            'https://transaksi.test/rest/v1/ringkasan_rating_tempat*' => Http::response([
-                ['tempat_slug' => 'istana-maimun', 'rata_rata_bintang' => '4.7', 'jumlah_rating' => 12],
-            ]),
         ]);
 
         $ai = Mockery::mock(AIService::class);
@@ -102,10 +101,17 @@ class TanyaMasNonovServiceTest extends TestCase
             })
             ->andReturn('Istana Maimun memiliki 9 ulasan dan 5 suka.');
         $postgres = Mockery::mock(PostgreSQLService::class);
-        $postgres->shouldReceive('ringkasanUlasanTempat')
+        $postgres->shouldReceive('ringkasanPopularitasTempat')
             ->once()
             ->with('istana-maimun')
-            ->andReturn(['tempat_slug' => 'istana-maimun', 'jumlah_ulasan' => 9, 'rata_rata_bintang' => '4.7']);
+            ->andReturn([
+                'tempat_slug' => 'istana-maimun',
+                'jumlah_ulasan' => 9,
+                'rata_rata_ulasan' => '4.7',
+                'jumlah_rating' => 12,
+                'rata_rata_bintang' => '4.7',
+                'jumlah_suka' => 5,
+            ]);
 
         $jawaban = (new TanyaMasNonovService($ai, $postgres))
             ->jawab('Berapa rating dan jumlah suka Istana Maimun?');

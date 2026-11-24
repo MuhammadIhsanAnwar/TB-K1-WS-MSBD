@@ -65,6 +65,29 @@ class TanyaMasNonovTest extends TestCase
         $this->assertNotNull($pesan->jawaban_terenkripsi);
     }
 
+    public function test_guest_still_receives_an_answer_when_chat_memory_storage_is_unavailable(): void
+    {
+        $asisten = Mockery::mock(TanyaMasNonovService::class);
+        $asisten->shouldReceive('jawab')
+            ->once()
+            ->with('Tempat wisata dekat Bihun Bebek Asie Kumango', null, [])
+            ->andReturn(['teks' => ['Ada beberapa tempat wisata di sekitar Bihun Bebek Asie Kumango.'], 'tempat' => []]);
+        $this->app->instance(TanyaMasNonovService::class, $asisten);
+
+        $memori = Mockery::mock(TanyaMasNonovMemori::class);
+        $memori->shouldReceive('simpan')
+            ->once()
+            ->andThrow(new \PDOException('Database unavailable'));
+        $this->app->instance(TanyaMasNonovMemori::class, $memori);
+
+        $this->withSession(['_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->postJson(route('tanya.jawab'), ['pesan' => 'Tempat wisata dekat Bihun Bebek Asie Kumango'])
+            ->assertOk()
+            ->assertJsonPath('teks.0', 'Ada beberapa tempat wisata di sekitar Bihun Bebek Asie Kumango.')
+            ->assertJsonPath('peringatan', 'Jawaban berhasil dimuat, tetapi riwayat percakapan tidak dapat disimpan saat ini.');
+    }
+
     public function test_chat_messages_are_encrypted_hashed_and_used_as_the_users_private_memory(): void
     {
         $pertanyaanLama = 'Saya suka tempat bersejarah.';

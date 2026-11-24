@@ -138,6 +138,11 @@ FROM pengaturan_situs
 WHERE kunci = $1
 LIMIT 1;
 
+-- Pengaturan untuk namespace/prefix tertentu (padanan PostgREST like.<prefix>*).
+SELECT kunci, nilai
+FROM pengaturan_situs
+WHERE kunci LIKE ($1 || '%');
+
 INSERT INTO pengaturan_situs (kunci, nilai, diubah_oleh, updated_at)
 VALUES ($1, $2::jsonb, $3, $4)
 ON CONFLICT (kunci) DO UPDATE

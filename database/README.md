@@ -24,14 +24,15 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_26_000200_buat_rating_tempat.php` | Riwayat migration DB 2 untuk membuat tabel rating; trigger lama dinormalisasi oleh migration berikutnya |
 | `migrations/2026_11_27_000100_normalisasi_db1_db2.php` | Memusatkan relasi admin-tempat, rating, dan moda rencana; ringkasan ulasan dihitung sebagai view |
 | `migrations/2026_11_27_000200_hapus_tabel_fitur_lama.php` | Menghapus tabel mitra, check-in, poin, voucher, dan penukaran yang tidak lagi dipakai web |
+| `migrations/2026_11_29_000100_buat_ringkasan_popularitas_tempat.php` | DB 2 menggabungkan ulasan, rating, dan suka serta menghitung ranking untuk Tanya Mas Nonov |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
 | `seeders/AdminTempatSeeder.php` | membuat satu akun admin untuk tiap tempat wisata dan memastikan tautannya tersimpan di `admin_tempat` (jalankan setelah migration DB 1) |
-| `sql pg/` | Referensi query PostgreSQL yang dipakai oleh aplikasi; bukan dump lengkap untuk membuat database |
+| `sql pg/` | Query PostgreSQL website dipisah berdasarkan fitur (lihat `sql pg/README.md`) serta workbook 60 kategori; bukan dump lengkap untuk membuat database |
 | `rdf sparql/medanvisit-ontologi.ttl` | ontologi (TBox): kelas dan properti, diperlukan untuk penggantian graph |
 | `rdf sparql/medanvisit-data.ttl` | sumber data wisata (ABox), dikirim langsung ke Database 3 |
-| `rdf sparql/query/*.rq` | contoh query SPARQL (SELECT, reifikasi, ASK, CONSTRUCT) |
+| `rdf sparql/query/` | Query SPARQL dipisah berdasarkan kegunaan; `query/README.md` membedakan query runtime, template admin, dan contoh eksplorasi |
 
 ## Server lokal (pengembangan)
 
@@ -157,7 +158,7 @@ yang sama akan diperbarui, bukan dibuat sebagai baris duplikat.
 
 | Jenis | DB 1 katalog | DB 2 transaksi |
 |---|---|---|
-| View | `v_simpul`, `v_tempat_lengkap`, `v_relasi_kalimat`, `v_statistik_kategori` | `v_penjualan_tiket`, `v_celah_konten`, `ringkasan_ulasan`, `ringkasan_suka_tempat`, `ringkasan_rating_tempat` |
+| View | `v_simpul`, `v_tempat_lengkap`, `v_relasi_kalimat`, `v_statistik_kategori` | `v_penjualan_tiket`, `v_celah_konten`, `ringkasan_ulasan`, `ringkasan_suka_tempat`, `ringkasan_rating_tempat`, `ringkasan_popularitas_tempat` |
 | Function | `fn_jarak_meter`, `fn_tempat_terdekat`, `fn_buka_pada` | `fn_kode_acak`, `fn_simpan_rencana` |
 | Trigger | `relasi_cek_simpul` (slug harus ada, jarak dihitung otomatis), `*_jaga_hapus` / `*_ikut_ganti` (integritas slug), `tempat_updated_at` | `pesanan_item_total` |
 | Procedure | `sp_hitung_relasi_dekat` | `sp_buat_pesanan`, `sp_bayar_pesanan`, `sp_kedaluwarsakan_pesanan` |

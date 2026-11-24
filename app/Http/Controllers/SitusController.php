@@ -155,8 +155,16 @@ class SitusController extends Controller
             }
         }
 
-        $idPesan = $memori->simpan($idPengguna, $pemilikTamu, $data['pesan']);
-        $riwayatTersimpan = $memori->pertanyaanSebelumnya($idPengguna, $pemilikTamu, $idPesan);
+        $idPesan = null;
+        $riwayatTersimpan = [];
+        $peringatanMemori = false;
+        try {
+            $idPesan = $memori->simpan($idPengguna, $pemilikTamu, $data['pesan']);
+            $riwayatTersimpan = $memori->pertanyaanSebelumnya($idPengguna, $pemilikTamu, $idPesan);
+        } catch (\PDOException $e) {
+            report($e);
+            $peringatanMemori = true;
+        }
         $pemilikKonteks = $idPengguna === null ? 'tamu:'.$pemilikTamu : 'pengguna:'.$idPengguna;
         $riwayat = $request->session()->get('tanya_mas_nonov', []);
         if (($riwayat['pemilik'] ?? null) !== $pemilikKonteks) {
@@ -186,8 +194,17 @@ class SitusController extends Controller
         $request->session()->put('tanya_mas_nonov', $riwayat);
 
         $teksJawaban = implode(' ', $jawaban['teks'] ?? []);
-        if ($teksJawaban !== '') {
-            $memori->simpanJawaban($idPesan, $teksJawaban);
+        if ($teksJawaban !== '' && $idPesan !== null) {
+            try {
+                $memori->simpanJawaban($idPesan, $teksJawaban);
+            } catch (\PDOException $e) {
+                report($e);
+                $peringatanMemori = true;
+            }
+        }
+
+        if ($peringatanMemori) {
+            $jawaban['peringatan'] = 'Jawaban berhasil dimuat, tetapi riwayat percakapan tidak dapat disimpan saat ini.';
         }
 
         return response()->json($jawaban);

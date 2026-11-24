@@ -102,6 +102,7 @@ async function tanya(pesan) {
         const isi = (j.teks ?? []).map((p) => `<p>${esc(p)}</p>`).join('')
             + (j.tempat ?? []).map(kartu).join('')
             + (j.tautan ? `<div class="aksi-mini"><a href="${esc(j.tautan.url)}">${esc(j.tautan.label)}</a></div>` : '')
+            + (j.peringatan ? `<p class="sumber">${esc(j.peringatan)}</p>` : '')
             + '<p class="sumber">Berdasarkan katalog MedanVisit</p>';
         tambah(isi, 'gelembung--asisten');
 

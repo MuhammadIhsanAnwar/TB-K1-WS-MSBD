@@ -232,7 +232,7 @@ class SupabaseApi
     public function pesananDenganKodeQr(string $kodeQr): array
     {
         return $this->getRows('pesanan', [
-            'select' => '*,pembayaran(dibayar_pada,referensi),e_tiket(kode_qr,dipakai_pada)',
+            'select' => '*,pembayaran(dibayar_pada,referensi),e_tiket!inner(kode_qr,dipakai_pada)',
             'e_tiket.kode_qr' => 'eq.'.$kodeQr,
             'limit' => 1,
         ]);
@@ -319,6 +319,39 @@ class SupabaseApi
     {
         return $this->getRows('ringkasan_suka_tempat', [
             'select' => 'tempat_slug,jumlah_suka',
+        ]);
+    }
+
+    public function ringkasanPopularitasTempat(string $slug): ?array
+    {
+        return $this->getRows('ringkasan_popularitas_tempat', [
+            'select' => 'tempat_slug,jumlah_ulasan,rata_rata_ulasan,jumlah_rating,rata_rata_bintang,jumlah_suka',
+            'tempat_slug' => 'eq.'.$slug,
+            'limit' => 1,
+        ])[0] ?? null;
+    }
+
+    public function peringkatUlasan(int $batas): array
+    {
+        $batas = max(1, min($batas, 100));
+
+        return $this->getRows('ringkasan_popularitas_tempat', [
+            'select' => 'tempat_slug,jumlah_ulasan,rata_rata_ulasan,jumlah_rating,rata_rata_bintang,peringkat_ulasan',
+            'jumlah_ulasan' => 'gt.0',
+            'order' => 'peringkat_ulasan.asc,tempat_slug.asc',
+            'limit' => $batas,
+        ]);
+    }
+
+    public function peringkatSuka(int $batas): array
+    {
+        $batas = max(1, min($batas, 1000));
+
+        return $this->getRows('ringkasan_popularitas_tempat', [
+            'select' => 'tempat_slug,jumlah_suka,peringkat_suka',
+            'jumlah_suka' => 'gt.0',
+            'order' => 'peringkat_suka.asc,tempat_slug.asc',
+            'limit' => $batas,
         ]);
     }
 
@@ -466,7 +499,41 @@ class SupabaseApi
             ->get($this->url('log_pencarian'), ['select' => 'id_log'])
             ->throw();
 
-        return (int) ($response->header('Content-Range') ? explode('/', $response->header('Content-Range'))[1] : 0);
+        return $this->jumlahDariContentRange($response, 'log_pencarian');
+    }
+
+    public function jumlahPesanan(int $idPengguna): int
+    {
+        $response = $this->request()
+            ->withHeaders(['Prefer' => 'count=exact', 'Range' => '0-0'])
+            ->get($this->url('pesanan'), [
+                'select' => 'id_pesanan',
+                'id_pengguna' => 'eq.'.$idPengguna,
+            ])
+            ->throw();
+
+        return $this->jumlahDariContentRange($response, 'pesanan');
+    }
+
+    public function profilPengguna(int $idPengguna): ?array
+    {
+        return $this->getRows('users', [
+            'select' => 'id,name,email,peran',
+            'id' => 'eq.'.$idPengguna,
+            'limit' => 1,
+        ])[0] ?? null;
+    }
+
+    public function riwayatPesanan(int $idPengguna, int $batas): array
+    {
+        $batas = max(1, min($batas, 20));
+
+        return $this->getRows('pesanan', [
+            'select' => 'kode,tempat_slug,tanggal_kunjungan,total,status,metode,created_at',
+            'id_pengguna' => 'eq.'.$idPengguna,
+            'order' => 'created_at.desc,id_pesanan.desc',
+            'limit' => $batas,
+        ]);
     }
 
     public function rencana(?int $idPengguna = null, ?string $kode = null): array
@@ -562,6 +629,16 @@ class SupabaseApi
             ->get($this->url($table), array_merge(['select' => '*'], $filters))
             ->throw()
             ->json();
+    }
+
+    private function jumlahDariContentRange(Response $response, string $tabel): int
+    {
+        $rentang = $response->header('Content-Range');
+        if (! is_string($rentang) || ! preg_match('~/(\d+|\*)$~', $rentang, $cocok)) {
+            throw new RuntimeException('Supabase tidak mengembalikan jumlah baris untuk '.$tabel.'.');
+        }
+
+        return $cocok[1] === '*' ? 0 : (int) $cocok[1];
     }
 
     private function semua(string $table, string $select, int $limit = 500): array

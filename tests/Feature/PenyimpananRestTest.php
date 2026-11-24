@@ -119,6 +119,29 @@ class PenyimpananRestTest extends TestCase
             && $r->hasHeader('Authorization', 'Bearer secret-key'));
     }
 
+    public function test_qr_lookup_filters_orders_through_an_inner_ticket_relation(): void
+    {
+        Http::fake([
+            'https://transaksi.test/rest/v1/pesanan?*' => Http::response([[
+                'id_pesanan' => 7,
+                'kode' => 'MV-AAAA1111',
+                'e_tiket' => [['kode_qr' => 'QR-1', 'dipakai_pada' => null]],
+            ]]),
+        ]);
+
+        $rows = (new SupabaseApi('transaksi'))->pesananDenganKodeQr('QR-1');
+
+        $this->assertCount(1, $rows);
+        Http::assertSent(function (Request $request): bool {
+            $query = urldecode((string) parse_url($request->url(), PHP_URL_QUERY));
+
+            return $request->method() === 'GET'
+                && str_contains($request->url(), '/rest/v1/pesanan?')
+                && str_contains($query, 'e_tiket!inner(kode_qr,dipakai_pada)')
+                && str_contains($query, 'e_tiket.kode_qr=eq.QR-1');
+        });
+    }
+
     public function test_creating_an_order_calls_the_database_function_through_rpc(): void
     {
         Http::fake([

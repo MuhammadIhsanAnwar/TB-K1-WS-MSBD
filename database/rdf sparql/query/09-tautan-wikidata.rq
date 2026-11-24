@@ -6,7 +6,11 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX wd: <http://www.wikidata.org/entity/>
 
 SELECT ?tempat ?wikidata WHERE {
-  ?t a mv:TempatWisata ; schema:name ?tempat ; owl:sameAs ?wikidata .
+  VALUES ?kelas {
+    mv:SitusSejarah mv:Museum mv:RumahIbadah mv:TempatKuliner
+    mv:RuangPublik mv:PusatBelanja mv:RekreasiAir
+  }
+  ?t a ?kelas ; schema:name ?tempat ; owl:sameAs ?wikidata .
   FILTER (STRSTARTS(STR(?wikidata), STR(wd:)))
 }
 ORDER BY ?tempat
