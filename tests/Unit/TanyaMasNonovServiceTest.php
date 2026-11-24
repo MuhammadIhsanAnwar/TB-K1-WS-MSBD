@@ -6,7 +6,6 @@ use App\Services\AIService;
 use App\Services\PostgreSQLService;
 use App\Services\TanyaMasNonovService;
 use App\Support\Katalog;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Mockery;
 use Tests\TestCase;
@@ -18,9 +17,10 @@ class TanyaMasNonovServiceTest extends TestCase
         config([
             'services.openrouter.api_key' => 'test-openrouter-key',
             'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
         ]);
         Katalog::forgetCache();
-        Cache::put('medanvisit.favorit.istana-maimun', 5);
         Http::fake([
             'sparql.test/*' => Http::response([
                 'head' => ['vars' => ['s', 'p', 'o']],
@@ -28,6 +28,9 @@ class TanyaMasNonovServiceTest extends TestCase
                     $this->triple('istana-maimun', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#SitusSejarah', 'uri'),
                     $this->triple('istana-maimun', 'https://schema.org/name', 'Istana Maimun', 'literal'),
                 ]],
+            ]),
+            'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
+                ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
             ]),
         ]);
 
@@ -39,7 +42,7 @@ class TanyaMasNonovServiceTest extends TestCase
                     && str_contains($sumber, 'PostgreSQL')
                     && ($konteks['peringkat_ulasan_postgresql'][0]['nama'] ?? null) === 'Istana Maimun'
                     && ($konteks['peringkat_ulasan_postgresql'][0]['jumlah_ulasan'] ?? null) === 9
-                    && ($konteks['peringkat_suka_cache_aplikasi'][0]['jumlah_suka'] ?? null) === 5;
+                    && ($konteks['peringkat_suka_db2'][0]['jumlah_suka'] ?? null) === 5;
             })
             ->andReturn('Istana Maimun memiliki jumlah ulasan dan suka tertinggi pada data saat ini.');
         $postgres = Mockery::mock(PostgreSQLService::class);
@@ -59,14 +62,15 @@ class TanyaMasNonovServiceTest extends TestCase
         $this->assertSame('Istana Maimun', $jawaban['tempat'][0]['nama']);
     }
 
-    public function test_place_rating_and_likes_use_rdf_identity_postgresql_and_application_cache(): void
+    public function test_place_rating_and_likes_use_rdf_identity_postgresql_and_database_2(): void
     {
         config([
             'services.openrouter.api_key' => 'test-openrouter-key',
             'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
         ]);
         Katalog::forgetCache();
-        Cache::put('medanvisit.favorit.istana-maimun', 5);
         Http::fake([
             'sparql.test/*' => Http::response([
                 'head' => ['vars' => ['s', 'p', 'o']],
@@ -74,6 +78,9 @@ class TanyaMasNonovServiceTest extends TestCase
                     $this->triple('istana-maimun', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#SitusSejarah', 'uri'),
                     $this->triple('istana-maimun', 'https://schema.org/name', 'Istana Maimun', 'literal'),
                 ]],
+            ]),
+            'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
+                ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
             ]),
         ]);
 
@@ -85,7 +92,7 @@ class TanyaMasNonovServiceTest extends TestCase
                     && str_contains($sumber, 'PostgreSQL')
                     && ($konteks['ulasan']['jumlah'] ?? null) === 9
                     && ($konteks['ulasan']['rata_rata_bintang'] ?? null) === 4.7
-                    && ($konteks['jumlah_suka_cache_aplikasi'] ?? null) === 5;
+                    && ($konteks['jumlah_suka_db2'] ?? null) === 5;
             })
             ->andReturn('Istana Maimun memiliki 9 ulasan dan 5 suka.');
         $postgres = Mockery::mock(PostgreSQLService::class);

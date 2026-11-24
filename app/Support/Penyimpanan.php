@@ -179,6 +179,35 @@ class Penyimpanan
             ]])->all(), []);
     }
 
+    /** Jumlah suka per tempat dihitung dari DB 2, bukan cache aplikasi. */
+    public static function ringkasanSukaTempat(): array
+    {
+        return self::aman(fn () => collect(self::api()->ringkasanSukaTempat())
+            ->mapWithKeys(fn ($r) => [$r['tempat_slug'] => (int) $r['jumlah_suka']])
+            ->all(), []);
+    }
+
+    /** Slug tempat yang disukai akun; kegagalan baca dicatat dan halaman tetap dapat ditampilkan. */
+    public static function tempatDisukai(int $idPengguna): array
+    {
+        return self::aman(fn () => array_column(self::api()->sukaTempatPengguna($idPengguna), 'tempat_slug'), []);
+    }
+
+    /** Toggle suka untuk satu akun-tempat, dengan pasangan unik dijaga DB 2. */
+    public static function ubahSukaTempat(int $idPengguna, string $slug): bool
+    {
+        $api = self::api();
+        if ($api->sudahSukaTempat($idPengguna, $slug)) {
+            $api->hapusSukaTempat($idPengguna, $slug);
+
+            return false;
+        }
+
+        $api->tambahSukaTempat($idPengguna, $slug);
+
+        return true;
+    }
+
     /**
      * Satu akun satu ulasan per tempat: kalau sudah pernah mengulas, ulasan lamanya diperbarui
      * (tanggal tulis awal dipertahankan). Trigger ulasan_ringkasan menghitung ulang rating.

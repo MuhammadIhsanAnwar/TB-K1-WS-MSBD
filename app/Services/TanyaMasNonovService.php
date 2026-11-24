@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Support\Katalog;
+use App\Support\Penyimpanan;
 use App\Support\SparqlService;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -157,14 +157,14 @@ class TanyaMasNonovService
                     : 'Belum ada ulasan publik yang tercatat untuk '.$tempatTerkait['nama'].'.';
             }
             if ($mintaSuka) {
-                $detail['jumlah_suka_cache_aplikasi'] = (int) Cache::get('medanvisit.favorit.'.$tempatTerkait['slug'], 0);
-                $fallbackDetail[] = $tempatTerkait['nama'].' mendapat '.$detail['jumlah_suka_cache_aplikasi'].' suka yang tercatat pada aplikasi.';
+                $detail['jumlah_suka_db2'] = Penyimpanan::ringkasanSukaTempat()[$tempatTerkait['slug']] ?? 0;
+                $fallbackDetail[] = $tempatTerkait['nama'].' mendapat '.$detail['jumlah_suka_db2'].' suka yang tercatat di DB 2.';
             }
 
             return [
                 'teks' => [$this->jawabAiAtauFallback(
                     $pertanyaan,
-                    'AllegroGraph RDF untuk tempat dan PostgreSQL/cache aplikasi untuk metrik',
+                    'AllegroGraph RDF untuk tempat, PostgreSQL untuk ulasan, dan DB 2 untuk suka',
                     $detail,
                     $riwayat,
                     implode(' ', $fallbackDetail),
@@ -201,18 +201,19 @@ class TanyaMasNonovService
         }
 
         if ($mintaSuka) {
+            $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
             $peringkatSuka = [];
             foreach ($semuaTempat as $tempat) {
-                $jumlah = (int) Cache::get('medanvisit.favorit.'.$tempat['slug'], 0);
+                $jumlah = $jumlahSukaTempat[$tempat['slug']] ?? 0;
                 if ($jumlah > 0 && $sesuaiKategori($tempat)) {
                     $peringkatSuka[] = ['nama' => $tempat['nama'], 'jumlah_suka' => $jumlah];
                 }
             }
             usort($peringkatSuka, fn (array $a, array $b) => $b['jumlah_suka'] <=> $a['jumlah_suka']);
             $peringkatSuka = array_slice($peringkatSuka, 0, 5);
-            $konteks['peringkat_suka_cache_aplikasi'] = $peringkatSuka;
+            $konteks['peringkat_suka_db2'] = $peringkatSuka;
             $bagianFallback[] = $peringkatSuka === []
-                ? 'Belum ada jumlah suka yang tercatat pada cache aplikasi.'
+                ? 'Belum ada jumlah suka yang tercatat di DB 2.'
                 : 'Tempat dengan suka terbanyak: '.implode('; ', array_map(
                     fn (array $baris) => $baris['nama'].' ('.$baris['jumlah_suka'].' suka)',
                     $peringkatSuka,
@@ -227,7 +228,7 @@ class TanyaMasNonovService
                 'kecamatan' => $tempat['kecamatan'],
                 'deskripsi' => $tempat['ringkas'],
             ], array_slice($kandidat, 0, 8));
-            $konteks['dasar_rekomendasi'] = 'tempat dan kategori dari RDF MedanVisit; jumlah ulasan publik dari PostgreSQL dan jumlah suka dari cache; metrik ditampilkan terpisah tanpa skor gabungan';
+            $konteks['dasar_rekomendasi'] = 'tempat dan kategori dari RDF MedanVisit; jumlah ulasan publik dari PostgreSQL dan jumlah suka dari DB 2; metrik ditampilkan terpisah tanpa skor gabungan';
             if ($kartu === []) {
                 $kartu = array_map(fn (array $tempat) => \App\Support\Asisten::kartu($tempat), array_slice($kandidat, 0, 5));
             }
@@ -242,7 +243,7 @@ class TanyaMasNonovService
         return [
             'teks' => [$this->jawabAiAtauFallback(
                 $pertanyaan,
-                'RDF MedanVisit untuk nama tempat, PostgreSQL untuk ringkasan ulasan, dan cache aplikasi untuk jumlah suka',
+                'RDF MedanVisit untuk nama tempat, PostgreSQL untuk ringkasan ulasan, dan DB 2 untuk jumlah suka',
                 $konteks,
                 $riwayat,
                 $fallback,

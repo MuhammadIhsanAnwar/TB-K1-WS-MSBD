@@ -3,7 +3,6 @@
 @php
     use App\Support\Katalog;
     use App\Support\Penyimpanan;
-    use Illuminate\Support\Facades\Cache;
     $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
     $semuaTempat = Katalog::tempat();
     $ringkasanUlasan = Penyimpanan::ringkasanUlasan();
@@ -11,7 +10,7 @@
         $ringkasan = $ringkasanUlasan[$tempatStat['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
         $tempatStat['rating'] = $ringkasan['rating'];
         $tempatStat['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
-        $tempatStat['jumlahSuka'] = (int) Cache::get('medanvisit.favorit.' . $tempatStat['slug'], 0);
+        $tempatStat['jumlahSuka'] = $jumlahSukaTempat[$tempatStat['slug']] ?? 0;
     }
     unset($tempatStat);
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();

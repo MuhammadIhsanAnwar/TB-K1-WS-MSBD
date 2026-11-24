@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
 /**
- * Membuat satu akun admin untuk tiap tempat wisata (69 tempat).
+ * Membuat satu akun admin untuk setiap tempat wisata yang tercantum di RDF.
  *
  * Aman dijalankan berulang: akun dicari lewat email (firstOrNew), jadi tidak
  * pernah ada akun ganda, dan password akun yang sudah ada TIDAK di-reset.

@@ -12,7 +12,7 @@ use Random\Randomizer;
 use RuntimeException;
 
 /**
- * Membuat 500 akun wisatawan contoh di database katalog.
+ * Membuat 10.000 akun wisatawan contoh di database katalog.
  *
  * Atur SEED_WISATAWAN_PASSWORD di environment, lalu jalankan:
  * php artisan db:seed --class=Wisatawan500Seeder
@@ -23,7 +23,7 @@ use RuntimeException;
  */
 class Wisatawan500Seeder extends Seeder
 {
-    private const JUMLAH_AKUN = 500;
+    private const JUMLAH_AKUN = 10000;
     private const DOMAIN = 'medanvisit.neoverse.my.id';
     private const NOMOR_TELEPON = '081234567890';
     private const RANDOM_SEED = 20261124;
@@ -60,6 +60,7 @@ class Wisatawan500Seeder extends Seeder
                 ->keyBy('email');
 
             $baru = [];
+            $passwordValid = [];
             foreach ($akun as $baris) {
                 $sudahAda = $existentes->get($baris['email']);
                 if ($sudahAda === null) {
@@ -73,7 +74,7 @@ class Wisatawan500Seeder extends Seeder
                     || $sudahAda->peran !== 'wisatawan'
                     || $sudahAda->no_hp !== self::NOMOR_TELEPON
                     || $tanggalLahir !== $baris['tanggal_lahir']
-                    || ! Hash::check($password, $sudahAda->password)
+                    || ! ($passwordValid[$sudahAda->password] ??= Hash::check($password, $sudahAda->password))
                 ) {
                     throw new RuntimeException(
                         "Email {$baris['email']} sudah digunakan oleh akun yang berbeda; tidak ada akun yang ditimpa."
@@ -98,6 +99,58 @@ class Wisatawan500Seeder extends Seeder
     private function buatAkun(string $password): array
     {
         $random = new Randomizer(new Mt19937(self::RANDOM_SEED));
+        $nama = self::namaDiacak($random);
+
+        $tanggalAwal = new DateTimeImmutable('1955-01-01');
+        $tanggalAkhir = new DateTimeImmutable('2008-01-01');
+        $rentangHari = (int) $tanggalAwal->diff($tanggalAkhir)->format('%a');
+        $waktu = now()->toDateTimeString();
+        $hashSandi = Hash::make($password);
+        $akun = [];
+
+        for ($i = 0; $i < self::JUMLAH_AKUN; $i++) {
+            $namaLengkap = self::namaUnik($nama, $i);
+            $slugNama = Str::slug($namaLengkap, '.');
+            $tanggalLahir = $tanggalAwal
+                ->modify('+'.$random->getInt(0, $rentangHari - 1).' days')
+                ->format('Y-m-d');
+
+            $akun[] = [
+                'name' => $namaLengkap,
+                'email' => $slugNama.'@'.self::DOMAIN,
+                'no_hp' => self::NOMOR_TELEPON,
+                'tanggal_lahir' => $tanggalLahir,
+                'password' => $hashSandi,
+                'peran' => 'wisatawan',
+                'email_verified_at' => $waktu,
+                'created_at' => $waktu,
+                'updated_at' => $waktu,
+            ];
+        }
+
+        return $akun;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function emailAkun(): array
+    {
+        $nama = self::namaDiacak(new Randomizer(new Mt19937(self::RANDOM_SEED)));
+        $email = [];
+
+        for ($i = 0; $i < self::JUMLAH_AKUN; $i++) {
+            $email[] = Str::slug(self::namaUnik($nama, $i), '.').'@'.self::DOMAIN;
+        }
+
+        return $email;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function namaDiacak(Randomizer $random): array
+    {
         $nama = [];
         foreach (self::NAMA_DEPAN as $depan) {
             foreach (self::NAMA_BELAKANG as $belakang) {
@@ -110,35 +163,18 @@ class Wisatawan500Seeder extends Seeder
             [$nama[$i], $nama[$j]] = [$nama[$j], $nama[$i]];
         }
 
-        if (count($nama) < self::JUMLAH_AKUN) {
-            throw new RuntimeException('Kombinasi nama belum cukup untuk membuat 500 akun unik.');
-        }
+        return $nama;
+    }
 
-        $tanggalAwal = new DateTimeImmutable('1955-01-01');
-        $tanggalAkhir = new DateTimeImmutable('2008-01-01');
-        $rentangHari = (int) $tanggalAwal->diff($tanggalAkhir)->format('%a');
-        $waktu = now()->toDateTimeString();
-        $akun = [];
+    /**
+     * @param list<string> $nama
+     */
+    private static function namaUnik(array $nama, int $indeks): string
+    {
+        $dasar = $nama[$indeks % count($nama)];
 
-        foreach (array_slice($nama, 0, self::JUMLAH_AKUN) as $namaLengkap) {
-            $slugNama = Str::slug($namaLengkap, '.');
-            $tanggalLahir = $tanggalAwal
-                ->modify('+'.$random->getInt(0, $rentangHari - 1).' days')
-                ->format('Y-m-d');
-
-            $akun[] = [
-                'name' => $namaLengkap,
-                'email' => $slugNama.'@'.self::DOMAIN,
-                'no_hp' => self::NOMOR_TELEPON,
-                'tanggal_lahir' => $tanggalLahir,
-                'password' => Hash::make($password),
-                'peran' => 'wisatawan',
-                'email_verified_at' => $waktu,
-                'created_at' => $waktu,
-                'updated_at' => $waktu,
-            ];
-        }
-
-        return $akun;
+        return $indeks < count($nama)
+            ? $dasar
+            : $dasar.' '.str_pad((string) ($indeks + 1), 5, '0', STR_PAD_LEFT);
     }
 }

@@ -25,7 +25,7 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::post('/tanya', 'jawab')->middleware(['peran', 'throttle:12,1'])->name('tanya.jawab');
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
-    Route::post('/tempat/{slug}/sukai', 'sukai')->name('tempat.sukai');
+    Route::post('/tempat/{slug}/sukai', 'sukai')->middleware('peran:wisatawan')->name('tempat.sukai');
     Route::get('/rencana', 'rencana')->middleware('bukan-pengelola')->name('rencana');
     Route::get('/r/{kode}', 'rencanaBagikan')->middleware('bukan-pengelola')->name('rencana.bagikan');
     Route::get('/ketentuan', 'ketentuan')->name('ketentuan');

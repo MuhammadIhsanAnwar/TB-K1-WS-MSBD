@@ -123,12 +123,64 @@ class PenyimpananRestTest extends TestCase
             && $request['dipakai_pada'] === $waktu);
     }
 
+    public function test_place_likes_are_toggled_per_user_through_database_2(): void
+    {
+        $reads = 0;
+        Http::fake(function (Request $request) use (&$reads) {
+            if ($request->method() === 'GET') {
+                $reads++;
+
+                return Http::response($reads === 1 ? [] : [['tempat_slug' => 'taman-cadika']]);
+            }
+
+            return Http::response([]);
+        });
+
+        $this->assertTrue(Penyimpanan::ubahSukaTempat(17, 'taman-cadika'));
+        $this->assertFalse(Penyimpanan::ubahSukaTempat(17, 'taman-cadika'));
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/suka_tempat?')
+            && str_contains($request->url(), 'id_pengguna=eq.17')
+            && str_contains($request->url(), 'tempat_slug=eq.taman-cadika'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/suka_tempat?on_conflict=id_pengguna%2Ctempat_slug')
+            && $request[0]['id_pengguna'] === 17
+            && $request[0]['tempat_slug'] === 'taman-cadika');
+        Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
+            && str_contains($request->url(), '/suka_tempat?')
+            && str_contains($request->url(), 'id_pengguna=eq.17')
+            && str_contains($request->url(), 'tempat_slug=eq.taman-cadika'));
+    }
+
+    public function test_place_like_counts_are_read_from_the_database_2_summary_view(): void
+    {
+        Http::fake([
+            'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
+                ['tempat_slug' => 'taman-cadika', 'jumlah_suka' => 12],
+            ]),
+        ]);
+
+        $this->assertSame(['taman-cadika' => 12], Penyimpanan::ringkasanSukaTempat());
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/ringkasan_suka_tempat?')
+            && $request->hasHeader('apikey', 'secret-key'));
+    }
+
+    public function test_only_logged_in_tourists_can_like_a_place(): void
+    {
+        $this->post('/tempat/taman-cadika/sukai')
+            ->assertRedirect(route('masuk', ['kembali' => '/tempat/taman-cadika/sukai']));
+    }
+
     public function test_unreachable_database_does_not_break_pages_that_opt_into_the_safe_read(): void
     {
         Http::fake(['https://transaksi.test/*' => Http::response(['message' => 'paused'], 503)]);
 
         $this->assertSame([], Penyimpanan::pesanan(aman: true));
         $this->assertSame([], Penyimpanan::ringkasanUlasan());
+        $this->assertSame([], Penyimpanan::ringkasanSukaTempat());
     }
 
     public function test_reviews_are_published_immediately_and_can_be_deleted(): void

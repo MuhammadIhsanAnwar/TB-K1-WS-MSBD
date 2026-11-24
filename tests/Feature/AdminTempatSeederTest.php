@@ -55,6 +55,10 @@ class AdminTempatSeederTest extends TestCase
             $relasi = $tautan->firstWhere('id_admin', $admin->id);
             $this->assertNotNull($relasi);
             $this->assertSame($admin->tempat_slug, $relasi->tempat_slug);
+            $this->assertSame(
+                $admin->tempat_slug.'@medanvisit.neoverse.my.id',
+                $admin->email
+            );
         }
 
         $seeder->run();

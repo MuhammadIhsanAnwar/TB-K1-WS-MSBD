@@ -10,22 +10,23 @@ use Tests\TestCase;
 
 class Wisatawan500SeederTest extends TestCase
 {
-    public function test_builds_500_unique_complete_wisatawan_accounts_deterministically(): void
+    public function test_builds_10000_unique_complete_wisatawan_accounts_deterministically(): void
     {
         Hash::shouldReceive('make')
             ->with('test-password-placeholder')
-            ->times(1000)
+            ->twice()
             ->andReturn('hashed-password');
 
         $seeder = new Wisatawan500Seeder;
         $rows = $this->buildRows($seeder);
         $again = $this->buildRows($seeder);
 
-        $this->assertCount(500, $rows);
-        $this->assertCount(500, array_unique(array_column($rows, 'email')));
-        $this->assertCount(500, array_unique(array_column($rows, 'name')));
+        $this->assertCount(10000, $rows);
+        $this->assertCount(10000, array_unique(array_column($rows, 'email')));
+        $this->assertCount(10000, array_unique(array_column($rows, 'name')));
         $this->assertSame(array_column($rows, 'email'), array_column($again, 'email'));
         $this->assertSame(array_column($rows, 'tanggal_lahir'), array_column($again, 'tanggal_lahir'));
+        $this->assertSame(array_column($rows, 'email'), Wisatawan500Seeder::emailAkun());
 
         foreach ($rows as $row) {
             $this->assertSame(Str::slug($row['name'], '.').'@medanvisit.neoverse.my.id', $row['email']);

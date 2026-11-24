@@ -19,12 +19,16 @@ class SitusTempatTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_place_detail_omits_the_1930_map_and_removed_entity_graph_helper(): void
+    public function test_place_detail_reads_like_count_from_database_2_and_omits_removed_map(): void
     {
         Cache::setDefaultDriver('array');
         Cache::store('array')->flush();
         Katalog::forgetCache();
-        config(['services.sparql.endpoint' => 'https://sparql.test/query']);
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
+        ]);
 
         $base = 'https://medanvisit.neoverse.my.id/';
         $place = $base.'id/kolam-renang-primbana';
@@ -58,6 +62,9 @@ class SitusTempatTest extends TestCase
                     'results' => ['bindings' => $bindings],
                 ]);
             }
+            if (str_contains($request->url(), '/ringkasan_suka_tempat?')) {
+                return Http::response([['tempat_slug' => 'kolam-renang-primbana', 'jumlah_suka' => 12]]);
+            }
 
             return Http::response([]);
         });
@@ -65,6 +72,7 @@ class SitusTempatTest extends TestCase
         $this->get('/tempat/kolam-renang-primbana')
             ->assertOk()
             ->assertSee('Kolam Renang Primbana')
+            ->assertSee('<span><b>12</b> like</span>', false)
             ->assertSee('property="og:title"', false)
             ->assertSee('property="og:image"', false)
             ->assertSee('property="mainEntity" typeof="TouristAttraction" resource="'.$place.'"', false)

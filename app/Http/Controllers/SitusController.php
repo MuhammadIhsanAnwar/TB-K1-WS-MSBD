@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
 use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
@@ -19,6 +18,7 @@ class SitusController extends Controller
     {
         $tempat = Katalog::tempat();
         $ulasan = Penyimpanan::ringkasanUlasan();
+        $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
         $kategori = [];
         foreach (Katalog::KATEGORI as $k => $label) {
             $kategori[$k] = ['label' => $label, 'tempat' => Katalog::tempat($k)];
@@ -28,7 +28,7 @@ class SitusController extends Controller
             $ringkasan = $ulasan[$t['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
             $t['rating'] = $ringkasan['rating'];
             $t['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
-            $t['jumlahSuka'] = (int) Cache::get('medanvisit.favorit.' . $t['slug'], 0);
+            $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
         }
         unset($t);
 
@@ -36,6 +36,7 @@ class SitusController extends Controller
             'kategori' => $kategori,
             'bertiket' => Katalog::bertiket(),
             'petaTempat' => array_values($tempat),
+            'jumlahSukaTempat' => $jumlahSukaTempat,
         ]);
     }
 
@@ -165,19 +166,20 @@ class SitusController extends Controller
         return response()->json($jawaban);
     }
 
-        public function peta()
+    public function peta()
     {
         $tempat = array_values(Katalog::tempat());
         $kunjungan = Kunjungan::ringkasan(365)['tempat'];
 
         // rating per tempat dihitung trigger DB 2 ke tabel ringkasan_ulasan
         $ulasan = Penyimpanan::ringkasanUlasan();
+        $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
 
         foreach ($tempat as &$t) {
             $t['rating'] = $ulasan[$t['slug']]['rating'] ?? 0;
             $t['jumlahUlasan'] = $ulasan[$t['slug']]['jumlahUlasan'] ?? 0;
             $t['jumlahKunjungan'] = $kunjungan[$t['slug']] ?? 0;
-            $t['jumlahSuka'] = (int) Cache::get('medanvisit.favorit.' . $t['slug'], 0);
+            $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
         }
         unset($t);
 
@@ -205,51 +207,43 @@ class SitusController extends Controller
         ]);
     }
     public function tempat(string $slug)
-{
-    $t = Katalog::get($slug);
-    abort_unless($t && $t['jenis'] === 'tempat', 404);
+    {
+        $t = Katalog::get($slug);
+        abort_unless($t && $t['jenis'] === 'tempat', 404);
 
-    $disukai = session('tempat_disukai', []);
+        $pengguna = session('pengguna', []);
+        $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $disukai = ($pengguna['peran'] ?? null) === 'wisatawan' && $idPengguna !== false
+            ? Penyimpanan::tempatDisukai((int) $idPengguna)
+            : [];
+        $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
 
-    return view('situs.tempat', ['e' => $t] + [
-        'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
-        'ramai' => 0,
-        'dekat' => $this->terdekat($t, 4),
-        'jumlahSuka' => (int) Cache::get('medanvisit.favorit.' . $slug, 0),
-        'sudahDisukai' => in_array($slug, $disukai, true),
-    ]);
-}
-    public function sukai(Request $request, string $slug)
-{
-    $tempat = Katalog::get($slug);
-
-    abort_unless($tempat && ($tempat['jenis'] ?? null) === 'tempat', 404);
-
-    $disukai = $request->session()->get('tempat_disukai', []);
-    $kunci = 'medanvisit.favorit.' . $slug;
-
-    if (in_array($slug, $disukai, true)) {
-        $jumlah = max(0, (int) Cache::get($kunci, 0));
-
-        if ($jumlah > 0) {
-            Cache::decrement($kunci);
-        }
-
-        $disukai = array_values(array_diff($disukai, [$slug]));
-
-        $request->session()->put('tempat_disukai', $disukai);
-
-        return back()->with('status', 'Suka berhasil dibatalkan.');
+        return view('situs.tempat', ['e' => $t] + [
+            'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
+            'ramai' => 0,
+            'dekat' => $this->terdekat($t, 4),
+            'jumlahSuka' => $jumlahSuka,
+            'sudahDisukai' => in_array($slug, $disukai, true),
+        ]);
     }
 
-    Cache::add($kunci, 0, now()->addYears(10));
-    Cache::increment($kunci);
+    public function sukai(Request $request, string $slug)
+    {
+        $tempat = Katalog::get($slug);
 
-    $disukai[] = $slug;
-    $request->session()->put('tempat_disukai', $disukai);
+        abort_unless($tempat && ($tempat['jenis'] ?? null) === 'tempat', 404);
 
-    return back()->with('status', 'Terima kasih sudah menyukai tempat ini.');
-}
+        $pengguna = $request->session()->get('pengguna', []);
+        $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        abort_unless(($pengguna['peran'] ?? null) === 'wisatawan' && $idPengguna !== false, 403, 'Masuk sebagai wisatawan untuk menyukai tempat.');
+
+        $disukai = Penyimpanan::ubahSukaTempat((int) $idPengguna, $slug);
+
+        return back()->with('status', $disukai
+            ? 'Terima kasih sudah menyukai tempat ini.'
+            : 'Suka berhasil dibatalkan.');
+    }
+
     public function entitas(string $jenis, string $slug)
     {
         $e = Katalog::get($slug);

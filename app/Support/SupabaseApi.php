@@ -260,6 +260,16 @@ class SupabaseApi
         return $this->rpc('sp_bayar_pesanan', ['p_kode' => $kode, 'p_referensi' => $referensi]);
     }
 
+    /** Pesanan simulasi dari seeder, dipakai agar seeder aman dijalankan ulang. */
+    public function pesananSeederDemo(): array
+    {
+        return $this->getRows('pesanan', [
+            'select' => 'id_pesanan,tempat_slug,id_pengguna,pembayaran!inner(referensi)',
+            'pembayaran.referensi' => 'like.SEED-DEMO-*',
+            'limit' => 10000,
+        ]);
+    }
+
     public function batalkanPesanan(string $kode, string $status): void
     {
         $this->request()
@@ -296,6 +306,51 @@ class SupabaseApi
         return is_array($rows) && $rows !== [];
     }
 
+    public function ringkasanSukaTempat(): array
+    {
+        return $this->getRows('ringkasan_suka_tempat', [
+            'select' => 'tempat_slug,jumlah_suka',
+        ]);
+    }
+
+    public function sukaTempatPengguna(int $idPengguna): array
+    {
+        return $this->getRows('suka_tempat', [
+            'select' => 'tempat_slug',
+            'id_pengguna' => 'eq.'.$idPengguna,
+        ]);
+    }
+
+    public function sudahSukaTempat(int $idPengguna, string $slug): bool
+    {
+        return $this->getRows('suka_tempat', [
+            'select' => 'tempat_slug',
+            'id_pengguna' => 'eq.'.$idPengguna,
+            'tempat_slug' => 'eq.'.$slug,
+            'limit' => 1,
+        ]) !== [];
+    }
+
+    public function tambahSukaTempat(int $idPengguna, string $slug): void
+    {
+        $this->upsertRows('suka_tempat', 'id_pengguna,tempat_slug', [[
+            'id_pengguna' => $idPengguna,
+            'tempat_slug' => $slug,
+            'created_at' => now()->toIso8601String(),
+        ]]);
+    }
+
+    public function hapusSukaTempat(int $idPengguna, string $slug): void
+    {
+        $this->request()
+            ->withHeaders(['Prefer' => 'return=minimal'])
+            ->delete($this->url('suka_tempat').'?'.http_build_query([
+                'id_pengguna' => 'eq.'.$idPengguna,
+                'tempat_slug' => 'eq.'.$slug,
+            ]))
+            ->throw();
+    }
+
     public function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null): array
     {
         $filters = ['order' => 'created_at.desc,id_ulasan.desc'];
@@ -314,6 +369,18 @@ class SupabaseApi
     public function tulisUlasan(array $data): array
     {
         return $this->insert('ulasan', $data);
+    }
+
+    /** Upsert ulasan batch untuk seeder; konflik ditangani oleh indeks unik akun-tempat. */
+    public function upsertUlasan(array $rows): void
+    {
+        $this->upsertRows('ulasan', 'id_pengguna,tempat_slug', $rows);
+    }
+
+    /** Upsert suka batch; memerlukan tabel suka_tempat pada DB 2. */
+    public function upsertSukaTempat(array $rows): void
+    {
+        $this->upsertRows('suka_tempat', 'id_pengguna,tempat_slug', $rows);
     }
 
     public function ubahUlasan(int $id, array $data): array
@@ -466,6 +533,18 @@ class SupabaseApi
             ->json();
 
         return $rows[0] ?? throw new RuntimeException('Supabase tidak mengembalikan data yang dibuat.');
+    }
+
+    private function upsertRows(string $table, string $konflik, array $rows): void
+    {
+        if ($rows === []) {
+            return;
+        }
+
+        $this->request()
+            ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
+            ->post($this->url($table).'?'.http_build_query(['on_conflict' => $konflik]), $rows)
+            ->throw();
     }
 
     private function ubahBaris(string $table, int $id, array $attributes): void
