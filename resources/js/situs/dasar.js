@@ -664,8 +664,12 @@ if (saringBeranda) {
             urut.splice(0, urut.length, ...kartuBawaan.filter((k) => hasil.includes(k)));
         } else if (urutanAktif === 'suka') {
             urut.sort((a, b) => Number(b.dataset.suka || 0) - Number(a.dataset.suka || 0));
+        } else if (urutanAktif === 'suka-sedikit') {
+            urut.sort((a, b) => Number(a.dataset.suka || 0) - Number(b.dataset.suka || 0));
         } else if (urutanAktif === 'ulasan') {
             urut.sort((a, b) => Number(b.dataset.ulasan || 0) - Number(a.dataset.ulasan || 0));
+        } else if (urutanAktif === 'ulasan-sedikit') {
+            urut.sort((a, b) => Number(a.dataset.ulasan || 0) - Number(b.dataset.ulasan || 0));
         } else if (urutanAktif === 'rating-tertinggi') {
             urut.sort((a, b) => Number(b.dataset.rating || 0) - Number(a.dataset.rating || 0));
         } else if (urutanAktif === 'rating-terendah') {

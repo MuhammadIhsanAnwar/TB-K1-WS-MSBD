@@ -91,6 +91,7 @@
 .mv-btn--bahaya:hover { background: #efc5be; }
 .mv-btn--kecil { min-height: 44px; padding: 8px 16px; font-size: var(--mv-s-ui); }
 .mv-btn--lebar { width: 100%; }
+.mv-btn--suka svg { flex: none; }
 .mv-google-logo { width: 20px; height: 20px; flex: none; }
 .mv-btn--google { border-radius: 8px; }
 .mv-btn:disabled, .mv-btn[aria-disabled="true"] { background: var(--mv-kertas-2); color: var(--mv-redup); transform: none; }
@@ -1632,29 +1633,43 @@
 }
 .mv-menu-tiket {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--mv-gutter);
   align-items: start;
 }
 .mv-menu-tiket__kiri {
-  grid-column: 1 / span 4;
+  grid-column: 1 / -1;
   display: grid;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  grid-template-areas:
+    "judul potret"
+    "deskripsi potret";
+  align-items: center;
+  gap: 8px 24px;
 }
 .mv-menu-tiket__kiri h2 {
+  grid-area: judul;
   font-size: var(--mv-s-h2);
-  max-width: 12ch;
+  max-width: 20ch;
+}
+.mv-menu-tiket__kiri p {
+  grid-area: deskripsi;
+  max-width: 60ch;
+  margin: 0;
 }
 .mv-menu-tiket__potret {
-  margin: 6px 0 0;
-  aspect-ratio: 4 / 5;
+  grid-area: potret;
+  margin: 0;
+  aspect-ratio: 3 / 2;
+  max-height: 200px;
   overflow: hidden;
   border-radius: 12px;
 }
 .mv-menu-tiket__potret img { width: 100%; height: 100%; object-fit: cover; }
 .mv-menu-tiket__daftar {
-  grid-column: 6 / -1;
+  grid-column: 1 / -1;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   min-width: 0;
 }
@@ -1664,6 +1679,7 @@
   background: var(--mv-kertas);
   border-radius: 10px;
 }
+.mv-menu-harga--melintang { grid-column: 1 / -1; }
 .mv-menu-harga:nth-child(2) { background: var(--mv-krem); }
 .mv-menu-harga h3 {
   font-size: var(--mv-s-h3);
@@ -2789,7 +2805,10 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
 
 @media (max-width: 1120px) {
   .mv-grid-tempat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mv-menu-tiket__kiri { grid-column: 1 / -1; }
+  .mv-menu-tiket__kiri {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "judul" "deskripsi";
+  }
   .mv-menu-tiket__potret { display: none; }
   .mv-menu-tiket__daftar { grid-column: 1 / -1; }
   .mv-paspor-peta, .mv-paspor-baris { grid-column: 1 / -1; }
@@ -2886,6 +2905,7 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
 
 @media (max-width: 580px) {
   .mv-btn { white-space: normal; text-align: center; }
+  .mv-menu-tiket__daftar { grid-template-columns: minmax(0, 1fr); }
   .mv-kepala__dalam { gap: 8px; }
   .mv-kepala__logo img { width: 108px; }
   .mv-kepala__cepat-ponsel:nth-of-type(2) { display: none; }

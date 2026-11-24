@@ -323,12 +323,26 @@ class SitusController extends Controller
     {
         $hasil = null;
         $pref = null;
-        if ($request->has('minat')) {
+        $rencanaEdit = null;
+
+        if ($request->filled('edit')) {
+            $pengguna = $request->session()->get('pengguna', []);
+            abort_unless(($pengguna['peran'] ?? null) === 'wisatawan', 404);
+            $rencanaEdit = Penyimpanan::cariRencanaPengguna(
+                (int) $pengguna['id'],
+                (string) $request->query('edit'),
+            );
+            abort_unless($rencanaEdit !== null, 404);
+        }
+
+        if ($request->hasAny(['minat', 'durasi', 'moda', 'mulai', 'tujuan'])) {
             $pref = $request->validate([
                 'minat' => ['required', 'array', 'min:1'], 'minat.*' => ['in:'.implode(',', array_keys(Katalog::KATEGORI))],
                 'durasi' => ['required', 'integer', 'in:2,4,6,8'],
-                'moda' => ['required', 'array', 'min:1'], 'moda.*' => ['in:jalan,becak'],
+                'moda' => ['required', 'array', 'min:1'], 'moda.*' => ['in:jalan,motor,mobil'],
                 'mulai' => ['required', 'string'],
+                'tujuan' => ['sometimes', 'array', 'max:10'],
+                'tujuan.*' => ['string', 'distinct', Rule::in(array_keys(Katalog::tempat()))],
                 // "lokasi": mulai dari posisi pengguna sekarang (koordinat dari browser)
                 'lat' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-90,90'],
                 'lng' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-180,180'],
@@ -338,16 +352,39 @@ class SitusController extends Controller
                 'lat.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
                 'lng.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
             ]);
+            $pref = array_replace($rencanaEdit ?? [], $pref);
+        } elseif ($rencanaEdit !== null) {
+            $pref = $rencanaEdit;
+        }
+
+        if ($pref !== null) {
             $posisi = $pref['mulai'] === 'lokasi' ? ['lat' => (float) $pref['lat'], 'lng' => (float) $pref['lng']] : null;
             try {
-                $hasil = Katalog::susunRute($pref['minat'], (int) $pref['durasi'], $pref['moda'], $pref['mulai'], posisi: $posisi);
+                $hasil = Katalog::susunRute(
+                    $pref['minat'],
+                    (int) $pref['durasi'],
+                    $pref['moda'],
+                    $pref['mulai'],
+                    posisi: $posisi,
+                    tujuan: $pref['tujuan'] ?? [],
+                );
             } catch (\RuntimeException $e) {
-                return view('situs.rencana', ['hasil' => null, 'pref' => $pref, 'tempat' => Katalog::tempat()])
+                return view('situs.rencana', [
+                    'hasil' => null,
+                    'pref' => $pref,
+                    'tempat' => Katalog::tempat(),
+                    'rencanaEdit' => $rencanaEdit,
+                ])
                     ->withErrors(['rute' => $e->getMessage()]);
             }
         }
 
-        return view('situs.rencana', ['hasil' => $hasil, 'pref' => $pref, 'tempat' => Katalog::tempat()]);
+        return view('situs.rencana', [
+            'hasil' => $hasil,
+            'pref' => $pref,
+            'tempat' => Katalog::tempat(),
+            'rencanaEdit' => $rencanaEdit,
+        ]);
     }
 
     public function rencanaBagikan(string $kode)
@@ -358,7 +395,13 @@ class SitusController extends Controller
         }
 
         try {
-            $hasil = Katalog::susunRute($r['minat'], $r['durasi'], $r['moda'], $r['mulai']);
+            $hasil = Katalog::susunRute(
+                $r['minat'],
+                $r['durasi'],
+                $r['moda'],
+                $r['mulai'],
+                tujuan: $r['tujuan'] ?? [],
+            );
         } catch (\RuntimeException $e) {
             // misalnya tempat awal sudah dihapus dari Database 3
             return view('situs.rencana', ['hasil' => null, 'pref' => $r, 'tempat' => Katalog::tempat()])

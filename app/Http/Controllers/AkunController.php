@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AkunController extends Controller
 {
@@ -652,15 +653,52 @@ class AkunController extends Controller
 
     public function simpanRencana(Request $request)
     {
+        $data = $this->validasiRencana($request);
+        $r = Penyimpanan::simpanRencana($data + [
+            'id_pengguna' => (int) $this->pengguna($request)['id'],
+        ]);
+
+        return redirect()->route('rencana.saya')->with('pesan', 'Rencana perjalanan berhasil disimpan.');
+    }
+
+    public function perbaruiRencana(Request $request, string $kode)
+    {
+        $pengguna = $this->pengguna($request);
+        $rencana = Penyimpanan::cariRencanaPengguna((int) $pengguna['id'], $kode);
+        abort_unless($rencana !== null, 404);
+
+        $r = Penyimpanan::perbaruiRencana($this->validasiRencana($request) + [
+            'id_rencana' => (int) $rencana['id'],
+            'id_pengguna' => (int) $pengguna['id'],
+        ]);
+        abort_unless($r !== null, 404);
+
+        return redirect()->route('rencana.saya')->with('pesan', 'Rencana perjalanan berhasil diperbarui.');
+    }
+
+    public function hapusRencana(Request $request, string $kode)
+    {
+        $pengguna = $this->pengguna($request);
+        $rencana = Penyimpanan::cariRencanaPengguna((int) $pengguna['id'], $kode);
+        abort_unless($rencana !== null, 404);
+        abort_unless(Penyimpanan::hapusRencana((int) $rencana['id'], (int) $pengguna['id']), 404);
+
+        return redirect()->route('rencana.saya')->with('pesan', 'Rencana perjalanan berhasil dihapus.');
+    }
+
+    private function validasiRencana(Request $request): array
+    {
         $data = $request->validate([
             'judul' => ['required', 'string', 'max:80'],
             'minat' => ['required', 'array'], 'minat.*' => ['in:'.implode(',', array_keys(Katalog::KATEGORI))],
             'durasi' => ['required', 'integer', 'in:2,4,6,8'],
-            'moda' => ['required', 'array'], 'moda.*' => ['in:jalan,becak'],
-            'mulai' => ['required', 'string'],
+            'moda' => ['required', 'array', 'min:1'], 'moda.*' => ['in:jalan,motor,mobil'],
+            'mulai' => ['required', 'string', Rule::in(array_keys(Katalog::tempat()))],
+            'tujuan' => ['sometimes', 'array', 'max:10'],
+            'tujuan.*' => ['string', 'distinct', Rule::in(array_keys(Katalog::tempat()))],
         ]);
-        $r = Penyimpanan::simpanRencana($data + ['id_pengguna' => (int) $this->pengguna($request)['id'], 'durasi' => (int) $data['durasi']]);
+        $data['tujuan'] ??= [];
 
-        return redirect()->route('rencana.bagikan', $r['kode'])->with('pesan', 'Rencana tersimpan. Bagikan tautan ini ke teman seperjalanan.');
+        return $data;
     }
 }

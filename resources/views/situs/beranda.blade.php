@@ -145,7 +145,9 @@
             <select id="urut-tempat-beranda" data-urut-beranda>
                 <option value="bawaan">Urutan utama</option>
                 <option value="suka">Like terbanyak</option>
+                <option value="suka-sedikit">Like terdikit</option>
                 <option value="ulasan">Ulasan terbanyak</option>
+                <option value="ulasan-sedikit">Ulasan terdikit</option>
                 <option value="rating-tertinggi">Rating tertinggi</option>
                 <option value="rating-terendah">Rating terendah</option>
             </select>
@@ -206,7 +208,7 @@
         <div class="mv-menu-tiket">
             <div class="mv-menu-tiket__kiri">
                 <h2 id="judul-tiket" data-muncul>Tiket masuk tanpa antre</h2>
-                <p style="color:var(--mv-redup)" data-muncul style="--i:1">Pilih tanggal kunjungan dan jumlah pengunjung, bayar dengan QRIS atau virtual account, lalu tunjukkan e-tiket ber-QR di loket masuk.</p>
+                <p data-muncul style="--i:1;color:var(--mv-redup)">Pilih tanggal kunjungan dan jumlah pengunjung, bayar dengan QRIS atau virtual account, lalu tunjukkan e-tiket ber-QR di loket masuk.</p>
                 <figure class="mv-menu-tiket__potret" data-muncul style="--i:2">
                     <x-foto :berkas="$potretTiket['foto'] ?? 'kesawan.jpg'" :alt="$potretTiket['nama'] ?? 'Kawasan Kota Lama Kesawan'" :kecil="true" />
                 </figure>
@@ -214,8 +216,8 @@
 
             {{-- daftar harga ala menu: satu baris per tempat, dikelompokkan per kategori; rincian tarif ada di halaman tiket --}}
             <div class="mv-menu-tiket__daftar">
-                @foreach (collect($bertiket)->groupBy('kategori') as $kode => $grup)
-                    <section class="mv-menu-harga" aria-labelledby="harga-{{ $kode }}">
+                @foreach (collect($bertiket)->groupBy('kategori')->sortByDesc(fn ($grup) => $grup->count()) as $kode => $grup)
+                    <section class="mv-menu-harga {{ $grup->count() === 1 ? 'mv-menu-harga--melintang' : '' }}" aria-labelledby="harga-{{ $kode }}">
                         <h3 id="harga-{{ $kode }}">{{ Katalog::KATEGORI[$kode] }}</h3>
                         <ul>
                             @foreach ($grup->sortBy(fn ($t) => Katalog::hargaTermurah($t)) as $t)

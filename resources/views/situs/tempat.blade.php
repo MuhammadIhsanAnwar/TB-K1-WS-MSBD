@@ -50,9 +50,9 @@
     <div class="mv-wadah">
         <nav class="mv-remah" aria-label="Jejak halaman">
             <a href="{{ route('beranda') }}">Beranda</a>
-            <span aria-hidden="true">â€º</span>
+            <span aria-hidden="true">&rsaquo;</span>
             <a href="{{ route('peta') }}">Tempat &amp; Peta</a>
-            <span aria-hidden="true">â€º</span>
+            <span aria-hidden="true">&rsaquo;</span>
             <span>{{ $kategori }}</span>
         </nav>
 
@@ -82,14 +82,19 @@
                     <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
                 @endunless
                             @unless ($akunPengelola)
-    <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
-        @csrf
-        <button type="submit" class="mv-btn mv-btn--garis">
-            {{ $sudahDisukai ? 'â¤ï¸ Batal suka' : 'ðŸ¤ Suka tempat ini' }}
-            ({{ number_format($jumlahSuka, 0, ',', '.') }})
-        </button>
-    </form>
-@endunless
+                                <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
+                                    @csrf
+                                    <button type="submit" class="mv-btn mv-btn--garis mv-btn--suka">
+                                        <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="{{ $sudahDisukai ? 'currentColor' : 'none' }}" stroke="currentColor"
+                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                                        </svg>
+                                        {{ $sudahDisukai ? 'Batal suka' : 'Suka tempat ini' }}
+                                        ({{ number_format($jumlahSuka, 0, ',', '.') }})
+                                    </button>
+                                </form>
+                            @endunless
             </div>
         </div>
 
@@ -238,7 +243,7 @@
                     </fieldset>
                     <div class="isian">
                         <label for="teks-ulasan">Ceritakan pengalamanmu di sini</label>
-                        <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukanâ€¦" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks', $ulasanSaya['teks'] ?? '') }}</textarea>
+                        <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukan&hellip;" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks', $ulasanSaya['teks'] ?? '') }}</textarea>
                         @error('teks')<p class="isian__galat" id="galat-teks">{{ $message }}</p>@enderror
                     </div>
                     <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">{{ $ulasanSaya ? 'Perbarui ulasan' : 'Kirim ulasan' }}</button>

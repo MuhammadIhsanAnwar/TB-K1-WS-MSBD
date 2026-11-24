@@ -53,8 +53,10 @@
                         <option value="rating">Rating tertinggi</option>
                         <option value="rating-rendah">Rating terendah</option>
                         <option value="ulasan">Ulasan terbanyak</option>
+                        <option value="ulasan-sedikit">Ulasan terdikit</option>
                         <option value="kunjungan">Paling banyak dikunjungi</option>
                         <option value="disukai">Paling disukai</option>
+                        <option value="disukai-sedikit">Like terdikit</option>
                     </select>
                 </div>
             </div>

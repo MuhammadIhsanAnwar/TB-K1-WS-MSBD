@@ -297,15 +297,32 @@ class Katalog
     public static function perpindahan(array $a, array $b, array $moda): array
     {
         $meter = self::jarakMeter($a, $b);
-        if (($meter <= 700 && in_array('jalan', $moda, true)) || ! in_array('becak', $moda, true)) {
-            return ['moda' => 'Jalan kaki', 'meter' => $meter, 'menit' => max(1, (int) round($meter / 75)), 'biaya' => 0];
-        }
+        $jalan = in_array('jalan', $moda, true);
+        $motor = in_array('motor', $moda, true);
+        $mobil = in_array('mobil', $moda, true);
+
+        $kodeModa = match (true) {
+            $jalan && ($meter <= 700 || (! $motor && ! $mobil)) => 'jalan',
+            $motor && $mobil => $meter >= 4000 ? 'mobil' : 'motor',
+            $motor => 'motor',
+            $mobil => 'mobil',
+            default => 'jalan',
+        };
 
         return [
-            'moda' => 'Becak motor',
+            'kode_moda' => $kodeModa,
+            'moda' => match ($kodeModa) {
+                'motor' => 'Motor',
+                'mobil' => 'Mobil',
+                default => 'Jalan kaki',
+            },
             'meter' => $meter,
-            'menit' => max(3, (int) round($meter / 300) + 2),
-            'biaya' => 10000 + (int) (ceil(max(0, $meter - 1000) / 1000) * 5000),
+            'menit' => match ($kodeModa) {
+                'motor' => max(1, (int) round($meter / 300)),
+                'mobil' => max(1, (int) round($meter / 400)),
+                default => max(1, (int) round($meter / 75)),
+            },
+            'biaya' => 0,
         ];
     }
 
@@ -315,29 +332,16 @@ class Katalog
     array $moda
 ): array {
     $hasil = self::perpindahan($a, $b, $moda);
-
-    $jenisModa = $hasil['moda'] === 'Jalan kaki'
-        ? 'jalan'
-        : 'becak';
-
-    $rute = self::ambilRuteApi($a, $b, $jenisModa);
+    $rute = self::ambilRuteApi($a, $b, $hasil['kode_moda']);
 
     if ($rute === null) {
         return $hasil;
     }
 
-    $meter = $rute['meter'];
-
-    return [
-        'moda' => $hasil['moda'],
-        'meter' => $meter,
+    return array_merge($hasil, [
+        'meter' => $rute['meter'],
         'menit' => $rute['menit'],
-        'biaya' => $jenisModa === 'jalan'
-            ? 0
-            : 10000 + (int) (
-                ceil(max(0, $meter - 1000) / 1000) * 5000
-            ),
-    ];
+    ]);
 }
 
     /** Jarak maksimum dari posisi pengguna ke persinggahan pertama (rumah bisa agak jauh dari pusat kota). */
@@ -353,13 +357,36 @@ class Katalog
      * Calon diurutkan dengan jarak garis lurus, jadi layanan rute online hanya dipanggil sekali per langkah
      * untuk tempat yang terpilih. Kalau layanan itu gagal, perkiraan garis lurus dipakai.
      */
-    public static function susunRute(array $minat, int $durasiJam, array $moda, string $mulai, ?\DateTimeInterface $tanggal = null, ?array $posisi = null): array
+    public static function susunRute(
+        array $minat,
+        int $durasiJam,
+        array $moda,
+        string $mulai,
+        ?\DateTimeInterface $tanggal = null,
+        ?array $posisi = null,
+        array $tujuan = [],
+    ): array
     {
         if ($durasiJam <= 0) {
             throw new RuntimeException('Durasi perjalanan harus lebih dari 0 jam.');
         }
 
-        $pool = array_filter(self::tempat(), fn ($t) => in_array($t['kategori'], $minat, true));
+        $tujuan = array_values(array_unique($tujuan));
+        if (count($tujuan) > 10) {
+            throw new RuntimeException('Pilih maksimal 10 tempat tujuan dalam satu rencana.');
+        }
+
+        $semuaTempat = self::tempat();
+        foreach ($tujuan as $slug) {
+            if (! isset($semuaTempat[$slug])) {
+                throw new RuntimeException('Salah satu tempat tujuan sudah tidak tersedia.');
+            }
+        }
+
+        $manual = $tujuan !== [];
+        $pool = $manual
+            ? array_intersect_key($semuaTempat, array_flip($tujuan))
+            : array_filter($semuaTempat, fn ($t) => in_array($t['kategori'], $minat, true));
         $hari = (int) \Illuminate\Support\Carbon::instance($tanggal ?? now())->setTimezone('Asia/Jakarta')->isoFormat('E');
 
         // mulai pukul 08.30, atau saat tempat awal buka kalau lebih siang
@@ -386,30 +413,35 @@ class Katalog
             if (! $awal || $awal['jenis'] !== 'tempat') {
                 throw new RuntimeException('Pilih tempat awal dari daftar tempat wisata.');
             }
-            $pool = array_filter($pool, fn ($t) => $t['slug'] !== $mulai);
-
-            $jadwalAwal = self::jadwal($awal);
-            if ($jadwalAwal && in_array($hari, $jadwalAwal['hari'], true) && $jadwalAwal['menit'][0] < $jadwalAwal['menit'][1]) {
-                $jam = max($jam, $jadwalAwal['menit'][0]);
-            }
-
-            $durasiAwal = (int) ($awal['singgah'] ?? 45);
-            if ($durasiAwal > $sisaMenit) {
-                throw new RuntimeException('Singgah di '.$awal['nama'].' butuh sekitar '.$durasiAwal.' menit, lebih lama dari waktu yang dipilih. Pilih waktu yang lebih panjang.');
-            }
-
-            $urut[] = ['tempat' => $awal, 'mulai' => $jam, 'pindah' => null];
-            $sisaMenit -= $durasiAwal;
-            $jam += $durasiAwal;
-            $hargaAwal = self::hargaTermurah($awal);
-            $biayaTiketLengkap = $hargaAwal !== null || ($awal['akses_gratis'] ?? null) === true;
-            $total = $hargaAwal ?? 0;
             $kini = $awal;
+
+            if (! $manual || isset($pool[$mulai])) {
+                $pool = array_filter($pool, fn ($t) => $t['slug'] !== $mulai);
+
+                $jadwalAwal = self::jadwal($awal);
+                if ($jadwalAwal && in_array($hari, $jadwalAwal['hari'], true) && $jadwalAwal['menit'][0] < $jadwalAwal['menit'][1]) {
+                    $jam = max($jam, $jadwalAwal['menit'][0]);
+                }
+
+                $durasiAwal = (int) ($awal['singgah'] ?? 45);
+                if ($durasiAwal > $sisaMenit) {
+                    throw new RuntimeException('Singgah di '.$awal['nama'].' butuh sekitar '.$durasiAwal.' menit, lebih lama dari waktu yang dipilih. Pilih waktu yang lebih panjang.');
+                }
+
+                $urut[] = ['tempat' => $awal, 'mulai' => $jam, 'pindah' => null];
+                $sisaMenit -= $durasiAwal;
+                $jam += $durasiAwal;
+                $hargaAwal = self::hargaTermurah($awal);
+                $biayaTiketLengkap = $hargaAwal !== null || ($awal['akses_gratis'] ?? null) === true;
+                $total = $hargaAwal ?? 0;
+            }
         }
 
         while ($pool) {
-            // dari posisi pengguna, langkah pertama boleh lebih jauh; antartempat tetap paling jauh 6 km
-            $batasMeter = $urut === [] ? self::JARAK_LANGKAH_PERTAMA : 6000;
+            // Rute otomatis dibatasi ke tempat terdekat; tujuan pilihan tetap bisa menempuh jarak lebih jauh.
+            $batasMeter = $urut === [] && $posisi !== null
+                ? self::JARAK_LANGKAH_PERTAMA
+                : ($manual ? PHP_INT_MAX : 6000);
             $jarak = array_map(fn ($t) => self::jarakMeter($kini, $t), $pool);
             asort($jarak);
             $slugCalon = null;
@@ -450,7 +482,16 @@ class Katalog
         }
 
         if ($urut === []) {
-            throw new RuntimeException('Dari lokasimu belum ada tempat yang cocok, buka, dan muat dalam waktu yang dipilih. Tambah minat, perpanjang waktu, atau izinkan becak motor.');
+            throw new RuntimeException($manual
+                ? 'Tempat tujuan pilihanmu tidak muat dalam durasi tersebut. Pilih durasi lebih panjang atau kurangi tujuan.'
+                : 'Dari lokasimu belum ada tempat yang cocok, buka, dan muat dalam waktu yang dipilih. Tambah minat atau perpanjang waktu.');
+        }
+
+        if ($manual) {
+            $terkunjungi = array_column(array_column($urut, 'tempat'), 'slug');
+            if (array_diff($tujuan, $terkunjungi) !== []) {
+                throw new RuntimeException('Semua tempat tujuan pilihan harus muat dalam durasi. Pilih durasi lebih panjang atau kurangi tujuan.');
+            }
         }
 
         return [

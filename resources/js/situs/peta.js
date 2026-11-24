@@ -373,6 +373,11 @@ function modeAlat(el) {
                 (b.jumlahUlasan - a.jumlahUlasan) ||
                 (b.rating - a.rating)
             );
+        } else if (saring.urut === 'ulasan-sedikit') {
+            tampil.sort((a, b) =>
+                (a.jumlahUlasan - b.jumlahUlasan) ||
+                (a.rating - b.rating)
+            );
         } else if (saring.urut === 'kunjungan') {
             tampil.sort((a, b) =>
                 b.jumlahKunjungan - a.jumlahKunjungan
@@ -380,6 +385,10 @@ function modeAlat(el) {
         } else if (saring.urut === 'disukai') {
             tampil.sort((a, b) =>
                 (b.jumlahSuka ?? 0) - (a.jumlahSuka ?? 0)
+            );
+        } else if (saring.urut === 'disukai-sedikit') {
+            tampil.sort((a, b) =>
+                (a.jumlahSuka ?? 0) - (b.jumlahSuka ?? 0)
             );
         } else if (saring.urut === 'terdekat' || lokasi) {
             tampil.sort((a, b) =>
