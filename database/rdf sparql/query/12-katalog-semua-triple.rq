@@ -17,10 +17,10 @@ SELECT ?s ?p ?o WHERE {
   FILTER (?p IN (
     rdf:type, rdf:subject, rdf:predicate, rdf:object, rdfs:label,
     schema:name, schema:description, schema:address, schema:containedInPlace,
-    schema:image, schema:offers, owl:sameAs, geo:lat, geo:long,
+    schema:image, schema:offers, schema:isAccessibleForFree, owl:sameAs, geo:lat, geo:long,
     schema:streetAddress, mv:cerita, mv:kelurahan, mv:keteranganJam,
     mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
-    mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh,
+    mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh, mv:hariTiket,
     mv:koordinatPerkiraan, mv:masa, mv:kalimat, dcterms:source,
     mv:dibangunOleh, mv:memimpin, mv:terlibatDalam, mv:merepresentasikan,
     mv:khasDari, mv:dekatDengan, mv:bergaya, mv:bagianDari,

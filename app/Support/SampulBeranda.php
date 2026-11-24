@@ -26,7 +26,7 @@ class SampulBeranda
 
     private const CACHE = 'medanvisit.sampul_beranda';
 
-    private const CADANGAN = 'peta-medan-1930-kota-lama.jpg';
+    private const CADANGAN = 'kesawan.jpg';
 
     /** Slot tersimpan: [['slug' => ..., 'foto' => 'storage/sampul_beranda/...' atau null], ...]. */
     public static function pengaturan(): array

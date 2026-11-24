@@ -86,6 +86,7 @@ class Katalog
     {
         self::$entities = self::$relations = null;
         Database3Catalog::forgetCache();
+        StatusOperasional::lupakanCache();
     }
 
     public static function entitas(): array
@@ -137,6 +138,16 @@ class Katalog
     public static function hargaTermurah(array $tempat): ?int
     {
         return empty($tempat['tiket']) ? null : (int) min($tempat['tiket']);
+    }
+
+    public static function labelHarga(array $tempat): string
+    {
+        $harga = self::hargaTermurah($tempat);
+        if ($harga !== null) {
+            return self::rupiah($harga);
+        }
+
+        return ($tempat['akses_gratis'] ?? null) === true ? 'Gratis' : 'Harga belum tersedia';
     }
 
     public static function tetangga(string $slug, bool $denganWilayah = true): array
@@ -356,6 +367,7 @@ class Katalog
         $sisaMenit = $durasiJam * 60;
         $urut = [];
         $total = 0;
+        $biayaTiketLengkap = true;
         $titikAwal = null;
 
         if ($posisi !== null) {
@@ -389,7 +401,9 @@ class Katalog
             $urut[] = ['tempat' => $awal, 'mulai' => $jam, 'pindah' => null];
             $sisaMenit -= $durasiAwal;
             $jam += $durasiAwal;
-            $total = self::hargaTermurah($awal) ?? 0;
+            $hargaAwal = self::hargaTermurah($awal);
+            $biayaTiketLengkap = $hargaAwal !== null || ($awal['akses_gratis'] ?? null) === true;
+            $total = $hargaAwal ?? 0;
             $kini = $awal;
         }
 
@@ -427,7 +441,11 @@ class Katalog
             $jam += $perpindahan['menit'];
             $urut[] = ['tempat' => $calon, 'mulai' => $jam, 'pindah' => $perpindahan];
             $jam += $durasiSinggah;
-            $total += $perpindahan['biaya'] + (self::hargaTermurah($calon) ?? 0);
+            $hargaCalon = self::hargaTermurah($calon);
+            if ($hargaCalon === null && ($calon['akses_gratis'] ?? null) !== true) {
+                $biayaTiketLengkap = false;
+            }
+            $total += $perpindahan['biaya'] + ($hargaCalon ?? 0);
             $kini = $calon;
         }
 
@@ -437,7 +455,7 @@ class Katalog
 
         return [
             'singgah' => $urut,
-            'biaya' => $total,
+            'biaya' => $biayaTiketLengkap ? $total : null,
             'selesai' => $jam,
             'awal' => $titikAwal,
         ];
@@ -450,18 +468,23 @@ class Katalog
         if (! $jadwal) {
             return true;
         }
-        if (! in_array($hari, $jadwal['hari'], true)) {
-            return false;
-        }
-        [$buka, $tutup] = $jadwal['menit'];
-        if ($buka === $tutup) {
-            return true;
-        }
-        if ($tutup < $buka) {
-            $tutup += 1440; // lewat tengah malam
+        foreach (self::rentangUntukHari($jadwal, $hari) as [$buka, $tutup]) {
+            if ($tutup < $buka) {
+                $tutup += 1440;
+            }
+            if ($tiba >= $buka && $tiba + $durasi <= $tutup) {
+                return true;
+            }
         }
 
-        return $tiba >= $buka && $tiba + $durasi <= $tutup;
+        $kemarin = $hari === 1 ? 7 : $hari - 1;
+        foreach (self::rentangUntukHari($jadwal, $kemarin) as [$buka, $tutup]) {
+            if ($tutup < $buka && $tiba + $durasi <= $tutup) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function jamTeks(int $menitDariTengahMalam): string
@@ -480,27 +503,25 @@ class Katalog
      * Jadwal buka sebuah tempat: jam buka dan tutup dalam menit, dan hari buka (1 = Senin ... 7 = Minggu).
      * Hari dibaca dari keterangan jam, misalnya "Selasaâ€“Minggu, 09.00â€“16.00 (Senin tutup)". Nama hari hanya
      * dihitung kalau diikuti rentang jam, jadi "Di luar jam misa (Minggu 06.30, ...)" tidak membatasi hari.
-     * Tanpa jam terstruktur hasilnya null, artinya jam buka tidak diketahui.
+     * Bila jam terstruktur tidak tersedia, rentang sederhana dibaca dari keterangan jam.
+     * Tanpa rentang yang bisa dipastikan hasilnya null.
      */
     public static function jadwal(array $tempat): ?array
     {
         $menit = $tempat['jam_menit'] ?? null;
-        if (! $menit) {
-            return null;
-        }
         $teks = mb_strtolower($tempat['jam'] ?? '');
         $nama = implode('|', array_keys(self::HARI));
+
+        if (! $menit) {
+            return self::jadwalDariTeks($teks, $nama);
+        }
+
         $hari = [];
         if (! str_contains($teks, 'setiap hari')) {
-            preg_match_all("/\b($nama)(?:\s*[â€“-]\s*($nama))?,?\s+\d{1,2}\.\d{2}\s*[â€“-]/u", $teks, $cocok, PREG_SET_ORDER);
+            preg_match_all("/\b($nama)(?:\s*[\p{Pd}-]\s*($nama))?,?\s+\d{1,2}[.:]\d{2}\s*[\p{Pd}-]/u", $teks, $cocok, PREG_SET_ORDER);
             foreach ($cocok as $c) {
-                $awal = self::HARI[$c[1]];
-                $akhir = isset($c[2]) && $c[2] !== '' ? self::HARI[$c[2]] : $awal;
-                for ($h = $awal, $n = 0; $n < 7; $h = $h % 7 + 1, $n++) {
+                foreach (self::hariDalamRentang($c[1], $c[2] ?? '') as $h) {
                     $hari[$h] = true;
-                    if ($h === $akhir) {
-                        break;
-                    }
                 }
             }
         }
@@ -508,31 +529,123 @@ class Katalog
         preg_match_all("/\b($nama)\s+tutup\b/u", $teks, $tutup);
         $hari = array_values(array_diff($hari, array_map(fn ($h) => self::HARI[$h], $tutup[1])));
         sort($hari);
+        $rentangHari = array_fill_keys($hari, [$menit]);
 
-        return ['menit' => $menit, 'hari' => $hari];
+        return ['menit' => $menit, 'hari' => $hari, 'rentang_hari' => $rentangHari];
     }
 
-    /** Apakah tempat sedang buka, menurut jam WIB. Jam yang lewat tengah malam (tutup < buka) ikut dihitung. */
-    public static function bukaSekarang(array $tempat, ?\DateTimeInterface $waktu = null): bool
+    private static function jadwalDariTeks(string $teks, string $namaHari): ?array
     {
+        $rentangHari = [];
+        $rentang24Jam = [0, 0];
+
+        if (preg_match('/\b24\s+jam\b/u', $teks)) {
+            $hari = range(1, 7);
+            if (! str_contains($teks, 'setiap hari')
+                && preg_match("/\b($namaHari)(?:\s*[\p{Pd}-]\s*($namaHari))?/u", $teks, $cocok)) {
+                $hari = self::hariDalamRentang($cocok[1], $cocok[2] ?? '');
+            }
+            preg_match_all("/\b($namaHari)\s+tutup\b/u", $teks, $tutup);
+            $hari = array_values(array_diff($hari, array_map(fn ($h) => self::HARI[$h], $tutup[1])));
+            foreach ($hari as $h) {
+                $rentangHari[$h] = [$rentang24Jam];
+            }
+        } else {
+            $pola = "/(?:(?<awal>$namaHari)(?:\\s*[\\p{Pd}-]\\s*(?<akhir>$namaHari))?(?:\\s+dan\\s+hari\\s+libur)?[,;:]?\\s*)?(?:pukul\\s*)?(?<jam_buka>\\d{1,2})[.:](?<menit_buka>\\d{2})\\s*[\\p{Pd}-]\\s*(?<jam_tutup>\\d{1,2})[.:](?<menit_tutup>\\d{2})/u";
+            preg_match_all($pola, $teks, $cocok, PREG_SET_ORDER);
+            foreach ($cocok as $rentang) {
+                $jamBuka = (int) $rentang['jam_buka'];
+                $menitBuka = (int) $rentang['menit_buka'];
+                $jamTutup = (int) $rentang['jam_tutup'];
+                $menitTutup = (int) $rentang['menit_tutup'];
+                if ($jamBuka > 23 || $menitBuka > 59 || $jamTutup > 23 || $menitTutup > 59) {
+                    continue;
+                }
+                $menit = [$jamBuka * 60 + $menitBuka, $jamTutup * 60 + $menitTutup];
+                $hari = ($rentang['awal'] ?? '') === ''
+                    ? range(1, 7)
+                    : self::hariDalamRentang($rentang['awal'], $rentang['akhir'] ?? '');
+                foreach ($hari as $h) {
+                    $rentangHari[$h] ??= [];
+                    if (! in_array($menit, $rentangHari[$h], true)) {
+                        $rentangHari[$h][] = $menit;
+                    }
+                }
+            }
+        }
+
+        if ($rentangHari === []) {
+            return null;
+        }
+
+        ksort($rentangHari);
+        $hari = array_keys($rentangHari);
+
+        return [
+            'menit' => $rentangHari[$hari[0]][0],
+            'hari' => $hari,
+            'rentang_hari' => $rentangHari,
+        ];
+    }
+
+    private static function hariDalamRentang(string $awal, string $akhir = ''): array
+    {
+        $mulai = self::HARI[$awal];
+        $selesai = $akhir !== '' ? self::HARI[$akhir] : $mulai;
+        $hari = [];
+        for ($h = $mulai, $n = 0; $n < 7; $h = $h % 7 + 1, $n++) {
+            $hari[] = $h;
+            if ($h === $selesai) {
+                break;
+            }
+        }
+
+        return $hari;
+    }
+
+    private static function rentangUntukHari(array $jadwal, int $hari): array
+    {
+        return $jadwal['rentang_hari'][$hari] ?? [];
+    }
+
+    /** Status tempat saat ini; null jika jadwal tidak diketahui dan pengelola belum mengaturnya. */
+    public static function statusOperasional(array $tempat, ?\DateTimeInterface $waktu = null): ?bool
+    {
+        $manual = StatusOperasional::untuk((string) ($tempat['slug'] ?? ''));
+        if ($manual !== null) {
+            return $manual === 'buka';
+        }
+
         $jadwal = self::jadwal($tempat);
         if (! $jadwal) {
-            return false;
+            return null;
         }
         $waktu = \Illuminate\Support\Carbon::instance($waktu ?? now())->setTimezone('Asia/Jakarta');
         $hari = (int) $waktu->isoFormat('E');
         $sekarang = $waktu->hour * 60 + $waktu->minute;
-        [$buka, $tutup] = $jadwal['menit'];
-        if ($buka === $tutup) {
-            return in_array($hari, $jadwal['hari'], true);
+        foreach (self::rentangUntukHari($jadwal, $hari) as [$buka, $tutup]) {
+            if ($buka === $tutup || ($tutup > $buka && $sekarang >= $buka && $sekarang < $tutup)) {
+                return true;
+            }
+            if ($tutup < $buka && $sekarang >= $buka) {
+                return true;
+            }
         }
-        if ($tutup > $buka) {
-            return in_array($hari, $jadwal['hari'], true) && $sekarang >= $buka && $sekarang < $tutup;
-        }
-        $kemarin = $hari === 1 ? 7 : $hari - 1;
 
-        return (in_array($hari, $jadwal['hari'], true) && $sekarang >= $buka)
-            || (in_array($kemarin, $jadwal['hari'], true) && $sekarang < $tutup);
+        $kemarin = $hari === 1 ? 7 : $hari - 1;
+        foreach (self::rentangUntukHari($jadwal, $kemarin) as [$buka, $tutup]) {
+            if ($tutup < $buka && $sekarang < $tutup) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** Apakah tempat sedang buka, menurut jam WIB atau override pengelola. */
+    public static function bukaSekarang(array $tempat, ?\DateTimeInterface $waktu = null): bool
+    {
+        return self::statusOperasional($tempat, $waktu) === true;
     }
 
     public static function cari(string $q): array
@@ -613,26 +726,4 @@ $teks = mb_strtolower(
         return $berkas === null ? $kredit : ($kredit[$berkas]['credit'] ?? null);
     }
 
-    public static function posisi1930(array $tempat): ?array
-    {
-        if (! isset($tempat['lat'], $tempat['lng'])) {
-            return null;
-        }
-        $x = 818 + ($tempat['lng'] - 98.6837) * 31110;
-        $y = 1150 - ($tempat['lat'] - 3.5752) * 30960;
-
-        return ($x > 80 && $x < 1340 && $y > 300 && $y < 1470) ? ['x' => round($x), 'y' => round($y)] : null;
-    }
-
-    public static function posisiKotaLama(array $tempat): ?array
-    {
-        $posisi = self::posisi1930($tempat);
-        if (! $posisi) {
-            return null;
-        }
-        $x = ($posisi['x'] - 480) / 560 * 100;
-        $y = ($posisi['y'] - 630) / 560 * 100;
-
-        return ($x >= 0 && $x <= 100 && $y >= 0 && $y <= 100) ? ['x' => round($x, 2), 'y' => round($y, 2)] : null;
-    }
 }

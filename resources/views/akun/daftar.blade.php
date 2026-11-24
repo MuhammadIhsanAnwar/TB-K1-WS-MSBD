@@ -6,7 +6,7 @@
 @section('isi')
 <div class="mv-otentik">
     <div class="mv-otentik__visual">
-        <x-foto :berkas="$tempatSorotan[0]['foto'] ?? 'peta-medan-1930-kota-lama.jpg'" :alt="$tempatSorotan[0]['nama'] ?? 'Medan'" :utama="true" />
+        <x-foto :berkas="$tempatSorotan[0]['foto'] ?? 'kesawan.jpg'" :alt="$tempatSorotan[0]['nama'] ?? 'Medan'" :utama="true" />
         <div class="mv-otentik__lapisan" aria-hidden="true"></div>
 
         <div class="mv-otentik__visual-atas" data-naik style="--i:0">

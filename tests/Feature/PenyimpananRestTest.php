@@ -99,6 +99,30 @@ class PenyimpananRestTest extends TestCase
             && $r['p_item'][0]['jumlah'] === 2);
     }
 
+    public function test_ticket_usage_is_claimed_only_when_the_database_row_is_still_unused(): void
+    {
+        $patches = 0;
+        Http::fake(function (Request $request) use (&$patches) {
+            if ($request->method() === 'PATCH') {
+                $patches++;
+
+                return Http::response($patches === 1 ? [['id_pesanan' => 7]] : []);
+            }
+
+            return Http::response([], 404);
+        });
+
+        $waktu = '2026-11-23T10:00:00+07:00';
+
+        $this->assertTrue(Penyimpanan::tandaiTiketDipakai(7, $waktu));
+        $this->assertFalse(Penyimpanan::tandaiTiketDipakai(7, $waktu));
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
+            && str_contains($request->url(), '/e_tiket?')
+            && str_contains($request->url(), 'dipakai_pada=is.null')
+            && $request['dipakai_pada'] === $waktu);
+    }
+
     public function test_unreachable_database_does_not_break_pages_that_opt_into_the_safe_read(): void
     {
         Http::fake(['https://transaksi.test/*' => Http::response(['message' => 'paused'], 503)]);

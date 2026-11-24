@@ -42,22 +42,45 @@ class TiketController extends Controller
     {
         $t = $this->tempatBertiket($slug);
         $lama = $request->session()->get('pilihan');
+        $waktu = now('Asia/Jakarta');
+        $statusOperasional = Katalog::statusOperasional($t, $waktu);
 
-        return view('tiket.pilih', ['t' => $t, 'lama' => ($lama['tempat'] ?? null) === $slug ? $lama : null]);
+        return view('tiket.pilih', [
+            't' => $t,
+            'lama' => ($lama['tempat'] ?? null) === $slug ? $lama : null,
+            'hariIni' => $waktu->toDateString(),
+            'jadwalDiketahui' => $statusOperasional !== null,
+            'tempatBuka' => $statusOperasional === true,
+        ]);
     }
 
     public function simpanPilihan(Request $request, string $slug)
     {
         $t = $this->tempatBertiket($slug);
-        $aturan = ['tanggal' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:'.now()->addDays(60)->toDateString()]];
+        $aturan = ['tanggal' => ['required', 'date_format:Y-m-d']];
         foreach (array_keys($t['tiket']) as $i => $jenis) {
             $aturan["jumlah.$i"] = ['required', 'integer', 'between:0,10'];
         }
         $data = $request->validate($aturan, [
             'tanggal.required' => 'Pilih tanggal kunjungan.',
-            'tanggal.after_or_equal' => 'Tanggal kunjungan tidak boleh sebelum hari ini.',
-            'tanggal.before_or_equal' => 'Pemesanan dibuka paling jauh 60 hari ke depan.',
+            'tanggal.date_format' => 'Pilih tanggal kunjungan yang valid.',
         ]);
+
+        if ($data['tanggal'] !== now('Asia/Jakarta')->toDateString()) {
+            return back()->withInput()->withErrors([
+                'tanggal' => 'Tiket hanya dapat dipesan untuk hari ini.',
+            ]);
+        }
+        if (! Katalog::bukaSekarang($t, now('Asia/Jakarta'))) {
+            return back()->withInput()->withErrors([
+                'tanggal' => $this->pesanJamPemesanan($t),
+            ]);
+        }
+        if (($t['hari_tiket'] ?? null) === 'Senin-Jumat' && Carbon::parse($data['tanggal'])->isWeekend()) {
+            return back()->withInput()->withErrors([
+                'tanggal' => 'Tarif tiket yang ditampilkan hanya berlaku untuk kunjungan Senin-Jumat.',
+            ]);
+        }
 
         $item = [];
         $i = 0;
@@ -82,13 +105,23 @@ class TiketController extends Controller
         if (! $pilihan) {
             return redirect()->route('beranda');
         }
+        if ($pilihan['tanggal'] !== now('Asia/Jakarta')->toDateString()) {
+            $request->session()->forget('pilihan');
+
+            return redirect()->route('tiket.pilih', $pilihan['tempat'])
+                ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
+        }
+        $t = $this->tempatBertiket($pilihan['tempat']);
+        $statusOperasional = Katalog::statusOperasional($t, now('Asia/Jakarta'));
 
         return view('tiket.checkout', [
             'pilihan' => $pilihan,
-            't' => Katalog::get($pilihan['tempat']),
+            't' => $t,
             'total' => array_sum(array_column($pilihan['item'], 'subtotal')),
             'u' => $request->session()->get('pengguna'),
             'metode' => self::METODE,
+            'jadwalDiketahui' => $statusOperasional !== null,
+            'tempatBuka' => $statusOperasional === true,
         ]);
     }
 
@@ -96,6 +129,17 @@ class TiketController extends Controller
     {
         $pilihan = $request->session()->get('pilihan');
         abort_unless($pilihan, 419);
+        $t = $this->tempatBertiket($pilihan['tempat']);
+        if ($pilihan['tanggal'] !== now('Asia/Jakarta')->toDateString()) {
+            $request->session()->forget('pilihan');
+
+            return redirect()->route('tiket.pilih', $pilihan['tempat'])
+                ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
+        }
+        if (! Katalog::bukaSekarang($t, now('Asia/Jakarta'))) {
+            return redirect()->route('checkout')
+                ->withErrors(['jam_operasional' => $this->pesanJamPemesanan($t)]);
+        }
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:80'],
             'email' => ['required', 'email'],
@@ -256,6 +300,13 @@ class TiketController extends Controller
         }
     }
 
+    private function pesanJamPemesanan(array $tempat): string
+    {
+        return Katalog::jadwal($tempat) === null
+            ? 'Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.'
+            : 'Tiket hanya dapat dipesan saat tempat sedang buka ('.$tempat['jam'].').';
+    }
+
     public function daftar(Request $request)
     {
         $tab = $request->query('tab', 'aktif');
@@ -278,7 +329,7 @@ class TiketController extends Controller
     public function eTiket(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
-        abort_unless($p['status'] === 'lunas', 404);
+        abort_unless($p['status'] === 'lunas' && ! empty($p['kode_qr']), 404);
         $t = Katalog::get($p['tempat']);
         $status = ! empty($p['dipakai']) ? 'dipakai' : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
 

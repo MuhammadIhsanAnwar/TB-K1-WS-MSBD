@@ -9,6 +9,7 @@ use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
 use App\Support\Semantik;
 use App\Services\TanyaMasNonovService;
+use App\Services\TanyaMasNonovMemori;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -17,10 +18,19 @@ class SitusController extends Controller
     public function beranda()
     {
         $tempat = Katalog::tempat();
+        $ulasan = Penyimpanan::ringkasanUlasan();
         $kategori = [];
         foreach (Katalog::KATEGORI as $k => $label) {
             $kategori[$k] = ['label' => $label, 'tempat' => Katalog::tempat($k)];
         }
+
+        foreach ($tempat as &$t) {
+            $ringkasan = $ulasan[$t['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
+            $t['rating'] = $ringkasan['rating'];
+            $t['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
+            $t['jumlahSuka'] = (int) Cache::get('medanvisit.favorit.' . $t['slug'], 0);
+        }
+        unset($t);
 
         return view('situs.beranda', [
             'kategori' => $kategori,
@@ -100,7 +110,7 @@ class SitusController extends Controller
             'jenis' => $e['jenis'],
             'label_jenis' => $e['jenis'] === 'tempat' ? Katalog::KATEGORI[$e['kategori']] : Katalog::KELAS[$e['jenis']],
             'ringkas' => $e['kecamatan'] ?? ($e['ringkas'] ?? ''),
-            'harga' => $e['jenis'] === 'tempat' ? Katalog::rupiah(Katalog::hargaTermurah($e)) : null,
+            'harga' => $e['jenis'] === 'tempat' ? Katalog::labelHarga($e) : null,
             'url' => self::urlEntitas($e),
         ], $items);
 
@@ -123,17 +133,23 @@ class SitusController extends Controller
         ]);
     }
 
-    public function jawab(Request $request, TanyaMasNonovService $asisten)
+    public function jawab(Request $request, TanyaMasNonovService $asisten, TanyaMasNonovMemori $memori)
     {
         $data = $request->validate(['pesan' => ['required', 'string', 'max:300']]);
         $pengguna = $request->session()->get('pengguna');
-        $pemilikKonteks = (string) ($pengguna['id'] ?? 'anonim');
+        $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        abort_unless($idPengguna !== false, 403, 'Akun pengguna tidak valid.');
+
+        $idPesan = $memori->simpan((int) $idPengguna, $data['pesan']);
+        $riwayatTersimpan = $memori->pertanyaanSebelumnya((int) $idPengguna, $idPesan);
+        $pemilikKonteks = (string) $idPengguna;
         $riwayat = $request->session()->get('tanya_mas_nonov', []);
         if (($riwayat['pemilik'] ?? null) !== $pemilikKonteks) {
             $riwayat = ['pemilik' => $pemilikKonteks, 'giliran' => []];
         }
 
-        $jawaban = $asisten->jawab($data['pesan'], $pengguna, $riwayat['giliran'] ?? []);
+        $konteksPercakapan = array_slice(array_merge($riwayatTersimpan, $riwayat['giliran'] ?? []), -4);
+        $jawaban = $asisten->jawab($data['pesan'], $pengguna, $konteksPercakapan);
         $routing = TanyaMasNonovService::klasifikasi($data['pesan']);
         if (in_array($routing['source'], ['sparql', 'general'], true)) {
             $riwayat['giliran'][] = [

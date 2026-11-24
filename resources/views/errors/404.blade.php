@@ -3,7 +3,7 @@
     $populer = array_slice(array_values(\App\Support\Katalog::tempat()), 0, 4);
 @endphp
 @section('judul', 'Belum ada di peta')
-@section('foto-kaki', 'peta-medan-1930-kota-lama.jpg')
+@section('foto-kaki', 'kesawan.jpg')
 
 @section('isi')
 <header class="kepala-halaman kepala-halaman--besar">
@@ -15,7 +15,7 @@
     <div class="tempat-populer" style="margin-top:24px">
         @foreach ($populer as $t)
             <a href="{{ route('tempat', $t['slug']) }}">
-                <x-foto :berkas="$t['foto'] ?: 'peta-medan-1930-kota-lama.jpg'" :alt="$t['nama']" :kecil="true" :segera="true" />
+                <x-foto :berkas="$t['foto'] ?: 'kesawan.jpg'" :alt="$t['nama']" :kecil="true" :segera="true" />
                 <b>{{ $t['nama'] }}</b>
                 <span class="kecil redup">{{ \App\Support\Katalog::KATEGORI[$t['kategori']] }}, {{ $t['kecamatan'] }}</span>
             </a>

@@ -490,13 +490,6 @@ button:disabled, input:disabled { cursor: not-allowed; }
 @media (max-width: 1100px) { .daftar-kredit { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .daftar-kredit { grid-template-columns: 1fr; gap: 36px; } }
 
-/* letak tempat di peta Medan 1930: potongan peta berpusat di titik tempat */
-.peta-lama { position: relative; overflow: hidden; aspect-ratio: 3 / 2; margin-top: 24px; background: var(--paper-deep); }
-.peta-lama img { position: absolute; left: 50%; top: 50%; width: 220%; max-width: none; height: auto; transform: translate(calc(var(--px) * -1%), calc(var(--py) * -1%)); }
-.peta-lama__titik { position: absolute; left: calc(50% + var(--dx) * 1%); top: calc(50% + var(--dy) * 1%); width: 56px; height: 56px; margin: -28px 0 0 -28px; border: 5px solid var(--accent); border-radius: 50%; }
-.peta-lama__titik::after { content: ''; position: absolute; inset: 14px; border-radius: 50%; background: var(--green); }
-.peta-lama__ket { margin-top: 12px; font-size: var(--s-small); max-width: 64ch; }
-
 /* ==========================================================================
    AUTENTIKASI (masuk/daftar): foto + formulir
    ========================================================================== */

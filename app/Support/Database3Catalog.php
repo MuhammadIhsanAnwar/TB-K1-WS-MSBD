@@ -38,6 +38,7 @@ final class Database3Catalog
     {
         self::$triples = self::$entities = self::$relations = null;
         Cache::forget('database3.catalog.triples.v7');
+        Cache::forget('database3.catalog.triples.v8');
     }
 
     public static function entities(): array
@@ -67,7 +68,7 @@ final class Database3Catalog
             }
 
             $slug = substr($subject, 4);
-            $nama = ucwords(str_replace('-', ' ', $slug));
+            $nama = self::first($properties, 'schema:name', self::first($properties, 'rdfs:label', ucwords(str_replace('-', ' ', $slug))));
             $entity = [
                 'slug' => $slug,
                 'jenis' => $type,
@@ -78,6 +79,7 @@ final class Database3Catalog
             ];
 
             if ($type === 'tempat') {
+                $hargaContoh = self::boolean($properties, 'mv:hargaContoh');
                 $entity += [
                     'wikidata' => self::wikidata(self::first($properties, 'owl:sameAs', '')),
                     'kategori' => self::category($types),
@@ -89,8 +91,12 @@ final class Database3Catalog
                     'alamat' => self::address($properties, $bySubject),
                     'lat' => (float) self::first($properties, 'geo:lat', 0),
                     'lng' => (float) self::first($properties, 'geo:long', 0),
-                    'tiket' => self::offers($properties, $bySubject),
-                    'harga_contoh' => self::boolean($properties, 'mv:hargaContoh'),
+                    'tiket' => $hargaContoh ? [] : self::offers($properties, $bySubject),
+                    'akses_gratis' => self::first($properties, 'schema:isAccessibleForFree', null) === null
+                        ? null
+                        : self::boolean($properties, 'schema:isAccessibleForFree'),
+                    'hari_tiket' => self::first($properties, 'mv:hariTiket', null),
+                    'harga_contoh' => $hargaContoh,
                     'koordinat_perkiraan' => self::boolean($properties, 'mv:koordinatPerkiraan'),
                     'jam' => self::formatJam(self::first($properties, 'mv:keteranganJam', '')),
                     'jam_buka' => self::timeRange($properties),
@@ -162,7 +168,7 @@ final class Database3Catalog
             return self::$triples;
         }
 
-        return self::$triples = Cache::remember('database3.catalog.triples.v7', now()->addMinutes(10), function (): array {
+        return self::$triples = Cache::remember('database3.catalog.triples.v8', now()->addMinutes(10), function (): array {
             $result = SparqlService::jalankan(<<<'SPARQL'
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -181,10 +187,12 @@ final class Database3Catalog
                         rdf:type, rdf:subject, rdf:predicate, rdf:object, rdfs:label,
                         schema:name, schema:description, schema:address, schema:containedInPlace,
                         schema:image, schema:offers, owl:sameAs, geo:lat, geo:long,
+                        schema:isAccessibleForFree,
                         schema:streetAddress, mv:cerita, mv:kelurahan, mv:keteranganJam,
                         mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
                         mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh, mv:koordinatPerkiraan,
                         mv:masa, mv:kalimat,
+                        mv:hariTiket,
                         dcterms:source, mv:dibangunOleh, mv:memimpin, mv:terlibatDalam,
                         mv:merepresentasikan, mv:khasDari, mv:dekatDengan, mv:bergaya,
                         mv:bagianDari, mv:berkaitanDengan, mv:memilikiSejarah,

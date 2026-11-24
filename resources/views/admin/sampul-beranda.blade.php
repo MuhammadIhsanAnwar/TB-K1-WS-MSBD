@@ -3,7 +3,7 @@
 
 @php
     use App\Support\Foto;
-    $cadangan = 'peta-medan-1930-kota-lama.jpg';
+    $cadangan = 'kesawan.jpg';
     $fotoKecil = fn (?string $berkas) => Foto::url($berkas ?: $cadangan);
     $tempatPerSlug = collect($pilihanTempat)->keyBy('slug');
 @endphp
@@ -45,7 +45,7 @@
                     <div class="p-kosong" data-kosong @if ($pratinjau) hidden @endif>Slot kosong</div>
                     <figcaption data-sumber>
                         @if ($s['fotoAda'] && $slugTerpilih === $s['slug']) Foto unggahan
-                        @elseif ($tempatSlot) {{ empty($tempatSlot['foto']) ? 'Tempat ini belum punya foto; beranda memakai peta Medan 1930' : 'Foto dari data tempat (Database 3)' }}
+                        @elseif ($tempatSlot) {{ empty($tempatSlot['foto']) ? 'Tempat ini belum punya foto; beranda memakai foto Kawasan Kota Lama Kesawan' : 'Foto dari data tempat (Database 3)' }}
                         @endif
                     </figcaption>
                 </figure>

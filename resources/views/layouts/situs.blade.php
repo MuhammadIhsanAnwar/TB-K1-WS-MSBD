@@ -5,7 +5,7 @@
         $judulMeta = trim($__env->yieldContent('judul', 'Jelajahi Kota Medan'));
         $deskripsiMeta = trim($__env->yieldContent('deskripsi', 'Jelajahi wisata Kota Medan melalui MedanVisit. Temukan tempat bersejarah, kuliner, informasi tiket, dan rute perjalanan.'));
         $urlMeta = url()->current();
-        $fotoMeta = trim($__env->yieldContent('foto-og')) ?: asset('storage/foto_wisata/peta-medan-1930-kota-lama.jpg');
+        $fotoMeta = trim($__env->yieldContent('foto-og')) ?: asset('storage/foto_wisata/kesawan.jpg');
     @endphp
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +65,7 @@
             $fotoKaki = trim($__env->yieldContent('foto-kaki'));
             if (! $fotoKaki) {
                 $fotoKaki = collect(\App\Support\Katalog::tempat())
-                    ->first(fn ($tempat) => ! empty($tempat['foto']))['foto'] ?? 'peta-medan-1930-kota-lama.jpg';
+                    ->first(fn ($tempat) => ! empty($tempat['foto']))['foto'] ?? 'kesawan.jpg';
             }
         @endphp
         @include('partials.kaki', ['ringkas' => ! request()->routeIs('beranda'), 'fotoKaki' => $fotoKaki])

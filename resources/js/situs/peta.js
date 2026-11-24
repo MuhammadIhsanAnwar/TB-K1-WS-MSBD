@@ -24,6 +24,7 @@ function popup(t) {
     const rating = Number(t.rating ?? 0);
     const jumlahUlasan = Number(t.jumlahUlasan ?? 0);
     const jumlahKunjungan = Number(t.jumlahKunjungan ?? 0);
+    const jumlahSuka = Number(t.jumlahSuka ?? 0);
 
     const infoRating = jumlahUlasan > 0
         ? `★ ${rating.toLocaleString('id', {
@@ -39,6 +40,7 @@ function popup(t) {
             <div style="margin-top:6px;font-size:0.85rem">
                 <div>${infoRating}</div>
                 <div>👁 ${jumlahKunjungan.toLocaleString('id')} kunjungan</div>
+                <div>❤️ ${jumlahSuka.toLocaleString('id')} like</div>
             </div>
             <div class="aksi">
                 <a href="${esc(t.url)}">Lihat tempat</a>
@@ -361,6 +363,16 @@ function modeAlat(el) {
         (b.rating - a.rating) ||
         (b.jumlahUlasan - a.jumlahUlasan)
     );
+        } else if (saring.urut === 'rating-rendah') {
+            tampil.sort((a, b) =>
+                (a.rating - b.rating) ||
+                (a.jumlahUlasan - b.jumlahUlasan)
+            );
+        } else if (saring.urut === 'ulasan') {
+            tampil.sort((a, b) =>
+                (b.jumlahUlasan - a.jumlahUlasan) ||
+                (b.rating - a.rating)
+            );
         } else if (saring.urut === 'kunjungan') {
             tampil.sort((a, b) =>
                 b.jumlahKunjungan - a.jumlahKunjungan
@@ -375,7 +387,7 @@ function modeAlat(el) {
             );
         } else if (saring.urut === 'termurah') {
             tampil.sort((a, b) =>
-                (a.hargaAngka ?? 0) - (b.hargaAngka ?? 0)
+                (a.hargaAngka ?? Number.MAX_SAFE_INTEGER) - (b.hargaAngka ?? Number.MAX_SAFE_INTEGER)
             );
         }
 

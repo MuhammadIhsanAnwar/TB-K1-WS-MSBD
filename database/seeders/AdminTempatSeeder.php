@@ -16,7 +16,7 @@ use RuntimeException;
  *
  *   php artisan db:seed --class=AdminTempatSeeder
  *
- * Daftar tempat dibaca dari database/rdf/medanvisit-data.ttl (sumber yang sama
+ * Daftar tempat dibaca dari database/rdf sparql/medanvisit-data.ttl (sumber yang sama
  * dengan Database 3), jadi seeder tidak perlu koneksi ke AllegroGraph.
  */
 class AdminTempatSeeder extends Seeder
@@ -70,7 +70,7 @@ class AdminTempatSeeder extends Seeder
     /** @return array<string,string> slug => nama tempat */
     private function daftarTempat(): array
     {
-        $berkas = database_path('rdf/medanvisit-data.ttl');
+        $berkas = database_path('rdf sparql/medanvisit-data.ttl');
         $isi = is_file($berkas) ? file_get_contents($berkas) : false;
         if ($isi === false) {
             throw new RuntimeException("Berkas RDF tidak ditemukan: {$berkas}");

@@ -53,25 +53,29 @@
             <div class="mv-gelembung mv-gelembung--asisten">
                 <p>Halo! Aku <b>Mas Nonov</b>, maskot asisten wisatamu di Medan. Aku bisa bantu cari tempat wisata, kuliner khas, rute jalan kaki, dan info harga tiket. Mau mulai dari mana?</p>
             </div>
-            <div class="mv-asisten-panel__saran" data-widget-saran>
-                @if ($contohTiket)
-                    <button type="button">Berapa harga tiket {{ $contohTiket['nama'] }}?</button>
-                @endif
-                @if ($contohKuliner)
-                    <button type="button">Info kuliner {{ $contohKuliner['nama'] }}</button>
-                @endif
-                @if ($contohTempat)
-                    <button type="button">Rute setengah hari dari {{ $contohTempat['nama'] }}</button>
-                    <button type="button">Tempat wisata dekat {{ $contohTempat['nama'] }}</button>
-                @endif
-            </div>
+            @if (session()->has('pengguna.id'))
+                <div class="mv-asisten-panel__saran" data-widget-saran>
+                    @if ($contohTiket)
+                        <button type="button">Berapa harga tiket {{ $contohTiket['nama'] }}?</button>
+                    @endif
+                    @if ($contohKuliner)
+                        <button type="button">Info kuliner {{ $contohKuliner['nama'] }}</button>
+                    @endif
+                    @if ($contohTempat)
+                        <button type="button">Rute setengah hari dari {{ $contohTempat['nama'] }}</button>
+                        <button type="button">Tempat wisata dekat {{ $contohTempat['nama'] }}</button>
+                    @endif
+                </div>
+            @else
+                <p>Silakan <a href="{{ route('masuk', ['kembali' => request()->getRequestUri()]) }}">masuk ke akun</a> untuk mulai bertanya kepada Mas Nonov.</p>
+            @endif
         </div>
 
         <form class="mv-asisten-panel__form" data-widget-form>
             <label class="sr-only" for="pesan-widget-asisten">Tulis pertanyaan soal wisata Medan</label>
-            <textarea id="pesan-widget-asisten" name="pesan" rows="1" maxlength="300" placeholder="Tulis pertanyaan soal Medan…" required></textarea>
-            <button type="submit" aria-label="Kirim pertanyaan">Kirim</button>
+            <textarea id="pesan-widget-asisten" name="pesan" rows="1" maxlength="300" placeholder="Tulis pertanyaan soal Medan…" required @disabled(! session()->has('pengguna.id'))></textarea>
+            <button type="submit" aria-label="Kirim pertanyaan" @disabled(! session()->has('pengguna.id'))>Kirim</button>
         </form>
-        <p class="mv-asisten-panel__catatan">Berdasarkan katalog MedanVisit. Cek kembali jam buka dan harga bertanda contoh sebelum berangkat.</p>
+        <p class="mv-asisten-panel__catatan">Berdasarkan katalog MedanVisit. Pastikan kembali jam buka dan harga di lokasi sebelum berangkat.</p>
     </div>
 </div>

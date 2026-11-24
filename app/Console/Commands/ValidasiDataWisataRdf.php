@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 /** Memeriksa kelengkapan identitas destinasi sebelum data RDF dikirim ke DB 3. */
 class ValidasiDataWisataRdf extends Command
 {
-    protected $signature = 'db3:validasi {--expect=196 : Jumlah tempat wisata yang diharapkan} {--ringkas : Hanya tampilkan ringkasan}';
+    protected $signature = 'db3:validasi {--expect=198 : Jumlah tempat wisata yang diharapkan} {--ringkas : Hanya tampilkan ringkasan}';
 
     protected $description = 'Validasi identitas lengkap tempat wisata pada medanvisit-data.ttl';
 
@@ -18,7 +18,7 @@ class ValidasiDataWisataRdf extends Command
 
     public function handle(): int
     {
-        $path = database_path('rdf/medanvisit-data.ttl');
+        $path = database_path('rdf sparql/medanvisit-data.ttl');
         if (! is_file($path)) {
             $this->error('Berkas RDF tidak ditemukan: '.$path);
 
@@ -37,8 +37,11 @@ class ValidasiDataWisataRdf extends Command
                     $missing[] = $field;
                 }
             }
-            if ($place['berbayar'] && ! $place['harga']) {
-                $missing[] = 'harga tiket';
+            if ($place['jumlah_tiket'] > 1) {
+                $missing[] = 'lebih dari satu tarif tiket';
+            }
+            if ($place['harga_contoh']) {
+                $missing[] = 'harga tiket contoh';
             }
             if ($missing !== []) {
                 $issues[$slug] = $missing;
@@ -48,7 +51,7 @@ class ValidasiDataWisataRdf extends Command
         $this->table(['Pemeriksaan', 'Hasil'], [
             ['Jumlah tempat di TTL', count($places)],
             ['Jumlah yang diharapkan', $expected],
-            ['Identitas tidak lengkap', count($issues)],
+            ['Data bermasalah', count($issues)],
         ]);
 
         if ($issues !== []) {
@@ -59,7 +62,7 @@ class ValidasiDataWisataRdf extends Command
                 }
             }
             ksort($ringkasan);
-            $this->table(['Data yang perlu dilengkapi', 'Jumlah tempat'], collect($ringkasan)
+            $this->table(['Masalah data', 'Jumlah tempat'], collect($ringkasan)
                 ->map(fn (int $count, string $field): array => [$field, $count])
                 ->values()
                 ->all());
@@ -67,7 +70,7 @@ class ValidasiDataWisataRdf extends Command
 
         if (! $this->option('ringkas') && $issues !== []) {
             $this->newLine();
-            $this->warn('Tempat dengan data belum lengkap:');
+            $this->warn('Tempat dengan data yang perlu diperbaiki:');
             foreach ($issues as $slug => $missing) {
                 $this->line("- {$slug}: ".implode(', ', $missing));
             }
@@ -79,7 +82,7 @@ class ValidasiDataWisataRdf extends Command
             return self::FAILURE;
         }
 
-        $this->info('Validasi berhasil: seluruh tempat memiliki identitas wajib.');
+        $this->info('Validasi berhasil: identitas wajib lengkap, tanpa tarif tiket ganda atau harga contoh.');
 
         return self::SUCCESS;
     }
@@ -105,12 +108,12 @@ class ValidasiDataWisataRdf extends Command
                 'lng' => preg_match('/(?:geo:long|schema:longitude)\s+"/u', $all) === 1,
                 'jam' => preg_match('/(?:mv:keteranganJam|schema:openingHours)\s+"/u', $all) === 1,
                 'gratis' => preg_match('/schema:isAccessibleForFree\s+(?:true|false)/u', $all) === 1,
-                'berbayar' => preg_match('/schema:isAccessibleForFree\s+false/u', $all) === 1,
                 'foto' => $fileFoto !== null && is_file(public_path('storage/foto_wisata/'.basename($fileFoto))),
                 'sumber' => preg_match('/(?:dcterms:source|prov:wasDerivedFrom)\s+</u', $all) === 1,
                 // Relasi kecamatan didefinisikan setelah blok ABox tempat.
                 'kecamatan' => preg_match('/^res:'.preg_quote($slug, '/').'\s+mv:beradaDi\s+res:[a-z0-9-]+\s*\./mu', $ttl) === 1,
-                'harga' => preg_match('/(?:schema:offers\s+\[|mv:hargaTiketMulai\s+\d+)/u', $all) === 1,
+                'jumlah_tiket' => preg_match_all('/schema:offers\s+\[/u', $all),
+                'harga_contoh' => preg_match('/mv:hargaContoh\s+true/u', $all) === 1,
             ];
         }
 

@@ -41,7 +41,12 @@ class AdminEntitasFotoTest extends TestCase
         $this->assertPlacePhotoCanBeUploadedBy('superadmin', true);
     }
 
-    private function assertPlacePhotoCanBeUploadedBy(string $role, bool $failUpdate = false): void
+    public function test_uploaded_photo_normalizes_legacy_filename_extension_to_jpg(): void
+    {
+        $this->assertPlacePhotoCanBeUploadedBy('superadmin', false, 'png');
+    }
+
+    private function assertPlacePhotoCanBeUploadedBy(string $role, bool $failUpdate = false, string $oldExtension = 'jpg'): void
     {
         Cache::setDefaultDriver('array');
         Cache::store('array')->flush();
@@ -57,14 +62,20 @@ class AdminEntitasFotoTest extends TestCase
         $slug = 'tempat-uji-foto';
         $name = 'Tempat Uji Foto';
         $district = $base.'id/kec-medan-barat';
-        $oldFilename = $slug.'-lama.jpg';
+        $oldFilename = $slug.'-lama.'.$oldExtension;
+        $targetFilename = pathinfo($oldFilename, PATHINFO_FILENAME).'.jpg';
         $oldPath = public_path('storage/foto_wisata/'.$oldFilename);
-        $newPath = public_path('storage/foto_wisata/'.$slug.'.jpg');
+        $targetPath = public_path('storage/foto_wisata/'.$targetFilename);
         $sourcePhoto = public_path('storage/foto_wisata/kesawan.jpg');
         $uploadSource = storage_path('app/'.$slug.'-unggahan.jpg');
         File::copy($sourcePhoto, $oldPath);
-        File::copy($sourcePhoto, $uploadSource);
-        $this->fotoUji = [$oldPath, $newPath, $uploadSource];
+        $gambarBaru = imagecreatetruecolor(8, 8);
+        $merah = imagecolorallocate($gambarBaru, 220, 30, 30);
+        imagefill($gambarBaru, 0, 0, $merah);
+        imagepng($gambarBaru, $uploadSource);
+        imagedestroy($gambarBaru);
+        $isiFotoLama = File::get($oldPath);
+        $this->fotoUji = [$oldPath, $targetPath, $uploadSource];
 
         $bindings = [];
         $addTriple = static function (string $subject, string $predicate, string $value, string $type = 'literal', ?string $datatype = null) use (&$bindings): void {
@@ -123,6 +134,12 @@ class AdminEntitasFotoTest extends TestCase
             $pengguna['tempat_slugs'] = [$slug];
         }
 
+        $this->withSession(['pengguna' => $pengguna])
+            ->get('/admin/entitas/'.$slug)
+            ->assertOk()
+            ->assertSee('Status buka/tutup')
+            ->assertSee(route('admin.entitas.status-operasional', $slug), false);
+
         $response = $this->withSession(['pengguna' => $pengguna])
             ->post('/admin/entitas/'.$slug, [
                 'nama' => $name,
@@ -134,23 +151,41 @@ class AdminEntitasFotoTest extends TestCase
                 'jam' => 'Setiap hari, 08.00–17.00',
                 'sumber' => 'https://example.test/sumber',
                 'kecamatan' => 'kec-medan-barat',
-                'foto' => new UploadedFile($uploadSource, 'unggahan.jpg', 'image/jpeg', null, true),
+                'foto' => new UploadedFile($uploadSource, 'unggahan.png', 'image/png', null, true),
             ]);
 
         if ($failUpdate) {
             $response->assertInternalServerError();
             $this->assertFileExists($oldPath);
-            $this->assertFileDoesNotExist($newPath);
+            $this->assertSame($isiFotoLama, File::get($oldPath));
+            if ($targetPath !== $oldPath) {
+                $this->assertFileDoesNotExist($targetPath);
+            }
 
             return;
         }
 
         $response->assertRedirect()->assertSessionHas('pesan');
 
-        $this->assertFileExists($newPath);
-        $this->assertFileDoesNotExist($oldPath);
+        $this->assertFileExists($targetPath);
+        $this->assertNotSame($isiFotoLama, File::get($targetPath));
+        $this->assertSame('image/jpeg', getimagesize($targetPath)['mime']);
+        if ($targetPath !== $oldPath) {
+            $this->assertFileDoesNotExist($oldPath);
+        }
         Http::assertSent(fn (ClientRequest $request): bool =>
-            str_contains(urldecode($request->body()), 'schema:image <'.$base.'storage/foto_wisata/'.$slug.'.jpg>')
+            str_contains(urldecode($request->body()), 'schema:image <'.$base.'storage/foto_wisata/'.$targetFilename.'>')
+        );
+
+        $this->withSession(['pengguna' => $pengguna])
+            ->post('/admin/entitas/'.$slug.'/status-operasional', ['status_operasional' => 'tutup'])
+            ->assertRedirect()
+            ->assertSessionHas('pesan', 'Status tempat ditetapkan Tutup sekarang, tanpa mengikuti jam operasional.');
+        Http::assertSent(fn (ClientRequest $request): bool =>
+            $request->method() === 'POST'
+            && str_contains($request->url(), '/rest/v1/pengaturan_situs?')
+            && $request['nilai']['slug'] === $slug
+            && $request['nilai']['status'] === 'tutup'
         );
     }
 }

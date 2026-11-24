@@ -51,7 +51,10 @@
                             <td class="sekunder">{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }}</td>
                             <td class="n nums">{{ Katalog::rupiah($p['total']) }}</td>
                             <td class="n">
-    @php $st = ! empty($p['dipakai']) ? ['Sudah dipakai', ''] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]; @endphp
+    @php
+        $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
+        $st = ! empty($p['dipakai']) ? ['Sudah dipakai', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
+    @endphp
     <span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span>
 </td>
 <td class="n">
@@ -74,7 +77,7 @@
         </div>
     @else
         <div class="kosong" style="background:var(--mv-putih);padding:32px 24px">
-            <p>{{ ['aktif' => 'Belum ada e-tiket aktif atau pesanan yang menunggu pembayaran.', 'selesai' => 'Belum ada riwayat tiket yang selesai dipakai.', 'dibatalkan' => 'Tidak ada pesanan tiket yang dibatalkan.'][$tab] }}</p>
+            <p>{{ ['aktif' => 'Belum ada e-tiket aktif atau pesanan yang menunggu pembayaran.', 'selesai' => 'Belum ada tiket yang dipakai atau kedaluwarsa.', 'dibatalkan' => 'Tidak ada pesanan tiket yang dibatalkan.'][$tab] }}</p>
             @if ($tab === 'aktif')
                 <a class="mv-btn mv-btn--utama" href="{{ route('beranda') }}#tiket" style="margin-top:16px">Lihat tempat bertiket</a>
             @endif

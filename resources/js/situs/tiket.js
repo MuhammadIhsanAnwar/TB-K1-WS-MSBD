@@ -20,7 +20,7 @@ if (pilih) {
         });
         total.textContent = rp(t);
         rincian.textContent = teks.length ? teks.join(', ') : 'Belum ada tiket dipilih';
-        lanjut.disabled = t === 0;
+        lanjut.disabled = t === 0 || lanjut.dataset.operasionalBuka !== '1';
     };
     baris.forEach((b) => {
         const input = b.querySelector('input');

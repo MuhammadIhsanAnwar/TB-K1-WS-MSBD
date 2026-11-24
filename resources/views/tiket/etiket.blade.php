@@ -44,8 +44,9 @@
         <div class="mv-etiket__potong" aria-hidden="true"></div>
 
         <div class="mv-etiket__qr-blok">
-            <div class="mv-etiket__qr" data-qr="{{ $p['kode'] }}" data-qr-label="Kode QR e-tiket {{ $p['kode'] }}"></div>
-            <p class="mv-etiket__kode">{{ $p['kode'] }}</p>
+            <div class="mv-etiket__qr" data-qr="{{ $p['kode_qr'] }}" data-qr-label="Identitas QR e-tiket {{ $p['kode_qr'] }}"></div>
+            <p class="mv-etiket__kode">{{ $p['kode_qr'] }}</p>
+            <p class="kecil redup">No. pesanan: {{ $p['kode'] }}</p>
             <span class="p-pill {{ $statusLabel[1] }}">{{ $statusLabel[0] }}</span>
             <p class="kecil redup">Naikkan kecerahan layar ponsel saat menunjukkan kode QR di pintu masuk.</p>
         </div>

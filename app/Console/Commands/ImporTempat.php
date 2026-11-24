@@ -38,7 +38,7 @@ class ImporTempat extends Command
     public function handle(): int
     {
         $berkas = base_path((string) $this->option('berkas'));
-        $ttl = database_path('rdf/medanvisit-data.ttl');
+        $ttl = database_path('rdf sparql/medanvisit-data.ttl');
 
         if (! is_file($berkas)) {
             $this->error('Berkas CSV tidak ditemukan: '.$berkas);

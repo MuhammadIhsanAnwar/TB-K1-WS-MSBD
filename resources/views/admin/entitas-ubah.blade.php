@@ -287,8 +287,9 @@
                            @error('foto') aria-invalid="true" @enderror>
 
                     <span class="bantu">
-                        JPG, PNG, atau WEBP; maksimal 8 MB. Nama file dibuat dari nama tempat wisata.
-                        Foto lama akan diganti setelah perubahan berhasil disimpan.
+                        JPG, PNG, atau WEBP; maksimal 8 MB. Semua unggahan disimpan sebagai JPG.
+                        Nama dasar foto yang tercatat di TTL tetap dipakai; jika belum ada foto,
+                        nama file dibuat dari nama tempat. Foto lama dihapus setelah perubahan berhasil disimpan.
                     </span>
 
                     @if (! empty($e['foto']))
@@ -412,6 +413,33 @@
     </section>
 
 </form>
+
+{{-- STATUS OPERASIONAL --}}
+@if ($e['jenis'] === 'tempat')
+    <section class="p-pengaturan" aria-labelledby="judul-status-operasional">
+        <div>
+            <h2 id="judul-status-operasional">Status buka/tutup</h2>
+            <p>
+                Status yang ditampilkan sekarang: {{ $statusSaatIni === null ? 'belum diketahui dari jadwal' : ($statusSaatIni ? 'Buka' : 'Tutup') }}.
+                Kamu dapat menetapkan status berbeda tanpa mengubah jadwal.
+            </p>
+        </div>
+        <div class="p-pengaturan__panel">
+            <form method="post" action="{{ route('admin.entitas.status-operasional', $e['slug']) }}">
+                @csrf
+                <div class="p-field">
+                    <label for="status-operasional">Status yang ditampilkan sekarang</label>
+                    <select id="status-operasional" name="status_operasional">
+                        <option value="jadwal" @selected($statusOperasional === 'jadwal')>Ikuti jam operasional</option>
+                        <option value="buka" @selected($statusOperasional === 'buka')>Tetapkan Buka sekarang</option>
+                        <option value="tutup" @selected($statusOperasional === 'tutup')>Tetapkan Tutup sekarang</option>
+                    </select>
+                </div>
+                <button class="p-btn p-btn--utama" type="submit">Simpan status</button>
+            </form>
+        </div>
+    </section>
+@endif
 
 {{-- HAPUS TEMPAT --}}
 @if ($e['jenis'] === 'tempat' && in_array(session('pengguna.peran'), ['admin', 'superadmin'], true))

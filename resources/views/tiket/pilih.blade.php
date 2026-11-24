@@ -40,16 +40,20 @@
                 <header><h2 id="judul-tanggal">Tanggal kunjungan</h2></header>
                 <div class="p-field">
                     <label for="tanggal">Pilih tanggal kedatangan</label>
-                    <input id="tanggal" type="date" name="tanggal" value="{{ old('tanggal', $lama['tanggal'] ?? now('Asia/Jakarta')->toDateString()) }}" min="{{ now('Asia/Jakarta')->toDateString() }}" max="{{ now('Asia/Jakarta')->addDays(60)->toDateString() }}" required aria-describedby="bantu-tanggal @error('tanggal') galat-tanggal @enderror" @error('tanggal') aria-invalid="true" @enderror>
-                    <span class="bantu" id="bantu-tanggal">Dapat dipesan hingga 60 hari ke depan. E-tiket berlaku satu kali masuk pada tanggal ini.</span>
+                    <input id="tanggal" type="date" name="tanggal" value="{{ old('tanggal', $lama['tanggal'] ?? $hariIni) }}" min="{{ $hariIni }}" max="{{ $hariIni }}" required aria-describedby="bantu-tanggal @error('tanggal') galat-tanggal @enderror" @error('tanggal') aria-invalid="true" @enderror>
+                    <span class="bantu" id="bantu-tanggal">Tiket hanya dapat dipesan untuk hari ini dan berlaku satu kali masuk. @if (! empty($t['hari_tiket'])) Tarif yang ditampilkan berlaku {{ $t['hari_tiket'] }}.@endif</span>
                     @error('tanggal')<span class="galat" id="galat-tanggal">{{ $message }}</span>@enderror
                 </div>
             </section>
+            @if (! $jadwalDiketahui)
+                <p class="p-pesan p-pesan--info" role="status">Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.</p>
+            @elseif (! $tempatBuka)
+                <p class="p-pesan p-pesan--info" role="status">Pemesanan hanya dapat dilakukan saat tempat sedang buka ({{ $t['jam'] }}).</p>
+            @endif
 
             <section class="p-panel" aria-labelledby="judul-jumlah">
                 <header>
                     <h2 id="judul-jumlah">Jumlah pengunjung</h2>
-                    @if (! empty($t['harga_contoh']))<span class="meta">Harga contoh prototipe</span>@endif
                 </header>
                 @foreach ($t['tiket'] as $jenis => $harga)
                     @php $n = $jumlahLama[$loop->index] ?? (collect($lama['item'] ?? [])->firstWhere('jenis', $jenis)['jumlah'] ?? ($loop->first ? 1 : 0)); @endphp
@@ -87,7 +91,7 @@
             <p><b>{{ $t['nama'] }}</b></p>
             <p class="redup" data-rincian aria-live="polite">Belum ada tiket dipilih</p>
             <div class="total"><span>Total bayar</span><b class="nums" data-total aria-live="polite">Rp0</b></div>
-            <button class="mv-btn mv-btn--utama mv-btn--lebar" type="submit" data-lanjut style="margin-top:16px">Lanjut ke data pemesan</button>
+            <button class="mv-btn mv-btn--utama mv-btn--lebar" type="submit" data-lanjut data-operasional-buka="{{ $tempatBuka ? '1' : '0' }}" style="margin-top:16px" @disabled(! $tempatBuka)>Lanjut ke data pemesan</button>
         </aside>
     </form>
 </div>

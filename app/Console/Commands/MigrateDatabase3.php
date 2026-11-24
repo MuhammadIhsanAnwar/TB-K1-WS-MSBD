@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 class MigrateDatabase3 extends Command
 {
     protected $signature = 'db3:migrate
-                            {--expect=196 : Jumlah tempat wisata yang diharapkan}
+                            {--expect=198 : Jumlah tempat wisata yang diharapkan}
                             {--force : Kirim meski validasi sumber gagal}
                             {--no-replace : Tambahkan data tanpa menghapus graph lama}';
 

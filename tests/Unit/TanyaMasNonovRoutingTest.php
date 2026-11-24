@@ -88,4 +88,13 @@ class TanyaMasNonovRoutingTest extends TestCase
         $this->assertSame('tourism_knowledge', $routing['intent']);
         $this->assertSame('sparql', $routing['source']);
     }
+
+    public function test_food_recommendations_route_to_tourism_data(): void
+    {
+        $routing = TanyaMasNonovService::klasifikasi('Tempat makan enak');
+
+        $this->assertSame('tourism_knowledge', $routing['intent']);
+        $this->assertSame('sparql', $routing['source']);
+        $this->assertTrue($routing['requires_database']);
+    }
 }

@@ -51,7 +51,7 @@ class SambutanLoginTest extends TestCase
             ->assertSee('Periksa juga folder spam.')
             ->assertSee($message)
             ->assertSee('class="mv-otentik__visual"', false)
-            ->assertSee('peta-medan-1930-kota-lama.jpg')
+            ->assertSee('kesawan.jpg')
             ->assertSee('class="mv-otentik__pesan" role="status"', false)
             ->assertDontSee('<div class="pesan" role="status">', false);
     }

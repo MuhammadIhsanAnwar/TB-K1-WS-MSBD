@@ -159,10 +159,14 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .p-pesan { display: flex; gap: 12px; align-items: center; padding: 12px 16px; margin-bottom: 16px; border-radius: var(--p-radius-control); background: var(--pill-positive-bg); color: var(--pill-positive-ink); font-weight: 500; }
 .p-pesan--galat { background: var(--pill-negative-bg); color: var(--pill-negative-ink); }
 .p-pesan--info { background: var(--pill-warning-bg); color: var(--pill-warning-ink); border: 1px solid #ecd9a6; }
+.p-pemindai { display: grid; justify-items: start; gap: 8px; }
+.p-pemindai__panel { display: grid; justify-items: start; gap: 8px; width: 100%; }
+.p-pemindai__panel[hidden] { display: none; }
+.p-pemindai__panel video { display: block; width: min(100%, 360px); max-height: 270px; aspect-ratio: 4 / 3; object-fit: cover; background: #101714; border-radius: var(--p-radius-control); }
 .p-hasil { display: grid; gap: 4px; padding: 20px; border-radius: var(--p-radius); margin-top: 16px; }
 .p-hasil b { font-size: 26px; line-height: 32px; }
 .p-hasil.valid { background: var(--pill-positive-bg); color: var(--pill-positive-ink); }
-.p-hasil.dipakai, .p-hasil.tidak { background: var(--pill-negative-bg); color: var(--pill-negative-ink); }
+.p-hasil.dipakai, .p-hasil.tidak, .p-hasil.kedaluwarsa { background: var(--pill-negative-bg); color: var(--pill-negative-ink); }
 .p-pengaturan { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px 40px; padding: 24px 0; }
 .p-pengaturan + .p-pengaturan { border-top: 1px solid var(--p-border); }
 .p-pengaturan h2 { font-size: 16px; font-weight: 600; }

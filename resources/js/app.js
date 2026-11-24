@@ -21,6 +21,11 @@ if (ada('[data-pengaturan]')) import('./situs/pengaturan.js');
 if (ada('[data-sampul-atur]')) import('./admin/sampul-beranda.js');
 if (ada('[data-rencana-form]')) import('./situs/rencana.js');
 if (ada('[data-checkin]')) import('./situs/checkin.js');
+if (ada('[data-pemindai-tiket]')) {
+    import('./panel/pemindai-tiket.js').catch((error) => {
+        console.error('Gagal memuat pemindai QR tiket:', error);
+    });
+}
 if (ada('[data-lorong]')) import('./situs/lorong.js');
 if (ada('[data-tiket]')) import('./situs/tiket.js');
 if (ada('[data-sparql]')) import('./situs/sparql.js');

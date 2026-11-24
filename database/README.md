@@ -4,11 +4,11 @@ Data wisata hanya dikirim ke Database 3. PostgreSQL hanya menyimpan akun,
 konfigurasi Laravel, dan transaksi:
 
 ```
-database/rdf/medanvisit-data.ttl
+database/rdf sparql/medanvisit-data.ttl
   └─► php artisan rdf:kirim ─► Database 3 AllegroGraph (SPARQL)
 ```
 
-Kalau data tempat berubah: ubah RDF sumber di `database/rdf/medanvisit-data.ttl`,
+Kalau data tempat berubah: ubah RDF sumber di `database/rdf sparql/medanvisit-data.ttl`,
 lalu jalankan `rdf:kirim` ke Database 3.
 
 ## Isi folder
@@ -20,15 +20,16 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_06_000300_buat_tabel_transaksi.php` | tabel DB 2, aktif |
 | `migrations/2026_11_06_000400_buat_objek_transaksi.php` | index, view, function, trigger, procedure DB 2, aktif |
 | `migrations/2026_11_15_000200_buat_admin_tempat.php` | hubungan admin dengan tempat wisata di DB 1; mengisi relasi dari `users.tempat_slug` yang sudah ada |
+| `migrations/2026_11_18_000200_buat_pengaturan_situs.php` | pengaturan DB 1 untuk sampul beranda dan override status operasional tempat |
+| `migrations/2026_11_24_000100_batasi_tiket_hari_ini.php` | DB 2 menolak pesanan dengan tanggal kunjungan selain hari ini |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
 | `seeders/AdminTempatSeeder.php` | membuat satu akun admin untuk tiap tempat wisata dan memastikan tautannya tersimpan di `admin_tempat` (jalankan setelah migration DB 1) |
 | `sql/00_role.sql`, `sql/01_medanvisit_katalog.sql`, `sql/02_medanvisit_transaksi.sql` | dump kedua database (struktur + data, perintah `INSERT` biasa). Bisa dijalankan di psql, DBeaver, atau SQL Editor Supabase tanpa Laravel; jalankan `00_role.sql` dulu |
-| `rdf/medanvisit-ontologi.ttl` (`.owl`) | ontologi (TBox): kelas dan properti, RDFS/OWL 2 |
-| `rdf/medanvisit-data.ttl` | sumber data wisata (ABox), dikirim langsung ke Database 3 |
-| `rdf/fuseki-medanvisit.ttl` | konfigurasi Fuseki: dataset `medanvisit`, hanya baca, reasoner OWL Micro |
-| `rdf/query/*.rq` | 10 contoh query SPARQL (SELECT, reifikasi, ASK, CONSTRUCT) |
+| `rdf sparql/medanvisit-ontologi.ttl` | ontologi (TBox): kelas dan properti, diperlukan untuk penggantian graph |
+| `rdf sparql/medanvisit-data.ttl` | sumber data wisata (ABox), dikirim langsung ke Database 3 |
+| `rdf sparql/query/*.rq` | contoh query SPARQL (SELECT, reifikasi, ASK, CONSTRUCT) |
 
 ## Server lokal (pengembangan)
 
@@ -50,6 +51,8 @@ Membuka database lewat DBeaver: koneksi PostgreSQL baru, host `localhost`, port 
 | Database 3 | `SPARQL_*` | tempat wisata, kategori, kecamatan, tiket, entitas, relasi, dan jalur dalam RDF |
 
 `id_tempat` di DB 2 merujuk ke resource RDF di Database 3. Kecocokannya dijaga aplikasi.
+DB 1 menyimpan override buka/tutup per tempat di `pengaturan_situs`; pilihan "Ikuti jam
+operasional" mengembalikan status publik dan pemesanan ke jadwal RDF.
 
 Laravel memuat schema dan objek DB 2 dari `database/migrations`; migration tersebut
 memakai koneksi `transaksi` dan tidak menyimpan data wisata.
@@ -121,11 +124,16 @@ SELECT kalimat, sumber FROM v_relasi_kalimat WHERE subjek = 'tjong-a-fie';
 CALL sp_hitung_relasi_dekat(300);
 
 -- DB 2
-CALL sp_buat_pesanan(1, 'Rina', 'rina@contoh.id', '0812', 1, current_date + 1, 'qris',
+CALL sp_buat_pesanan(1, 'Rina', 'rina@contoh.id', '0812', 'istana-maimun', current_date, 'qris',
                      '[{"jenis":"Dewasa","harga":10000,"jumlah":2}]', NULL);
 CALL sp_bayar_pesanan('MV-XXXXXXXX', 'REF-1', NULL);
 SELECT * FROM v_saldo_poin;
 ```
+
+`sp_buat_pesanan` hanya menerima tanggal kunjungan hari ini (zona waktu Asia/Jakarta).
+Aplikasi juga memeriksa jam operasional RDF saat memilih tiket dan mengulang pemeriksaan
+sebelum membuat pesanan. Tiket lunas yang belum dipakai menjadi kedaluwarsa setelah tanggal
+kunjungannya lewat; pemindaian admin hanya dapat menandai e-tiket yang belum pernah dipakai.
 
 ## 2. Web Semantik: standar W3C
 

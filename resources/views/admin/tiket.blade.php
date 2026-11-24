@@ -115,7 +115,16 @@
         <header><h2 id="judul-validasi">Validasi di loket</h2></header>
         <form class="p-form" method="post" action="{{ route('admin.tiket.validasi') }}" novalidate>
             @csrf
-            <div class="p-field"><label for="kode">Kode e-tiket</label><input id="kode" name="kode" class="kode" placeholder="MV-XXXX-0000" autocomplete="off" value="{{ old('kode') }}" @error('kode') aria-invalid="true" aria-describedby="g-kode" @enderror>@error('kode')<span class="galat" id="g-kode">{{ $message }}</span>@enderror</div>
+            <div class="p-field"><label for="kode">ID QR e-tiket atau kode pesanan</label><input id="kode" name="kode" class="kode" maxlength="40" placeholder="QR-XXXXXXXXXXXX" autocomplete="off" value="{{ old('kode') }}" @error('kode') aria-invalid="true" aria-describedby="g-kode" @enderror>@error('kode')<span class="galat" id="g-kode">{{ $message }}</span>@enderror</div>
+            <div class="p-pemindai" data-pemindai-tiket>
+                <button class="p-btn" type="button" data-pemindai-mulai>Pindai QR dengan kamera</button>
+                <div class="p-pemindai__panel" data-pemindai-panel hidden>
+                    <video data-pemindai-video autoplay muted playsinline aria-label="Pratinjau kamera untuk memindai e-tiket"></video>
+                    <p class="bantu" data-pemindai-status role="status" aria-live="polite">Arahkan kamera ke QR e-tiket.</p>
+                    <button class="p-btn p-btn--teks" type="button" data-pemindai-berhenti>Berhenti memindai</button>
+                </div>
+                <span class="bantu">Bisa juga ketik ID QR atau kode pesanan secara manual.</span>
+            </div>
             <div><button class="p-btn p-btn--utama p-btn--besar" type="submit">Periksa tiket</button></div>
         </form>
         @if ($hasil)<div class="p-hasil {{ $hasil['status'] }}" role="status"><b>{{ $hasil['judul'] }}</b><span>{{ $hasil['teks'] }}</span></div>@endif
@@ -134,7 +143,10 @@
                 <thead><tr><th>Kode</th><th>Pemesan</th><th>Tempat dan tanggal</th><th class="n">Total</th><th class="n">Status</th></tr></thead>
                 <tbody>
                     @foreach ($pesanan as $p)
-                        @php $st = ! empty($p['dipakai']) ? ['Dipakai', ''] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]; @endphp
+                        @php
+                            $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
+                            $st = ! empty($p['dipakai']) ? ['Dipakai', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
+                        @endphp
                         <tr>
                             <td><span class="kode">{{ $p['kode'] }}</span></td>
                             <td class="sekunder">{{ $p['pemesan']['nama'] }}<span class="sub">{{ $p['pemesan']['email'] }}</span></td>

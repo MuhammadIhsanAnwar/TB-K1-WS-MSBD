@@ -61,6 +61,11 @@ class Penyimpanan
         return self::bentukPesanan(self::api()->pesanan(kode: $kode))[0] ?? null;
     }
 
+    public static function cariPesananQr(string $kodeQr): ?array
+    {
+        return self::bentukPesanan(self::api()->pesananDenganKodeQr($kodeQr))[0] ?? null;
+    }
+
     /**
      * Membuat pesanan lewat function sp_buat_pesanan (pesanan + item dalam satu transaksi,
      * total dihitung trigger, batas bayar 15 menit).
@@ -107,6 +112,11 @@ class Penyimpanan
         }
 
         return self::cariPesanan($kode);
+    }
+
+    public static function tandaiTiketDipakai(int $idPesanan, string $waktu): bool
+    {
+        return self::api()->pakaiTiket($idPesanan, $waktu);
     }
 
     /** Baris database menjadi bentuk yang dipakai controller dan view. */

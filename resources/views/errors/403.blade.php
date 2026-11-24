@@ -1,6 +1,6 @@
 @extends('layouts.situs')
 @section('judul', 'Halaman ini khusus peran lain')
-@section('foto-kaki', 'peta-medan-1930-kota-lama.jpg')
+@section('foto-kaki', 'kesawan.jpg')
 
 @section('isi')
 <header class="kepala-halaman kepala-halaman--tunggal">

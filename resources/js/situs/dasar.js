@@ -646,6 +646,7 @@ const saringBeranda = document.querySelector('[data-saring-beranda]');
 if (saringBeranda) {
     const grid = document.querySelector('[data-grid-beranda]');
     const kartu = [...(grid?.querySelectorAll('[data-kategori]') ?? [])];
+    const kartuBawaan = [...kartu];
     const tombol = [...saringBeranda.querySelectorAll('button[data-filter]')];
     const paginasi = document.querySelector('[data-paginasi-beranda]');
     const sebelum = paginasi?.querySelector('[data-halaman-sebelum]');
@@ -654,21 +655,36 @@ if (saringBeranda) {
     const perHalaman = 9;
     let filterAktif = 'semua';
     let halaman = 0;
+    let urutanAktif = 'bawaan';
 
     const tampilkanHalaman = ({ fokus = false } = {}) => {
         const hasil = kartu.filter((k) => filterAktif === 'semua' || k.dataset.kategori === filterAktif);
-        const jumlahHalaman = Math.max(1, Math.ceil(hasil.length / perHalaman));
+        const urut = [...hasil];
+        if (urutanAktif === 'bawaan') {
+            urut.splice(0, urut.length, ...kartuBawaan.filter((k) => hasil.includes(k)));
+        } else if (urutanAktif === 'suka') {
+            urut.sort((a, b) => Number(b.dataset.suka || 0) - Number(a.dataset.suka || 0));
+        } else if (urutanAktif === 'ulasan') {
+            urut.sort((a, b) => Number(b.dataset.ulasan || 0) - Number(a.dataset.ulasan || 0));
+        } else if (urutanAktif === 'rating-tertinggi') {
+            urut.sort((a, b) => Number(b.dataset.rating || 0) - Number(a.dataset.rating || 0));
+        } else if (urutanAktif === 'rating-terendah') {
+            urut.sort((a, b) => Number(a.dataset.rating || 0) - Number(b.dataset.rating || 0));
+        }
+        urut.forEach((k) => grid?.appendChild(k));
+        const daftar = urut;
+        const jumlahHalaman = Math.max(1, Math.ceil(daftar.length / perHalaman));
         halaman = Math.min(halaman, jumlahHalaman - 1);
         const awal = halaman * perHalaman;
-        const akhir = Math.min(awal + perHalaman, hasil.length);
+        const akhir = Math.min(awal + perHalaman, daftar.length);
 
         kartu.forEach((k) => { k.hidden = true; });
-        hasil.slice(awal, akhir).forEach((k) => { k.hidden = false; });
+        daftar.slice(awal, akhir).forEach((k) => { k.hidden = false; });
         grid?.classList.toggle('terfilter', filterAktif !== 'semua');
 
         if (paginasi) {
-            paginasi.hidden = hasil.length <= perHalaman;
-            if (status) status.textContent = `Menampilkan ${hasil.length ? awal + 1 : 0}–${akhir} dari ${hasil.length} tempat`;
+            paginasi.hidden = daftar.length <= perHalaman;
+            if (status) status.textContent = `Menampilkan ${daftar.length ? awal + 1 : 0}–${akhir} dari ${daftar.length} tempat`;
             if (sebelum) sebelum.disabled = halaman === 0;
             if (sesudah) sesudah.disabled = halaman >= jumlahHalaman - 1;
         }
@@ -683,6 +699,11 @@ if (saringBeranda) {
             halaman = 0;
             tampilkanHalaman();
         });
+    });
+    document.querySelector('[data-urut-beranda]')?.addEventListener('change', (event) => {
+        urutanAktif = event.currentTarget.value;
+        halaman = 0;
+        tampilkanHalaman({ fokus: true });
     });
     sebelum?.addEventListener('click', () => { halaman -= 1; tampilkanHalaman({ fokus: true }); });
     sesudah?.addEventListener('click', () => { halaman += 1; tampilkanHalaman({ fokus: true }); });

@@ -7,6 +7,7 @@ use App\Support\Database3CatalogWriter;
 use App\Support\Kunjungan;
 use App\Support\PesanLayanan;
 use App\Support\Penyimpanan;
+use App\Support\StatusOperasional;
 use App\Support\SupabaseApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -367,7 +368,39 @@ class AdminController extends Controller
             'tetangga' => Katalog::tetangga($slug, false),
             'kecamatan' => $kecamatan,
             'kecamatanTerpilih' => $kecamatanTerpilih,
+            'statusOperasional' => $e['jenis'] === 'tempat' ? (StatusOperasional::untuk($slug) ?? 'jadwal') : null,
+            'statusSaatIni' => $e['jenis'] === 'tempat' ? Katalog::statusOperasional($e) : null,
         ]);
+    }
+
+    public function simpanStatusOperasional(Request $request, string $slug)
+    {
+        $this->pastikanBolehKelola($request, $slug);
+        $tempat = Katalog::get($slug);
+        abort_unless($tempat && $tempat['jenis'] === 'tempat', 404);
+        $data = $request->validate([
+            'status_operasional' => ['required', 'in:jadwal,buka,tutup'],
+        ]);
+
+        try {
+            StatusOperasional::simpan(
+                $slug,
+                $data['status_operasional'],
+                (int) $request->session()->get('pengguna.id') ?: null,
+            );
+        } catch (Throwable $e) {
+            report($e);
+
+            return back()->with('galat', 'Status operasional gagal disimpan. Coba lagi beberapa saat lagi.');
+        }
+
+        $pesan = match ($data['status_operasional']) {
+            'buka' => 'Status tempat ditetapkan Buka sekarang, tanpa mengikuti jam operasional.',
+            'tutup' => 'Status tempat ditetapkan Tutup sekarang, tanpa mengikuti jam operasional.',
+            default => 'Status tempat kembali mengikuti jam operasional.',
+        };
+
+        return back()->with('pesan', $pesan);
     }
 
     public function simpanEntitas(Request $request, string $slug)
@@ -429,29 +462,47 @@ class AdminController extends Controller
             $ekstensi = 'jpg';
         }
         $dasarNama = Str::slug($data['nama']) ?: $slug;
-        $namaFoto = $dasarNama.'.'.$ekstensi;
         $fotoLama = $fotoLama !== null && $fotoLama !== '' ? basename($fotoLama) : null;
         $tempatLain = Katalog::tempat();
         $dipakaiTempatLain = static fn (string $nama): bool => collect($tempatLain)->contains(
             fn (array $tempat): bool => $tempat['slug'] !== $slug && basename((string) ($tempat['foto'] ?? '')) === $nama
         );
 
-        while ($dipakaiTempatLain($namaFoto)) {
-            $namaFoto = $dasarNama.'-'.Str::lower(Str::random(8)).'.'.$ekstensi;
+        $namaFoto = $fotoLama !== null
+            ? pathinfo($fotoLama, PATHINFO_FILENAME).'.jpg'
+            : $dasarNama.'.jpg';
+
+        if ($fotoLama !== null && ($dipakaiTempatLain($fotoLama) || $dipakaiTempatLain($namaFoto))) {
+            throw ValidationException::withMessages([
+                'foto' => 'Foto ini juga dipakai tempat lain, jadi tidak dapat diganti tanpa mengubah foto tempat tersebut.',
+            ]);
+        }
+
+        if ($fotoLama === null) {
+            while ($dipakaiTempatLain($namaFoto)) {
+                $namaFoto = $dasarNama.'-'.Str::lower(Str::random(8)).'.jpg';
+            }
         }
 
         $jalurFoto = $folder.DIRECTORY_SEPARATOR.$namaFoto;
         $jalurSementara = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-'.Str::uuid().'.'.$ekstensi;
+        $jalurKonversi = null;
+        $jalurUntukPasang = $jalurSementara;
         $jalurCadangan = null;
         $fotoTerpasang = false;
 
         try {
             $unggahan->move($sementara, basename($jalurSementara));
+            if ($ekstensi !== 'jpg') {
+                $jalurKonversi = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-konversi-'.Str::uuid().'.jpg';
+                $this->konversiFoto($jalurSementara, $jalurKonversi);
+                $jalurUntukPasang = $jalurKonversi;
+            }
             if (File::exists($jalurFoto)) {
-                $jalurCadangan = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-cadangan-'.Str::uuid().'.'.$ekstensi;
+                $jalurCadangan = $sementara.DIRECTORY_SEPARATOR.'foto-wisata-cadangan-'.Str::uuid().'.jpg';
                 File::move($jalurFoto, $jalurCadangan);
             }
-            File::move($jalurSementara, $jalurFoto);
+            File::move($jalurUntukPasang, $jalurFoto);
             $fotoTerpasang = true;
 
             $data['foto'] = $namaFoto;
@@ -475,6 +526,9 @@ class AdminController extends Controller
             throw $exception;
         } finally {
             $this->hapusFotoJikaAda($jalurSementara, 'file unggahan sementara');
+            if ($jalurKonversi !== null) {
+                $this->hapusFotoJikaAda($jalurKonversi, 'file foto hasil konversi sementara');
+            }
         }
 
         if ($jalurCadangan !== null && File::exists($jalurCadangan)) {
@@ -483,6 +537,29 @@ class AdminController extends Controller
         if ($fotoLama !== null && $fotoLama !== $namaFoto && ! $dipakaiTempatLain($fotoLama)) {
             $jalurFotoLama = $folder.DIRECTORY_SEPARATOR.$fotoLama;
             $this->hapusFotoJikaAda($jalurFotoLama, 'foto lama');
+        }
+    }
+
+    private function konversiFoto(string $sumber, string $tujuan): void
+    {
+        $gambar = imagecreatefromstring(File::get($sumber));
+        if ($gambar === false) {
+            throw new RuntimeException('Berkas unggahan tidak dapat dibaca sebagai gambar.');
+        }
+
+        $kanvas = imagecreatetruecolor(imagesx($gambar), imagesy($gambar));
+        try {
+            $putih = imagecolorallocate($kanvas, 255, 255, 255);
+            imagefill($kanvas, 0, 0, $putih);
+            $berhasil = imagecopy($kanvas, $gambar, 0, 0, 0, 0, imagesx($gambar), imagesy($gambar))
+                && imagejpeg($kanvas, $tujuan, 90);
+        } finally {
+            imagedestroy($gambar);
+            imagedestroy($kanvas);
+        }
+
+        if (! $berhasil) {
+            throw new RuntimeException('Gagal mengubah format foto ke JPG.');
         }
     }
 
@@ -686,33 +763,58 @@ class AdminController extends Controller
 
     public function validasi(Request $request)
     {
-        $data = $request->validate(['kode' => ['required', 'string', 'max:20']], ['kode.required' => 'Pindai atau ketik kode pada e-tiket.']);
-        $p = Penyimpanan::cariPesanan(strtoupper(trim($data['kode'])));
+        $data = $request->validate(['kode' => ['required', 'string', 'max:40']], ['kode.required' => 'Pindai QR atau ketik kode pada e-tiket.']);
+        $kode = strtoupper(trim($data['kode']));
+        $p = str_starts_with($kode, 'QR-')
+            ? Penyimpanan::cariPesananQr($kode)
+            : Penyimpanan::cariPesanan($kode);
 
         if ($p) {
             $this->pastikanBolehKelola($request, $p['tempat']);
         }
-        $hasil = match (true) {
-            ! $p => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada pesanan dengan kode '.strtoupper($data['kode']).'.'],
-            $p['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$p['kode'].' berstatus '.$p['status'].'.'],
-            ! empty($p['dipakai']) => ['status' => 'dipakai', 'judul' => 'Sudah dipakai', 'teks' => 'Tiket ini dipakai '.substr($p['dipakai'], 11, 5).'.'],
-            $p['tanggal'] < now('Asia/Jakarta')->toDateString() => [
-            'status' => 'kedaluwarsa',
-            'judul' => 'Tiket kedaluwarsa',
-            'teks' => 'Masa berlaku tiket berakhir pada '.$p['tanggal'].'.',
-        ],
-        $p['tanggal'] > now('Asia/Jakarta')->toDateString() => [
-            'status' => 'tidak',
-            'judul' => 'Belum berlaku',
-            'teks' => 'Tiket baru berlaku tanggal '.$p['tanggal'].'.',
-        ],
-            default => ['status' => 'valid', 'judul' => 'Valid', 'teks' => collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.$i['jenis'])->implode(', ').' atas nama '.$p['pemesan']['nama'].'.'],
-        };
+        $hasil = $this->hasilValidasiTiket($p, $kode);
         if ($hasil['status'] === 'valid') {
-            Penyimpanan::ubahPesanan($p['kode'], ['dipakai' => now('Asia/Jakarta')->toIso8601String()]);
+            if (Penyimpanan::tandaiTiketDipakai((int) $p['id'], now('Asia/Jakarta')->toIso8601String())) {
+                $hasil['judul'] = 'Valid dan sudah dipakai';
+                $hasil['teks'] .= ' Tiket dinonaktifkan dan masuk ke riwayat.';
+            } else {
+                $p = str_starts_with($kode, 'QR-')
+                    ? (Penyimpanan::cariPesananQr($kode) ?? $p)
+                    : (Penyimpanan::cariPesanan($p['kode']) ?? $p);
+                $hasil = $this->hasilValidasiTiket($p, $kode);
+            }
         }
 
         return back()->with('hasil', $hasil);
+    }
+
+    private function hasilValidasiTiket(?array $pesanan, string $kode): array
+    {
+        return match (true) {
+            ! $pesanan => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada tiket dengan identitas '. $kode.'.'],
+            $pesanan['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$pesanan['kode'].' berstatus '.$pesanan['status'].'.'],
+            ! empty($pesanan['dipakai']) => ['status' => 'dipakai', 'judul' => 'Sudah dipakai', 'teks' => 'Tiket ini dipakai '.substr($pesanan['dipakai'], 11, 5).'.'],
+            $pesanan['tanggal'] < now('Asia/Jakarta')->toDateString() => [
+                'status' => 'kedaluwarsa',
+                'judul' => 'Tiket kedaluwarsa',
+                'teks' => 'Masa berlaku tiket berakhir pada '.$pesanan['tanggal'].'.',
+            ],
+            $pesanan['tanggal'] > now('Asia/Jakarta')->toDateString() => [
+                'status' => 'tidak',
+                'judul' => 'Belum berlaku',
+                'teks' => 'Tiket baru berlaku tanggal '.$pesanan['tanggal'].'.',
+            ],
+            empty($pesanan['kode_qr']) => [
+                'status' => 'tidak',
+                'judul' => 'Identitas tiket tidak tersedia',
+                'teks' => 'Tiket ini tidak memiliki kode QR yang dapat diverifikasi.',
+            ],
+            default => [
+                'status' => 'valid',
+                'judul' => 'Valid',
+                'teks' => collect($pesanan['item'])->map(fn ($i) => $i['jumlah'].' '.$i['jenis'])->implode(', ').' atas nama '.$pesanan['pemesan']['nama'].'.',
+            ],
+        };
     }
 
     public function sinkronisasi(Request $request)

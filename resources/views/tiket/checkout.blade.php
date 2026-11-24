@@ -25,6 +25,11 @@
 
     <form class="tiket-alur" method="post" action="{{ route('checkout') }}" novalidate>
         @csrf
+        @if (! $jadwalDiketahui || ! $tempatBuka)
+            <p class="p-pesan p-pesan--info" role="alert">
+                {{ $errors->first('jam_operasional') ?: ($jadwalDiketahui ? 'Pemesanan hanya dapat dilakukan saat tempat sedang buka ('.$t['jam'].').' : 'Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.') }}
+            </p>
+        @endif
         <div>
             <section class="p-panel" aria-labelledby="judul-pemesan">
                 <header><h2 id="judul-pemesan">Identitas pemesan</h2></header>
@@ -87,7 +92,7 @@
             </label>
             @error('setuju')<p class="galat" style="color:var(--p-negative);font-weight:600;margin-top:6px">{{ $message }}</p>@enderror
 
-            <button class="mv-btn mv-btn--utama mv-btn--lebar" type="submit" style="margin-top:16px">Buat pesanan ({{ Katalog::rupiah($total) }})</button>
+            <button class="mv-btn mv-btn--utama mv-btn--lebar" type="submit" style="margin-top:16px" @disabled(! $tempatBuka)>Buat pesanan ({{ Katalog::rupiah($total) }})</button>
         </aside>
     </form>
 </div>

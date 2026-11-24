@@ -19,7 +19,7 @@ class SitusTempatTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_place_detail_renders_without_the_removed_entity_graph_helper(): void
+    public function test_place_detail_omits_the_1930_map_and_removed_entity_graph_helper(): void
     {
         Cache::setDefaultDriver('array');
         Cache::store('array')->flush();
@@ -68,6 +68,9 @@ class SitusTempatTest extends TestCase
             ->assertSee('property="og:title"', false)
             ->assertSee('property="og:image"', false)
             ->assertSee('property="mainEntity" typeof="TouristAttraction" resource="'.$place.'"', false)
+            ->assertDontSee('Di peta Medan 1930')
+            ->assertDontSee('peta-1930')
+            ->assertDontSee('peta-medan-1930')
             ->assertDontSee('property="mainEntityOfPage"', false);
     }
 }

@@ -92,7 +92,7 @@ class Asisten
             'keterangan' => $e['ringkas'] ?? '',
             'foto' => ! empty($e['foto']) ? asset('storage/foto_wisata/'.$e['foto']) : null,
             'url' => SitusController::urlEntitas($e),
-            'harga' => $e['jenis'] === 'tempat' ? Katalog::rupiah(Katalog::hargaTermurah($e)) : null,
+            'harga' => $e['jenis'] === 'tempat' ? Katalog::labelHarga($e) : null,
             'tiket' => ! empty($e['tiket']) ? route('tiket.pilih', $e['slug']) : null,
             'jarak' => $jarak,
         ];
@@ -102,12 +102,17 @@ class Asisten
     {
         if ($t && $t['jenis'] === 'tempat') {
             if (empty($t['tiket'])) {
-                return ['teks' => [$t['nama'].' tidak memungut tiket masuk.'], 'tempat' => [self::kartu($t)]];
+                $pesan = ($t['akses_gratis'] ?? null) === true
+                    ? $t['nama'].' tidak memungut tiket masuk.'
+                    : 'Harga tiket '.$t['nama'].' belum tersedia di MedanVisit. Hubungi pengelola untuk tarif terbaru.';
+
+                return ['teks' => [$pesan], 'tempat' => [self::kartu($t)]];
             }
             $rincian = collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(', ');
+            $jadwal = ! empty($t['hari_tiket']) ? ' Tarif ini berlaku '.$t['hari_tiket'].'.' : '';
 
             return [
-                'teks' => ['Tiket '.$t['nama'].': '.$rincian.'. Harga ini masih contoh dan akan dicek ulang ke pengelola.', 'Kamu bisa memesan dan langsung mendapat e-tiket ber-QR.'],
+                'teks' => ['Tiket '.$t['nama'].': '.$rincian.'.'.$jadwal.' Pastikan tarif terbaru kepada pengelola.', 'Kamu bisa memesan dan langsung mendapat e-tiket ber-QR.'],
                 'tempat' => [self::kartu($t)],
             ];
         }
@@ -145,7 +150,11 @@ class Asisten
         $namaMulai = Katalog::get($mulai)['nama'];
 
         return [
-            'teks' => ['Rute setengah hari dari '.$namaMulai.', jalan kaki dan becak motor:', implode(', lalu ', $baris).'.', 'Perkiraan biaya tiket dan becak '.Katalog::rupiah($r['biaya']).' per orang. Kamu bisa mengubah minat dan durasinya di Perencana Rute.'],
+            'teks' => [
+                'Rute setengah hari dari '.$namaMulai.', jalan kaki dan becak motor:',
+                implode(', lalu ', $baris).'.',
+                ($r['biaya'] === null ? 'Biaya belum bisa diperkirakan karena sebagian harga tiket belum tersedia.' : 'Perkiraan biaya tiket dan becak '.Katalog::rupiah($r['biaya']).' per orang.').' Kamu bisa mengubah minat dan durasinya di Perencana Rute.',
+            ],
             'tempat' => [],
             'tautan' => ['label' => 'Buka Perencana Rute', 'url' => route('rencana', ['minat' => $minat, 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $mulai])],
         ];

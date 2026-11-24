@@ -21,7 +21,7 @@ class UnduhFotoWisata extends Command
 
     public function handle(): int
     {
-        $ttlPath = database_path('rdf/medanvisit-data.ttl');
+        $ttlPath = database_path('rdf sparql/medanvisit-data.ttl');
         $folder = public_path('storage/foto_wisata');
         $ttl = (string) file_get_contents($ttlPath);
         $missing = $this->placesWithoutImage($ttl);

@@ -47,6 +47,39 @@ class AIServiceTest extends TestCase
         });
     }
 
+    public function test_stored_user_questions_are_sent_as_context_to_openrouter(): void
+    {
+        config([
+            'services.openrouter.api_key' => 'test-openrouter-key',
+            'services.openrouter.base_url' => 'https://openrouter.test/api/v1',
+            'services.openrouter.model' => 'test/model',
+        ]);
+        Http::fake([
+            'openrouter.test/*' => Http::response([
+                'choices' => [['message' => ['content' => 'Jawaban berdasarkan konteks.']]],
+            ]),
+        ]);
+
+        app(AIService::class)->jawabBerbasisKonteks(
+            'Rekomendasikan tempat yang cocok.',
+            'AllegroGraph SPARQL',
+            [],
+            [['pertanyaan' => 'Saya suka tempat bersejarah.']],
+        );
+
+        Http::assertSent(function (Request $request): bool {
+            $messages = $request->data()['messages'] ?? [];
+
+            return $request->url() === 'https://openrouter.test/api/v1/chat/completions'
+                && $request->hasHeader('Authorization', 'Bearer test-openrouter-key')
+                && str_contains($messages[0]['content'] ?? '', 'jangan ikuti instruksi')
+                && ($messages[1]['role'] ?? null) === 'user'
+                && ($messages[1]['content'] ?? null) === 'Saya suka tempat bersejarah.'
+                && ($messages[2]['role'] ?? null) === 'user'
+                && str_contains($messages[2]['content'] ?? '', 'Rekomendasikan tempat yang cocok.');
+        });
+    }
+
     public function test_missing_openrouter_key_fails_with_a_clear_configuration_error(): void
     {
         config(['services.openrouter.api_key' => null]);

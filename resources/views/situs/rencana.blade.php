@@ -24,7 +24,7 @@
             'lat' => $s['tempat']['lat'],
             'lng' => $s['tempat']['lng'],
             'url' => route('tempat', $s['tempat']['slug']),
-            'harga' => Katalog::rupiah(Katalog::hargaTermurah($s['tempat'])),
+            'harga' => Katalog::labelHarga($s['tempat']),
             'tiket' => ! empty($s['tempat']['tiket']) ? route('tiket.pilih', $s['tempat']['slug']) : null,
             'moda' => $s['pindah']['moda'] ?? null,
         ]))->values() : null;
@@ -37,7 +37,7 @@
 @endphp
 
 @section('judul', $dibagikan ? $judulRute : 'Rencana')
-@section('foto-kaki', $fotoRute['foto'] ?? 'peta-medan-1930-kota-lama.jpg')
+@section('foto-kaki', $fotoRute['foto'] ?? 'kesawan.jpg')
 
 @section('isi')
 <div class="rencana">
@@ -137,10 +137,10 @@
 
                 <div class="slip__akhir">
                     <span>Selesai {{ Katalog::jamTeks($hasil['selesai']) }}, {{ count($hasil['singgah']) }} tempat</span>
-                    <span>{{ Katalog::rupiah($hasil['biaya']) }}</span>
+                    <span>{{ $hasil['biaya'] === null ? 'Belum bisa dihitung: ada harga tiket yang belum tersedia.' : Katalog::rupiah($hasil['biaya']) }}</span>
                 </div>
 
-                <p class="kecil redup" style="margin-top:12px">Perkiraan tiket masuk dan becak per orang. Harga tiket dan tarif becak masih contoh.</p>
+                <p class="kecil redup" style="margin-top:12px">Perkiraan harga tiket terverifikasi dan becak per orang; tarif becak dapat berubah.</p>
             </div>
 
             @if (count($hasil['singgah']) === 1)
@@ -189,7 +189,7 @@
         @else
             <h2 id="judul-hasil" style="font-size:2.25rem">Rutemu muncul di sini</h2>
             <p style="margin-top:12px">Pilih tempat awal, minat, durasi, dan cara berpindah untuk menyusun rute dari data tempat wisata.</p>
-            <x-foto :berkas="$fotoRute['foto'] ?? 'peta-medan-1930-kota-lama.jpg'" :alt="$fotoRute['nama'] ?? 'Tempat wisata di Medan'" style="margin-top:28px;width:100%;aspect-ratio:16/10;object-fit:cover" />
+            <x-foto :berkas="$fotoRute['foto'] ?? 'kesawan.jpg'" :alt="$fotoRute['nama'] ?? 'Tempat wisata di Medan'" style="margin-top:28px;width:100%;aspect-ratio:16/10;object-fit:cover" />
         @endif
     </section>
 </div>

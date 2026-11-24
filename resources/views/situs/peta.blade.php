@@ -11,8 +11,8 @@
         'lng' => $t['lng'],
         'kategori' => $t['kategori'],
         'url' => route('tempat', $t['slug']),
-        'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
-        'hargaAngka' => Katalog::hargaTermurah($t) ?? 0,
+        'harga' => Katalog::labelHarga($t),
+        'hargaAngka' => Katalog::hargaTermurah($t) ?? (($t['akses_gratis'] ?? null) === true ? 0 : null),
         'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
         'buka' => Katalog::jadwal($t),
         'rating' => $t['rating'] ?? 0,
@@ -50,6 +50,8 @@
                         <option value="terdekat">Terdekat</option>
                         <option value="termurah">Biaya terendah</option>
                         <option value="rating">Rating tertinggi</option>
+                        <option value="rating-rendah">Rating terendah</option>
+                        <option value="ulasan">Ulasan terbanyak</option>
                         <option value="kunjungan">Paling banyak dikunjungi</option>
                         <option value="disukai">Paling disukai</option>
                     </select>
@@ -80,7 +82,7 @@
 
         <div class="mv-peta-daftar" data-peta-daftar>
             @foreach ($tempat as $t)
-                @php $berkas = $t['foto'] ?: 'peta-medan-1930-kota-lama.jpg'; @endphp
+                @php $berkas = $t['foto'] ?: 'kesawan.jpg'; @endphp
                 <article class="mv-peta-kartu" data-slug="{{ $t['slug'] }}">
                     <button type="button" data-fokus-peta="{{ $t['slug'] }}" aria-label="Tunjukkan {{ $t['nama'] }} di peta" style="padding:0;border:0;background:none">
                         <x-foto :berkas="$berkas" alt="" :kecil="true" />

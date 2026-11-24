@@ -95,14 +95,20 @@ class TanyaMasNonovService
             array_map('mb_strtolower', $kataBerhurufBesar[0] ?? []),
             fn (string $kata) => ! in_array($kata, $kataUmum, true),
         );
-        if (count($namaKandidat) < 2) {
+        $teks = mb_strtolower($pertanyaan);
+        $bertanyaTentangEntitas = (bool) preg_match('/\b(siapa|tentang|ceritakan|cerita|kisah|sejarah|asal-usul|tokoh|kerajaan|peristiwa|budaya|hubungan|relasi|dibangun|didirikan)\b/u', $teks);
+        if ($namaKandidat === [] && ! $bertanyaTentangEntitas) {
             return null;
         }
 
-        $teks = mb_strtolower($pertanyaan);
-        foreach (Katalog::entitas() as $entitas) {
+        $entitasKatalog = Katalog::entitas();
+        uasort($entitasKatalog, fn (array $a, array $b) => mb_strlen($b['nama']) <=> mb_strlen($a['nama']));
+        foreach ($entitasKatalog as $entitas) {
             $nama = mb_strtolower(trim((string) ($entitas['nama'] ?? '')));
-            if (mb_strlen($nama) >= 4 && str_contains($teks, $nama)) {
+            if (
+                mb_strlen($nama) >= 4
+                && preg_match('/(?<![\p{L}\p{N}])'.preg_quote($nama, '/').'(?![\p{L}\p{N}])/u', $teks)
+            ) {
                 return $entitas;
             }
         }
@@ -295,7 +301,7 @@ class TanyaMasNonovService
             ));
         }
 
-        return ['teks' => [$this->jawabAiAtauFallback($pertanyaan, 'PostgreSQL: pesanan milik pengguna terautentikasi', $konteks, [], $fallback)], 'tempat' => []];
+        return ['teks' => [$this->jawabAiAtauFallback($pertanyaan, 'PostgreSQL: pesanan milik pengguna terautentikasi', $konteks, $riwayat, $fallback)], 'tempat' => []];
     }
 
     private function jawabHybrid(string $pertanyaan, ?array $pengguna, array $riwayat): array
@@ -333,7 +339,7 @@ class TanyaMasNonovService
             : 'Belum ada tempat yang cocok dengan kategori dalam riwayat pesananmu.';
 
         return [
-            'teks' => [$this->jawabAiAtauFallback($pertanyaan, 'PostgreSQL dan AllegroGraph; rekomendasi berdasarkan riwayat pesanan', $konteks, [], $fallback)],
+            'teks' => [$this->jawabAiAtauFallback($pertanyaan, 'PostgreSQL dan AllegroGraph; rekomendasi berdasarkan riwayat pesanan', $konteks, $riwayat, $fallback)],
             'tempat' => $hasil,
         ];
     }
@@ -394,16 +400,20 @@ class TanyaMasNonovService
                     'kategori' => $entitas['kategori'] ?? null,
                     'deskripsi' => $entitas['ringkas'] ?? '',
                     'cerita' => $entitas['cerita'] ?? [],
+                    'masa' => $entitas['masa'] ?? null,
                     'alamat' => $entitas['alamat'] ?? null,
                     'kecamatan' => $entitas['kecamatan'] ?? null,
+                    'kelurahan' => $entitas['kelurahan'] ?? null,
                     'jam_buka' => $entitas['jam'] ?? null,
                     'fasilitas' => $entitas['fasilitas'] ?? [],
+                    'cara_menuju' => $entitas['cara'] ?? [],
                     'tiket' => $entitas['tiket'] ?? [],
+                    'sumber' => $entitas['sumber'] ?? null,
                 ],
-                'relasi_rdf' => array_map(
-                    fn (array $tetangga) => Katalog::kalimat($tetangga['relasi'], $entitas['slug']),
-                    $relasi,
-                ),
+                'relasi_rdf' => array_map(fn (array $tetangga) => [
+                    'fakta' => Katalog::kalimat($tetangga['relasi'], $entitas['slug']),
+                    'sumber' => $tetangga['relasi']['sumber'] ?? 'Database 3',
+                ], $relasi),
                 'jawaban_katalog' => $jawabanKatalog['teks'] ?? [],
                 'entitas' => array_map(fn (array $tempat) => [
                     'nama' => $tempat['nama'] ?? '',
@@ -424,6 +434,40 @@ class TanyaMasNonovService
                     $fallback !== '' ? $fallback : 'Informasi entitas tersebut belum tersedia di katalog MedanVisit.',
                 )],
                 'tempat' => $jawabanKatalog['tempat'] ?? [],
+            ];
+        }
+
+        $mintaRekomendasiKuliner = $kategori === 'kuliner'
+            && preg_match('/\b(makan|makanan|kuliner|restoran|rumah makan|enak|rekomendasi|sarankan|saran)\b/u', $teksPertanyaan);
+        if ($mintaRekomendasiKuliner) {
+            $kandidat = array_values(Katalog::tempat('kuliner'));
+            $kandidat = array_slice($kandidat, 0, 5);
+            $konteks = [
+                'kategori' => 'kuliner',
+                'hasil' => array_map(fn (array $tempat) => [
+                    'nama' => $tempat['nama'],
+                    'kecamatan' => $tempat['kecamatan'],
+                    'deskripsi' => $tempat['ringkas'],
+                    'alamat' => $tempat['alamat'] ?? null,
+                    'jam' => $tempat['jam'] ?? null,
+                ], $kandidat),
+            ];
+            $fallback = $kandidat === []
+                ? 'Belum ada data tempat kuliner yang tercatat di katalog MedanVisit.'
+                : 'Beberapa pilihan tempat makan yang tercatat di MedanVisit: '.implode(', ', array_map(
+                    fn (array $tempat) => $tempat['nama'].(! empty($tempat['kecamatan']) ? ' ('.$tempat['kecamatan'].')' : ''),
+                    $kandidat,
+                )).'.';
+
+            return [
+                'teks' => [$this->jawabAiAtauFallback(
+                    $pertanyaan,
+                    'AllegroGraph RDF: katalog tempat kuliner MedanVisit',
+                    $konteks,
+                    $riwayat,
+                    $fallback,
+                )],
+                'tempat' => array_map(fn (array $tempat) => \App\Support\Asisten::kartu($tempat), $kandidat),
             ];
         }
 

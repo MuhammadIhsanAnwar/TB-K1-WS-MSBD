@@ -226,6 +226,15 @@ class SupabaseApi
         return $this->getRows('pesanan', $filters);
     }
 
+    public function pesananDenganKodeQr(string $kodeQr): array
+    {
+        return $this->getRows('pesanan', [
+            'select' => '*,pembayaran(dibayar_pada,referensi),e_tiket(kode_qr,dipakai_pada)',
+            'e_tiket.kode_qr' => 'eq.'.$kodeQr,
+            'limit' => 1,
+        ]);
+    }
+
     public function pesananItem(array $idPesanan): array
     {
         if (! $idPesanan) {
@@ -274,14 +283,17 @@ class SupabaseApi
             ->throw();
     }
 
-    public function pakaiTiket(int $idPesanan, string $waktu): void
+    public function pakaiTiket(int $idPesanan, string $waktu): bool
     {
-        $this->request()
-            ->withHeaders(['Prefer' => 'return=minimal'])
+        $rows = $this->request()
+            ->withHeaders(['Prefer' => 'return=representation'])
             ->patch($this->url('e_tiket').'?'.http_build_query(['id_pesanan' => 'eq.'.$idPesanan, 'dipakai_pada' => 'is.null']), [
                 'dipakai_pada' => $waktu,
             ])
-            ->throw();
+            ->throw()
+            ->json();
+
+        return is_array($rows) && $rows !== [];
     }
 
     public function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null): array
@@ -389,6 +401,15 @@ class SupabaseApi
     public function pengaturanSitus(string $kunci): mixed
     {
         return $this->getRows('pengaturan_situs', ['kunci' => 'eq.'.$kunci, 'limit' => 1])[0]['nilai'] ?? null;
+    }
+
+    /** Pengaturan dengan awalan kunci tertentu, misalnya override status operasional tempat. */
+    public function pengaturanSitusAwalan(string $awalan): array
+    {
+        return $this->getRows('pengaturan_situs', [
+            'select' => 'kunci,nilai',
+            'kunci' => 'like.'.$awalan.'*',
+        ]);
     }
 
     /** Simpan (buat atau timpa) satu kunci pengaturan. */

@@ -2,8 +2,18 @@
 
 @php
     use App\Support\Katalog;
+    use App\Support\Penyimpanan;
+    use Illuminate\Support\Facades\Cache;
     $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
     $semuaTempat = Katalog::tempat();
+    $ringkasanUlasan = Penyimpanan::ringkasanUlasan();
+    foreach ($semuaTempat as &$tempatStat) {
+        $ringkasan = $ringkasanUlasan[$tempatStat['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
+        $tempatStat['rating'] = $ringkasan['rating'];
+        $tempatStat['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
+        $tempatStat['jumlahSuka'] = (int) Cache::get('medanvisit.favorit.' . $tempatStat['slug'], 0);
+    }
+    unset($tempatStat);
     $jumlahKecamatan = collect($semuaTempat)->pluck('kecamatan')->unique()->count();
     // foto sampul: pilihan super admin (DB 1, panel Sampul beranda), atau otomatis 4 tempat berfoto
     $heroSlide = \App\Support\SampulBeranda::slide($semuaTempat);
@@ -19,7 +29,7 @@
         'lng' => $t['lng'],
         'kategori' => $t['kategori'],
         'url' => route('tempat', $t['slug']),
-        'harga' => Katalog::rupiah(Katalog::hargaTermurah($t)),
+        'harga' => Katalog::labelHarga($t),
         'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
     ])->values();
     // Tiga pilihan sampul selalu muncul lebih dulu, lalu enam destinasi berikutnya
@@ -129,15 +139,32 @@
             @endforeach
         </div>
 
+        <div class="mv-saring-baris" role="group" aria-label="Urutkan tempat wisata">
+            <label class="mv-label-urut" for="urut-tempat-beranda">Urutkan:</label>
+            <select id="urut-tempat-beranda" data-urut-beranda>
+                <option value="bawaan">Urutan utama</option>
+                <option value="suka">Like terbanyak</option>
+                <option value="ulasan">Ulasan terbanyak</option>
+                <option value="rating-tertinggi">Rating tertinggi</option>
+                <option value="rating-terendah">Rating terendah</option>
+            </select>
+        </div>
+
         <div class="mv-grid-tempat" data-grid-beranda aria-live="polite">
             @foreach ($urutTempat as $idx => $t)
                 @php
                     $adalahLebar = in_array($t['slug'], $unggulan, true);
                     $nadaPita = ['hijau', 'krem', 'kuning'][$idx % 3];
                     $sedangBuka = Katalog::bukaSekarang($t);
-                    $berkasFoto = $t['foto'] ?: 'peta-medan-1930-kota-lama.jpg';
+                    $berkasFoto = $t['foto'] ?: 'kesawan.jpg';
                 @endphp
-                <a class="mv-kartu-tempat {{ $adalahLebar ? 'mv-kartu-tempat--lebar' : '' }}" href="{{ route('tempat', $t['slug']) }}" data-kategori="{{ $t['kategori'] }}" @if ($idx >= $perHalamanTempat) hidden @endif>
+                <a class="mv-kartu-tempat {{ $adalahLebar ? 'mv-kartu-tempat--lebar' : '' }}"
+                   href="{{ route('tempat', $t['slug']) }}"
+                   data-kategori="{{ $t['kategori'] }}"
+                   data-rating="{{ $t['rating'] }}"
+                   data-ulasan="{{ $t['jumlahUlasan'] }}"
+                   data-suka="{{ $t['jumlahSuka'] }}"
+                   @if ($idx >= $perHalamanTempat) hidden @endif>
                     <div class="mv-kartu-tempat__media">
                         <x-foto :berkas="$berkasFoto" :alt="$t['nama']" :kecil="true" />
                     </div>
@@ -148,6 +175,10 @@
                     <div class="mv-kartu-tempat__isi">
                         <strong class="mv-kartu-tempat__nama">{{ $t['nama'] }}</strong>
                         <span class="mv-kartu-tempat__meta">{{ \Illuminate\Support\Str::limit($t['ringkas'], $adalahLebar ? 115 : 80) }}</span>
+                        <div class="mv-kartu-tempat__statistik" aria-label="Statistik {{ $t['nama'] }}">
+                            <span><b>{{ number_format($t['jumlahSuka'], 0, ',', '.') }}</b> like</span>
+                            <span><b>★ {{ number_format($t['rating'], 1, ',', '.') }}</b> ({{ $t['jumlahUlasan'] }} ulasan)</span>
+                        </div>
                         <div class="mv-kartu-tempat__kaki">
                             <span><x-harga :tempat="$t" /></span>
                             @if (Katalog::jadwal($t))
@@ -176,7 +207,7 @@
                 <h2 id="judul-tiket" data-muncul>Tiket masuk tanpa antre</h2>
                 <p style="color:var(--mv-redup)" data-muncul style="--i:1">Pilih tanggal kunjungan dan jumlah pengunjung, bayar dengan QRIS atau virtual account, lalu tunjukkan e-tiket ber-QR di loket masuk.</p>
                 <figure class="mv-menu-tiket__potret" data-muncul style="--i:2">
-                    <x-foto :berkas="$potretTiket['foto'] ?? 'peta-medan-1930-kota-lama.jpg'" :alt="$potretTiket['nama'] ?? 'Peta wisata Medan'" :kecil="true" />
+                    <x-foto :berkas="$potretTiket['foto'] ?? 'kesawan.jpg'" :alt="$potretTiket['nama'] ?? 'Kawasan Kota Lama Kesawan'" :kecil="true" />
                 </figure>
             </div>
 
@@ -190,9 +221,9 @@
                                 <li class="mv-menu-harga__baris">
                                     <span class="mv-menu-harga__nama">
                                         <a href="{{ route('tempat', $t['slug']) }}">{{ $t['nama'] }}</a>
-                                        <span>{{ $t['kecamatan'] }}, {{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(' · ') }}@if (! empty($t['harga_contoh'])) <span class="contoh">contoh</span>@endif</span>
+                                        <span>{{ $t['kecamatan'] }}, {{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(' · ') }}</span>
                                     </span>
-                                    <span class="mv-menu-harga__harga nums">{{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</span>
+                                    <span class="mv-menu-harga__harga nums">{{ Katalog::labelHarga($t) }}</span>
                                     @unless ($akunPengelola)
                                         <a class="mv-btn mv-btn--utama mv-btn--kecil" href="{{ route('tiket.pilih', $t['slug']) }}" aria-label="Pesan tiket {{ $t['nama'] }}">Pesan</a>
                                     @endunless
@@ -277,8 +308,8 @@
             </div>
 
             <div class="mv-faq-kanan">
-                <x-foto :berkas="$fotoPilihan->get(0)['foto'] ?? 'peta-medan-1930-kota-lama.jpg'" :alt="$fotoPilihan->get(0)['nama'] ?? 'Peta wisata Medan'" class="mv-faq-kanan__tinggi" />
-                <x-foto :berkas="$fotoPilihan->get(1)['foto'] ?? ($fotoPilihan->get(0)['foto'] ?? 'peta-medan-1930-kota-lama.jpg')" :alt="$fotoPilihan->get(1)['nama'] ?? ($fotoPilihan->get(0)['nama'] ?? 'Peta wisata Medan')" class="mv-faq-kanan__kecil" />
+                <x-foto :berkas="$fotoPilihan->get(0)['foto'] ?? 'kesawan.jpg'" :alt="$fotoPilihan->get(0)['nama'] ?? 'Kawasan Kota Lama Kesawan'" class="mv-faq-kanan__tinggi" />
+                <x-foto :berkas="$fotoPilihan->get(1)['foto'] ?? ($fotoPilihan->get(0)['foto'] ?? 'kesawan.jpg')" :alt="$fotoPilihan->get(1)['nama'] ?? ($fotoPilihan->get(0)['nama'] ?? 'Kawasan Kota Lama Kesawan')" class="mv-faq-kanan__kecil" />
             </div>
         </div>
     </div>

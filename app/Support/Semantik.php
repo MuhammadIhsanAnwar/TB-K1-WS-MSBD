@@ -34,8 +34,10 @@ class Semantik
                 'description' => $t['ringkas'],
                 'address' => ['@type' => 'PostalAddress', 'streetAddress' => $t['alamat'], 'addressLocality' => 'Medan', 'addressRegion' => 'Sumatera Utara', 'addressCountry' => 'ID'],
                 'geo' => ['@type' => 'GeoCoordinates', 'latitude' => $t['lat'], 'longitude' => $t['lng']],
-                'isAccessibleForFree' => empty($t['tiket']),
             ];
+            if ($t['akses_gratis'] !== null) {
+                $n['isAccessibleForFree'] = $t['akses_gratis'];
+            }
             if (! empty($t['tiket'])) {
                 $n['offers'] = array_map(fn ($jenis, $harga) => ['@type' => 'Offer', 'name' => $jenis, 'price' => $harga, 'priceCurrency' => 'IDR'], array_keys($t['tiket']), $t['tiket']);
             }

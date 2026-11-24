@@ -19,8 +19,8 @@ class KirimRdf extends Command
         $username = config('services.sparql.username');
         $password = config('services.sparql.password');
         $berkas = [
-            database_path('rdf/medanvisit-ontologi.ttl'),
-            database_path('rdf/medanvisit-data.ttl'),
+            database_path('rdf sparql/medanvisit-ontologi.ttl'),
+            database_path('rdf sparql/medanvisit-data.ttl'),
         ];
 
         if ($endpoint === '' || $username === null || $password === null) {
@@ -41,8 +41,8 @@ class KirimRdf extends Command
             ->withBasicAuth($username, $password);
 
         // Simpan salinan lokal sebelum menyentuh Database 3, supaya bisa dikirim ulang kalau gagal.
-        $cadangan = database_path('rdf/medanvisit-data.backup-'.date('Ymd-His').'.ttl');
-        if (! copy(database_path('rdf/medanvisit-data.ttl'), $cadangan)) {
+        $cadangan = database_path('rdf sparql/medanvisit-data.backup-'.date('Ymd-His').'.ttl');
+        if (! copy($berkas[1], $cadangan)) {
             $this->error('Gagal membuat cadangan data RDF.');
 
             return self::FAILURE;
@@ -73,6 +73,7 @@ class KirimRdf extends Command
         Cache::forget('database3.catalog.triples.v3');
         Cache::forget('database3.catalog.triples.v4');
         Cache::forget('database3.catalog.triples.v7');
+        Cache::forget('database3.catalog.triples.v8');
         Cache::forget('database3.unavailable');
         $this->info('Ontologi dan data RDF berhasil dikirim ke Database 3.');
 

@@ -83,7 +83,7 @@ class TempatFoto extends Command
     public function handle(): int
     {
         $folder = (string) $this->argument('folder');
-        $ttl = database_path('rdf/medanvisit-data.ttl');
+        $ttl = database_path('rdf sparql/medanvisit-data.ttl');
         $tujuan = public_path('storage/foto_wisata');
 
         if (! is_dir($folder)) {

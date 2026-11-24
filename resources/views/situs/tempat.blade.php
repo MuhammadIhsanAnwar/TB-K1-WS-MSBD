@@ -7,10 +7,10 @@
     $t = $e;
     $u = session('pengguna');
     $akunPengelola = in_array($u['peran'] ?? null, ['admin', 'superadmin'], true);
-    $buka = Katalog::bukaSekarang($t);
+    $statusOperasional = Katalog::statusOperasional($t);
+    $buka = $statusOperasional === true;
     $gagal = session('checkin_gagal');
     $kategori = Katalog::KATEGORI[$t['kategori']];
-    $posisi = Katalog::posisi1930($t);
     $tingkatRamai = $ramai >= 8 ? 'Ramai' : ($ramai >= 3 ? 'Sedang' : ($ramai > 0 ? 'Lengang' : null));
     $kreditUtama = ! empty($t['foto']) ? Katalog::kredit($t['foto']) : null;
 
@@ -35,8 +35,8 @@
 
 @section('judul', $t['nama'])
 @section('deskripsi', $t['ringkas'])
-@if ($t['foto']) @section('foto-kaki', $t['foto']) @endif
-@if ($t['foto']) @section('foto-og', Foto::url($t['foto'])) @endif
+@section('foto-kaki', $t['foto'] ?: 'storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png')
+@section('foto-og', $t['foto'] ? Foto::url($t['foto']) : asset('storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png'))
 
 @php
     // rating dari ulasan yang tayang (DB 2); ulasan milik pengguna yang sedang masuk dipakai untuk form "perbarui"
@@ -65,13 +65,18 @@
                 <div class="mv-tempat-tanda">
                     <x-kelas jenis="tempat" :label="$kategori" />
                     <span class="kecil">{{ implode(', ', array_filter([$t['kelurahan'], $t['kecamatan']])) }}</span>
-                    @if (Katalog::jadwal($t))
+                    @if ($statusOperasional !== null)
                         <span class="mv-lencana-jam {{ $buka ? 'mv-lencana-jam--buka' : 'mv-lencana-jam--tutup' }}">{{ $buka ? 'Buka sekarang' : 'Tutup sekarang' }}</span>
                     @endif
                 </div>
             </div>
 
             <div class="mv-tempat-kepala__meta">
+                <div class="mv-tempat-statistik" aria-label="Statistik tempat">
+                    <span><b>{{ number_format($jumlahSuka, 0, ',', '.') }}</b> like</span>
+                    <span><b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> rating</span>
+                    <span><b>{{ $ratingTempat['jumlah'] }}</b> ulasan</span>
+                </div>
                 @if ($t['tiket'] && ! $akunPengelola)
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
                 @endif
@@ -130,9 +135,6 @@
 <nav class="mv-lompat-seksi tidak-dicetak" data-ui aria-label="Lompat ke bagian halaman">
     <div class="mv-wadah mv-lompat-seksi__dalam">
         <a href="#info">Info kunjungan</a>
-        @if ($posisi)
-            <a href="#peta-1930">Peta 1930</a>
-        @endif
         <a href="#dekat">Dekat dari sini</a>
         <a href="#ulasan">Ulasan</a>
     </div>
@@ -176,24 +178,6 @@
                 <p class="kecil redup"><span class="nums">{{ $ramai }}</span> check-in tercatat lewat MedanVisit dalam 3 jam terakhir.</p>
             </div>
         </section>
-
-        @if ($posisi)
-            @php
-                $px = $posisi['x'] / 14.22;
-                $py = $posisi['y'] / 16;
-                $cx = max(22.73, min(77.27, $px));
-                $cy = max(13.47, min(86.53, $py));
-                $kreditPeta = Katalog::kredit('peta-medan-1930.webp');
-            @endphp
-            <section class="mv-seksi-detail" id="peta-1930" aria-labelledby="judul-peta-lama">
-                <h2 id="judul-peta-lama">Di peta Medan 1930</h2>
-                <div class="peta-lama" style="--px: {{ round($cx, 2) }}; --py: {{ round($cy, 2) }}; --dx: {{ round(($px - $cx) * 2.2, 2) }}; --dy: {{ round(($py - $cy) * 3.713, 2) }}">
-                    <img src="{{ asset('storage/foto_wisata/peta-medan-1930.webp') }}" width="1422" height="1600" loading="lazy" decoding="async" alt="Potongan peta Medan tahun 1930 di sekitar {{ $t['nama'] }}">
-                    <span class="peta-lama__titik" aria-hidden="true"></span>
-                </div>
-                <p class="peta-lama__ket">Lingkaran kuning menandai letak {{ $t['nama'] }} hari ini di atas peta kota tahun 1930.@if (! empty($t['koordinat_perkiraan'])) Titiknya berupa perkiraan kawasan.@endif @if ($kreditPeta) Sumber peta: {{ $kreditPeta }}.@endif</p>
-            </section>
-        @endif
 
         <section class="mv-seksi-detail" id="dekat" aria-labelledby="judul-dekat">
             <h2 id="judul-dekat">Dekat dari sini</h2>
@@ -279,9 +263,6 @@
                     @foreach ($t['tiket'] as $jenis => $harga)
                         <div class="mv-tarif-samping__baris"><span>{{ $jenis }}</span><b class="nums">{{ Katalog::rupiah($harga) }}</b></div>
                     @endforeach
-                    @if (! empty($t['harga_contoh']))
-                        <div><span class="contoh">harga contoh</span></div>
-                    @endif
                 </div>
             </div>
             @unless ($akunPengelola)
