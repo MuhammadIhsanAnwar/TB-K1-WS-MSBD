@@ -99,7 +99,7 @@ class SitusController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
         if (mb_strlen($q) < 2) {
-            return response()->json(['saran' => [], 'tanya' => null]);
+            return response()->json(['saran' => []]);
         }
 
         // saringan jenis dari dialog pencarian cepat: tempat, sejarah (tokoh, kerajaan, peristiwa, budaya), kuliner
@@ -122,20 +122,7 @@ class SitusController extends Controller
 
         return response()->json([
             'saran' => array_values(array_filter($saran, fn ($x) => ! empty($x['url']))),
-            'tanya' => route('tanya', ['q' => $q]),
             'semua' => route('cari', ['q' => $q]),
-        ]);
-    }
-
-    public function tanya(Request $request)
-    {
-        $tempat = Katalog::tempat();
-
-        return view('situs.tanya', [
-            'awal' => (string) $request->query('q', ''),
-            'contohTempat' => array_slice(array_values($tempat), 0, 3),
-            'contohTiket' => array_values(Katalog::bertiket())[0] ?? null,
-            'contohKuliner' => array_values(Katalog::tempat('kuliner'))[0] ?? null,
         ]);
     }
 
@@ -335,7 +322,7 @@ class SitusController extends Controller
             abort_unless($rencanaEdit !== null, 404);
         }
 
-        if ($request->hasAny(['minat', 'durasi', 'moda', 'mulai', 'tujuan'])) {
+        if ($request->hasAny(['minat', 'durasi', 'moda', 'mulai', 'tujuan', 'tujuan_dikirim'])) {
             $pref = $request->validate([
                 'minat' => ['required', 'array', 'min:1'], 'minat.*' => ['in:'.implode(',', array_keys(Katalog::KATEGORI))],
                 'durasi' => ['required', 'integer', 'in:2,4,6,8'],
@@ -343,15 +330,19 @@ class SitusController extends Controller
                 'mulai' => ['required', 'string'],
                 'tujuan' => ['sometimes', 'array', 'max:10'],
                 'tujuan.*' => ['string', 'distinct', Rule::in(array_keys(Katalog::tempat()))],
+                'tujuan_dikirim' => ['sometimes', 'in:1'],
                 // "lokasi": mulai dari posisi pengguna sekarang (koordinat dari browser)
                 'lat' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-90,90'],
                 'lng' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-180,180'],
             ], [
                 'minat.required' => 'Pilih minimal satu minat.',
-                'moda.required' => 'Pilih minimal satu cara berpindah.',
+                'moda.required' => 'Pilih minimal satu moda transportasi.',
                 'lat.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
                 'lng.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
             ]);
+            if ($request->has('tujuan_dikirim') && ! array_key_exists('tujuan', $pref)) {
+                $pref['tujuan'] = [];
+            }
             $pref = array_replace($rencanaEdit ?? [], $pref);
         } elseif ($rencanaEdit !== null) {
             $pref = $rencanaEdit;

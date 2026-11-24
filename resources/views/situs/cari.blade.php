@@ -44,7 +44,7 @@
                 @else
                     <p>Belum menemukan informasi yang kamu cari? Coba gunakan kata kunci yang lebih singkat, seperti Istana Maimun, kuliner Medan, atau Tjong A Fie.</p>
                 @endif
-                <a class="tombol" href="{{ route('tanya', ['q' => $q]) }}">Tanyakan ke asisten</a>
+                <button class="tombol" type="button" data-buka-asisten-eksternal data-pesan-asisten="{{ $q }}">Tanyakan ke Mas Nonov</button>
             </div>
         @else
             <p class="lead">Ketik nama tempat, kuliner, tokoh, atau kecamatan. Salah ketik tetap ketemu.</p>
@@ -62,7 +62,7 @@
         <div class="ajak-asisten">
             <h2 id="judul-asisten">Butuh jawaban yang lebih lengkap?</h2>
             <p>Asisten menyusun jawaban dari data yang sama: harga tiket, jarak, rute, dan kuliner di sekitar.</p>
-            <a class="tombol" href="{{ route('tanya', $q ? ['q' => $q] : []) }}">Tanya asisten</a>
+            <button class="tombol" type="button" data-buka-asisten-eksternal @if ($q) data-pesan-asisten="{{ $q }}" @endif>Tanya Mas Nonov</button>
         </div>
     </aside>
 </div>

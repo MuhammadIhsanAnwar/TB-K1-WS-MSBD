@@ -41,6 +41,7 @@ class AIServiceTest extends TestCase
                 && $request->hasHeader('Authorization', 'Bearer test-openrouter-key')
                 && ($payload['model'] ?? null) === 'test/model'
                 && count($messages) === 4
+                && str_contains($messages[0]['content'] ?? '', 'Tanggapi pertanyaan maupun obrolan umum secara langsung')
                 && str_contains($messages[1]['content'] ?? '', 'Pertanyaan sebelumnya')
                 && str_contains($messages[3]['content'] ?? '', 'AllegroGraph SPARQL')
                 && str_contains($messages[3]['content'] ?? '', 'Taman Contoh');

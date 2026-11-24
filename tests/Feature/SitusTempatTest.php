@@ -72,6 +72,9 @@ class SitusTempatTest extends TestCase
                     'jumlah_rating' => 10,
                 ]]);
             }
+            if (str_contains($request->url(), '/suka_tempat?')) {
+                return Http::response([['tempat_slug' => 'kolam-renang-primbana']]);
+            }
 
             return Http::response([]);
         });
@@ -83,7 +86,7 @@ class SitusTempatTest extends TestCase
             ->assertSee('<span><b>4,5</b> rating</span>', false)
             ->assertSee('Suka tempat ini')
             ->assertSee('<svg aria-hidden="true" focusable="false" width="18" height="18"', false)
-            ->assertSee('&rsaquo;', false)
+            ->assertSee('&gt;', false)
             ->assertDontSee('â€º', false)
             ->assertSee('property="og:title"', false)
             ->assertSee('property="og:image"', false)
@@ -92,5 +95,16 @@ class SitusTempatTest extends TestCase
             ->assertDontSee('peta-1930')
             ->assertDontSee('peta-medan-1930')
             ->assertDontSee('property="mainEntityOfPage"', false);
+
+        $this->withSession(['pengguna' => [
+            'id' => 17,
+            'nama' => 'Wisatawan',
+            'email' => 'wisatawan@example.test',
+            'peran' => 'wisatawan',
+        ]])->get('/tempat/kolam-renang-primbana')
+            ->assertOk()
+            ->assertSee('mv-btn--suka-aktif', false)
+            ->assertSee('aria-pressed="true"', false)
+            ->assertSee('fill="currentColor"', false);
     }
 }

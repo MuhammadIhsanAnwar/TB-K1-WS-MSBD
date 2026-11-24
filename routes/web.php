@@ -21,8 +21,7 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/', 'beranda')->name('beranda');
     Route::get('/cari', 'cari')->name('cari');
     Route::get('/cari/saran.json', 'saran')->name('cari.saran');
-    Route::get('/tanya', 'tanya')->name('tanya');
-    Route::post('/tanya', 'jawab')->middleware('throttle:12,1')->name('tanya.jawab');
+    Route::post('/asisten/mas-nonov', 'jawab')->middleware('throttle:12,1')->name('tanya.jawab');
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
     Route::post('/tempat/{slug}/sukai', 'sukai')->middleware('peran:wisatawan')->name('tempat.sukai');
@@ -59,6 +58,8 @@ Route::controller(AkunController::class)->middleware('kunjungan')->group(functio
         Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->middleware('peran:wisatawan')->name('ulasan.tulis');
         Route::get('/rencana/saya', 'rencanaSaya')->middleware('peran:wisatawan')->name('rencana.saya');
         Route::post('/rencana/simpan', 'simpanRencana')->middleware('peran:wisatawan')->name('rencana.simpan');
+        Route::put('/rencana/{kode}', 'perbaruiRencana')->middleware('peran:wisatawan')->name('rencana.perbarui');
+        Route::delete('/rencana/{kode}', 'hapusRencana')->middleware('peran:wisatawan')->name('rencana.hapus');
     });
 });
 

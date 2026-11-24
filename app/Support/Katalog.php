@@ -348,8 +348,8 @@ class Katalog
     private const JARAK_LANGKAH_PERTAMA = 25000;
 
     /**
-     * Susun rute satu hari dari tempat awal: setiap langkah memilih tempat terdekat yang cocok dengan minat,
-     * masih muat dalam sisa waktu, dan buka saat didatangi (jam buka dari Database 3).
+     * Susun rute dari rekomendasi minat atau tujuan pilihan, selama tempat masih muat dalam waktu
+     * dan buka saat didatangi (jam buka dari Database 3).
      *
      * Dengan $posisi (lat, lng pengguna), rute dimulai dari titik itu: persinggahan pertama adalah tempat
      * terdekat yang cocok, dan hasilnya membawa 'awal' untuk penanda di peta.
@@ -371,6 +371,11 @@ class Katalog
             throw new RuntimeException('Durasi perjalanan harus lebih dari 0 jam.');
         }
 
+        foreach ($tujuan as $slug) {
+            if (! is_string($slug)) {
+                throw new RuntimeException('Salah satu tempat tujuan sudah tidak tersedia.');
+            }
+        }
         $tujuan = array_values(array_unique($tujuan));
         if (count($tujuan) > 10) {
             throw new RuntimeException('Pilih maksimal 10 tempat tujuan dalam satu rencana.');

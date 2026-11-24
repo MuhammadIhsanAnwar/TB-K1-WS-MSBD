@@ -145,18 +145,18 @@ class Asisten
             return ['teks' => ['Belum ada tempat wisata untuk menyusun rute.'], 'tempat' => []];
         }
         $minat = array_values(array_unique(array_filter(array_column($tempat, 'kategori'))));
-        $r = Katalog::susunRute($minat, 4, ['jalan', 'becak'], $mulai);
+        $r = Katalog::susunRute($minat, 4, ['jalan', 'motor'], $mulai);
         $baris = array_map(fn ($s) => Katalog::jamTeks($s['mulai']).' '.$s['tempat']['nama'], $r['singgah']);
         $namaMulai = Katalog::get($mulai)['nama'];
 
         return [
             'teks' => [
-                'Rute setengah hari dari '.$namaMulai.', jalan kaki dan becak motor:',
+                'Rute setengah hari dari '.$namaMulai.', jalan kaki dan motor:',
                 implode(', lalu ', $baris).'.',
-                ($r['biaya'] === null ? 'Biaya belum bisa diperkirakan karena sebagian harga tiket belum tersedia.' : 'Perkiraan biaya tiket dan becak '.Katalog::rupiah($r['biaya']).' per orang.').' Kamu bisa mengubah minat dan durasinya di Perencana Rute.',
+                ($r['biaya'] === null ? 'Biaya belum bisa diperkirakan karena sebagian harga tiket belum tersedia.' : 'Perkiraan tiket '.Katalog::rupiah($r['biaya']).' per orang; biaya bensin dan parkir tidak termasuk.').' Kamu bisa mengubah minat dan durasinya di Perencana Rute.',
             ],
             'tempat' => [],
-            'tautan' => ['label' => 'Buka Perencana Rute', 'url' => route('rencana', ['minat' => $minat, 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $mulai])],
+            'tautan' => ['label' => 'Buka Perencana Rute', 'url' => route('rencana', ['minat' => $minat, 'durasi' => 4, 'moda' => ['jalan', 'motor'], 'mulai' => $mulai])],
         ];
     }
 

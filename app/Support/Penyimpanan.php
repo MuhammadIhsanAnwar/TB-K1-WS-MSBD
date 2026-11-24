@@ -318,14 +318,41 @@ class Penyimpanan
             'p_moda' => array_values(array_unique($data['moda'])),
             'p_tempat_mulai_slug' => $data['mulai'],
             'p_minat' => array_values(array_unique($data['minat'])),
+            'p_tujuan' => array_values(array_unique($data['tujuan'] ?? [])),
         ]);
 
         return self::bentukRencana([$row])[0];
     }
 
+    public static function perbaruiRencana(array $data): ?array
+    {
+        $row = self::api()->perbaruiRencana([
+            'p_id_rencana' => $data['id_rencana'],
+            'p_id_pengguna' => $data['id_pengguna'],
+            'p_judul' => $data['judul'],
+            'p_durasi_jam' => (int) $data['durasi'],
+            'p_moda' => array_values(array_unique($data['moda'])),
+            'p_tempat_mulai_slug' => $data['mulai'],
+            'p_minat' => array_values(array_unique($data['minat'])),
+            'p_tujuan' => array_values(array_unique($data['tujuan'] ?? [])),
+        ]);
+
+        return $row === null ? null : self::bentukRencana([$row])[0];
+    }
+
+    public static function hapusRencana(int $idRencana, int $idPengguna): bool
+    {
+        return self::api()->hapusRencana($idRencana, $idPengguna);
+    }
+
     public static function cariRencana(string $kode): ?array
     {
         return self::bentukRencana(self::api()->rencana(kode: $kode))[0] ?? null;
+    }
+
+    public static function cariRencanaPengguna(int $idPengguna, string $kode): ?array
+    {
+        return self::bentukRencana(self::api()->rencana($idPengguna, $kode))[0] ?? null;
     }
 
     private static function bentukRencana(array $baris): array
@@ -335,6 +362,7 @@ class Penyimpanan
         }
         $minat = collect(self::api()->rencanaMinat(array_column($baris, 'id_rencana')))->groupBy('id_rencana');
         $moda = collect(self::api()->rencanaModa(array_column($baris, 'id_rencana')))->groupBy('id_rencana');
+        $tujuan = collect(self::api()->rencanaTujuan(array_column($baris, 'id_rencana')))->groupBy('id_rencana');
 
         return array_map(fn ($r) => [
             'id' => (string) $r['id_rencana'],
@@ -344,6 +372,7 @@ class Penyimpanan
             'minat' => ($minat[$r['id_rencana']] ?? collect())->pluck('kode_kategori')->all(),
             'durasi' => (int) $r['durasi_jam'],
             'moda' => ($moda[$r['id_rencana']] ?? collect())->pluck('moda')->all(),
+            'tujuan' => ($tujuan[$r['id_rencana']] ?? collect())->pluck('tempat_slug')->all(),
             'mulai' => $r['tempat_mulai_slug'],
             'waktu' => self::waktu($r['created_at']),
         ], $baris);

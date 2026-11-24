@@ -573,6 +573,19 @@ class SupabaseApi
         ]);
     }
 
+    public function rencanaTujuan(array $idRencana): array
+    {
+        if (! $idRencana) {
+            return [];
+        }
+
+        return $this->getRows('rencana_tujuan', [
+            'select' => 'id_rencana,urutan,tempat_slug',
+            'id_rencana' => 'in.('.implode(',', array_map('intval', $idRencana)).')',
+            'order' => 'id_rencana.asc,urutan.asc',
+        ]);
+    }
+
     /** Rencana + minatnya dibuat dalam satu function database (transaksi). */
     public function simpanRencana(array $arg): array
     {
@@ -581,6 +594,23 @@ class SupabaseApi
         return is_array($rows) && isset($rows[0]) && is_array($rows[0])
             ? $rows[0]
             : (array) $rows;
+    }
+
+    public function perbaruiRencana(array $arg): ?array
+    {
+        $rows = $this->rpc('fn_perbarui_rencana', $arg);
+
+        return is_array($rows) && isset($rows[0]) && is_array($rows[0])
+            ? $rows[0]
+            : null;
+    }
+
+    public function hapusRencana(int $idRencana, int $idPengguna): bool
+    {
+        return $this->rpc('fn_hapus_rencana', [
+            'p_id_rencana' => $idRencana,
+            'p_id_pengguna' => $idPengguna,
+        ]) === true;
     }
 
     // ---------- utilitas ----------

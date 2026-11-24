@@ -1,7 +1,10 @@
 // MedanVisit: titik masuk skrip. Modul berat (peta, graf, QR) hanya dimuat di halaman yang memakainya.
 import './situs/dasar.js';
+import { mulaiLokasi } from './situs/lokasi.js';
 
 const ada = (sel) => document.querySelector(sel);
+
+if (document.body.classList.contains('situs')) mulaiLokasi();
 
 if (ada('[data-peta-koordinat]')) {
     import('./admin/peta-koordinat.js')
@@ -15,7 +18,6 @@ if (ada('[data-peta-koordinat]')) {
 if (ada('[data-panggung]')) import('./situs/panggung.js');
 if (ada('[data-peta]')) import('./situs/peta.js');
 if (ada('[data-dekat]')) import('./situs/dekat.js');
-if (ada('[data-tanya]')) import('./situs/tanya.js');
 if (ada('[data-hubungi-admin]')) import('./situs/hubungi-admin.js');
 if (ada('[data-pengaturan]')) import('./situs/pengaturan.js');
 if (ada('[data-sampul-atur]')) import('./admin/sampul-beranda.js');

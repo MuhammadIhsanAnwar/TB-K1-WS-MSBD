@@ -92,6 +92,13 @@
 .mv-btn--kecil { min-height: 44px; padding: 8px 16px; font-size: var(--mv-s-ui); }
 .mv-btn--lebar { width: 100%; }
 .mv-btn--suka svg { flex: none; }
+.mv-btn--suka { color: #b43e54; }
+.mv-btn--suka-aktif {
+  color: #167445;
+  border-color: #167445;
+  background: #e8f5ec;
+}
+.mv-btn--suka-aktif svg { fill: currentColor; }
 .mv-google-logo { width: 20px; height: 20px; flex: none; }
 .mv-btn--google { border-radius: 8px; }
 .mv-btn:disabled, .mv-btn[aria-disabled="true"] { background: var(--mv-kertas-2); color: var(--mv-redup); transform: none; }
@@ -510,7 +517,21 @@
   border-top: 1px solid var(--mv-kertas-2);
   font-size: var(--mv-s-meta);
 }
-[data-ui] .mv-saran-kaki a { color: var(--mv-hijau); font-weight: 700; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center; }
+[data-ui] .mv-saran-kaki a,
+[data-ui] .mv-saran-kaki button {
+  color: var(--mv-hijau);
+  font: 700 var(--mv-s-meta)/1.3 var(--font-text);
+  text-decoration: none;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+[data-ui] .mv-saran-kaki button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
 
 /* ---------- Asisten Melayang ([data-ui].mv-asisten-widget) ---------- */
 [data-ui].mv-asisten-widget {
@@ -1372,13 +1393,21 @@
   font-size: var(--mv-s-ui);
   color: var(--mv-di-hijau-redup);
 }
-.mv-hero__saran-cepat a {
+.mv-hero__saran-cepat a,
+.mv-hero__saran-cepat button {
   color: var(--mv-di-hijau);
   text-decoration: underline;
   text-underline-offset: 0.2em;
   min-height: 36px;
   display: inline-flex;
   align-items: center;
+}
+.mv-hero__saran-cepat button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
 }
 .mv-hero__aksi {
   display: flex;
@@ -1507,6 +1536,7 @@
 }
 .mv-paginasi-tempat__status { margin: 0; color: var(--mv-redup); font-size: var(--mv-s-ui); }
 .mv-paginasi-tempat button:disabled { cursor: not-allowed; opacity: .45; }
+.mv-paginasi-tempat svg { flex: none; }
 .mv-kartu-tempat:hover { transform: translateY(-4px); }
 .mv-kartu-tempat__media {
   position: relative;
@@ -1696,6 +1726,26 @@
   align-items: center;
   gap: 6px 18px;
   padding: 12px 0;
+}
+.mv-menu-harga[hidden],
+.mv-menu-harga__baris[hidden] { display: none; }
+.mv-menu-tiket > [data-paginasi-tiket] { grid-column: 1 / -1; margin-top: 0; }
+.popup-tempat__stat {
+  display: grid;
+  gap: 3px;
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+.popup-tempat__stat > div { display: flex; align-items: center; gap: 5px; }
+.popup-tempat__stat svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
 }
 .mv-menu-harga__nama { display: grid; gap: 2px; min-width: 0; }
 .mv-menu-harga__nama a {
@@ -2286,118 +2336,6 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   background: #dfe4dd;
 }
 
-/* ==========================================================================
-   TANYA MEDAN (/tanya — framed-sheet)
-   ========================================================================== */
-.mv-tanya-ruang {
-  width: min(100%, var(--mv-lebar));
-  margin-inline: auto;
-  min-height: calc(100svh - var(--mv-tinggi-kepala));
-  padding: 20px var(--mv-margin);
-  display: grid;
-  grid-template-columns: 312px minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
-}
-.mv-tanya-samping {
-  background: var(--mv-putih);
-  padding: 22px;
-  display: grid;
-  gap: 16px;
-  position: sticky;
-  top: calc(var(--mv-tinggi-kepala) + 20px);
-}
-.mv-tanya-samping h1 { font-size: var(--mv-s-h3); }
-.mv-tanya-topik {
-  display: grid;
-  gap: 8px;
-}
-.mv-tanya-topik button {
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 0;
-  background: var(--mv-kertas);
-  color: var(--mv-hijau);
-  font: 600 var(--mv-s-ui)/1.3 var(--font-text);
-  text-align: left;
-}
-.mv-tanya-topik button:hover { background: var(--mv-krem); }
-.mv-tanya-utama {
-  background: var(--mv-putih);
-  min-height: calc(100svh - var(--mv-tinggi-kepala) - 44px);
-  display: flex;
-  flex-direction: column;
-}
-.mv-tanya-utama .tanya__log {
-  flex: 1;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.mv-tanya-utama .tanya__saran {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-.mv-tanya-utama .tanya__saran button {
-  min-height: 48px;
-  padding: 10px 14px;
-  border: 0;
-  background: var(--mv-kertas);
-  color: var(--mv-hijau);
-  font: 600 var(--mv-s-ui)/1.3 var(--font-text);
-  text-align: left;
-}
-.mv-tanya-utama .tanya__saran button:hover { background: var(--mv-krem); }
-.mv-tanya-awal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-.mv-tanya-awal-kartu {
-  display: flex;
-  flex-direction: column;
-  background: var(--mv-kertas);
-  color: var(--mv-teks);
-  text-decoration: none;
-  transition: transform 200ms var(--ease-out);
-}
-.mv-tanya-awal-kartu:hover { background: var(--mv-krem); transform: translateY(-2px); }
-.mv-tanya-awal-kartu img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  display: block;
-}
-.mv-tanya-awal-kartu div {
-  padding: 12px 14px;
-  display: grid;
-  gap: 4px;
-}
-.mv-tanya-awal-kartu b { color: var(--mv-hijau); font-size: var(--mv-s-ui); }
-.mv-tanya-awal-kartu span { color: var(--mv-redup); font-size: var(--mv-s-meta); }
-.mv-tanya-utama .tanya__form {
-  position: sticky;
-  bottom: 0;
-  padding: 16px 22px 18px;
-  background: var(--mv-krem);
-}
-.mv-tanya-utama .tanya__form form {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-}
-.mv-tanya-utama .tanya__form textarea {
-  min-height: 48px;
-  padding: 12px 14px;
-  border: 1px solid var(--mv-hijau);
-  background: var(--mv-putih);
-  color: var(--mv-teks);
-  font: 500 var(--mv-s-ui)/1.4 var(--font-text);
-  resize: none;
-}
-
 /* Kartu tempat mini di dalam percakapan */
 .kartu-mini {
   display: grid;
@@ -2813,8 +2751,6 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   .mv-menu-tiket__daftar { grid-column: 1 / -1; }
   .mv-paspor-peta, .mv-paspor-baris { grid-column: 1 / -1; }
   .mv-tempat-kolom, [data-ui].mv-kartu-samping { grid-column: 1 / -1; position: static; }
-  .mv-tanya-ruang { grid-template-columns: 1fr; }
-  .mv-tanya-samping { position: static; }
 }
 
 @media (max-width: 900px) {
@@ -2857,8 +2793,6 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   .mv-kaki__atas { grid-template-columns: 1fr; }
   .mv-tempat-kepala__teks, .mv-tempat-kepala__meta { grid-column: 1 / -1; justify-self: start; }
   .mv-fakta-grid { grid-template-columns: 1fr; }
-  .mv-tanya-awal-grid { grid-template-columns: 1fr; }
-  .mv-tanya-utama .tanya__saran { grid-template-columns: 1fr; }
 
   /* Peta ponsel dengan lembar bawah (Intip / Daftar / Penuh) */
   .mv-peta-ruang {

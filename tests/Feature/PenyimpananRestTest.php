@@ -371,7 +371,7 @@ class PenyimpananRestTest extends TestCase
             && str_contains($request->url(), 'rating_tempat'));
     }
 
-    public function test_saved_plans_send_and_read_normalized_travel_modes(): void
+    public function test_saved_plans_send_and_read_ordered_destinations_and_travel_modes(): void
     {
         Http::fake(function (Request $request) {
             if (str_ends_with($request->url(), '/rpc/fn_simpan_rencana')) {
@@ -390,8 +390,15 @@ class PenyimpananRestTest extends TestCase
             }
             if (str_contains($request->url(), '/rencana_moda?')) {
                 return Http::response([
-                    ['id_rencana' => 9, 'moda' => 'becak'],
                     ['id_rencana' => 9, 'moda' => 'jalan'],
+                    ['id_rencana' => 9, 'moda' => 'motor'],
+                    ['id_rencana' => 9, 'moda' => 'mobil'],
+                ]);
+            }
+            if (str_contains($request->url(), '/rencana_tujuan?')) {
+                return Http::response([
+                    ['id_rencana' => 9, 'urutan' => 1, 'tempat_slug' => 'museum-sumut'],
+                    ['id_rencana' => 9, 'urutan' => 2, 'tempat_slug' => 'taman-cadika'],
                 ]);
             }
 
@@ -402,13 +409,71 @@ class PenyimpananRestTest extends TestCase
             'id_pengguna' => 7,
             'judul' => 'Rute sejarah',
             'durasi' => 4,
-            'moda' => ['jalan', 'becak'],
+            'moda' => ['jalan', 'motor', 'mobil'],
             'mulai' => 'istana-maimun',
             'minat' => ['sejarah'],
+            'tujuan' => ['museum-sumut', 'taman-cadika'],
         ]);
 
-        $this->assertSame(['becak', 'jalan'], $rencana['moda']);
+        $this->assertSame(['jalan', 'motor', 'mobil'], $rencana['moda']);
+        $this->assertSame(['museum-sumut', 'taman-cadika'], $rencana['tujuan']);
         Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/rpc/fn_simpan_rencana')
-            && $request['p_moda'] === ['jalan', 'becak']);
+            && $request['p_moda'] === ['jalan', 'motor', 'mobil']
+            && $request['p_tujuan'] === ['museum-sumut', 'taman-cadika']);
+    }
+
+    public function test_updating_a_saved_plan_sends_owner_and_replacement_preferences(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_ends_with($request->url(), '/rpc/fn_perbarui_rencana')) {
+                return Http::response([[
+                    'id_rencana' => 9,
+                    'kode' => 'mdn-abcd',
+                    'id_pengguna' => 7,
+                    'judul' => 'Rute museum',
+                    'durasi_jam' => 6,
+                    'tempat_mulai_slug' => 'istana-maimun',
+                    'created_at' => '2026-11-15T10:00:00Z',
+                ]]);
+            }
+            if (str_contains($request->url(), '/rencana_minat?')) {
+                return Http::response([['id_rencana' => 9, 'kode_kategori' => 'museum']]);
+            }
+            if (str_contains($request->url(), '/rencana_moda?')) {
+                return Http::response([['id_rencana' => 9, 'moda' => 'mobil']]);
+            }
+            if (str_contains($request->url(), '/rencana_tujuan?')) {
+                return Http::response([['id_rencana' => 9, 'urutan' => 1, 'tempat_slug' => 'museum-sumut']]);
+            }
+
+            return Http::response([]);
+        });
+
+        $rencana = Penyimpanan::perbaruiRencana([
+            'id_rencana' => 9,
+            'id_pengguna' => 7,
+            'judul' => 'Rute museum',
+            'durasi' => 6,
+            'moda' => ['mobil'],
+            'mulai' => 'istana-maimun',
+            'minat' => ['museum'],
+            'tujuan' => ['museum-sumut'],
+        ]);
+
+        $this->assertSame(['museum-sumut'], $rencana['tujuan']);
+        Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/rpc/fn_perbarui_rencana')
+            && $request['p_id_rencana'] === 9
+            && $request['p_id_pengguna'] === 7
+            && $request['p_tujuan'] === ['museum-sumut']);
+    }
+
+    public function test_deleting_a_saved_plan_uses_owner_scoped_rpc(): void
+    {
+        Http::fake(['*' => Http::response('true', 200, ['Content-Type' => 'application/json'])]);
+
+        $this->assertTrue(Penyimpanan::hapusRencana(9, 7));
+        Http::assertSent(fn (Request $request) => str_ends_with($request->url(), '/rpc/fn_hapus_rencana')
+            && $request['p_id_rencana'] === 9
+            && $request['p_id_pengguna'] === 7);
     }
 }

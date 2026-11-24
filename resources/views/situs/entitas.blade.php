@@ -11,7 +11,7 @@
     <article class="detail__baca">
         <header class="detail__kepala">
             <nav class="remah" aria-label="Remah roti">
-                <a href="{{ route('beranda') }}">Medan</a><span aria-hidden="true">›</span>
+                <a href="{{ route('beranda') }}">Medan</a><span aria-hidden="true">&gt;</span>
                 <span>{{ $kelas }}</span>
             </nav>
             <h1>{{ $e['nama'] }}</h1>
@@ -21,7 +21,7 @@
                 @if (! empty($e['masa']))<span class="kecil">{{ $e['masa'] }}</span>@endif
             </div>
             <div class="detail__aksi">
-                <a class="tombol tombol--garis" href="{{ route('tanya', ['q' => $e['nama']]) }}">Tanya soal {{ \Illuminate\Support\Str::limit($e['nama'], 18) }}</a>
+                <button class="tombol tombol--garis" type="button" data-buka-asisten-eksternal data-pesan-asisten="{{ $e['nama'] }}">Tanya soal {{ \Illuminate\Support\Str::limit($e['nama'], 18) }}</button>
             </div>
         </header>
 

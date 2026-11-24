@@ -73,8 +73,8 @@
     @hasSection('tanpa-kepala')
     @else
             @include('partials.dialog-cari')
-            {{-- tidak dipasang di halaman Tanya (sudah percakapan) dan alur tiket (jangan menutupi tombol bayar) --}}
-            @unless (request()->routeIs('tanya', 'tiket.*', 'checkout', 'pesanan*'))
+            {{-- alur tiket tidak memakai widget agar tidak menutupi tombol pembayaran --}}
+            @unless (request()->routeIs('tiket.*', 'checkout', 'pesanan*'))
                 @include('partials.asisten-melayang')
         @endunless
     @endif

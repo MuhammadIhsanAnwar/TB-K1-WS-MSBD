@@ -50,9 +50,9 @@
     <div class="mv-wadah">
         <nav class="mv-remah" aria-label="Jejak halaman">
             <a href="{{ route('beranda') }}">Beranda</a>
-            <span aria-hidden="true">&rsaquo;</span>
+            <span aria-hidden="true">&gt;</span>
             <a href="{{ route('peta') }}">Tempat &amp; Peta</a>
-            <span aria-hidden="true">&rsaquo;</span>
+            <span aria-hidden="true">&gt;</span>
             <span>{{ $kategori }}</span>
         </nav>
 
@@ -79,12 +79,12 @@
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
                 @endif
                 @unless ($akunPengelola)
-                    <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'becak'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
+                    <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'motor'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
                 @endunless
                             @unless ($akunPengelola)
                                 <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
                                     @csrf
-                                    <button type="submit" class="mv-btn mv-btn--garis mv-btn--suka">
+                                    <button type="submit" class="mv-btn mv-btn--garis mv-btn--suka {{ $sudahDisukai ? 'mv-btn--suka-aktif' : '' }}" aria-pressed="{{ $sudahDisukai ? 'true' : 'false' }}">
                                         <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
                                             fill="{{ $sudahDisukai ? 'currentColor' : 'none' }}" stroke="currentColor"
                                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

@@ -10,9 +10,9 @@
 <div class="mv-tiket-ruang">
     <nav class="mv-remah" aria-label="Jejak halaman">
         <a href="{{ route('beranda') }}">Beranda</a>
-        <span aria-hidden="true">›</span>
+        <span aria-hidden="true">&gt;</span>
         <a href="{{ route('tempat', $t['slug']) }}">{{ $t['nama'] }}</a>
-        <span aria-hidden="true">›</span>
+        <span aria-hidden="true">&gt;</span>
         <span>Pesan tiket</span>
     </nav>
 

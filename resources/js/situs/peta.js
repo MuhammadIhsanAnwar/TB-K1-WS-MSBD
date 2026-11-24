@@ -3,6 +3,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { bukaPada, waktuWib } from './jadwal.js';
+import { pantauLokasi } from './lokasi.js';
 
 export const WARNA = { sejarah: '#e3a51c', religi: '#6a4c9c', kuliner: '#c9541e', museum: '#2f6690', 'ruang-publik': '#2e7d4f', belanja: '#9b6b3d', 'rekreasi-air': '#2f8a8a' };
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -32,15 +33,17 @@ function popup(t) {
             maximumFractionDigits: 1
         })} (${jumlahUlasan} ulasan)`
         : 'Belum ada rating';
+    const ikonKunjungan = '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>';
+    const ikonSuka = '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>';
 
     return `
         <div class="popup-tempat">
             <b>${esc(t.nama)}</b>
             <span>${esc(t.harga ?? '')}</span>
-            <div style="margin-top:6px;font-size:0.85rem">
+            <div class="popup-tempat__stat">
                 <div>${infoRating}</div>
-                <div>👁 ${jumlahKunjungan.toLocaleString('id')} kunjungan</div>
-                <div>❤️ ${jumlahSuka.toLocaleString('id')} like</div>
+                <div>${ikonKunjungan} ${jumlahKunjungan.toLocaleString('id')} kunjungan</div>
+                <div>${ikonSuka} ${jumlahSuka.toLocaleString('id')} like</div>
             </div>
             <div class="aksi">
                 <a href="${esc(t.url)}">Lihat tempat</a>
@@ -533,12 +536,9 @@ function modeAlat(el) {
         }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 });
     });
 
-    // Lokasi yang sudah diizinkan di beranda langsung dipakai di peta.
-    if (tombolLokasi && navigator.permissions?.query) {
-        navigator.permissions.query({ name: 'geolocation' })
-            .then((izin) => { if (izin.state === 'granted') tombolLokasi.click(); })
-            .catch(() => {});
-    }
+    pantauLokasi(({ keadaan }) => {
+        if (keadaan === 'berhasil' && tombolLokasi && pantau === null) tombolLokasi.click();
+    });
 
     daftar.querySelectorAll('[data-slug]').forEach((a) => {
         a.addEventListener('mouseenter', () => penanda.get(a.dataset.slug)?.setZIndexOffset(400));

@@ -1,7 +1,6 @@
 // Beranda: sarankan tiga tempat wisata terdekat dari lokasi pengunjung.
-// Izin lokasi langsung diminta saat beranda dibuka. Kalau permintaan itu ditutup tanpa jawaban, beranda
-// tidak bertanya otomatis lagi selama 7 hari dan menampilkan tombol. Kalau izin ditolak, bagian ini disembunyikan.
 import { bukaPada, jarakMeter, waktuWib } from './jadwal.js';
+import { mintaLokasi, pantauLokasi } from './lokasi.js';
 
 const blok = document.querySelector('[data-dekat]');
 const tempat = JSON.parse(blok.dataset.dekat);
@@ -9,22 +8,13 @@ const status = blok.querySelector('[data-dekat-status]');
 const daftar = blok.querySelector('[data-dekat-daftar]');
 const tombol = blok.querySelector('[data-dekat-minta]');
 const tautanPeta = blok.querySelector('[data-dekat-peta]');
-const KUNCI = 'mv-lokasi-ditunda';
-const TUNDA = 7 * 24 * 60 * 60 * 1000;
 
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const fmtJarak = (m) => (m < 1000 ? `${m.toLocaleString('id')} m` : `${(m / 1000).toLocaleString('id', { maximumFractionDigits: 1 })} km`);
 
-function ditunda() {
-    try {
-        return Date.now() - Number(localStorage.getItem(KUNCI) || 0) < TUNDA;
-    } catch {
-        return false;
-    }
-}
-
 function tawarkanTombol(teks) {
     blok.hidden = false;
+    blok.removeAttribute('aria-busy');
     status.textContent = teks;
     tombol.hidden = false;
 }
@@ -51,41 +41,22 @@ function tampilkan(pos) {
     blok.removeAttribute('aria-busy');
 }
 
-function minta() {
-    blok.hidden = false;
-    tombol.hidden = true;
-    blok.setAttribute('aria-busy', 'true');
-    status.textContent = 'Mencari tempat terdekat dari lokasimu…';
-    navigator.geolocation.getCurrentPosition(tampilkan, (galat) => {
-        blok.removeAttribute('aria-busy');
-        if (galat.code !== galat.PERMISSION_DENIED) {
-            tawarkanTombol('Lokasimu belum terbaca.');
-            return;
-        }
-        // permintaan ditutup tanpa jawaban (izin masih "prompt") atau benar-benar ditolak
-        const cek = navigator.permissions?.query ? navigator.permissions.query({ name: 'geolocation' }) : Promise.resolve({ state: 'denied' });
-        cek.then((izin) => {
-            if (izin.state === 'denied') {
-                blok.hidden = true;
-                return;
-            }
-            try { localStorage.setItem(KUNCI, String(Date.now())); } catch { /* penyimpanan tidak tersedia */ }
-            tawarkanTombol('Izinkan lokasi untuk melihat tempat wisata terdekat.');
-        }).catch(() => { blok.hidden = true; });
-    }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
-}
+tombol.addEventListener('click', mintaLokasi);
 
-function mulai(keadaan) {
-    if (keadaan === 'denied') return;
-    if (keadaan === 'granted' || !ditunda()) minta();
-    else tawarkanTombol('Lihat tempat wisata yang paling dekat denganmu.');
-}
-
-if (navigator.geolocation) {
-    tombol.addEventListener('click', minta);
-    if (navigator.permissions?.query) {
-        navigator.permissions.query({ name: 'geolocation' }).then((izin) => mulai(izin.state)).catch(() => mulai('prompt'));
+pantauLokasi(({ keadaan, posisi }) => {
+    if (keadaan === 'meminta') {
+        blok.hidden = false;
+        tombol.hidden = true;
+        blok.setAttribute('aria-busy', 'true');
+        status.textContent = 'Meminta akses lokasi untuk mencari tempat terdekat. Lokasi digunakan di peramban ini dan tidak dikirim ke server.';
+    } else if (keadaan === 'berhasil') {
+        tampilkan(posisi);
+    } else if (keadaan === 'ditunda') {
+        tawarkanTombol('Izinkan lokasi untuk melihat tempat wisata terdekat.');
+    } else if (keadaan === 'gagal') {
+        tawarkanTombol('Lokasimu belum terbaca.');
     } else {
-        mulai('prompt');
+        blok.hidden = true;
+        blok.removeAttribute('aria-busy');
     }
-}
+});

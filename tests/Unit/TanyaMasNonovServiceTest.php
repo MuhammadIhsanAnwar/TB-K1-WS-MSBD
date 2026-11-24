@@ -250,6 +250,35 @@ class TanyaMasNonovServiceTest extends TestCase
         $this->assertSame('Istana Maimun', $jawaban['tempat'][0]['nama']);
     }
 
+    public function test_general_questions_are_sent_to_ai_and_answered_as_conversation(): void
+    {
+        config(['services.openrouter.api_key' => 'test-openrouter-key']);
+
+        $ai = Mockery::mock(AIService::class);
+        $ai->shouldReceive('jawabBerbasisKonteks')
+            ->twice()
+            ->withArgs(fn (string $pertanyaan, string $sumber, array $konteks, array $riwayat): bool =>
+                in_array($pertanyaan, ['Kamu siapa?', 'Ayam enak'], true)
+                && str_contains($sumber, 'pengetahuan umum')
+                && $konteks === []
+            )
+            ->andReturn(
+                'Saya Mas Nonov, asisten AI MedanVisit.',
+                'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
+            );
+        $postgres = Mockery::mock(PostgreSQLService::class);
+        $service = new TanyaMasNonovService($ai, $postgres);
+
+        $this->assertSame(
+            'Saya Mas Nonov, asisten AI MedanVisit.',
+            $service->jawab('Kamu siapa?')['teks'][0],
+        );
+        $this->assertSame(
+            'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
+            $service->jawab('Ayam enak')['teks'][0],
+        );
+    }
+
     private function triple(
         string $subjek,
         string $predikat,

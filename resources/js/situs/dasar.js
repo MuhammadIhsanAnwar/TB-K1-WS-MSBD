@@ -236,7 +236,6 @@ document.querySelectorAll('[data-cari-cepat]').forEach((form, nomor) => {
             if (input.value.trim() !== q) return; // sudah diketik ulang, hasil ini usang
             const hasil = data.saran ?? data.hasil ?? [];
             const urlSemua = data.semua || `/cari?q=${encodeURIComponent(q)}`;
-            const urlTanya = data.tanya || `/tanya?q=${encodeURIComponent(q)}`;
             const butir = hasil.map((h, i) => {
                 const sub = [h.ringkas ?? h.sub, h.harga].filter(Boolean).join(', ');
                 const label = h.label_jenis ?? h.jenis ?? '';
@@ -246,11 +245,11 @@ document.querySelectorAll('[data-cari-cepat]').forEach((form, nomor) => {
                     <span class="mv-saran-butir__jenis">${esc(label)}</span>
                 </a>`;
             }).join('');
-            const kosong = `<div class="mv-saran-status" role="status">Tidak ada nama persis untuk “${esc(q)}”${jenis ? ' di jenis ini' : ''}. Tekan Cari atau tanyakan ke asisten.</div>`;
+            const kosong = `<div class="mv-saran-status" role="status">Tidak ada nama persis untuk “${esc(q)}”${jenis ? ' di jenis ini' : ''}. Tekan Cari atau tanyakan ke Mas Nonov.</div>`;
             kotak.innerHTML = (butir || kosong) + `
                 <div class="mv-saran-kaki">
                     <a href="${esc(urlSemua)}">Semua hasil “${esc(q)}”</a>
-                    <a href="${esc(urlTanya)}">Tanyakan ke asisten</a>
+                    <button type="button" data-buka-asisten-eksternal data-pesan-asisten="${esc(q)}">Tanyakan ke Mas Nonov</button>
                 </div>`;
             aktif = -1;
             input.setAttribute('aria-expanded', 'true');
@@ -476,6 +475,21 @@ if (widget) {
 
     pemicu?.addEventListener('click', () => aturBuka(true));
     tutup?.addEventListener('click', () => aturBuka(false));
+    document.addEventListener('click', (event) => {
+        const pemicuEksternal = event.target.closest?.('[data-buka-asisten-eksternal]');
+        if (!pemicuEksternal) return;
+        event.preventDefault();
+        const pesan = pemicuEksternal.dataset.pesanAsisten?.trim();
+        if (pesan && input) {
+            input.value = pesan;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (panel.hidden) {
+            aturBuka(true);
+        } else {
+            input?.focus();
+        }
+    });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !panel.hidden) aturBuka(false);
     });
@@ -712,6 +726,47 @@ if (saringBeranda) {
     sebelum?.addEventListener('click', () => { halaman -= 1; tampilkanHalaman({ fokus: true }); });
     sesudah?.addEventListener('click', () => { halaman += 1; tampilkanHalaman({ fokus: true }); });
     tampilkanHalaman();
+}
+
+// ---- Paginasi tiket masuk di beranda ----
+const paginasiTiket = document.querySelector('[data-paginasi-tiket]');
+if (paginasiTiket) {
+    const daftar = document.querySelector('[data-daftar-tiket]');
+    const item = [...(daftar?.querySelectorAll('[data-tiket-item]') ?? [])];
+    const grup = [...(daftar?.querySelectorAll('[data-tiket-grup]') ?? [])];
+    const sebelum = paginasiTiket.querySelector('[data-tiket-sebelum]');
+    const sesudah = paginasiTiket.querySelector('[data-tiket-sesudah]');
+    const status = paginasiTiket.querySelector('[data-tiket-status]');
+    const perHalaman = 6;
+    let halaman = 0;
+
+    const tampilkanHalamanTiket = ({ fokus = false } = {}) => {
+        const jumlahHalaman = Math.max(1, Math.ceil(item.length / perHalaman));
+        halaman = Math.min(Math.max(halaman, 0), jumlahHalaman - 1);
+        const awal = halaman * perHalaman;
+        const akhir = Math.min(awal + perHalaman, item.length);
+
+        item.forEach((baris, indeks) => {
+            baris.hidden = indeks < awal || indeks >= akhir;
+        });
+        grup.forEach((bagian) => {
+            bagian.hidden = ![...bagian.querySelectorAll('[data-tiket-item]')].some((baris) => !baris.hidden);
+        });
+        if (status) status.textContent = `Menampilkan ${awal + 1}–${akhir} dari ${item.length} tempat bertiket`;
+        if (sebelum) sebelum.disabled = halaman === 0;
+        if (sesudah) sesudah.disabled = halaman >= jumlahHalaman - 1;
+        if (fokus) daftar?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    sebelum?.addEventListener('click', () => {
+        halaman -= 1;
+        tampilkanHalamanTiket({ fokus: true });
+    });
+    sesudah?.addEventListener('click', () => {
+        halaman += 1;
+        tampilkanHalamanTiket({ fokus: true });
+    });
+    tampilkanHalamanTiket();
 }
 
 // ---- Tampilkan/Sembunyikan Sandi & Indikator Kekuatan ----

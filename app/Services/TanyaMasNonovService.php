@@ -85,7 +85,7 @@ class TanyaMasNonovService
             'pengetahuan umum; konteks percakapan privat dari Database 1 bila tersedia',
             [],
             $riwayat,
-            'Saya belum dapat menjawab pertanyaan umum itu saat ini. Untuk pertanyaan tentang MedanVisit, saya tetap bisa membantu mencari tempat, tiket, kuliner, rute, ulasan, atau suka.',
+            'Maaf, layanan AI Mas Nonov sedang tidak tersedia untuk menjawab pertanyaan umum. Coba lagi sebentar; saya tetap bisa membantu mencari informasi wisata Medan.',
         )], 'tempat' => []];
     }
 
@@ -567,8 +567,9 @@ class TanyaMasNonovService
 
         try {
             return $this->ai->jawabBerbasisKonteks($pertanyaan, $sumber, $konteks, $riwayat);
-        } catch (\Throwable) {
-            // Jawaban berbasis data lokal tetap diberikan saat OpenRouter sedang tidak tersedia.
+        } catch (\Illuminate\Http\Client\ConnectionException|\Illuminate\Http\Client\RequestException|RuntimeException $e) {
+            report($e);
+
             return $fallback;
         }
     }

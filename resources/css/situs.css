@@ -477,6 +477,12 @@ button:disabled, input:disabled { cursor: not-allowed; }
 .rencana__hasil .slip { width: 100%; max-width: 560px; }
 .rencana__peta { height: 360px; margin-top: 28px; background: #dfe3dc; }
 .rencana__aksi { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.rencana__tujuan-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; max-height: 280px; overflow: auto; padding: 8px; border: 1px solid #b9b19c; background: var(--white); }
+.rencana__tujuan-item { display: flex; align-items: flex-start; gap: 9px; padding: 8px; border: 1px solid #ded8c9; cursor: pointer; }
+.rencana__tujuan-item:has(input:checked) { border-color: var(--green); background: #e7eee8; }
+.rencana__tujuan-item:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.rencana__tujuan-item input { width: 18px; height: 18px; margin: 2px 0 0; flex: none; accent-color: var(--green); }
+.rencana__tujuan-item small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.8rem; }
 
 /* kredit & ketentuan (teks panjang) */
 .teks-panjang { max-width: 70ch; }
@@ -540,6 +546,7 @@ button:disabled, input:disabled { cursor: not-allowed; }
 @media (max-width: 900px) {
   :root { --section: clamp(4.5rem, 16vw, 7rem); }
   .panggung, .detail, .rencana, .otentik { grid-template-columns: 1fr; }
+  .rencana__tujuan-list { grid-template-columns: 1fr; }
   .panggung__layar { position: relative; top: 0; height: 56svh; order: -1; }
   .detail__layar { position: relative; top: 0; height: 56svh; order: -1; }
   .sampul { min-height: 0; padding-bottom: 48px; }

@@ -8,6 +8,9 @@ if (form) {
     const lng = form.querySelector('[data-lng]');
     const kabar = form.querySelector('[data-kabar-lokasi]');
     const tombol = form.querySelector('button[type="submit"]');
+    const daftarTujuan = form.querySelector('[data-daftar-tujuan]');
+    const cariTujuan = form.querySelector('[data-cari-tujuan]');
+    const kosongkanTujuan = form.querySelector('[data-kosongkan-tujuan]');
 
     const tulis = (teks) => {
         kabar.hidden = !teks;
@@ -24,6 +27,24 @@ if (form) {
             : 'Browser ini tidak bisa membaca lokasi. Pilih tempat awal dari daftar.');
     };
     pilih.addEventListener('change', aturKabar);
+
+    cariTujuan.addEventListener('input', () => {
+        const kata = cariTujuan.value.trim().toLocaleLowerCase('id');
+        daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
+            item.hidden = !item.dataset.tujuanItem.includes(kata);
+        });
+    });
+
+    kosongkanTujuan.addEventListener('click', () => {
+        daftarTujuan.querySelectorAll('input[name="tujuan[]"]').forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+        cariTujuan.value = '';
+        daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
+            item.hidden = false;
+        });
+        cariTujuan.focus();
+    });
 
     form.addEventListener('submit', (e) => {
         // tempat awal dari daftar: koordinat lama tidak ikut dikirim

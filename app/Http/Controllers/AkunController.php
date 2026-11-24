@@ -654,7 +654,7 @@ class AkunController extends Controller
     public function simpanRencana(Request $request)
     {
         $data = $this->validasiRencana($request);
-        $r = Penyimpanan::simpanRencana($data + [
+        Penyimpanan::simpanRencana($data + [
             'id_pengguna' => (int) $this->pengguna($request)['id'],
         ]);
 

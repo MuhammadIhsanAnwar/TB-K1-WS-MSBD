@@ -5,10 +5,12 @@
 
     $pref ??= null;
     $dibagikan ??= null;
+    $rencanaEdit ??= null;
     $kategoriTempat = array_values(array_unique(array_filter(array_column($tempat, 'kategori'))));
     $minat = $pref['minat'] ?? $kategoriTempat;
     $durasi = (int) ($pref['durasi'] ?? 4);
-    $moda = $pref['moda'] ?? ['jalan', 'becak'];
+    $moda = $pref['moda'] ?? ['jalan', 'motor', 'mobil'];
+    $tujuan = $pref['tujuan'] ?? [];
     // bawaan: mulai dari posisi pengguna sekarang (dibaca browser saat rute disusun)
     $mulai = $pref['mulai'] ?? 'lokasi';
 
@@ -18,6 +20,9 @@
 
     // mulai dari posisi pengguna: titik "Posisimu" menjadi awal garis rute di peta
     $dariLokasi = ! empty($hasil['awal']);
+    $tujuanSimpan = $hasil && $tujuan
+        ? array_column(array_column($hasil['singgah'], 'tempat'), 'slug')
+        : [];
     $rute = $hasil ? collect($dariLokasi ? [['nama' => 'Posisimu', 'lat' => $hasil['awal']['lat'], 'lng' => $hasil['awal']['lng'], 'awal' => true]] : [])
         ->concat(collect($hasil['singgah'])->map(fn ($s) => [
             'nama' => $s['tempat']['nama'],
@@ -43,11 +48,16 @@
 <div class="rencana">
     <form class="rencana__form" action="{{ route('rencana') }}" method="get" novalidate data-rencana-form>
         <h1 style="font-size:var(--s-head);margin-bottom:12px">Rencana perjalanan</h1>
-        <p style="margin-bottom:32px">Pilih minat, lama waktu, dan cara berpindah. Rute disusun dari tempat terdekat ke tempat berikutnya, dengan jarak dan ongkos becak dihitung dari letaknya.</p>
+        <p style="margin-bottom:32px">Pilih minat untuk rekomendasi otomatis, atau tentukan beberapa tujuan sendiri. Rute diurutkan agar perjalanan lebih praktis.</p>
 
         @if ($errors->any())
             <div class="pesan pesan--galat" role="alert" style="margin-bottom:24px">{{ $errors->first() }}</div>
         @endif
+
+        @if ($rencanaEdit)
+            <input type="hidden" name="edit" value="{{ $rencanaEdit['kode'] }}">
+        @endif
+        <input type="hidden" name="tujuan_dikirim" value="1">
 
         <fieldset>
             <legend>Minat</legend>
@@ -68,11 +78,30 @@
         </fieldset>
 
         <fieldset>
-            <legend>Cara berpindah</legend>
+            <legend>Transportasi</legend>
             <div class="pilih-banyak">
                 <label><input type="checkbox" name="moda[]" value="jalan" @checked(in_array('jalan', $moda, true))>Jalan kaki</label>
-                <label><input type="checkbox" name="moda[]" value="becak" @checked(in_array('becak', $moda, true))>Becak motor</label>
+                <label><input type="checkbox" name="moda[]" value="motor" @checked(in_array('motor', $moda, true))>Motor</label>
+                <label><input type="checkbox" name="moda[]" value="mobil" @checked(in_array('mobil', $moda, true))>Mobil</label>
             </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Tempat tujuan <span class="redup">(opsional)</span></legend>
+            <p class="isian__bantuan">Pilih hingga 10 tempat untuk menentukan tujuan. Jika dikosongkan, tempat direkomendasikan dari minatmu.</p>
+            <div class="isian" style="margin:12px 0">
+                <label for="cari-tujuan">Cari tempat</label>
+                <input id="cari-tujuan" type="search" autocomplete="off" placeholder="Ketik nama tempat" data-cari-tujuan>
+            </div>
+            <div class="rencana__tujuan-list" data-daftar-tujuan>
+                @foreach ($tempat as $t)
+                    <label class="rencana__tujuan-item" data-tujuan-item="{{ mb_strtolower($t['nama']) }}">
+                        <input type="checkbox" name="tujuan[]" value="{{ $t['slug'] }}" @checked(in_array($t['slug'], $tujuan, true))>
+                        <span>{{ $t['nama'] }}<small>{{ Katalog::KATEGORI[$t['kategori']] ?? 'Tempat wisata' }}</small></span>
+                    </label>
+                @endforeach
+            </div>
+            <button class="tombol tombol--garis" type="button" style="margin-top:10px" data-kosongkan-tujuan>Hapus pilihan tujuan</button>
         </fieldset>
 
         <div class="isian" style="margin-bottom:28px">
@@ -106,8 +135,8 @@
                     <dt>Durasi rencana</dt>
                 </div>
                 <div>
-                    <dd>{{ collect($moda)->map(fn ($m) => $m === 'jalan' ? 'Jalan kaki' : 'Becak')->implode(' & ') }}</dd>
-                    <dt>Cara pindah</dt>
+                    <dd>{{ collect($moda)->map(fn ($m) => ['jalan' => 'Jalan kaki', 'motor' => 'Motor', 'mobil' => 'Mobil'][$m] ?? $m)->implode(' & ') }}</dd>
+                    <dt>Transportasi</dt>
                 </div>
             </dl>
 
@@ -140,11 +169,11 @@
                     <span>{{ $hasil['biaya'] === null ? 'Belum bisa dihitung: ada harga tiket yang belum tersedia.' : Katalog::rupiah($hasil['biaya']) }}</span>
                 </div>
 
-                <p class="kecil redup" style="margin-top:12px">Perkiraan harga tiket terverifikasi dan becak per orang; tarif becak dapat berubah.</p>
+                <p class="kecil redup" style="margin-top:12px">Perkiraan tiket per orang. Biaya bensin dan parkir motor atau mobil tidak termasuk.</p>
             </div>
 
-            @if (count($hasil['singgah']) === 1)
-                <p class="pesan pesan--galat" style="margin-top:20px">Tidak ada tempat lain yang cocok dalam waktu ini. Tambah minat, perpanjang waktu, atau izinkan becak motor.</p>
+            @if (count($hasil['singgah']) === 1 && ! $tujuan)
+                <p class="pesan pesan--galat" style="margin-top:20px">Tidak ada tempat lain yang cocok dalam waktu ini. Tambah minat atau perpanjang waktu.</p>
             @endif
 
             <div class="rencana__peta" data-peta data-peta-mode="rute" data-rute="{{ json_encode($rute) }}" tabindex="0" aria-label="Peta rute">
@@ -157,13 +186,17 @@
                     <button class="tombol tombol--hijau" type="button" data-salin="{{ $tautan }}">Salin tautan rencana</button>
                     <a class="tombol tombol--garis" href="https://wa.me/?text={{ urlencode($judulRute.': '.$tautan) }}" rel="noopener">Bagikan ke WhatsApp</a>
                 @elseif (session('pengguna'))
-                    <form method="post" action="{{ route('rencana.simpan') }}" style="display:flex;flex-wrap:wrap;gap:12px;align-items:end">
+                    <form method="post" action="{{ $rencanaEdit ? route('rencana.perbarui', $rencanaEdit['kode']) : route('rencana.simpan') }}" style="display:flex;flex-wrap:wrap;gap:12px;align-items:end">
                         @csrf
+                        @if ($rencanaEdit) @method('PUT') @endif
                         @foreach ($minat as $m)
                             <input type="hidden" name="minat[]" value="{{ $m }}">
                         @endforeach
                         @foreach ($moda as $m)
                             <input type="hidden" name="moda[]" value="{{ $m }}">
+                        @endforeach
+                        @foreach ($tujuanSimpan as $slug)
+                            <input type="hidden" name="tujuan[]" value="{{ $slug }}">
                         @endforeach
                         <input type="hidden" name="durasi" value="{{ $durasi }}">
                         <input type="hidden" name="mulai" value="{{ $mulaiSimpan }}">
@@ -176,7 +209,7 @@
                             @endif
                         </div>
 
-                        <button class="tombol tombol--hijau" type="submit">Simpan rencana</button>
+                        <button class="tombol tombol--hijau" type="submit">{{ $rencanaEdit ? 'Simpan perubahan' : 'Simpan rencana' }}</button>
                     </form>
                 @else
                     <a class="tombol tombol--hijau" href="{{ route('masuk', ['kembali' => request()->getRequestUri()]) }}">Masuk untuk menyimpan</a>
@@ -188,7 +221,7 @@
             </div>
         @else
             <h2 id="judul-hasil" style="font-size:2.25rem">Rutemu muncul di sini</h2>
-            <p style="margin-top:12px">Pilih tempat awal, minat, durasi, dan cara berpindah untuk menyusun rute dari data tempat wisata.</p>
+            <p style="margin-top:12px">Pilih tempat awal, minat, durasi, dan transportasi. Tentukan beberapa tujuan sendiri atau biarkan rekomendasi menyusunnya otomatis.</p>
             <x-foto :berkas="$fotoRute['foto'] ?? 'kesawan.jpg'" :alt="$fotoRute['nama'] ?? 'Tempat wisata di Medan'" style="margin-top:28px;width:100%;aspect-ratio:16/10;object-fit:cover" />
         @endif
     </section>

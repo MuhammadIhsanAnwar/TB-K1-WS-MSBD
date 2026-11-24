@@ -107,7 +107,7 @@
                         @endif
                     </span>
                         <span>
-                            <span aria-hidden="true">👁</span>
+                            <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
                             {{ number_format($t['jumlahKunjungan'] ?? 0, 0, ',', '.') }} kunjungan
                         </span>
                     </div>
@@ -116,9 +116,10 @@
                             @csrf
                             <button
                                 type="submit"
-                                style="border:1px solid var(--mv-kertas-2);background:var(--mv-kertas);padding:5px 10px;border-radius:8px;cursor:pointer;color:#d9485f"
+                                style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--mv-kertas-2);background:var(--mv-kertas);padding:5px 10px;border-radius:8px;cursor:pointer;color:#d9485f"
                             >
-                                ❤️ {{ number_format($t['jumlahSuka'] ?? 0, 0, ',', '.') }} suka
+                                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+                                {{ number_format($t['jumlahSuka'] ?? 0, 0, ',', '.') }} suka
                             </button>
                         </form>
                         <div style="display:flex;gap:10px;align-items:center;margin-top:6px">

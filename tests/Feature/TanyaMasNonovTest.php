@@ -43,7 +43,7 @@ class TanyaMasNonovTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_guest_can_open_chat_and_messages_are_stored_as_guest_data(): void
+    public function test_guest_can_use_widget_chat_without_a_full_page_and_messages_are_stored_as_guest_data(): void
     {
         $asisten = Mockery::mock(TanyaMasNonovService::class);
         $asisten->shouldReceive('jawab')
@@ -52,7 +52,8 @@ class TanyaMasNonovTest extends TestCase
             ->andReturn(['teks' => ['Ada banyak pilihan wisata di Medan.'], 'tempat' => []]);
         $this->app->instance(TanyaMasNonovService::class, $asisten);
 
-        $this->get(route('tanya'))->assertOk();
+        $this->assertFalse(\Illuminate\Support\Facades\Route::has('tanya'));
+        $this->get('/tanya')->assertNotFound();
         $this->withSession(['_token' => 'test-csrf'])
             ->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->postJson(route('tanya.jawab'), ['pesan' => 'Apa tempat wisata di Medan?'])

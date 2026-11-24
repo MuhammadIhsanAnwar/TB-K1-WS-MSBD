@@ -118,4 +118,38 @@ class DatabaseNormalizationMigrationTest extends TestCase
             $this->assertFalse(Schema::connection('transaksi')->hasTable($table));
         }
     }
+
+    public function test_route_plan_migration_converts_old_transport_and_adds_ordered_destinations(): void
+    {
+        Schema::connection('transaksi')->create('rencana', function ($table): void {
+            $table->bigIncrements('id_rencana');
+        });
+        Schema::connection('transaksi')->create('rencana_moda', function ($table): void {
+            $table->bigInteger('id_rencana');
+            $table->string('moda', 12);
+            $table->primary(['id_rencana', 'moda']);
+        });
+        DB::connection('transaksi')->table('rencana')->insert(['id_rencana' => 9]);
+        DB::connection('transaksi')->table('rencana_moda')->insert([
+            ['id_rencana' => 9, 'moda' => 'jalan'],
+            ['id_rencana' => 9, 'moda' => 'becak'],
+        ]);
+
+        $migration = require database_path('migrations/2026_11_30_000200_rencana_multi_tujuan_dan_transport.php');
+        $migration->up();
+
+        $this->assertTrue(Schema::connection('transaksi')->hasTable('rencana_tujuan'));
+        $this->assertSame(
+            ['jalan', 'motor'],
+            DB::connection('transaksi')->table('rencana_moda')->orderBy('moda')->pluck('moda')->all(),
+        );
+
+        $migration->down();
+
+        $this->assertFalse(Schema::connection('transaksi')->hasTable('rencana_tujuan'));
+        $this->assertSame(
+            ['becak', 'jalan'],
+            DB::connection('transaksi')->table('rencana_moda')->orderBy('moda')->pluck('moda')->all(),
+        );
+    }
 }

@@ -41,6 +41,8 @@
         ->concat(collect($semuaTempat)->reject(fn ($t) => in_array($t['slug'], $unggulan, true))->sortBy('nama'))
         ->values();
     $perHalamanTempat = 9;
+    $perHalamanTiket = 6;
+    $jumlahTiket = count($bertiket);
     $jumlahGaleri = $urutTempat->countBy('kategori');
     // bahan saran "Dekat denganmu": jarak dihitung di peramban dari lokasi pengunjung
     $dekatJson = collect($semuaTempat)->filter(fn ($t) => ($t['lat'] ?? 0) > 0)->map(fn ($t) => [
@@ -88,7 +90,7 @@
                     @foreach ($saranCari as $tempat)
                         <a href="{{ route('cari', ['q' => $tempat['nama']]) }}">{{ $tempat['nama'] }}</a>
                     @endforeach
-                    <a href="{{ route('tanya') }}">Tanya asisten</a>
+                    <button type="button" data-buka-asisten-eksternal>Tanya Mas Nonov</button>
                 </div>
             </div>
 
@@ -194,9 +196,15 @@
         </div>
         @if ($urutTempat->count() > $perHalamanTempat)
             <nav class="mv-paginasi-tempat" data-paginasi-beranda aria-label="Halaman tempat wisata">
-                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sebelum disabled>← Sebelumnya</button>
+                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sebelum disabled>
+                    <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Sebelumnya
+                </button>
                 <p class="mv-paginasi-tempat__status" data-halaman-status>Menampilkan 1–{{ min($perHalamanTempat, $urutTempat->count()) }} dari {{ $urutTempat->count() }} tempat</p>
-                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sesudah>Berikutnya →</button>
+                <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-halaman-sesudah>
+                    Berikutnya
+                    <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
             </nav>
         @endif
     </div>
@@ -215,13 +223,13 @@
             </div>
 
             {{-- daftar harga ala menu: satu baris per tempat, dikelompokkan per kategori; rincian tarif ada di halaman tiket --}}
-            <div class="mv-menu-tiket__daftar">
+            <div class="mv-menu-tiket__daftar" data-daftar-tiket>
                 @foreach (collect($bertiket)->groupBy('kategori')->sortByDesc(fn ($grup) => $grup->count()) as $kode => $grup)
-                    <section class="mv-menu-harga {{ $grup->count() === 1 ? 'mv-menu-harga--melintang' : '' }}" aria-labelledby="harga-{{ $kode }}">
+                    <section class="mv-menu-harga {{ $grup->count() === 1 ? 'mv-menu-harga--melintang' : '' }}" data-tiket-grup aria-labelledby="harga-{{ $kode }}">
                         <h3 id="harga-{{ $kode }}">{{ Katalog::KATEGORI[$kode] }}</h3>
                         <ul>
                             @foreach ($grup->sortBy(fn ($t) => Katalog::hargaTermurah($t)) as $t)
-                                <li class="mv-menu-harga__baris">
+                                <li class="mv-menu-harga__baris" data-tiket-item>
                                     <span class="mv-menu-harga__nama">
                                         <a href="{{ route('tempat', $t['slug']) }}">{{ $t['nama'] }}</a>
                                         <span>{{ $t['kecamatan'] }}, {{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(' · ') }}</span>
@@ -236,6 +244,19 @@
                     </section>
                 @endforeach
             </div>
+            @if ($jumlahTiket > $perHalamanTiket)
+                <nav class="mv-paginasi-tempat" data-paginasi-tiket aria-label="Halaman tempat bertiket">
+                    <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-tiket-sebelum disabled>
+                        <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                        Sebelumnya
+                    </button>
+                    <p class="mv-paginasi-tempat__status" data-tiket-status>Menampilkan 1–{{ $perHalamanTiket }} dari {{ $jumlahTiket }} tempat bertiket</p>
+                    <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-tiket-sesudah>
+                        Berikutnya
+                        <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </nav>
+            @endif
         </div>
     </div>
 </section>
@@ -305,7 +326,6 @@
                 </div>
 
                 <div style="display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center">
-                    <a class="mv-btn mv-btn--hijau" href="{{ route('tanya') }}">Tanya asisten MedanVisit</a>
                     <a class="mv-tautan" href="{{ route('ketentuan') }}">Ketentuan pembelian</a>
                 </div>
             </div>
