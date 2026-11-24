@@ -122,6 +122,8 @@ untuk tempat populer. Transaksi demo ditandai referensi `SEED-DEMO-` dan menggun
 termurah di RDF untuk tanggal berjalan. Rating disimpan satu per akun-tempat di `rating_tempat`;
 `WisatawanRatingSeeder` dapat dijalankan sendiri, sedangkan rating pada ulasan juga disinkronkan
 ke tabel tersebut oleh trigger DB 2. Jalankan migration DB 2 sebelum seeder interaksi.
+Jika dijalankan ulang, ulasan dengan pasangan akun-tempat yang sama akan diperbarui
+(teks, bintang, dan waktu), bukan dibuat sebagai baris duplikat.
 
 ### Objek database
 

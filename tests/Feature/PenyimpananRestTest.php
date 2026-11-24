@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Support\Penyimpanan;
+use App\Support\SupabaseApi;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -20,6 +21,41 @@ class PenyimpananRestTest extends TestCase
             'services.supabase.transaksi.publishable_key' => 'pub-key',
             'services.supabase.transaksi.secret_key' => 'secret-key',
         ]);
+    }
+
+    public function test_reseeding_reviews_merges_rows_with_the_same_user_and_place_key(): void
+    {
+        Http::fake(['https://transaksi.test/*' => Http::response([])]);
+
+        $api = new SupabaseApi('transaksi');
+        $barisLama = [
+            'id_pengguna' => 17,
+            'tempat_slug' => 'taman-cadika',
+            'bintang' => 3,
+            'teks' => 'Teks ulasan lama.',
+            'status' => 'tayang',
+        ];
+        $barisBaru = $barisLama;
+        $barisBaru['bintang'] = 5;
+        $barisBaru['teks'] = 'Teks ulasan terbaru.';
+
+        $api->upsertUlasan([$barisLama]);
+        $api->upsertUlasan([$barisBaru]);
+
+        $requests = Http::recorded()->map(static fn (array $recorded) => $recorded[0])->values();
+        $this->assertCount(2, $requests);
+        foreach ($requests as $request) {
+            $this->assertSame('POST', $request->method());
+            $this->assertStringContainsString(
+                '/ulasan?on_conflict=id_pengguna%2Ctempat_slug',
+                $request->url(),
+            );
+            $this->assertStringContainsString('resolution=merge-duplicates', $request->header('Prefer')[0]);
+        }
+
+        $this->assertSame('Teks ulasan lama.', $requests[0][0]['teks']);
+        $this->assertSame('Teks ulasan terbaru.', $requests[1][0]['teks']);
+        $this->assertSame(5, $requests[1][0]['bintang']);
     }
 
     public function test_orders_are_read_through_postgrest_with_embedded_payment_and_ticket(): void
