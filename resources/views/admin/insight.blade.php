@@ -13,7 +13,7 @@
     $totalLunas = $pesanan->where('status', 'lunas');
     $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'rencana' => 'Rencana', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
-    $rating = $fokus ? (Penyimpanan::ringkasanUlasan()[$fokus] ?? null) : null;
+    $rating = $fokus ? (Penyimpanan::ringkasanRatingTempat()[$fokus] ?? null) : null;
     $dikunjungi = $kunjunganTempat->where('jumlah', '>', 0);
     $belumDikunjungi = $kunjunganTempat->count() - $dikunjungi->count();
     // superadmin yang sedang melihat satu tempat tetap membawa pilihan itu saat ganti periode
@@ -44,7 +44,7 @@
     <div><div class="label">Tiket terjual</div><div class="nilai">{{ number_format($totalLunas->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))), 0, ',', '.') }}</div><div class="ket">dari {{ $totalLunas->count() }} pesanan lunas</div></div>
     <div><div class="label">Pendapatan tiket</div><div class="nilai">{{ Katalog::rupiah($totalLunas->sum('total')) }}</div><div class="ket">berdasarkan pesanan lunas</div></div>
     @if ($fokus)
-        <div><div class="label">Rating ulasan</div><div class="nilai">{{ $rating && $rating['jumlahUlasan'] ? number_format($rating['rating'], 1, ',', '.') : '-' }}</div><div class="ket">{{ $rating['jumlahUlasan'] ?? 0 }} ulasan tayang</div></div>
+        <div><div class="label">Rating tempat</div><div class="nilai">{{ $rating && $rating['jumlahRating'] ? number_format($rating['rating'], 1, ',', '.') : '-' }}</div><div class="ket">{{ $rating['jumlahRating'] ?? 0 }} rating pengguna</div></div>
     @else
         <div><div class="label">Akun terdaftar</div><div class="nilai">{{ number_format(($akun['admin'] ?? 0) + ($akun['wisatawan'] ?? 0) + ($akun['superadmin'] ?? 0), 0, ',', '.') }}</div><div class="ket">{{ $akun['admin'] ?? 0 }} admin · {{ $akun['superadmin'] ?? 0 }} superadmin · {{ $akun['wisatawan'] ?? 0 }} wisatawan</div></div>
     @endif

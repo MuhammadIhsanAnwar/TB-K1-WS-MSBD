@@ -146,15 +146,17 @@ class TanyaMasNonovService
             $fallbackDetail = [];
             if ($mintaUlasan) {
                 $ringkasan = $this->postgres->ringkasanUlasanTempat($tempatTerkait['slug']);
+                $rating = Penyimpanan::ringkasanRatingTempat()[$tempatTerkait['slug']] ?? null;
                 $detail['ulasan'] = [
                     'jumlah' => (int) ($ringkasan['jumlah_ulasan'] ?? 0),
-                    'rata_rata_bintang' => isset($ringkasan['rata_rata_bintang'])
-                        ? (float) $ringkasan['rata_rata_bintang']
+                    'jumlah_rating' => (int) ($rating['jumlahRating'] ?? 0),
+                    'rata_rata_bintang' => isset($rating['rating'])
+                        ? (float) $rating['rating']
                         : null,
                 ];
-                $fallbackDetail[] = $detail['ulasan']['jumlah'] > 0
-                    ? $tempatTerkait['nama'].' memiliki '.$detail['ulasan']['jumlah'].' ulasan publik'.($detail['ulasan']['rata_rata_bintang'] === null ? '.' : ' dengan rata-rata '.number_format($detail['ulasan']['rata_rata_bintang'], 1, ',', '.').'/5.')
-                    : 'Belum ada ulasan publik yang tercatat untuk '.$tempatTerkait['nama'].'.';
+                $fallbackDetail[] = $detail['ulasan']['jumlah_rating'] > 0
+                    ? $tempatTerkait['nama'].' memiliki '.$detail['ulasan']['jumlah_rating'].' rating publik dengan rata-rata '.number_format($detail['ulasan']['rata_rata_bintang'], 1, ',', '.').'/5 dan '.$detail['ulasan']['jumlah'].' ulasan.'
+                    : 'Belum ada rating publik yang tercatat untuk '.$tempatTerkait['nama'].'.';
             }
             if ($mintaSuka) {
                 $detail['jumlah_suka_db2'] = Penyimpanan::ringkasanSukaTempat()[$tempatTerkait['slug']] ?? 0;
@@ -164,7 +166,7 @@ class TanyaMasNonovService
             return [
                 'teks' => [$this->jawabAiAtauFallback(
                     $pertanyaan,
-                    'AllegroGraph RDF untuk tempat, PostgreSQL untuk ulasan, dan DB 2 untuk suka',
+                    'AllegroGraph RDF untuk tempat, PostgreSQL untuk jumlah ulasan, serta DB 2 untuk rating dan suka',
                     $detail,
                     $riwayat,
                     implode(' ', $fallbackDetail),
@@ -175,6 +177,7 @@ class TanyaMasNonovService
 
         if ($mintaUlasan) {
             $peringkat = $this->postgres->peringkatUlasan(100);
+            $ratingTempat = Penyimpanan::ringkasanRatingTempat();
             $ulasan = [];
             foreach ($peringkat as $baris) {
                 $tempat = Katalog::get((string) $baris['tempat_slug']);
@@ -185,9 +188,8 @@ class TanyaMasNonovService
                 $ulasan[] = [
                     'nama' => $tempat['nama'],
                     'jumlah_ulasan' => (int) $baris['jumlah_ulasan'],
-                    'rata_rata_bintang' => $baris['rata_rata_bintang'] === null
-                        ? null
-                        : (float) $baris['rata_rata_bintang'],
+                    'jumlah_rating' => (int) ($ratingTempat[$tempat['slug']]['jumlahRating'] ?? 0),
+                    'rata_rata_bintang' => $ratingTempat[$tempat['slug']]['rating'] ?? null,
                 ];
                 $kartu[] = \App\Support\Asisten::kartu($tempat);
             }

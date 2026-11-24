@@ -65,6 +65,13 @@ class SitusTempatTest extends TestCase
             if (str_contains($request->url(), '/ringkasan_suka_tempat?')) {
                 return Http::response([['tempat_slug' => 'kolam-renang-primbana', 'jumlah_suka' => 12]]);
             }
+            if (str_contains($request->url(), '/ringkasan_rating_tempat?')) {
+                return Http::response([[
+                    'tempat_slug' => 'kolam-renang-primbana',
+                    'rata_rata_bintang' => '4.5',
+                    'jumlah_rating' => 10,
+                ]]);
+            }
 
             return Http::response([]);
         });
@@ -73,6 +80,7 @@ class SitusTempatTest extends TestCase
             ->assertOk()
             ->assertSee('Kolam Renang Primbana')
             ->assertSee('<span><b>12</b> like</span>', false)
+            ->assertSee('<span><b>4,5</b> rating</span>', false)
             ->assertSee('property="og:title"', false)
             ->assertSee('property="og:image"', false)
             ->assertSee('property="mainEntity" typeof="TouristAttraction" resource="'.$place.'"', false)

@@ -9,61 +9,48 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 /**
- * Seeds clearly labelled demo reviews, likes, and paid ticket orders.
+ * Seeds demo reviews, likes, and paid ticket orders.
  *
  * Run after applying database migrations:
  * php artisan db:seed --class=WisatawanUlasanSeeder
  */
 class WisatawanUlasanSeeder extends Seeder
 {
-    private const TARGET_METRIK = [
-        'Taman Cadika Pramuka' => [6032, 44],
-        'Graha Maria Annai Velangkanni' => [4955, 48],
-        'Masjid Agung Medan' => [4519, 48],
-        'Taman Ahmad Yani' => [4481, 44],
-        'Tjong A Fie Mansion' => [3656, 46],
-        'Rahmat International Wildlife Museum & Gallery' => [3017, 46],
-        'Museum Negeri Sumatera Utara' => [2941, 45],
-        'Masjid Raya Al-Mashun' => [2221, 48],
-        'Kantor Pos Besar Medan (Pos Bloc)' => [1718, 46],
-        'Kuil Shri Mariamman' => [1004, 46],
-    ];
-
     private const TEKS = [
         'sejarah' => [
             'Cerita dan suasana tempat ini menarik untuk dijelajahi.',
-            'Kunjungan simulasi yang menyenangkan untuk mengenal sejarah setempat.',
+            'Tempat ini menarik untuk mengenal sejarah setempat.',
             'Bangunan dan kisah tempat ini memberi pengalaman yang berkesan.',
         ],
         'museum' => [
-            'Kunjungan simulasi yang menarik untuk mengenal koleksi museum.',
+            'Koleksi museum ini menarik untuk disimak.',
             'Tempat ini memberi pengalaman belajar yang menyenangkan.',
-            'Koleksi dan kisah yang ditampilkan menarik untuk disimak.',
+            'Informasi yang disajikan menambah wawasan.',
         ],
         'religi' => [
             'Arsitektur tempat ini menarik; pengunjung perlu menjaga ketenangan.',
-            'Kunjungan simulasi yang berkesan dengan suasana yang tenang.',
-            'Tempat ini memiliki detail arsitektur yang menarik untuk dilihat.',
+            'Tempat ini nyaman dikunjungi dengan tetap menjaga ketenangan.',
+            'Detail arsitekturnya menarik untuk dilihat.',
         ],
         'kuliner' => [
-            'Catatan simulasi: tempat ini menarik untuk dikunjungi saat wisata kuliner.',
-            'Kunjungan simulasi yang menyenangkan untuk mencoba kuliner setempat.',
+            'Pilihan kulinernya menarik untuk dicoba.',
             'Tempat ini cocok disinggahi saat menjelajahi pilihan kuliner Medan.',
+            'Suasananya nyaman untuk menikmati hidangan.',
         ],
         'ruang-publik' => [
-            'Kunjungan simulasi yang menyenangkan untuk menikmati ruang terbuka.',
+            'Ruang terbuka ini cocok untuk bersantai.',
             'Tempat ini menarik untuk disinggahi saat berwisata di Medan.',
-            'Suasana ruang publik ini memberi pilihan untuk bersantai.',
+            'Suasananya nyaman untuk menikmati waktu luang.',
         ],
         'belanja' => [
-            'Kunjungan simulasi yang menyenangkan untuk melihat pilihan tenant.',
+            'Pilihan tenant di tempat ini menarik untuk dijelajahi.',
             'Tempat ini cocok disinggahi saat berbelanja di Medan.',
             'Lokasinya menjadi pilihan menarik untuk berbelanja dan bersantai.',
         ],
         'rekreasi-air' => [
-            'Kunjungan simulasi yang menyenangkan untuk rekreasi bersama keluarga.',
-            'Tempat ini memberi pilihan aktivitas rekreasi yang menarik.',
-            'Pengalaman simulasi yang seru untuk mengisi waktu liburan.',
+            'Tempat ini menawarkan pilihan aktivitas rekreasi yang menarik.',
+            'Cocok untuk mengisi waktu liburan bersama keluarga.',
+            'Suasananya menyenangkan untuk menikmati waktu bersama keluarga.',
         ],
     ];
 
@@ -98,7 +85,7 @@ class WisatawanUlasanSeeder extends Seeder
         foreach ($tempat as $slug => $data) {
             $tempatPerNama[$data['nama']] = [$slug, $data];
         }
-        foreach (array_keys(self::TARGET_METRIK) as $nama) {
+        foreach (array_keys(WisatawanRatingSeeder::metrikTarget()) as $nama) {
             if (! isset($tempatPerNama[$nama])) {
                 throw new RuntimeException("Tempat target metrik tidak ditemukan di Database 3: {$nama}");
             }
@@ -111,14 +98,11 @@ class WisatawanUlasanSeeder extends Seeder
         $totalSuka = 0;
 
         foreach ($tempat as $slug => $data) {
-            [$jumlahUlasanTempat, $ratingPerSepuluh] = self::TARGET_METRIK[$data['nama']]
-                ?? self::metrikUmum($slug);
+            [$jumlahUlasanTempat, $ratingPerSepuluh] = WisatawanRatingSeeder::metrikTempat($data['nama'], $slug);
             $offset = self::angkaStabil($slug) % count($wisatawan);
-            $teks = self::TEKS[$data['kategori']] ?? self::TEKS['ruang-publik'];
-
             for ($i = 0; $i < $jumlahUlasanTempat; $i++) {
                 $pengguna = $wisatawan[($offset + $i) % count($wisatawan)];
-                $bintang = self::bintang($ratingPerSepuluh, $i, $offset);
+                $bintang = WisatawanRatingSeeder::bintang($ratingPerSepuluh, $i, $offset);
                 $waktu = now()->subDays(($i * 13 + $offset) % 1200)->toIso8601String();
 
                 $batchUlasan[] = [
@@ -127,7 +111,7 @@ class WisatawanUlasanSeeder extends Seeder
                     'nama_pengguna' => $pengguna['name'],
                     'email_pengguna' => $pengguna['email'],
                     'bintang' => $bintang,
-                    'teks' => '[SIMULASI] '.$teks[($i + $offset) % count($teks)].' Catatan contoh #'.($i + 1).'.',
+                    'teks' => self::teksUlasan($data['kategori'], $i + $offset),
                     'status' => 'tayang',
                     'created_at' => $waktu,
                     'updated_at' => $waktu,
@@ -140,7 +124,7 @@ class WisatawanUlasanSeeder extends Seeder
                 }
             }
 
-            $jumlahSuka = isset(self::TARGET_METRIK[$data['nama']])
+            $jumlahSuka = WisatawanRatingSeeder::tempatTarget($data['nama'])
                 ? min(count($wisatawan), (int) ceil($jumlahUlasanTempat * 1.25))
                 : 20 + self::angkaStabil($slug.'-suka') % 481;
             $offsetSuka = self::angkaStabil($slug.'-suka-offset') % count($wisatawan);
@@ -176,28 +160,16 @@ class WisatawanUlasanSeeder extends Seeder
         );
     }
 
-    /** @return array{int, int} jumlah ulasan, rating target dalam skala 10 */
-    private static function metrikUmum(string $slug): array
-    {
-        return [
-            12 + self::angkaStabil($slug.'-ulasan') % 69,
-            38 + self::angkaStabil($slug.'-rating') % 12,
-        ];
-    }
-
-    private static function bintang(int $ratingPerSepuluh, int $indeks, int $offset): int
-    {
-        $bintangDasar = intdiv($ratingPerSepuluh, 10);
-        $sisa = $ratingPerSepuluh % 10;
-
-        return (($indeks * 7 + $offset) % 10) < $sisa
-            ? $bintangDasar + 1
-            : $bintangDasar;
-    }
-
     private static function angkaStabil(string $nilai): int
     {
         return (int) hexdec(substr(hash('sha256', $nilai), 0, 8));
+    }
+
+    private static function teksUlasan(string $kategori, int $indeks): string
+    {
+        $pilihan = self::TEKS[$kategori] ?? self::TEKS['ruang-publik'];
+
+        return $pilihan[$indeks % count($pilihan)];
     }
 
     /**

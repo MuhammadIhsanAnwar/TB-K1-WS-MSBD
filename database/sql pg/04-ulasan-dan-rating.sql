@@ -1,5 +1,5 @@
 -- Padanan PostgreSQL untuk operasi ulasan SupabaseApi.php.
--- Ringkasan rating dihitung dan dipelihara trigger database, bukan oleh PHP.
+-- Rating tersimpan di rating_tempat; ulasan tayang disinkronkan dengan trigger DB 2.
 
 SELECT *
 FROM ulasan
@@ -10,6 +10,15 @@ ORDER BY created_at DESC, id_ulasan DESC;
 
 SELECT tempat_slug, rata_rata_bintang, jumlah_ulasan
 FROM ringkasan_ulasan;
+
+SELECT tempat_slug, rata_rata_bintang, jumlah_rating
+FROM ringkasan_rating_tempat;
+
+INSERT INTO rating_tempat
+  (id_pengguna, tempat_slug, bintang, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5)
+ON CONFLICT (id_pengguna, tempat_slug) DO UPDATE
+SET bintang = EXCLUDED.bintang, updated_at = EXCLUDED.updated_at;
 
 INSERT INTO ulasan
   (id_pengguna, tempat_slug, nama_pengguna, email_pengguna,

@@ -366,6 +366,19 @@ class SupabaseApi
         return $this->getRows('ringkasan_ulasan', ['select' => 'tempat_slug,rata_rata_bintang,jumlah_ulasan']);
     }
 
+    public function ringkasanRatingTempat(): array
+    {
+        return $this->getRows('ringkasan_rating_tempat', [
+            'select' => 'tempat_slug,rata_rata_bintang,jumlah_rating',
+        ]);
+    }
+
+    /** Upsert rating akun-tempat; konflik akun-tempat memperbarui rating yang sudah ada. */
+    public function upsertRatingTempat(array $rows): void
+    {
+        $this->upsertRows('rating_tempat', 'id_pengguna,tempat_slug', $rows);
+    }
+
     public function tulisUlasan(array $data): array
     {
         return $this->insert('ulasan', $data);

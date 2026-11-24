@@ -179,6 +179,16 @@ class Penyimpanan
             ]])->all(), []);
     }
 
+    /** Rating dan jumlah penilai dari tabel rating_tempat di DB 2. */
+    public static function ringkasanRatingTempat(): array
+    {
+        return self::aman(fn () => collect(self::api()->ringkasanRatingTempat())
+            ->mapWithKeys(fn ($r) => [$r['tempat_slug'] => [
+                'rating' => $r['rata_rata_bintang'] === null ? 0 : (float) $r['rata_rata_bintang'],
+                'jumlahRating' => (int) $r['jumlah_rating'],
+            ]])->all(), []);
+    }
+
     /** Jumlah suka per tempat dihitung dari DB 2, bukan cache aplikasi. */
     public static function ringkasanSukaTempat(): array
     {
@@ -224,10 +234,17 @@ class Penyimpanan
                 'status' => 'tayang',
                 'updated_at' => now()->toIso8601String(),
             ]);
+            self::api()->upsertRatingTempat([[
+                'id_pengguna' => (int) $data['id_pengguna'],
+                'tempat_slug' => $data['tempat'],
+                'bintang' => (int) $data['bintang'],
+                'updated_at' => now()->toIso8601String(),
+            ]]);
 
             return ['id' => (string) $row['id_ulasan'], 'diperbarui' => true] + $data;
         }
 
+        $waktu = now()->toIso8601String();
         $row = self::api()->tulisUlasan([
             'id_pengguna' => $data['id_pengguna'],
             'tempat_slug' => $data['tempat'],
@@ -236,9 +253,15 @@ class Penyimpanan
             'bintang' => $data['bintang'],
             'teks' => $data['teks'],
             'status' => 'tayang',
-            'created_at' => now()->toIso8601String(),
-            'updated_at' => now()->toIso8601String(),
+            'created_at' => $waktu,
+            'updated_at' => $waktu,
         ]);
+        self::api()->upsertRatingTempat([[
+            'id_pengguna' => (int) $data['id_pengguna'],
+            'tempat_slug' => $data['tempat'],
+            'bintang' => (int) $data['bintang'],
+            'updated_at' => $waktu,
+        ]]);
 
         return ['id' => (string) $row['id_ulasan']] + $data;
     }

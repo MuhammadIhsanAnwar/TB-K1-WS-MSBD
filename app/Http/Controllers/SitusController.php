@@ -18,6 +18,7 @@ class SitusController extends Controller
     {
         $tempat = Katalog::tempat();
         $ulasan = Penyimpanan::ringkasanUlasan();
+        $ratingTempat = Penyimpanan::ringkasanRatingTempat();
         $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
         $kategori = [];
         foreach (Katalog::KATEGORI as $k => $label) {
@@ -26,7 +27,9 @@ class SitusController extends Controller
 
         foreach ($tempat as &$t) {
             $ringkasan = $ulasan[$t['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
-            $t['rating'] = $ringkasan['rating'];
+            $rating = $ratingTempat[$t['slug']] ?? ['rating' => 0, 'jumlahRating' => 0];
+            $t['rating'] = $rating['rating'];
+            $t['jumlahRating'] = $rating['jumlahRating'];
             $t['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
             $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
         }
@@ -36,6 +39,7 @@ class SitusController extends Controller
             'kategori' => $kategori,
             'bertiket' => Katalog::bertiket(),
             'petaTempat' => array_values($tempat),
+            'ringkasanRatingTempat' => $ratingTempat,
             'jumlahSukaTempat' => $jumlahSukaTempat,
         ]);
     }
@@ -171,12 +175,15 @@ class SitusController extends Controller
         $tempat = array_values(Katalog::tempat());
         $kunjungan = Kunjungan::ringkasan(365)['tempat'];
 
-        // rating per tempat dihitung trigger DB 2 ke tabel ringkasan_ulasan
+        // Rating dibaca dari ringkasan tabel rating DB 2; ulasan tetap dihitung terpisah.
         $ulasan = Penyimpanan::ringkasanUlasan();
+        $ratingTempat = Penyimpanan::ringkasanRatingTempat();
         $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
 
         foreach ($tempat as &$t) {
-            $t['rating'] = $ulasan[$t['slug']]['rating'] ?? 0;
+            $rating = $ratingTempat[$t['slug']] ?? ['rating' => 0, 'jumlahRating' => 0];
+            $t['rating'] = $rating['rating'];
+            $t['jumlahRating'] = $rating['jumlahRating'];
             $t['jumlahUlasan'] = $ulasan[$t['slug']]['jumlahUlasan'] ?? 0;
             $t['jumlahKunjungan'] = $kunjungan[$t['slug']] ?? 0;
             $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
@@ -217,9 +224,11 @@ class SitusController extends Controller
             ? Penyimpanan::tempatDisukai((int) $idPengguna)
             : [];
         $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
+        $rating = Penyimpanan::ringkasanRatingTempat()[$slug] ?? ['rating' => 0, 'jumlahRating' => 0];
 
         return view('situs.tempat', ['e' => $t] + [
             'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
+            'ratingTempat' => ['rata' => $rating['rating'], 'jumlah' => $rating['jumlahRating']],
             'ramai' => 0,
             'dekat' => $this->terdekat($t, 4),
             'jumlahSuka' => $jumlahSuka,

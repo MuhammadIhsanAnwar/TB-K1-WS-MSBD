@@ -23,6 +23,7 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_18_000200_buat_pengaturan_situs.php` | pengaturan DB 1 untuk sampul beranda dan override status operasional tempat |
 | `migrations/2026_11_24_000100_batasi_tiket_hari_ini.php` | DB 2 menolak pesanan dengan tanggal kunjungan selain hari ini |
 | `migrations/2026_11_26_000100_buat_suka_tempat.php` | DB 2 menyimpan satu suka per akun dan tempat serta menyediakan ringkasan jumlah suka |
+| `migrations/2026_11_26_000200_buat_rating_tempat.php` | DB 2 menyimpan satu rating per akun-tempat, ringkasan rating, sinkronisasi dari ulasan, dan backfill data lama |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
@@ -48,7 +49,7 @@ Membuka database lewat DBeaver: koneksi PostgreSQL baru, host `localhost`, port 
 | Koneksi | Variabel `.env` | Isi |
 |---|---|---|
 | `katalog` (DB 1) | `DB_*` | users, admin_tempat, password_reset_tokens, sessions, cache, jobs, failed_jobs |
-| `transaksi` (DB 2) | `DB2_*` | usaha_mitra, menu_usaha, pesanan, pesanan_item, pembayaran, e_tiket, checkin, riwayat_poin, ulasan, ringkasan_ulasan, suka_tempat, ringkasan_suka_tempat, voucher, penukaran, rencana, rencana_minat, log_pencarian |
+| `transaksi` (DB 2) | `DB2_*` | usaha_mitra, menu_usaha, pesanan, pesanan_item, pembayaran, e_tiket, checkin, riwayat_poin, ulasan, ringkasan_ulasan, rating_tempat, ringkasan_rating_tempat, suka_tempat, ringkasan_suka_tempat, voucher, penukaran, rencana, rencana_minat, log_pencarian |
 | Database 3 | `SPARQL_*` | tempat wisata, kategori, kecamatan, tiket, entitas, relasi, dan jalur dalam RDF |
 
 `id_tempat` di DB 2 merujuk ke resource RDF di Database 3. Kecocokannya dijaga aplikasi.
@@ -109,22 +110,26 @@ Akun pengguna disimpan di DB 1 dengan role `wisatawan`, `admin`, atau `superadmi
 ```bash
 php artisan db:seed --class=Wisatawan500Seeder   # 10.000 akun wisatawan
 php artisan db:seed --class=AdminTempatSeeder    # satu admin per tempat dalam RDF
+php artisan db:seed --class=WisatawanRatingSeeder # rating simulasi untuk semua tempat
 php artisan db:seed --class=WisatawanUlasanSeeder # ulasan/suka/transaksi simulasi
 ```
 
-`WisatawanUlasanSeeder` juga menjalankan seeder akun wisatawan. Data ulasan diberi label
-`[SIMULASI]`, bukan ulasan pengunjung sungguhan. Sepuluh tempat yang diberikan memiliki
+`WisatawanUlasanSeeder` juga menjalankan seeder akun wisatawan. Teks ulasan dibuat natural
+tanpa penanda di isi pesan, tetapi seluruh ulasan dan metrik yang dibuat seeder tetap data
+demo, bukan ulasan pengunjung sungguhan. Sepuluh tempat yang diberikan memiliki
 jumlah ulasan dan rata-rata rating sesuai target; jumlah suka dibuat bervariasi dan banyak
 untuk tempat populer. Transaksi demo ditandai referensi `SEED-DEMO-` dan menggunakan tiket
-termurah di RDF untuk tanggal berjalan. Jalankan migration DB 2 sebelum seeder interaksi.
+termurah di RDF untuk tanggal berjalan. Rating disimpan satu per akun-tempat di `rating_tempat`;
+`WisatawanRatingSeeder` dapat dijalankan sendiri, sedangkan rating pada ulasan juga disinkronkan
+ke tabel tersebut oleh trigger DB 2. Jalankan migration DB 2 sebelum seeder interaksi.
 
 ### Objek database
 
 | Jenis | DB 1 katalog | DB 2 transaksi |
 |---|---|---|
-| View | `v_simpul`, `v_tempat_lengkap`, `v_relasi_kalimat`, `v_statistik_kategori` | `v_saldo_poin`, `v_penjualan_tiket`, `v_celah_konten`, `ringkasan_suka_tempat` |
+| View | `v_simpul`, `v_tempat_lengkap`, `v_relasi_kalimat`, `v_statistik_kategori` | `v_saldo_poin`, `v_penjualan_tiket`, `v_celah_konten`, `ringkasan_suka_tempat`, `ringkasan_rating_tempat` |
 | Function | `fn_jarak_meter`, `fn_tempat_terdekat`, `fn_buka_pada` | `fn_kode_acak`, `fn_saldo_poin`, `fn_hitung_ringkasan_ulasan` |
-| Trigger | `relasi_cek_simpul` (slug harus ada, jarak dihitung otomatis), `*_jaga_hapus` / `*_ikut_ganti` (integritas slug), `tempat_updated_at` | `pesanan_item_total`, `checkin_poin`, `ulasan_ringkasan`, `penukaran_cek`, `penukaran_poin` |
+| Trigger | `relasi_cek_simpul` (slug harus ada, jarak dihitung otomatis), `*_jaga_hapus` / `*_ikut_ganti` (integritas slug), `tempat_updated_at` | `pesanan_item_total`, `checkin_poin`, `ulasan_ringkasan`, `ulasan_sinkron_rating_tempat`, `penukaran_cek`, `penukaran_poin` |
 | Procedure | `sp_hitung_relasi_dekat` | `sp_buat_pesanan`, `sp_bayar_pesanan`, `sp_kedaluwarsakan_pesanan` |
 | Role | `medanvisit_baca`, `medanvisit_kurator` | `medanvisit_aplikasi`, `medanvisit_laporan` |
 

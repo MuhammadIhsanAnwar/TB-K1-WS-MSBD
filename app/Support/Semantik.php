@@ -48,10 +48,7 @@ class Semantik
     }
 
     /** JSON-LD satu tempat, untuk disematkan di halaman detail. */
-    /**
-     * JSON-LD schema.org satu tempat. Rating (dari ulasan di DB 2) ditambahkan sebagai
-     * schema:aggregateRating supaya mesin pencari ikut membaca penilaian pengunjung.
-     */
+    /** JSON-LD schema.org satu tempat dengan agregat rating dari DB 2. */
     public static function jsonldTempat(array $t, ?array $rating = null): array
     {
         foreach (self::jsonld()['@graph'] as $n) {
@@ -60,7 +57,7 @@ class Semantik
                     $n['aggregateRating'] = [
                         '@type' => 'AggregateRating',
                         'ratingValue' => round((float) $rating['rata'], 1),
-                        'reviewCount' => (int) $rating['jumlah'],
+                        'ratingCount' => (int) $rating['jumlah'],
                         'bestRating' => 5,
                         'worstRating' => 1,
                     ];

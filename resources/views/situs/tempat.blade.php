@@ -39,8 +39,6 @@
 @section('foto-og', $t['foto'] ? Foto::url($t['foto']) : asset('storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png'))
 
 @php
-    // rating dari ulasan yang tayang (DB 2); ulasan milik pengguna yang sedang masuk dipakai untuk form "perbarui"
-    $ratingTempat = ['rata' => collect($ulasan)->avg('bintang') ?? 0, 'jumlah' => count($ulasan)];
     $ulasanSaya = collect($ulasan)->firstWhere('id_pengguna', (int) ($u['id'] ?? 0));
 @endphp
 @push('kepala')
@@ -75,7 +73,7 @@
                 <div class="mv-tempat-statistik" aria-label="Statistik tempat">
                     <span><b>{{ number_format($jumlahSuka, 0, ',', '.') }}</b> like</span>
                     <span><b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> rating</span>
-                    <span><b>{{ $ratingTempat['jumlah'] }}</b> ulasan</span>
+                    <span><b>{{ count($ulasan) }}</b> ulasan</span>
                 </div>
                 @if ($t['tiket'] && ! $akunPengelola)
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
@@ -204,7 +202,7 @@
             @if ($ratingTempat['jumlah'])
                 <p class="mv-rating-ringkas">
                     <x-bintang :n="(int) round($ratingTempat['rata'])" />
-                    <b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> dari 5, dari {{ $ratingTempat['jumlah'] }} ulasan
+                    <b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> dari 5, dari {{ $ratingTempat['jumlah'] }} rating
                 </p>
             @endif
             @if ($ulasan)

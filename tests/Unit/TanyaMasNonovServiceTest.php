@@ -32,6 +32,9 @@ class TanyaMasNonovServiceTest extends TestCase
             'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
                 ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
             ]),
+            'https://transaksi.test/rest/v1/ringkasan_rating_tempat*' => Http::response([
+                ['tempat_slug' => 'istana-maimun', 'rata_rata_bintang' => '4.7', 'jumlah_rating' => 12],
+            ]),
         ]);
 
         $ai = Mockery::mock(AIService::class);
@@ -81,6 +84,9 @@ class TanyaMasNonovServiceTest extends TestCase
             ]),
             'https://transaksi.test/rest/v1/ringkasan_suka_tempat*' => Http::response([
                 ['tempat_slug' => 'istana-maimun', 'jumlah_suka' => 5],
+            ]),
+            'https://transaksi.test/rest/v1/ringkasan_rating_tempat*' => Http::response([
+                ['tempat_slug' => 'istana-maimun', 'rata_rata_bintang' => '4.7', 'jumlah_rating' => 12],
             ]),
         ]);
 

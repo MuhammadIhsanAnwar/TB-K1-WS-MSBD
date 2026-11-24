@@ -168,6 +168,23 @@ class PenyimpananRestTest extends TestCase
             && $request->hasHeader('apikey', 'secret-key'));
     }
 
+    public function test_place_ratings_are_read_from_the_database_2_summary_view(): void
+    {
+        Http::fake([
+            'https://transaksi.test/rest/v1/ringkasan_rating_tempat*' => Http::response([
+                ['tempat_slug' => 'taman-cadika', 'rata_rata_bintang' => '4.4', 'jumlah_rating' => 6032],
+            ]),
+        ]);
+
+        $this->assertSame([
+            'taman-cadika' => ['rating' => 4.4, 'jumlahRating' => 6032],
+        ], Penyimpanan::ringkasanRatingTempat());
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/ringkasan_rating_tempat?')
+            && $request->hasHeader('apikey', 'secret-key'));
+    }
+
     public function test_only_logged_in_tourists_can_like_a_place(): void
     {
         $this->post('/tempat/taman-cadika/sukai')
@@ -180,6 +197,7 @@ class PenyimpananRestTest extends TestCase
 
         $this->assertSame([], Penyimpanan::pesanan(aman: true));
         $this->assertSame([], Penyimpanan::ringkasanUlasan());
+        $this->assertSame([], Penyimpanan::ringkasanRatingTempat());
         $this->assertSame([], Penyimpanan::ringkasanSukaTempat());
     }
 
@@ -207,6 +225,11 @@ class PenyimpananRestTest extends TestCase
         Http::assertSent(fn (Request $request) => $request->method() === 'POST'
             && str_ends_with($request->url(), '/ulasan')
             && $request['status'] === 'tayang');
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/rating_tempat?')
+            && $request[0]['id_pengguna'] === 7
+            && $request[0]['tempat_slug'] === 'istana-maimun'
+            && $request[0]['bintang'] === 5);
         Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
             && str_contains($request->url(), '/ulasan?')
             && str_contains($request->url(), 'id_ulasan=eq.42'));

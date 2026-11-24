@@ -16,6 +16,7 @@
         'tiket' => ! $akunPengelola && ! empty($t['tiket']) ? route('tiket.pilih', $t['slug']) : null,
         'buka' => Katalog::jadwal($t),
         'rating' => $t['rating'] ?? 0,
+        'jumlahRating' => $t['jumlahRating'] ?? 0,
         'jumlahUlasan' => $t['jumlahUlasan'] ?? 0,
         'jumlahKunjungan' => $t['jumlahKunjungan'] ?? 0,
         'jumlahSuka' => $t['jumlahSuka'] ?? 0,
@@ -96,9 +97,9 @@
                         <div class="mv-peta-kartu__meta" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:5px">
                         <span style="display:inline-flex;align-items:center;gap:4px;white-space:nowrap">
                         <span style="color:#e6a23c;letter-spacing:1px">★</span>
-                        <b>{{ ($t['jumlahUlasan'] ?? 0) > 0 ? number_format($t['rating'], 1, ',', '.') : '-' }}</b>
-                        @if(($t['jumlahUlasan'] ?? 0) > 0)
-                            <span>({{ $t['jumlahUlasan'] }} ulasan)</span>
+                        <b>{{ ($t['jumlahRating'] ?? 0) > 0 ? number_format($t['rating'], 1, ',', '.') : '-' }}</b>
+                        @if(($t['jumlahRating'] ?? 0) > 0)
+                            <span>({{ $t['jumlahRating'] }} rating)</span>
                         @else
                             <span>Belum ada rating</span>
                         @endif

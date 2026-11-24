@@ -7,8 +7,10 @@
     $semuaTempat = Katalog::tempat();
     $ringkasanUlasan = Penyimpanan::ringkasanUlasan();
     foreach ($semuaTempat as &$tempatStat) {
-        $ringkasan = $ringkasanUlasan[$tempatStat['slug']] ?? ['rating' => 0, 'jumlahUlasan' => 0];
-        $tempatStat['rating'] = $ringkasan['rating'];
+        $ringkasanRating = $ringkasanRatingTempat[$tempatStat['slug']] ?? ['rating' => 0, 'jumlahRating' => 0];
+        $ringkasan = $ringkasanUlasan[$tempatStat['slug']] ?? ['jumlahUlasan' => 0];
+        $tempatStat['rating'] = $ringkasanRating['rating'];
+        $tempatStat['jumlahRating'] = $ringkasanRating['jumlahRating'];
         $tempatStat['jumlahUlasan'] = $ringkasan['jumlahUlasan'];
         $tempatStat['jumlahSuka'] = $jumlahSukaTempat[$tempatStat['slug']] ?? 0;
     }
