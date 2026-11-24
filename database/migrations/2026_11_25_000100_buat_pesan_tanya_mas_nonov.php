@@ -14,11 +14,16 @@ return new class extends Migration
         $schema = Schema::connection($this->connection);
         $schema->create('pesan_tanya_mas_nonov', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pengguna')->constrained('users')->cascadeOnDelete();
+            // null menandakan pesan berasal dari tamu; identitas tamu dipisahkan dengan token sesi ter-hash.
+            $table->foreignId('id_pengguna')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('pengirim', 12)->default('pengguna');
+            $table->char('pemilik_tamu', 64)->nullable();
             $table->longText('pesan_terenkripsi');
+            $table->longText('jawaban_terenkripsi')->nullable();
             $table->char('pesan_hash', 64);
             $table->timestamps();
             $table->index(['id_pengguna', 'created_at']);
+            $table->index(['pemilik_tamu', 'created_at']);
         });
 
         $connection = DB::connection($this->connection);

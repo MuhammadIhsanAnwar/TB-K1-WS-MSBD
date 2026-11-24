@@ -157,6 +157,36 @@ class PenyimpananRestTest extends TestCase
             && $r['p_item'][0]['jumlah'] === 2);
     }
 
+    public function test_demo_transaction_rpc_retries_with_a_stable_reference(): void
+    {
+        Http::fake([
+            'https://transaksi.test/rest/v1/rpc/sp_buat_transaksi_demo' => Http::sequence()
+                ->pushFailedConnection('Connection reset')
+                ->push('MV-DEMO1234'),
+        ]);
+
+        $referensi = 'SEED-DEMO-abc123-1';
+        $kode = (new SupabaseApi('transaksi'))->buatTransaksiDemo([
+            'p_referensi' => $referensi,
+            'p_id_pengguna' => 17,
+            'p_nama' => 'Rina',
+            'p_email' => 'rina@example.test',
+            'p_hp' => '0812',
+            'p_tempat_slug' => 'taman-cadika',
+            'p_tanggal' => '2026-11-24',
+            'p_metode' => 'qris',
+            'p_item' => [['jenis' => 'Dewasa', 'harga' => 10000, 'jumlah' => 1]],
+        ]);
+
+        $this->assertSame('MV-DEMO1234', $kode);
+        $requests = Http::recorded()->map(static fn (array $recorded) => $recorded[0])->values();
+        $this->assertCount(2, $requests);
+        foreach ($requests as $request) {
+            $this->assertSame($referensi, $request['p_referensi']);
+            $this->assertSame('POST', $request->method());
+        }
+    }
+
     public function test_ticket_usage_is_claimed_only_when_the_database_row_is_still_unused(): void
     {
         $patches = 0;

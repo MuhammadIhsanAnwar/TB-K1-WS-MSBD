@@ -257,6 +257,12 @@ class SupabaseApi
         return (string) $this->rpc('sp_buat_pesanan', $arg);
     }
 
+    /** Membuat dan membayar transaksi demo secara atomik dan aman diulang lewat referensinya. */
+    public function buatTransaksiDemo(array $arg): string
+    {
+        return (string) $this->rpc('sp_buat_transaksi_demo', $arg, true);
+    }
+
     /** Membayar pesanan lewat function sp_bayar_pesanan (pembayaran + e-tiket dibuat database). */
     public function bayarPesanan(string $kode, ?string $referensi): ?string
     {
@@ -591,18 +597,22 @@ class SupabaseApi
             return;
         }
 
-        $this->request()
-            ->retry(
-                [1000, 2000, 5000, 10000],
-                when: static fn (Throwable $exception): bool => $exception instanceof ConnectionException
-                    || ($exception instanceof RequestException && (
-                        $exception->response->serverError()
-                        || $exception->response->tooManyRequests()
-                    )),
-            )
+        $this->requestForIdempotentWrite()
             ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
             ->post($this->url($table).'?'.http_build_query(['on_conflict' => $konflik]), $rows)
             ->throw();
+    }
+
+    private function requestForIdempotentWrite(): PendingRequest
+    {
+        return $this->request()->retry(
+            [1000, 2000, 5000, 10000],
+            when: static fn (Throwable $exception): bool => $exception instanceof ConnectionException
+                || ($exception instanceof RequestException && (
+                    $exception->response->serverError()
+                    || $exception->response->tooManyRequests()
+                )),
+        );
     }
 
     private function ubahBaris(string $table, int $id, array $attributes): void
@@ -618,9 +628,10 @@ class SupabaseApi
         }
     }
 
-    private function rpc(string $fungsi, array $arg): mixed
+    private function rpc(string $fungsi, array $arg, bool $idempoten = false): mixed
     {
-        $response = $this->request()
+        $request = $idempoten ? $this->requestForIdempotentWrite() : $this->request();
+        $response = $request
             ->withHeaders(['Prefer' => 'return=representation'])
             ->post($this->url('rpc/'.$fungsi), $arg)
             ->throw();

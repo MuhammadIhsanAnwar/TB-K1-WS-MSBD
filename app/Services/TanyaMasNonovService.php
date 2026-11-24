@@ -80,11 +80,13 @@ class TanyaMasNonovService
             return $this->jawabSemantik($pertanyaan, $riwayat);
         }
 
-        if (! config('services.openrouter.api_key')) {
-            return ['teks' => ['Layanan AI Mas Nonov belum dikonfigurasi untuk menjawab pertanyaan umum.'], 'tempat' => []];
-        }
-
-        return ['teks' => [$this->ai->jawabBerbasisKonteks($pertanyaan, 'pengetahuan umum', [], $riwayat)], 'tempat' => []];
+        return ['teks' => [$this->jawabAiAtauFallback(
+            $pertanyaan,
+            'pengetahuan umum; konteks percakapan privat dari Database 1 bila tersedia',
+            [],
+            $riwayat,
+            'Saya belum dapat menjawab pertanyaan umum itu saat ini. Untuk pertanyaan tentang MedanVisit, saya tetap bisa membantu mencari tempat, tiket, kuliner, rute, ulasan, atau suka.',
+        )], 'tempat' => []];
     }
 
     private static function entitasRdfDisebut(string $pertanyaan): ?array
@@ -554,7 +556,12 @@ class TanyaMasNonovService
             return $fallback;
         }
 
-        return $this->ai->jawabBerbasisKonteks($pertanyaan, $sumber, $konteks, $riwayat);
+        try {
+            return $this->ai->jawabBerbasisKonteks($pertanyaan, $sumber, $konteks, $riwayat);
+        } catch (\Throwable) {
+            // Jawaban berbasis data lokal tetap diberikan saat OpenRouter sedang tidak tersedia.
+            return $fallback;
+        }
     }
 
     private function filterPertanyaan(string $pertanyaan): array

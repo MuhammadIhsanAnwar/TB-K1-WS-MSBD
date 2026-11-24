@@ -43,19 +43,33 @@ class TanyaMasNonovTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_guest_must_log_in_before_opening_or_sending_a_chat_message(): void
+    public function test_guest_can_open_chat_and_messages_are_stored_as_guest_data(): void
     {
-        $this->get(route('tanya'))
-            ->assertRedirect(route('masuk', ['kembali' => '/tanya']));
-        $this->postJson(route('tanya.jawab'), ['pesan' => 'Apa tempat wisata di Medan?'])
-            ->assertRedirect(route('masuk', ['kembali' => '/tanya']));
+        $asisten = Mockery::mock(TanyaMasNonovService::class);
+        $asisten->shouldReceive('jawab')
+            ->once()
+            ->with('Apa tempat wisata di Medan?', null, [])
+            ->andReturn(['teks' => ['Ada banyak pilihan wisata di Medan.'], 'tempat' => []]);
+        $this->app->instance(TanyaMasNonovService::class, $asisten);
+
+        $this->get(route('tanya'))->assertOk();
+        $this->withSession(['_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->postJson(route('tanya.jawab'), ['pesan' => 'Apa tempat wisata di Medan?'])
+            ->assertOk();
+
+        $pesan = DB::connection('katalog')->table('pesan_tanya_mas_nonov')->first();
+        $this->assertNull($pesan->id_pengguna);
+        $this->assertSame('tamu', $pesan->pengirim);
+        $this->assertNotEmpty($pesan->pemilik_tamu);
+        $this->assertNotNull($pesan->jawaban_terenkripsi);
     }
 
     public function test_chat_messages_are_encrypted_hashed_and_used_as_the_users_private_memory(): void
     {
         $pertanyaanLama = 'Saya suka tempat bersejarah.';
         $pertanyaanBaru = 'Rekomendasikan tempat yang cocok.';
-        app(TanyaMasNonovMemori::class)->simpan(18, 'Jangan bocorkan pertanyaan pengguna lain.');
+        app(TanyaMasNonovMemori::class)->simpan(18, null, 'Jangan bocorkan pertanyaan pengguna lain.');
         $jumlahPemanggilan = 0;
         $asisten = Mockery::mock(TanyaMasNonovService::class);
         $asisten->shouldReceive('jawab')
@@ -70,7 +84,7 @@ class TanyaMasNonovTest extends TestCase
                 return $pertanyaan === $pertanyaanBaru
                     && count($riwayat) === 1
                     && ($riwayat[0]['pertanyaan'] ?? null) === $pertanyaanLama
-                    && ! array_key_exists('jawaban', $riwayat[0]);
+                    && ($riwayat[0]['jawaban'] ?? null) === 'Silakan kunjungi Istana Maimun.';
             })
             ->andReturn(['teks' => ['Silakan kunjungi Istana Maimun.'], 'tempat' => []]);
         $this->app->instance(TanyaMasNonovService::class, $asisten);
@@ -81,13 +95,16 @@ class TanyaMasNonovTest extends TestCase
             'email' => 'wisatawan@example.test',
             'peran' => 'wisatawan',
         ];
-        $this->withSession(['pengguna' => $pengguna])
+        $this->withSession(['pengguna' => $pengguna, '_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->postJson(route('tanya.jawab'), ['pesan' => $pertanyaanLama])
             ->assertOk();
         $this->withSession([
             'pengguna' => $pengguna,
+            '_token' => 'test-csrf',
             'tanya_mas_nonov' => ['pemilik' => 'sesi-baru', 'giliran' => []],
-        ])->postJson(route('tanya.jawab'), ['pesan' => $pertanyaanBaru])
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->postJson(route('tanya.jawab'), ['pesan' => $pertanyaanBaru])
             ->assertOk();
 
         $pesan = DB::connection('katalog')->table('pesan_tanya_mas_nonov')

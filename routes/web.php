@@ -21,8 +21,8 @@ Route::controller(SitusController::class)->middleware('kunjungan')->group(functi
     Route::get('/', 'beranda')->name('beranda');
     Route::get('/cari', 'cari')->name('cari');
     Route::get('/cari/saran.json', 'saran')->name('cari.saran');
-    Route::get('/tanya', 'tanya')->middleware('peran')->name('tanya');
-    Route::post('/tanya', 'jawab')->middleware(['peran', 'throttle:12,1'])->name('tanya.jawab');
+    Route::get('/tanya', 'tanya')->name('tanya');
+    Route::post('/tanya', 'jawab')->middleware('throttle:12,1')->name('tanya.jawab');
     Route::get('/peta', 'peta')->name('peta');
     Route::get('/tempat/{slug}', 'tempat')->name('tempat');
     Route::post('/tempat/{slug}/sukai', 'sukai')->middleware('peran:wisatawan')->name('tempat.sukai');

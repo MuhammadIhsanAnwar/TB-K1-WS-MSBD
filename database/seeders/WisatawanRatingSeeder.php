@@ -37,6 +37,7 @@ class WisatawanRatingSeeder extends Seeder
         $akun = DB::connection('katalog')
             ->table('users')
             ->whereIn('email', $emails)
+            ->where('peran', 'wisatawan')
             ->orderBy('id')
             ->get(['id', 'name', 'email'])
             ->keyBy('email');

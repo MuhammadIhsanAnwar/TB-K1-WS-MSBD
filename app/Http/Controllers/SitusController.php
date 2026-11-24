@@ -11,6 +11,7 @@ use App\Services\TanyaMasNonovService;
 use App\Services\TanyaMasNonovMemori;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class SitusController extends Controller
 {
@@ -143,18 +144,35 @@ class SitusController extends Controller
         $data = $request->validate(['pesan' => ['required', 'string', 'max:300']]);
         $pengguna = $request->session()->get('pengguna');
         $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        abort_unless($idPengguna !== false, 403, 'Akun pengguna tidak valid.');
+        $idPengguna = $idPengguna === false ? null : (int) $idPengguna;
+        $pemilikTamu = null;
+        if ($idPengguna === null) {
+            // Token acak ini hanya tersimpan pada sesi browser. Yang masuk database adalah hash-nya.
+            $pemilikTamu = $request->session()->get('tanya_mas_nonov_pemilik_tamu');
+            if (! is_string($pemilikTamu) || $pemilikTamu === '') {
+                $pemilikTamu = Str::random(64);
+                $request->session()->put('tanya_mas_nonov_pemilik_tamu', $pemilikTamu);
+            }
+        }
 
-        $idPesan = $memori->simpan((int) $idPengguna, $data['pesan']);
-        $riwayatTersimpan = $memori->pertanyaanSebelumnya((int) $idPengguna, $idPesan);
-        $pemilikKonteks = (string) $idPengguna;
+        $idPesan = $memori->simpan($idPengguna, $pemilikTamu, $data['pesan']);
+        $riwayatTersimpan = $memori->pertanyaanSebelumnya($idPengguna, $pemilikTamu, $idPesan);
+        $pemilikKonteks = $idPengguna === null ? 'tamu:'.$pemilikTamu : 'pengguna:'.$idPengguna;
         $riwayat = $request->session()->get('tanya_mas_nonov', []);
         if (($riwayat['pemilik'] ?? null) !== $pemilikKonteks) {
             $riwayat = ['pemilik' => $pemilikKonteks, 'giliran' => []];
         }
 
         $konteksPercakapan = array_slice(array_merge($riwayatTersimpan, $riwayat['giliran'] ?? []), -4);
-        $jawaban = $asisten->jawab($data['pesan'], $pengguna, $konteksPercakapan);
+        try {
+            $jawaban = $asisten->jawab($data['pesan'], $pengguna, $konteksPercakapan);
+        } catch (\Throwable $e) {
+            report($e);
+            $jawaban = [
+                'teks' => ['Maaf, Mas Nonov sedang mengalami kendala saat menyusun jawaban. Silakan coba lagi sebentar.'],
+                'tempat' => [],
+            ];
+        }
         $routing = TanyaMasNonovService::klasifikasi($data['pesan']);
         if (in_array($routing['source'], ['sparql', 'general'], true)) {
             $riwayat['giliran'][] = [
@@ -166,6 +184,11 @@ class SitusController extends Controller
             $riwayat['giliran'] = [];
         }
         $request->session()->put('tanya_mas_nonov', $riwayat);
+
+        $teksJawaban = implode(' ', $jawaban['teks'] ?? []);
+        if ($teksJawaban !== '') {
+            $memori->simpanJawaban($idPesan, $teksJawaban);
+        }
 
         return response()->json($jawaban);
     }
