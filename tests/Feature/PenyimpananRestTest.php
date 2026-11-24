@@ -63,6 +63,23 @@ class PenyimpananRestTest extends TestCase
         $this->assertSame(5, $ratingRequests[1][0]['bintang']);
     }
 
+    public function test_idempotent_upserts_retry_connection_failures(): void
+    {
+        Http::fake([
+            'https://transaksi.test/*' => Http::sequence()
+                ->pushFailedConnection('Connection reset')
+                ->push([]),
+        ]);
+
+        (new SupabaseApi('transaksi'))->upsertSukaTempat([[
+            'id_pengguna' => 17,
+            'tempat_slug' => 'taman-cadika',
+            'created_at' => '2026-11-24T10:00:00Z',
+        ]]);
+
+        $this->assertCount(2, Http::recorded());
+    }
+
     public function test_orders_are_read_through_postgrest_with_embedded_payment_and_ticket(): void
     {
         Http::fake([

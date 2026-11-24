@@ -3,9 +3,12 @@
 namespace App\Support;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
+use Throwable;
 
 /**
  * Klien Supabase REST (PostgREST) untuk DB 1 (katalog) dan DB 2 (transaksi).
@@ -589,6 +592,11 @@ class SupabaseApi
         }
 
         $this->request()
+            ->retry(
+                [500, 1000, 2000],
+                when: static fn (Throwable $exception): bool => $exception instanceof ConnectionException
+                    || ($exception instanceof RequestException && $exception->response->serverError()),
+            )
             ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
             ->post($this->url($table).'?'.http_build_query(['on_conflict' => $konflik]), $rows)
             ->throw();
