@@ -142,33 +142,38 @@ class Penyimpanan
         }
         $item = collect(self::api()->pesananItem(array_column($baris, 'id_pesanan')))->groupBy('id_pesanan');
 
-        return array_map(fn ($p) => [
-            'id' => (string) $p['id_pesanan'],
-            'kode' => $p['kode'],
-            'id_pengguna' => $p['id_pengguna'] === null ? null : (int) $p['id_pengguna'],
-            'pemesan' => ['nama' => $p['nama_pemesan'], 'email' => $p['email_pemesan'], 'hp' => $p['hp_pemesan']],
-            'tempat' => $p['tempat_slug'],
-            'tanggal' => Carbon::parse($p['tanggal_kunjungan'])->toDateString(),
-            'item' => ($item[$p['id_pesanan']] ?? collect())->map(function ($i) {
-                $jenis = $i['jenis_pengunjung'];
-                $jenisNormal = mb_strtolower(trim($jenis));
+        return array_map(function ($p) use ($item): array {
+            $pembayaran = $p['pembayaran'][0] ?? $p['pembayaran'] ?? [];
+            $eTiket = $p['e_tiket'][0] ?? $p['e_tiket'] ?? [];
 
-                return [
-                    'jenis' => in_array($jenisNormal, ['hari kerja', 'umum'], true) ? 'Tiket umum' : $jenis,
-                    'harga' => (int) $i['harga'],
-                    'jumlah' => (int) $i['jumlah'],
-                    'subtotal' => (int) $i['subtotal'],
-                ];
-            })->values()->all(),
-            'total' => (int) $p['total'],
-            'metode' => $p['metode'],
-            'status' => $p['status'],
-            'batas_bayar' => self::waktu($p['batas_bayar']),
-            'waktu' => self::waktu($p['created_at']),
-            'dibayar' => self::waktu($p['pembayaran'][0]['dibayar_pada'] ?? null),
-            'kode_qr' => $p['e_tiket'][0]['kode_qr'] ?? null,
-            'dipakai' => self::waktu($p['e_tiket'][0]['dipakai_pada'] ?? null),
-        ], $baris);
+            return [
+                'id' => (string) $p['id_pesanan'],
+                'kode' => $p['kode'],
+                'id_pengguna' => $p['id_pengguna'] === null ? null : (int) $p['id_pengguna'],
+                'pemesan' => ['nama' => $p['nama_pemesan'], 'email' => $p['email_pemesan'], 'hp' => $p['hp_pemesan']],
+                'tempat' => $p['tempat_slug'],
+                'tanggal' => Carbon::parse($p['tanggal_kunjungan'])->toDateString(),
+                'item' => ($item[$p['id_pesanan']] ?? collect())->map(function ($i) {
+                    $jenis = $i['jenis_pengunjung'];
+                    $jenisNormal = mb_strtolower(trim($jenis));
+
+                    return [
+                        'jenis' => in_array($jenisNormal, ['hari kerja', 'umum'], true) ? 'Tiket umum' : $jenis,
+                        'harga' => (int) $i['harga'],
+                        'jumlah' => (int) $i['jumlah'],
+                        'subtotal' => (int) $i['subtotal'],
+                    ];
+                })->values()->all(),
+                'total' => (int) $p['total'],
+                'metode' => $p['metode'],
+                'status' => $p['status'],
+                'batas_bayar' => self::waktu($p['batas_bayar']),
+                'waktu' => self::waktu($p['created_at']),
+                'dibayar' => self::waktu($pembayaran['dibayar_pada'] ?? null),
+                'kode_qr' => $eTiket['kode_qr'] ?? null,
+                'dipakai' => self::waktu($eTiket['dipakai_pada'] ?? null),
+            ];
+        }, $baris);
     }
 
     // ---------- ulasan ----------

@@ -342,7 +342,8 @@ class TiketEtiketTest extends TestCase
         $this->withSession($session)
             ->get('/tiket?tab=dibatalkan')
             ->assertOk()
-            ->assertSee('MV-CANCEL1')
-            ->assertDontSee('MV-PAYEXPIRE');
+            ->assertSee('MV-ACTIVE1')
+            ->assertDontSee('MV-CANCEL1')
+            ->assertDontSee('Dibatalkan');
     }
 }

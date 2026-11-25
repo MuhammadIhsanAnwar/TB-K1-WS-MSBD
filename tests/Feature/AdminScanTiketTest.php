@@ -78,7 +78,8 @@ class AdminScanTiketTest extends TestCase
             ->from('/admin/tiket')
             ->post('/admin/tiket/validasi', ['kode' => 'QR-IDENTITAS'])
             ->assertRedirect('/admin/tiket')
-            ->assertSessionHas('hasil.status', 'dipakai');
+            ->assertSessionHas('hasil.status', 'dipakai')
+            ->assertSessionHas('hasil.judul', 'Sudah check-in');
 
         $this->assertSame([], Kunjungan::ringkasanCheckinTerbaru());
         Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
@@ -121,7 +122,8 @@ class AdminScanTiketTest extends TestCase
             ->from('/admin/tiket')
             ->post('/admin/tiket/validasi', ['kode' => 'QR-IDENTITAS'])
             ->assertRedirect('/admin/tiket')
-            ->assertSessionHas('hasil.status', 'kedaluwarsa');
+            ->assertSessionHas('hasil.status', 'kedaluwarsa')
+            ->assertSessionHas('hasil.judul', 'Tiket kedaluwarsa');
 
         Http::assertNotSent(fn (Request $request) => $request->method() === 'PATCH'
             && str_contains($request->url(), '/e_tiket?'));
@@ -272,11 +274,11 @@ class AdminScanTiketTest extends TestCase
             'status' => 'lunas',
             'batas_bayar' => '2026-11-23T03:15:00+00:00',
             'created_at' => '2026-11-23T03:00:00+00:00',
-            'pembayaran' => [['dibayar_pada' => '2026-11-23T03:05:00+00:00']],
-            'e_tiket' => $kodeQr === null ? [] : [[
+            'pembayaran' => ['dibayar_pada' => '2026-11-23T03:05:00+00:00'],
+            'e_tiket' => $kodeQr === null ? [] : [
                 'kode_qr' => $kodeQr,
                 'dipakai_pada' => $dipakai,
-            ]],
+            ],
         ];
     }
 }

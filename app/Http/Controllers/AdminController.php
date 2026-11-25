@@ -811,8 +811,13 @@ class AdminController extends Controller
     {
         return match (true) {
             ! $pesanan => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada tiket dengan identitas '. $kode.'.'],
+            $pesanan['status'] === 'kedaluwarsa' => [
+                'status' => 'kedaluwarsa',
+                'judul' => 'Tiket kedaluwarsa',
+                'teks' => 'Pesanan '.$pesanan['kode'].' sudah kedaluwarsa dan tidak dapat digunakan.',
+            ],
             $pesanan['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$pesanan['kode'].' berstatus '.$pesanan['status'].'.'],
-            ! empty($pesanan['dipakai']) => [            'status' => 'dipakai', 'judul' => 'Sudah check-in', 'teks' => 'Tiket ini dipakai '.substr($pesanan['dipakai'], 11, 5).'.'],
+            ! empty($pesanan['dipakai']) => ['status' => 'dipakai', 'judul' => 'Sudah check-in', 'teks' => 'Tiket ini dipakai '.substr($pesanan['dipakai'], 11, 5).'.'],
             $pesanan['tanggal'] < now('Asia/Jakarta')->toDateString() => [
                 'status' => 'kedaluwarsa',
                 'judul' => 'Tiket kedaluwarsa',

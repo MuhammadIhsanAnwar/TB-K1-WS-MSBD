@@ -1,7 +1,7 @@
 @extends('layouts.situs')
 @php
     use App\Support\Katalog;
-    $label = ['aktif' => 'Aktif', 'checkin' => 'Sudah check-in', 'kedaluwarsa' => 'Kedaluwarsa', 'dibatalkan' => 'Dibatalkan'];
+    $label = ['aktif' => 'Aktif', 'checkin' => 'Sudah check-in', 'kedaluwarsa' => 'Kedaluwarsa'];
 @endphp
 @section('judul', 'Tiket saya')
 @section('tanpa-kaki', '1')
@@ -79,7 +79,7 @@
         </div>
     @else
         <div class="kosong" style="background:var(--mv-putih);padding:32px 24px">
-            <p>{{ ['aktif' => 'Belum ada e-tiket aktif atau pesanan yang menunggu pembayaran.', 'checkin' => 'Belum ada tiket yang sudah check-in.', 'kedaluwarsa' => 'Belum ada tiket atau pesanan yang kedaluwarsa.', 'dibatalkan' => 'Tidak ada pesanan tiket yang dibatalkan.'][$tab] }}</p>
+            <p>{{ ['aktif' => 'Belum ada e-tiket aktif atau pesanan yang menunggu pembayaran.', 'checkin' => 'Belum ada tiket yang sudah check-in.', 'kedaluwarsa' => 'Belum ada tiket atau pesanan yang kedaluwarsa.'][$tab] }}</p>
             @if ($tab === 'aktif')
                 <a class="mv-btn mv-btn--utama" href="{{ route('beranda') }}#tiket" style="margin-top:16px">Lihat tempat bertiket</a>
             @endif

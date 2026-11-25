@@ -303,7 +303,7 @@ class TiketController extends Controller
             Penyimpanan::ubahPesanan($kode, ['status' => 'dibatalkan']);
         }
 
-        return redirect()->route('tiket.saya', ['tab' => 'dibatalkan'])->with('pesan', 'Pesanan '.$kode.' dibatalkan.');
+        return redirect()->route('tiket.saya')->with('pesan', 'Pesanan '.$kode.' dibatalkan.');
     }
 
     /** Sinkron dengan Midtrans; null kalau Midtrans atau DB 2 sedang tidak terjangkau. */
@@ -340,7 +340,6 @@ class TiketController extends Controller
             'checkin' => $semua->filter(fn ($p) => $p['status'] === 'lunas' && ! empty($p['dipakai'])),
             'kedaluwarsa' => $semua->filter(fn ($p) => $p['status'] === 'kedaluwarsa'
                 || ($p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString())),
-            'dibatalkan' => $semua->where('status', 'dibatalkan'),
         ];
 
         return view('tiket.daftar', ['tab' => array_key_exists($tab, $kelompok) ? $tab : 'aktif', 'kelompok' => $kelompok]);
