@@ -137,6 +137,18 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .p-baris .dua span { display: block; color: var(--p-muted); font-size: 12px; margin-top: 2px; }
 .p-kosong { display: grid; place-items: center; min-height: 80px; padding: 16px; border: 1px dashed var(--p-control); border-radius: var(--p-radius-control); color: var(--p-muted); text-align: center; }
 .p-kosong a { color: var(--p-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.p-ulasan-kontrol { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.p-ulasan-kontrol__rentang { color: var(--p-muted); font-variant-numeric: tabular-nums; }
+.p-per-halaman { display: flex; align-items: center; gap: 8px; color: var(--p-muted); }
+.p-per-halaman select { min-height: 38px; padding: 0 30px 0 10px; border: 1px solid var(--p-control); border-radius: var(--p-radius-control); background: var(--p-surface); color: var(--p-text); font: 14px var(--p-font); }
+.p-paginasi { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 16px; }
+.p-paginasi__angka, .p-paginasi__arah { display: flex; align-items: center; gap: 4px; }
+.p-paginasi__angka .p-btn { min-width: 40px; padding: 0 8px; font-variant-numeric: tabular-nums; }
+.p-paginasi [aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+@media (max-width: 520px) {
+  .p-paginasi { flex-wrap: wrap; }
+  .p-paginasi__angka { order: 1; width: 100%; justify-content: center; }
+}
 
 /* bilah sebaran (baris adalah batang) */
 .p-batang { display: grid; gap: 2px; }

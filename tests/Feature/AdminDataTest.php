@@ -70,6 +70,48 @@ class AdminDataTest extends TestCase
         ]])->get('/admin/akun')->assertForbidden();
     }
 
+    public function test_editor_relasi_navigation_is_only_visible_to_superadmin(): void
+    {
+        Cache::setDefaultDriver('array');
+        Cache::store('array')->flush();
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+            'services.supabase.katalog.url' => 'https://supabase.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.publishable_key' => 'test-key',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
+        ]);
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/rest/v1/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'istana-maimun']], 200);
+            }
+            if (str_contains($request->url(), 'sparql.test')) {
+                return Http::response([
+                    'head' => ['vars' => ['s', 'p', 'o']],
+                    'results' => ['bindings' => []],
+                ], 200);
+            }
+
+            return Http::response([], 200);
+        });
+
+        $this->withSession(['pengguna' => [
+            'id' => 2,
+            'nama' => 'Admin',
+            'email' => 'admin@example.test',
+            'peran' => 'admin',
+        ]])->get('/admin')->assertOk()->assertDontSee('Editor relasi');
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin')->assertOk()->assertSee('Editor relasi');
+    }
+
     public function test_admin_role_is_refreshed_from_database_before_denying_admin_dashboard(): void
     {
         Cache::setDefaultDriver('array');

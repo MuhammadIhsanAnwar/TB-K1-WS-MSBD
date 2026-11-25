@@ -187,10 +187,19 @@ class AdminTempatRestTest extends TestCase
                 return Http::response([['tempat_slug' => 'istana-maimun']]);
             }
             if (str_contains($request->url(), '/ulasan?')) {
-                return Http::response([
+                $baris = [
                     $this->ulasanBaris(12, 'istana-maimun', 'Ulasan Istana'),
                     $this->ulasanBaris(13, 'masjid-raya', 'Ulasan Masjid'),
-                ]);
+                ];
+                parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+                if (isset($query['tempat_slug'])) {
+                    $slugs = explode(',', trim(substr($query['tempat_slug'], 3), '()'));
+                    $baris = array_values(array_filter($baris, fn (array $ulasan) => in_array($ulasan['tempat_slug'], $slugs, true)));
+                }
+                $jumlah = count($baris);
+                $rentang = $jumlah === 0 ? '*/0' : '0-'.($jumlah - 1).'/'.$jumlah;
+
+                return Http::response($baris, 200, ['Content-Range' => $rentang]);
             }
             if (str_contains($request->url(), 'sparql.test')) {
                 return Http::response($this->sparqlTempatResponse());

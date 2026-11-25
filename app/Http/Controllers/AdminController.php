@@ -11,6 +11,7 @@ use App\Support\StatusOperasional;
 use App\Support\SupabaseApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -662,15 +663,34 @@ class AdminController extends Controller
 
     public function ulasan(Request $request)
     {
-        $ulasan = collect(Penyimpanan::ulasan(status: 'tayang'));
         $milik = $this->slugsKelolaan($request);
-        if ($milik !== null) {
-            $ulasan = $ulasan->filter(fn ($baris) => in_array($baris['tempat'], $milik, true));
+        $perHalaman = filter_var($request->query('per_halaman', 10), FILTER_VALIDATE_INT);
+        $perHalaman = in_array($perHalaman, [10, 25, 50, 100], true) ? $perHalaman : 10;
+        $halaman = filter_var($request->query('page', 1), FILTER_VALIDATE_INT);
+        $halaman = $halaman === false ? 1 : max(1, $halaman);
+        $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman);
+        $jumlah = $hasil['jumlah'];
+        $halamanTerakhir = max(1, (int) ceil($jumlah / $perHalaman));
+
+        if ($halaman > $halamanTerakhir) {
+            $halaman = $halamanTerakhir;
+            if ($jumlah > 0) {
+                $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman);
+            }
         }
 
+        $ulasan = new LengthAwarePaginator(
+            $hasil['ulasan'],
+            $jumlah,
+            $perHalaman,
+            $halaman,
+            ['path' => $request->url(), 'query' => ['per_halaman' => $perHalaman]],
+        );
+
         return view('admin.ulasan', [
-            'jumlah' => $ulasan->count(),
-            'ulasan' => $ulasan->values(),
+            'jumlah' => $jumlah,
+            'ulasan' => $ulasan,
+            'perHalaman' => $perHalaman,
         ]);
     }
 

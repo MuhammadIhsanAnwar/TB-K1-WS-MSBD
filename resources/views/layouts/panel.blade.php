@@ -18,12 +18,16 @@
     ];
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
     $menuKurator = [
-        ['admin.ringkasan', 'Ringkasan', 'ringkasan', null], ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null], ['admin.relasi', 'Editor relasi', 'relasi', null],
+        ['admin.ringkasan', 'Ringkasan', 'ringkasan', null],
+        ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null],
         ['admin.ulasan', 'Ulasan', 'ulasan', null],
         ['admin.pesan', 'Pesan pengguna', 'pesan', null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
     ];
-        $menuKurator[] = ['admin.insight', 'Insight', 'statistik', null];
+    if ($u['peran'] === 'superadmin') {
+        array_splice($menuKurator, 2, 0, [['admin.relasi', 'Editor relasi', 'relasi', null]]);
+    }
+    $menuKurator[] = ['admin.insight', 'Insight', 'statistik', null];
     if ($u['peran'] === 'superadmin') {
         $menuKurator = array_merge($menuKurator, [
             ['admin.tempat.daftar', 'Kelola tempat wisata', 'entitas', null],

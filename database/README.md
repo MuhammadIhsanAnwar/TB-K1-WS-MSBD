@@ -26,6 +26,8 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_27_000100_normalisasi_db1_db2.php` | Memusatkan relasi admin-tempat, rating, dan moda rencana; ringkasan ulasan dihitung sebagai view |
 | `migrations/2026_11_27_000200_hapus_tabel_fitur_lama.php` | Menghapus tabel mitra, check-in, poin, voucher, dan penukaran yang tidak lagi dipakai web |
 | `migrations/2026_11_29_000100_buat_ringkasan_popularitas_tempat.php` | DB 2 menggabungkan ulasan, rating, dan suka serta menghitung ranking untuk Tanya Mas Nonov |
+| `migrations/2026_12_01_000100_beri_akses_rest_service_role_db1.php` | memberi `service_role` akses REST DB 1 pada relasi admin-tempat, pesan, token reset, dan pengaturan situs |
+| `migrations/2026_12_01_000200_beri_akses_analitik_service_role_db2.php` | memberi `service_role` akses DB 2 ke log pencarian dan view celah konten |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
@@ -131,6 +133,9 @@ php artisan migrate --database=katalog
 
 Migration yang memiliki `protected $connection = 'transaksi'` tetap dijalankan
 ke DB 2, sedangkan tabel pelacak migration tetap berada di DB 1.
+Migration akses `service_role` DB 1 dan DB 2 perlu dijalankan sebelum menggunakan
+panel admin dan fitur analitik setelah deploy. Kunci `service_role` hanya boleh
+dipakai di server; jangan pernah mengirimkannya ke browser.
 
 Jangan menaruh password database atau secret key Supabase di repository.
 

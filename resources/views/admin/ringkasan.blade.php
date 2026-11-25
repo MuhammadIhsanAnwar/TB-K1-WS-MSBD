@@ -61,7 +61,12 @@
         <h3 style="font-size:13px;color:var(--p-muted);font-weight:500;margin:20px 0 4px">Relasi bersumber survei, perlu verifikasi</h3>
         <div class="p-baris">
             @foreach ($tanpaSumber->take(4) as $r)
-                <div><span>{{ Katalog::kalimat($r, $r[0]) }}</span><a class="p-tautan-kartu kanan" href="{{ route('admin.relasi', ['predikat' => $r[1]]) }}">Buka</a></div>
+                <div>
+                    <span>{{ Katalog::kalimat($r, $r[0]) }}</span>
+                    @if (session('pengguna.peran') === 'superadmin')
+                        <a class="p-tautan-kartu kanan" href="{{ route('admin.relasi', ['predikat' => $r[1]]) }}">Buka</a>
+                    @endif
+                </div>
             @endforeach
         </div>
     </section>
@@ -75,7 +80,12 @@
         </div>
     </section>
     <section class="p-panel s5" aria-labelledby="judul-usulan">
-        <header><h2 id="judul-usulan">Usulan relasi baru</h2><a class="p-tautan-kartu" href="{{ route('admin.relasi') }}">Editor relasi</a></header>
+        <header>
+            <h2 id="judul-usulan">Usulan relasi baru</h2>
+            @if (session('pengguna.peran') === 'superadmin')
+                <a class="p-tautan-kartu" href="{{ route('admin.relasi') }}">Editor relasi</a>
+            @endif
+        </header>
         @if ($usulan)
             <div class="p-baris">
                 @foreach (array_slice(array_reverse($usulan), 0, 4) as $us)

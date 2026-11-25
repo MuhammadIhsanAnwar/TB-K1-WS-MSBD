@@ -403,6 +403,38 @@ class SupabaseApi
         return $this->getRows('ulasan', $filters);
     }
 
+    public function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset): array
+    {
+        $filters = [
+            'select' => '*,rating_tempat(bintang)',
+            'status' => 'eq.'.$status,
+            'order' => 'created_at.desc,id_ulasan.desc',
+            'limit' => max(1, min($batas, 100)),
+            'offset' => max(0, $offset),
+        ];
+
+        if ($tempatSlugs !== null) {
+            $tempatSlugs = array_values(array_unique(array_filter(
+                $tempatSlugs,
+                fn ($slug) => is_string($slug) && preg_match('/\A[a-z0-9][a-z0-9-]*\z/D', $slug),
+            )));
+            if ($tempatSlugs === []) {
+                return ['baris' => [], 'jumlah' => 0];
+            }
+            $filters['tempat_slug'] = 'in.('.implode(',', $tempatSlugs).')';
+        }
+
+        $response = $this->request()
+            ->withHeaders(['Prefer' => 'count=exact'])
+            ->get($this->url('ulasan'), $filters)
+            ->throw();
+
+        return [
+            'baris' => $response->json(),
+            'jumlah' => $this->jumlahDariContentRange($response, 'ulasan'),
+        ];
+    }
+
     public function ringkasanUlasan(): array
     {
         return $this->getRows('ringkasan_ulasan', ['select' => 'tempat_slug,rata_rata_bintang,jumlah_ulasan']);

@@ -106,5 +106,24 @@ class SitusTempatTest extends TestCase
             ->assertSee('mv-btn--suka-aktif', false)
             ->assertSee('aria-pressed="true"', false)
             ->assertSee('fill="currentColor"', false);
+
+        $admin = ['id' => 18, 'nama' => 'Admin', 'peran' => 'admin'];
+        $this->withSession(['pengguna' => $admin])
+            ->get('/tempat/kolam-renang-primbana')
+            ->assertOk()
+            ->assertSee('Batal suka')
+            ->assertSee('mv-btn--suka-aktif', false);
+
+        $csrf = 'test-csrf';
+        $this->from('/tempat/kolam-renang-primbana')
+            ->withSession(['pengguna' => $admin, '_token' => $csrf])
+            ->withHeader('X-CSRF-TOKEN', $csrf)
+            ->post('/tempat/kolam-renang-primbana/sukai')
+            ->assertRedirect('/tempat/kolam-renang-primbana')
+            ->assertSessionHas('status', 'Suka berhasil dibatalkan.');
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
+            && str_contains($request->url(), '/suka_tempat?')
+            && str_contains($request->url(), 'id_pengguna=eq.18'));
     }
 }

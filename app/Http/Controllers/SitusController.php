@@ -247,7 +247,7 @@ class SitusController extends Controller
 
         $pengguna = session('pengguna', []);
         $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        $disukai = ($pengguna['peran'] ?? null) === 'wisatawan' && $idPengguna !== false
+        $disukai = $idPengguna !== false
             ? Penyimpanan::tempatDisukai((int) $idPengguna)
             : [];
         $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
@@ -271,7 +271,11 @@ class SitusController extends Controller
 
         $pengguna = $request->session()->get('pengguna', []);
         $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        abort_unless(($pengguna['peran'] ?? null) === 'wisatawan' && $idPengguna !== false, 403, 'Masuk sebagai wisatawan untuk menyukai tempat.');
+        abort_unless(
+            in_array($pengguna['peran'] ?? null, ['wisatawan', 'admin', 'superadmin'], true) && $idPengguna !== false,
+            403,
+            'Masuk ke akun MedanVisit untuk menyukai tempat.',
+        );
 
         $disukai = Penyimpanan::ubahSukaTempat((int) $idPengguna, $slug);
 

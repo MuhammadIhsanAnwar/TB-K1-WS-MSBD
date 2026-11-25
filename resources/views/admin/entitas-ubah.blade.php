@@ -368,9 +368,11 @@
 
         <div>
             <h2 id="judul-relasi">Relasi</h2>
-            <p>
-                Relasi diubah di editor relasi, dengan sumber wajib.
-            </p>
+            @if (session('pengguna.peran') === 'superadmin')
+                <p>Relasi diubah di editor relasi, dengan sumber wajib.</p>
+            @else
+                <p>Relasi yang sudah ada ditampilkan sebagai informasi.</p>
+            @endif
         </div>
 
         <div class="p-pengaturan__panel">
@@ -403,9 +405,11 @@
                         : 'Simpan sebagai draf' }}
                 </button>
 
-                <a class="p-btn" href="{{ route('admin.relasi') }}">
-                    Editor relasi
-                </a>
+                @if (session('pengguna.peran') === 'superadmin')
+                    <a class="p-btn" href="{{ route('admin.relasi') }}">
+                        Editor relasi
+                    </a>
+                @endif
 
             </div>
 

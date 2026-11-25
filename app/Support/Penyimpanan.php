@@ -154,7 +154,28 @@ class Penyimpanan
     /** Ulasan (terbaru dulu), bisa disaring per tempat dan status. */
     public static function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null, bool $aman = false): array
     {
-        $baca = fn () => array_map(function ($u): array {
+        $baca = fn () => self::bentukUlasan(self::api()->ulasan($tempat, $status, $idPengguna));
+
+        return $aman ? self::aman($baca, []) : $baca();
+    }
+
+    public static function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset): array
+    {
+        if ($tempatSlugs === []) {
+            return ['ulasan' => [], 'jumlah' => 0];
+        }
+
+        $hasil = self::api()->ulasanHalaman($tempatSlugs, $status, $batas, $offset);
+
+        return [
+            'ulasan' => self::bentukUlasan($hasil['baris']),
+            'jumlah' => (int) $hasil['jumlah'],
+        ];
+    }
+
+    private static function bentukUlasan(array $baris): array
+    {
+        return array_map(function ($u): array {
             $rating = $u['rating_tempat'] ?? [];
             if (isset($rating[0])) {
                 $rating = $rating[0];
@@ -171,9 +192,7 @@ class Penyimpanan
                 'status' => $u['status'],
                 'waktu' => self::waktu($u['created_at']),
             ];
-        }, self::api()->ulasan($tempat, $status, $idPengguna));
-
-        return $aman ? self::aman($baca, []) : $baca();
+        }, $baris);
     }
 
     /** Ringkasan ulasan dihitung dari ulasan dan rating yang terkait. */
