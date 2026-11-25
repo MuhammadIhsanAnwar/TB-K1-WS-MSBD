@@ -126,6 +126,14 @@ class TanyaMasNonovService
                 'fitur' => ['pencarian tempat', 'informasi kuliner', 'tiket', 'ulasan', 'suka', 'perencanaan rute'],
             ],
         ];
+        $titikAcuan = self::titikAcuanDisebut($pertanyaan);
+        if ($titikAcuan !== null) {
+            $konteks['titik_acuan_medanvisit'] = [
+                'nama' => $titikAcuan['nama'],
+                'latitude' => $titikAcuan['lat'],
+                'longitude' => $titikAcuan['lng'],
+            ];
+        }
         $perluKatalog = (bool) preg_match('/\b(medan|medanvisit|wisata|kuliner|makan|tiket|tempat|rute|perjalanan|museum|situs|website|platform|aplikasi|layanan|fitur|bantu|kemampuan)\b/u', mb_strtolower($pertanyaan));
         if ($perluKatalog) {
             $tempat = array_values(Katalog::tempat());
@@ -161,13 +169,42 @@ class TanyaMasNonovService
             return 'Hai! Aku Mas Nonov, asisten AI MedanVisit. Ada yang ingin kamu tanyakan?';
         }
         if (preg_match('/\b(siapa kamu|kamu siapa|nama kamu|siapa namamu)\b/u', $teks)) {
-            return 'Aku Mas Nonov, asisten AI MedanVisit. Aku bisa membantu mencari informasi tempat wisata, kuliner, tiket, ulasan, dan rute di Kota Medan.';
+            return 'Aku Mas Nonov, asisten AI MedanVisit. Aku bisa menjawab pertanyaan umum dan membantu mencari informasi wisata, kuliner, tiket, ulasan, serta rute di Kota Medan.';
         }
 
-        $contohTempat = array_column($konteks['katalog_database3']['contoh_tempat'] ?? [], 'nama');
-        $contoh = $contohTempat === [] ? '' : ' Contoh tempat yang tercatat: '.implode(', ', $contohTempat).'.';
+        $titikAcuan = $konteks['titik_acuan_medanvisit'] ?? null;
+        if (is_array($titikAcuan)) {
+            $latitude = number_format((float) $titikAcuan['latitude'], 4, '.', '');
+            $longitude = number_format((float) $titikAcuan['longitude'], 4, '.', '');
 
-        return 'Aku Mas Nonov, asisten AI MedanVisit. Aku bisa ngobrol dan membantu berdasarkan informasi tempat wisata, kuliner, tiket, ulasan, serta rute di Kota Medan.'.$contoh;
+            return $titikAcuan['nama'].' berada di Kota Medan. Titik acuannya di MedanVisit sekitar '.$latitude.', '.$longitude.'. Aku juga bisa membantu mencari tempat wisata terdekat dari sana.';
+        }
+
+        if (preg_match('/\b(apa yang ada|fitur|fungsi|bisa|kemampuan|tentang)\b/u', $teks)) {
+            $fitur = implode(', ', $konteks['website']['fitur']);
+            $jawaban = 'MedanVisit menyediakan informasi wisata Kota Medan serta fitur '.$fitur.'.';
+            $contohTempat = array_column($konteks['katalog_database3']['contoh_tempat'] ?? [], 'nama');
+
+            return $contohTempat === []
+                ? $jawaban
+                : $jawaban.' Contoh tempat yang tercatat: '.implode(', ', $contohTempat).'.';
+        }
+
+        return 'Maaf, aku belum tahu jawaban yang tepat untuk pertanyaan itu. Kalau kamu beri sedikit konteks tambahan, aku akan coba membantu tanpa menebak.';
+    }
+
+    private static function titikAcuanDisebut(string $teks): ?array
+    {
+        $teks = mb_strtolower($teks);
+        foreach (self::TITIK_ACUAN as $titik) {
+            foreach ($titik['alias'] as $alias) {
+                if (preg_match('/(?<![\p{L}\p{N}])'.preg_quote($alias, '/').'(?![\p{L}\p{N}])/u', $teks)) {
+                    return $titik;
+                }
+            }
+        }
+
+        return null;
     }
 
     private static function entitasRdfDisebut(string $pertanyaan): ?array
@@ -598,13 +635,9 @@ class TanyaMasNonovService
 
         if (preg_match('/\b(?:dari|dekat|sekitar)\s+(.+?)(?=\s+\b(?:ke|menuju|dan)\b|[?.!]|$)/u', $teks, $titikTertulis)) {
             $frasaAsal = trim($titikTertulis[1]);
-            foreach (self::TITIK_ACUAN as $titik) {
-                foreach ($titik['alias'] as $alias) {
-                    if (preg_match('/(?<![\p{L}\p{N}])'.preg_quote($alias, '/').'(?![\p{L}\p{N}])/u', $frasaAsal)) {
-                        $asal = $titik + ['slug' => null];
-                        break 2;
-                    }
-                }
+            $titikAcuan = self::titikAcuanDisebut($frasaAsal);
+            if ($titikAcuan !== null) {
+                $asal = $titikAcuan + ['slug' => null];
             }
             foreach ($entitas as $tempat) {
                 $nama = mb_strtolower($tempat['nama']);

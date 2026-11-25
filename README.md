@@ -147,7 +147,7 @@ Atur Notification URL di dashboard Midtrans ke `https://<domain-aplikasi>/midtra
 
 | Variabel | Keterangan |
 |---|---|
-| `OPENROUTER_API_KEY` | API key yang diperlukan agar Mas Nonov dapat menjawab pertanyaan umum. Tanpa key atau saat layanan AI bermasalah, aplikasi memakai jawaban fallback dan mencatat kegagalan layanan ke log. |
+| `OPENROUTER_API_KEY` | API key untuk jawaban bebas dan pertanyaan umum Mas Nonov. Tanpa key atau saat layanan bermasalah, aplikasi menjawab fakta lokal yang tersedia dan secara eksplisit mengakui jika tidak tahu, bukan mengarang; kegagalan layanan dicatat ke log. |
 | `OPENROUTER_BASE_URL` | Default `https://openrouter.ai/api/v1`. |
 | `OPENROUTER_MODEL` | Model OpenRouter; contoh bawaan `openrouter/free`. |
 | `OPENROUTER_TIMEOUT` | Batas waktu request; contoh bawaan 120 detik. |

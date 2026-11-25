@@ -48,7 +48,7 @@
 
         <div class="mv-asisten-panel__log" data-widget-log aria-live="polite">
             <div class="mv-gelembung mv-gelembung--asisten">
-                <p>Halo! Aku <b>Mas Nonov</b>, maskot asisten wisatamu di Medan. Aku bisa bantu cari tempat wisata, kuliner khas, rute jalan kaki, dan info harga tiket. Mau mulai dari mana?</p>
+                <p>Halo! Aku <b>Mas Nonov</b>, asisten AI MedanVisit. Aku bisa menjawab pertanyaan umum dan membantu mencari informasi wisata, kuliner, tiket, ulasan, serta rute di Kota Medan. Kalau aku tidak tahu, aku akan mengatakannya.</p>
             </div>
             <div class="mv-asisten-panel__saran" data-widget-saran>
                 @if ($contohTiket)

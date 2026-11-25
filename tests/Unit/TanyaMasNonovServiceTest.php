@@ -274,11 +274,17 @@ class TanyaMasNonovServiceTest extends TestCase
 
         $ai = Mockery::mock(AIService::class);
         $ai->shouldReceive('jawabBerbasisKonteks')
-            ->times(3)
+            ->times(4)
             ->withArgs(function (string $pertanyaan, string $sumber, array $konteks, array $riwayat): bool {
                 if ($pertanyaan === 'Kamu siapa?') {
                     return str_contains($sumber, 'fakta publik MedanVisit')
                         && ($konteks['website']['nama'] ?? null) === 'MedanVisit';
+                }
+
+                if ($pertanyaan === 'USU di mana?') {
+                    return ($konteks['titik_acuan_medanvisit']['nama'] ?? null) === 'Universitas Sumatera Utara (USU)'
+                        && ($konteks['titik_acuan_medanvisit']['latitude'] ?? null) === 3.5613218
+                        && ($konteks['titik_acuan_medanvisit']['longitude'] ?? null) === 98.6568033;
                 }
 
                 if ($pertanyaan === 'Ayam enak') {
@@ -293,6 +299,7 @@ class TanyaMasNonovServiceTest extends TestCase
             })
             ->andReturn(
                 'Saya Mas Nonov, asisten AI MedanVisit.',
+                'USU berada di Kota Medan.',
                 'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
                 'MedanVisit memiliki informasi tentang tempat wisata dan kuliner di Medan.',
             );
@@ -304,6 +311,10 @@ class TanyaMasNonovServiceTest extends TestCase
             $service->jawab('Kamu siapa?')['teks'][0],
         );
         $this->assertSame(
+            'USU berada di Kota Medan.',
+            $service->jawab('USU di mana?')['teks'][0],
+        );
+        $this->assertSame(
             'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
             $service->jawab('Ayam enak')['teks'][0],
         );
@@ -311,6 +322,34 @@ class TanyaMasNonovServiceTest extends TestCase
             'MedanVisit memiliki informasi tentang tempat wisata dan kuliner di Medan.',
             $service->jawab('Apa yang ada di MedanVisit?')['teks'][0],
         );
+    }
+
+    public function test_usu_location_question_has_a_direct_verified_fallback_when_ai_is_unavailable(): void
+    {
+        config(['services.openrouter.api_key' => null]);
+        $ai = Mockery::mock(AIService::class);
+        $postgres = Mockery::mock(PostgreSQLService::class);
+
+        $jawaban = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('USU di mana?');
+
+        $this->assertStringContainsString('Universitas Sumatera Utara (USU)', $jawaban['teks'][0]);
+        $this->assertStringContainsString('Kota Medan', $jawaban['teks'][0]);
+        $this->assertStringContainsString('3.5613, 98.6568', $jawaban['teks'][0]);
+        $this->assertStringNotContainsString('Aku bisa ngobrol dan membantu', $jawaban['teks'][0]);
+    }
+
+    public function test_unknown_general_question_is_not_replaced_with_the_intro_message(): void
+    {
+        config(['services.openrouter.api_key' => null]);
+        $ai = Mockery::mock(AIService::class);
+        $postgres = Mockery::mock(PostgreSQLService::class);
+
+        $jawaban = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('Apa jawaban untuk pertanyaan yang belum ada di sumber?');
+
+        $this->assertStringContainsString('aku belum tahu jawaban yang tepat', $jawaban['teks'][0]);
+        $this->assertStringNotContainsString('Aku bisa ngobrol dan membantu', $jawaban['teks'][0]);
     }
 
     public function test_nearby_food_uses_browser_location_and_returns_sorted_distances_without_sending_coordinates_to_ai(): void
