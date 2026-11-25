@@ -156,7 +156,7 @@ class AkunController extends Controller
     private function tujuan(string $peran): string
     {
         return match ($peran) {
-            'admin', 'superadmin' => route('admin.ringkasan'),
+            'admin', 'superadmin' => route('admin.insight'),
             default => route('beranda'),
         };
     }

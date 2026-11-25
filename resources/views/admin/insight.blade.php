@@ -48,6 +48,9 @@
     @else
         <div><div class="label">Akun terdaftar</div><div class="nilai">{{ number_format(($akun['admin'] ?? 0) + ($akun['wisatawan'] ?? 0) + ($akun['superadmin'] ?? 0), 0, ',', '.') }}</div><div class="ket">{{ $akun['admin'] ?? 0 }} admin · {{ $akun['superadmin'] ?? 0 }} superadmin · {{ $akun['wisatawan'] ?? 0 }} wisatawan</div></div>
     @endif
+    @if (! $admin && ! $fokus)
+        <div><div class="label">Jumlah tempat wisata</div><div class="nilai">{{ number_format($kunjunganTempat->count(), 0, ',', '.') }}</div><div class="ket">Terdaftar di Database 3</div></div>
+    @endif
 </div>
 
 <div class="p-grid">

@@ -56,12 +56,12 @@
                     @if ($urlFotoProfil)
                         <img class="mv-kepala__foto" src="{{ $urlFotoProfil }}" alt="">
                     @endif
-                    <a class="mv-btn mv-btn--krem mv-btn--kecil" href="{{ route('admin.ringkasan') }}">Ruang Admin</a>
+                    <a class="mv-btn mv-btn--krem mv-btn--kecil" href="{{ route('admin.insight') }}">Ruang Admin</a>
                 @elseif (in_array($u['peran'], ['superadmin'], true))
                     @if ($urlFotoProfil)
                         <img class="mv-kepala__foto" src="{{ $urlFotoProfil }}" alt="">
                     @endif
-                    <a class="mv-btn mv-btn--krem mv-btn--kecil" href="{{ route('admin.ringkasan') }}">Super Admin</a>
+                    <a class="mv-btn mv-btn--krem mv-btn--kecil" href="{{ route('admin.insight') }}">Super Admin</a>
                 @else
                     <details class="mv-akun-menu" data-ui data-akun-menu>
                         <summary aria-label="Menu akun {{ $u['nama'] }}">

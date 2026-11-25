@@ -103,6 +103,7 @@ class AdminDataTest extends TestCase
             'email' => 'admin@example.test',
             'peran' => 'admin',
         ]])->get('/admin')->assertOk()
+            ->assertSee('Insight')
             ->assertDontSee('Editor relasi')
             ->assertDontSee('Antrean kerja kurator')
             ->assertDontSee('Dicari tetapi tanpa hasil')
@@ -117,6 +118,7 @@ class AdminDataTest extends TestCase
             'email' => 'superadmin@example.test',
             'peran' => 'superadmin',
         ]])->get('/admin')->assertOk()
+            ->assertSee('Insight')
             ->assertSee('Editor relasi')
             ->assertSee('Antrean kerja kurator')
             ->assertSee('Dicari tetapi tanpa hasil')
@@ -179,6 +181,10 @@ class AdminDataTest extends TestCase
         Http::fake(['*' => fn (Request $request) => str_contains($request->url(), '/rest/v1/')
             ? Http::response([], 200)
             : Http::response(['head' => ['vars' => ['s', 'p', 'o']], 'results' => ['bindings' => []]], 200)]);
+        Cache::put('database3.catalog.triples.v8', [
+            ['res:museum-test', 'rdf:type', 'mv:Museum'],
+            ['res:museum-test', 'schema:name', 'Museum Test'],
+        ]);
         $session = ['pengguna' => [
             'id' => 1,
             'nama' => 'Super Admin',
@@ -186,11 +192,17 @@ class AdminDataTest extends TestCase
             'peran' => 'superadmin',
         ]];
 
-        $this->withSession($session)->get('/admin/insight')
+        $response = $this->withSession($session)->get('/admin/insight');
+        $response
             ->assertOk()
             ->assertSee('Insight')
+            ->assertSee('Jumlah tempat wisata')
             ->assertSee('data-grafik=', false)
             ->assertDontSee('p-batang', false);
+        $this->assertMatchesRegularExpression(
+            '/<div class="label">Jumlah tempat wisata<\/div>\s*<div class="nilai">1<\/div>\s*<div class="ket">Terdaftar di Database 3<\/div>/',
+            $response->getContent(),
+        );
         $this->withSession($session)->get('/admin/tempat/baru')->assertOk()->assertSee('Tambah tempat wisata');
     }
 
@@ -229,6 +241,7 @@ class AdminDataTest extends TestCase
         ]])->get('/admin/insight')
             ->assertOk()
             ->assertSee('Grafik tayangan halaman per hari')
+            ->assertDontSee('Jumlah tempat wisata')
             ->assertSee('data-grafik=', false)
             ->assertDontSee('p-batang', false);
     }
