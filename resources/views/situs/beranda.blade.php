@@ -230,7 +230,7 @@
             {{-- daftar harga ala menu: satu baris per tempat, dikelompokkan per kategori; rincian tarif ada di halaman tiket --}}
             <div class="mv-menu-tiket__daftar" data-daftar-tiket>
                 @foreach (collect($bertiket)->groupBy('kategori')->sortByDesc(fn ($grup) => $grup->count()) as $kode => $grup)
-                    <section class="mv-menu-harga {{ $grup->count() === 1 ? 'mv-menu-harga--melintang' : '' }}" data-tiket-grup aria-labelledby="harga-{{ $kode }}">
+                    <section class="mv-menu-harga" data-tiket-grup aria-labelledby="harga-{{ $kode }}">
                         <h3 id="harga-{{ $kode }}">{{ Katalog::KATEGORI[$kode] }}</h3>
                         <ul>
                             @foreach ($grup->sortBy(fn ($t) => Katalog::hargaTermurah($t)) as $t)
