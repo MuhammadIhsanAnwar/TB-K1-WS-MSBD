@@ -653,7 +653,8 @@ class AkunController extends Controller
             'nama' => $u['nama'],
         ]);
 
-        return redirect()->route('ulasan.saya')->with('pesan', 'Ulasan dan rating berhasil diperbarui.');
+        return redirect()->to($this->urlKembaliDariUlasan($request, $ulasan))
+            ->with('pesan', 'Ulasan dan rating berhasil diperbarui.');
     }
 
     public function hapusUlasanSaya(Request $request, string $id)
@@ -665,7 +666,15 @@ class AkunController extends Controller
 
         Penyimpanan::hapusUlasan($id);
 
-        return redirect()->route('ulasan.saya')->with('pesan', 'Ulasan dan rating berhasil dihapus.');
+        return redirect()->to($this->urlKembaliDariUlasan($request, $ulasan))
+            ->with('pesan', 'Ulasan dan rating berhasil dihapus.');
+    }
+
+    private function urlKembaliDariUlasan(Request $request, array $ulasan): string
+    {
+        return $request->input('kembali') === 'tempat'
+            ? route('tempat', $ulasan['tempat']).'#ulasan'
+            : route('ulasan.saya');
     }
 
     public function tulisUlasan(Request $request, string $slug)

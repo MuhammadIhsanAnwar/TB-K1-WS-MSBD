@@ -122,6 +122,56 @@ document.querySelectorAll('[data-tutup-pesan]').forEach((b) => {
     b.addEventListener('click', () => b.closest('[role="status"], [role="alert"]')?.remove());
 });
 
+// ---- Konfirmasi penghapusan ulasan dan rencana ----
+const dialogKonfirmasi = document.querySelector('[data-dialog-konfirmasi]');
+const teksDialogKonfirmasi = dialogKonfirmasi?.querySelector('[data-teks-dialog-konfirmasi]');
+const formulirBolehKirim = new WeakSet();
+let formulirKonfirmasiAktif = null;
+
+document.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement) || !form.dataset.konfirmasi) return;
+    if (formulirBolehKirim.has(form)) {
+        formulirBolehKirim.delete(form);
+        return;
+    }
+
+    event.preventDefault();
+    if (!dialogKonfirmasi?.showModal) {
+        if (window.confirm(form.dataset.konfirmasi)) form.submit();
+        return;
+    }
+
+    formulirKonfirmasiAktif = form;
+    teksDialogKonfirmasi.textContent = form.dataset.konfirmasi;
+    dialogKonfirmasi.showModal();
+    dialogKonfirmasi.querySelector('[data-batal-konfirmasi]')?.focus();
+});
+
+dialogKonfirmasi?.querySelector('[data-batal-konfirmasi]')?.addEventListener('click', () => {
+    formulirKonfirmasiAktif = null;
+    dialogKonfirmasi.close();
+});
+
+dialogKonfirmasi?.querySelector('[data-setuju-konfirmasi]')?.addEventListener('click', () => {
+    const form = formulirKonfirmasiAktif;
+    formulirKonfirmasiAktif = null;
+    dialogKonfirmasi.close();
+    if (!form?.isConnected) return;
+    formulirBolehKirim.add(form);
+    form.requestSubmit();
+});
+
+dialogKonfirmasi?.addEventListener('click', (event) => {
+    if (event.target === dialogKonfirmasi) {
+        formulirKonfirmasiAktif = null;
+        dialogKonfirmasi.close();
+    }
+});
+dialogKonfirmasi?.addEventListener('close', () => {
+    formulirKonfirmasiAktif = null;
+});
+
 // ---- Status penyimpanan pengaturan akun ----
 const dialogPengaturan = document.querySelector('[data-dialog-pengaturan]');
 if (dialogPengaturan?.showModal) {

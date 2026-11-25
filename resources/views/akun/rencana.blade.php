@@ -6,9 +6,6 @@
 <div class="alat">
     <div class="alat__judul"><div><h1>Rencana saya</h1><p>Rencana yang sudah disimpan, bisa dibuka dan dibagikan lewat tautan.</p></div><a class="p-btn p-btn--utama" href="{{ route('rencana') }}">Susun rencana baru</a></div>
     @include('partials.subnav-akun')
-    @if (session('pesan'))
-        <p class="pesan pesan--sukses" role="status">{{ session('pesan') }}</p>
-    @endif
     @if ($rencana)
         <div class="p-panel">
             <table class="p-tabel jadi-daftar">
@@ -24,9 +21,10 @@
                             <td class="sekunder">{{ collect($r['minat'])->map(fn ($m) => \App\Support\Katalog::KATEGORI[$m])->implode(', ') }}</td>
                             <td class="n">{{ $r['durasi'] }} jam</td>
                             <td>
-                                <div class="rencana__aksi">
+                                <div class="rencana__aksi rencana-saya__aksi">
+                                    <a class="p-btn" href="{{ route('rencana.bagikan', $r['kode']) }}">Detail</a>
                                     <a class="p-btn" href="{{ route('rencana', ['edit' => $r['kode']]) }}">Edit</a>
-                                    <form method="post" action="{{ route('rencana.hapus', $r['kode']) }}" onsubmit="return confirm('Hapus rencana perjalanan ini?')">
+                                    <form method="post" action="{{ route('rencana.hapus', $r['kode']) }}" data-konfirmasi="Rencana perjalanan ini akan dihapus permanen. Lanjutkan?">
                                         @csrf
                                         @method('DELETE')
                                         <button class="p-btn" type="submit">Hapus</button>
@@ -42,4 +40,5 @@
         <div class="kosong"><p>Belum ada rencana tersimpan. Susun rute, lalu simpan supaya bisa diedit dan dibagikan.</p><a class="tombol" href="{{ route('rencana') }}">Susun rute</a></div>
     @endif
 </div>
+@include('partials.konfirmasi')
 @endsection

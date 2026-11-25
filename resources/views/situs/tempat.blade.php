@@ -291,4 +291,5 @@
         </div>
     </aside>
 </div>
+@include('partials.konfirmasi')
 @endsection

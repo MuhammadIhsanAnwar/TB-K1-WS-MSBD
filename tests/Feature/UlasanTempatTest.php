@@ -144,6 +144,51 @@ class UlasanTempatTest extends TestCase
         $this->assertGreaterThanOrEqual(5, substr_count($html, '<svg'));
     }
 
+    public function test_place_page_shows_edit_and_delete_actions_only_for_the_review_owner(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/ulasan?')) {
+                return Http::response([[
+                    'id_ulasan' => 12,
+                    'id_pengguna' => 7,
+                    'tempat_slug' => 'istana-maimun',
+                    'nama_pengguna' => 'Wisatawan',
+                    'email_pengguna' => 'wisatawan@example.test',
+                    'teks' => 'Tempat bersejarah yang menarik.',
+                    'status' => 'tayang',
+                    'created_at' => '2026-11-25T10:00:00Z',
+                    'rating_tempat' => ['bintang' => 4],
+                ]], 200, ['Content-Range' => '0-0/1']);
+            }
+
+            return Http::response([]);
+        });
+
+        $pemilik = $this->withSession(['pengguna' => [
+            'id' => 7,
+            'nama' => 'Wisatawan',
+            'email' => 'wisatawan@example.test',
+            'peran' => 'wisatawan',
+        ]])->get('/tempat/istana-maimun')
+            ->assertOk()
+            ->assertSee(route('ulasan.perbarui', 12), false)
+            ->assertSee(route('ulasan.hapus-saya', 12), false)
+            ->assertSee('name="kembali" value="tempat"', false)
+            ->assertSee('data-dialog-konfirmasi', false);
+
+        $this->assertGreaterThan(0, substr_count($pemilik->getContent(), 'Edit ulasan'));
+
+        $this->withSession(['pengguna' => [
+            'id' => 8,
+            'nama' => 'Wisatawan lain',
+            'email' => 'lain@example.test',
+            'peran' => 'wisatawan',
+        ]])->get('/tempat/istana-maimun')
+            ->assertOk()
+            ->assertDontSee(route('ulasan.perbarui', 12), false)
+            ->assertDontSee(route('ulasan.hapus-saya', 12), false);
+    }
+
     private function samplePlace(): array
     {
         return [

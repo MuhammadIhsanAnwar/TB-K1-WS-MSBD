@@ -62,10 +62,37 @@ class UlasanSayaTest extends TestCase
             ->assertSee('Istana Maimun')
             ->assertSee('Edit')
             ->assertSee('name="bintang"', false)
-            ->assertSee('value="4" selected', false)
+            ->assertSee('type="radio"', false)
+            ->assertSee('value="4" checked', false)
             ->assertSee('name="teks"', false)
             ->assertSee(route('ulasan.perbarui', 42), false)
             ->assertSee(route('ulasan.hapus-saya', 42), false);
+    }
+
+    public function test_success_flash_is_rendered_once_on_the_reviews_page(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/ulasan?')) {
+                return Http::response([$this->review()]);
+            }
+            if (str_contains($request->url(), '/rating_tempat?')) {
+                return Http::response([]);
+            }
+
+            return Http::response([]);
+        });
+
+        foreach ([
+            'Ulasan dan rating berhasil diperbarui.',
+            'Ulasan dan rating berhasil dihapus.',
+        ] as $message) {
+            $response = $this->withSession([
+                'pengguna' => $this->user(),
+                'pesan' => $message,
+            ])->get('/ulasan-saya')->assertOk();
+
+            $this->assertSame(1, substr_count($response->getContent(), $message));
+        }
     }
 
     public function test_user_can_update_their_review_and_rating(): void
@@ -102,6 +129,32 @@ class UlasanSayaTest extends TestCase
             && str_contains($request->url(), 'id_ulasan=eq.42')
             && $request['teks'] === 'Tempat bersejarah yang sangat menarik.'
             && $request['status'] === 'tayang');
+    }
+
+    public function test_update_from_a_place_page_returns_to_that_place(): void
+    {
+        Http::fake(function (Request $request) {
+            if ($request->method() === 'GET' && str_contains($request->url(), '/ulasan?')) {
+                return Http::response([$this->review()]);
+            }
+            if (str_contains($request->url(), '/rating_tempat?')) {
+                return Http::response([]);
+            }
+            if ($request->method() === 'PATCH' && str_contains($request->url(), '/ulasan?')) {
+                return Http::response([$this->review()]);
+            }
+
+            return Http::response([]);
+        });
+
+        $this->withSession(['pengguna' => $this->user(), '_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->put('/ulasan-saya/42', [
+                'bintang' => 5,
+                'teks' => 'Tempat bersejarah yang sangat menarik.',
+                'kembali' => 'tempat',
+            ])
+            ->assertRedirect('/tempat/istana-maimun#ulasan');
     }
 
     public function test_user_can_delete_their_review_and_rating(): void

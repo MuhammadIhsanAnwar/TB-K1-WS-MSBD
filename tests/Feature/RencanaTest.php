@@ -213,19 +213,38 @@ class RencanaTest extends TestCase
 
     public function test_saved_plans_page_shows_edit_and_delete_actions(): void
     {
-        $this->withSession(['pengguna' => [
-            'id' => 7,
-            'nama' => 'Wisatawan',
-            'email' => 'wisatawan@example.test',
-            'peran' => 'wisatawan',
-        ]])
+        $response = $this->withSession([
+            'pengguna' => [
+                'id' => 7,
+                'nama' => 'Wisatawan',
+                'email' => 'wisatawan@example.test',
+                'peran' => 'wisatawan',
+            ],
+            'pesan' => 'Rencana perjalanan berhasil disimpan.',
+        ])
             ->get('/rencana/saya')
             ->assertOk()
             ->assertSee('Rencana saya')
             ->assertSee('Rute museum')
+            ->assertSee(route('rencana.bagikan', 'mdn-abcd'), false)
+            ->assertSee('Detail')
             ->assertSee(route('rencana', ['edit' => 'mdn-abcd']), false)
             ->assertSee(route('rencana.hapus', 'mdn-abcd'), false)
             ->assertSee('name="_method" value="DELETE"', false);
+
+        $this->assertSame(1, substr_count($response->getContent(), 'Rencana perjalanan berhasil disimpan.'));
+
+        $response = $this->withSession([
+            'pengguna' => [
+                'id' => 7,
+                'nama' => 'Wisatawan',
+                'email' => 'wisatawan@example.test',
+                'peran' => 'wisatawan',
+            ],
+            'pesan' => 'Rencana perjalanan berhasil dihapus.',
+        ])->get('/rencana/saya')->assertOk();
+
+        $this->assertSame(1, substr_count($response->getContent(), 'Rencana perjalanan berhasil dihapus.'));
     }
 
     private function tempat(string $slug, float $lat, float $lng): array

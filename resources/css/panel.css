@@ -208,6 +208,18 @@ body.panel-app { margin: 0; background: var(--p-frame); color: var(--p-text); fo
 .alat .p-btn--utama:hover { background: var(--accent-hover); }
 .alat .p-kpi { border-radius: var(--p-radius); }
 .alat .p-field input, .alat .p-field select, .alat .p-field textarea { border-radius: var(--p-radius-control); height: 48px; font-size: 16px; }
+.ulasan-saya__editor { position: relative; max-width: 420px; }
+.ulasan-saya__editor summary { min-height: 40px; padding: 0 12px; }
+.ulasan-saya__form { display: grid; gap: 14px; width: min(440px, calc(100vw - 56px)); min-width: min(300px, calc(100vw - 56px)); max-width: 440px; padding: 18px; border: 1px solid var(--p-border); border-radius: var(--p-radius); background: var(--p-surface); box-shadow: 0 12px 30px rgba(20, 32, 24, 0.12); white-space: normal; }
+.ulasan-saya__form .isian { display: grid; gap: 8px; }
+.ulasan-saya__form fieldset { margin: 0; padding: 0; border: 0; }
+.ulasan-saya__form legend { margin-bottom: 6px; font-weight: 600; }
+.ulasan-saya__form textarea { width: 100%; min-height: 132px; padding: 12px 14px; border: 1px solid var(--p-border); border-radius: var(--p-radius-control); background: var(--p-surface); color: var(--p-text); font: inherit; line-height: 1.55; resize: vertical; }
+.ulasan-saya__form textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ulasan-saya__form .tombol { justify-self: start; }
+.ulasan-saya__hapus { margin-top: 8px; color: #a3221b; border-color: #e2b4b0; }
+.rencana-saya__aksi { margin-top: 0; align-items: center; }
+.rencana-saya__aksi form { margin: 0; }
 /* ketentuan: judul bagian di kiri, aturannya di kanan, supaya halaman memakai lebar layar */
 .ketentuan { padding: 32px; }
 .ketentuan__catatan { max-width: 72ch; margin-bottom: 8px; }

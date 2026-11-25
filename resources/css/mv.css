@@ -1106,6 +1106,10 @@
 .mv-dialog-pengaturan__ikon--sukses { background: #e2f2e6; color: #1e6b3a; }
 .mv-dialog-pengaturan__ikon--galat { background: #f7dcd8; color: #a3221b; }
 .mv-dialog-pengaturan__isi button { min-width: 120px; margin-top: 4px; }
+.mv-dialog-konfirmasi__aksi { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 4px; }
+.mv-dialog-konfirmasi__aksi button { margin-top: 0; }
+.mv-dialog-konfirmasi__hapus { background: #a3221b; color: #fff; }
+.mv-dialog-konfirmasi__hapus:hover { background: #821b16; }
 
 /* ---------- Kaki Halaman Arsip (.mv-kaki) ---------- */
 .mv-pemuatan {
