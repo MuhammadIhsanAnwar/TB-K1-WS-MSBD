@@ -28,6 +28,8 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_29_000100_buat_ringkasan_popularitas_tempat.php` | DB 2 menggabungkan ulasan, rating, dan suka serta menghitung ranking untuk Tanya Mas Nonov |
 | `migrations/2026_12_01_000100_beri_akses_rest_service_role_db1.php` | memberi `service_role` akses REST DB 1 pada relasi admin-tempat, pesan, token reset, dan pengaturan situs |
 | `migrations/2026_12_01_000200_beri_akses_analitik_service_role_db2.php` | memberi `service_role` akses DB 2 ke log pencarian dan view celah konten |
+| `migrations/2026_12_02_000100_hardening_akses_rest_db1.php` | mencabut akses REST publik DB 1, mengaktifkan RLS pada data aplikasi, dan mempertahankan akses `service_role` |
+| `migrations/2026_12_02_000200_hardening_rls_db2.php` | mencabut akses REST publik DB 2 dan mengaktifkan RLS pada seluruh tabel aplikasi |
 | `migrations-transaksi/2026_11_06_000500_buat_role_database.php` | role hak akses kedua database, ditunda |
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
@@ -136,6 +138,18 @@ ke DB 2, sedangkan tabel pelacak migration tetap berada di DB 1.
 Migration akses `service_role` DB 1 dan DB 2 perlu dijalankan sebelum menggunakan
 panel admin dan fitur analitik setelah deploy. Kunci `service_role` hanya boleh
 dipakai di server; jangan pernah mengirimkannya ke browser.
+
+Migration hardening akses mencabut grant tabel, sequence, dan routine dari `PUBLIC`,
+`anon`, serta `authenticated`. Database 2 mengaktifkan RLS tanpa policy untuk role
+publik; runtime Laravel memakai `service_role` yang tetap diberi hak akses. Tabel
+sesi, cache, dan antrean DB 1 tidak dipaksa memakai RLS karena diakses melalui
+koneksi PostgreSQL Laravel. Jalankan `php artisan migrate` pada kedua koneksi setelah
+deploy; verifikasi grant dan policy live melalui Supabase SQL Editor karena migration
+lokal tidak dapat memastikan konfigurasi role pada project Supabase.
+
+Operasi tulis SPARQL Database 3 di production memerlukan `SPARQL_USERNAME` dan
+`SPARQL_PASSWORD`. Kredensial kosong atau parsial akan menggagalkan penulisan secara
+eksplisit; query baca tidak diwajibkan memakai Basic Auth.
 
 Jangan menaruh password database atau secret key Supabase di repository.
 

@@ -138,10 +138,10 @@ return new class extends Migration
                     RETURN QUERY SELECT * FROM rencana WHERE id_rencana = v_id;
                 END $$;
 
-                GRANT SELECT, INSERT, UPDATE, DELETE ON rencana_moda, rating_tempat TO anon, authenticated, service_role;
-                GRANT SELECT ON ringkasan_ulasan TO anon, authenticated, service_role;
+                GRANT SELECT, INSERT, UPDATE, DELETE ON rencana_moda, rating_tempat TO service_role;
+                GRANT SELECT ON ringkasan_ulasan TO service_role;
                 GRANT EXECUTE ON FUNCTION fn_simpan_rencana(varchar, bigint, varchar, smallint, text[], varchar, text[])
-                    TO anon, authenticated, service_role;
+                    TO service_role;
                 NOTIFY pgrst, 'reload schema';
                 SQL);
         }
@@ -242,7 +242,7 @@ return new class extends Migration
                 CREATE TRIGGER ulasan_sinkron_rating_tempat
                     AFTER INSERT OR UPDATE OR DELETE ON ulasan
                     FOR EACH ROW EXECUTE FUNCTION fn_sinkron_rating_tempat();
-                GRANT SELECT, INSERT, UPDATE, DELETE ON ringkasan_ulasan TO anon, authenticated, service_role;
+                GRANT SELECT, INSERT, UPDATE, DELETE ON ringkasan_ulasan TO service_role;
                 SQL);
         }
 
@@ -281,7 +281,7 @@ return new class extends Migration
                     RETURN QUERY SELECT * FROM rencana WHERE id_rencana = v_id;
                 END $$;
                 GRANT EXECUTE ON FUNCTION fn_simpan_rencana(varchar, bigint, varchar, smallint, boolean, boolean, varchar, text[])
-                    TO anon, authenticated, service_role;
+                    TO service_role;
                 SQL);
             $db->statement("NOTIFY pgrst, 'reload schema'");
         }

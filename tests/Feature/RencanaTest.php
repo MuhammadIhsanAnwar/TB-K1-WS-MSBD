@@ -73,7 +73,8 @@ class RencanaTest extends TestCase
             'tujuan_dikirim' => 1,
         ]);
 
-        $this->get('/rencana?'.$query)
+        $response = $this->get('/rencana?'.$query);
+        $response
             ->assertOk()
             ->assertSee('Jalan kaki')
             ->assertSee('Motor')
@@ -81,7 +82,38 @@ class RencanaTest extends TestCase
             ->assertSee('name="tujuan[]"', false)
             ->assertSee('tujuan-satu')
             ->assertSee('tujuan-dua')
-            ->assertSee('2 tempat');
+            ->assertSee('2 tempat')
+            ->assertSee('data-peta-mode="rute"', false)
+            ->assertSee('data-rute=', false);
+
+        preg_match('/data-rute="([^"]+)"/', $response->getContent(), $matches);
+        $rute = json_decode(html_entity_decode($matches[1] ?? '', ENT_QUOTES | ENT_HTML5), true);
+        $this->assertSame('awal', $rute[0]['nama'] ?? null);
+        $this->assertTrue($rute[0]['awal'] ?? false);
+        $this->assertCount(3, $rute);
+    }
+
+    public function test_guest_manual_route_map_includes_a_place_start_and_one_destination(): void
+    {
+        $query = http_build_query([
+            'minat' => ['sejarah'],
+            'durasi' => 4,
+            'moda' => ['motor'],
+            'mulai' => 'awal',
+            'tujuan' => ['tujuan-satu'],
+            'tujuan_dikirim' => 1,
+        ]);
+
+        $response = $this->get('/rencana?'.$query)
+            ->assertOk()
+            ->assertSee('Masuk untuk menyimpan')
+            ->assertSee('data-peta-mode="rute"', false);
+
+        preg_match('/data-rute="([^"]+)"/', $response->getContent(), $matches);
+        $rute = json_decode(html_entity_decode($matches[1] ?? '', ENT_QUOTES | ENT_HTML5), true);
+        $this->assertSame('awal', $rute[0]['nama'] ?? null);
+        $this->assertSame('tujuan-satu', $rute[1]['nama'] ?? null);
+        $this->assertCount(2, $rute);
     }
 
     public function test_saved_plan_edit_loads_only_for_its_owner_and_preserves_destinations(): void

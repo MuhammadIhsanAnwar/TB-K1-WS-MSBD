@@ -22,8 +22,16 @@ class KirimRdf extends Command
             database_path('rdf sparql/medanvisit-ontologi.ttl'),
             database_path('rdf sparql/medanvisit-data.ttl'),
         ];
+        $authUsername = is_string($username) && trim($username) !== '' ? $username : null;
+        $authPassword = is_string($password) && trim($password) !== '' ? $password : null;
+        $hasUsername = $authUsername !== null;
+        $hasPassword = $authPassword !== null;
 
-        if ($endpoint === '' || $username === null || $password === null) {
+        if (
+            $endpoint === ''
+            || (app()->environment('production') && (! $hasUsername || ! $hasPassword))
+            || $hasUsername !== $hasPassword
+        ) {
             $this->error('Konfigurasi Database 3 belum lengkap.');
 
             return self::FAILURE;
@@ -37,8 +45,10 @@ class KirimRdf extends Command
             }
         }
 
-        $http = Http::timeout((int) config('services.sparql.timeout', 30))
-            ->withBasicAuth($username, $password);
+        $http = Http::timeout((int) config('services.sparql.timeout', 30));
+        if ($authUsername !== null && $authPassword !== null) {
+            $http = $http->withBasicAuth($authUsername, $authPassword);
+        }
 
         // Simpan salinan lokal sebelum menyentuh Database 3, supaya bisa dikirim ulang kalau gagal.
         $cadangan = database_path('rdf sparql/medanvisit-data.backup-'.date('Ymd-His').'.ttl');

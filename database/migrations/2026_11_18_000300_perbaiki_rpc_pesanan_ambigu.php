@@ -16,7 +16,7 @@ return new class extends Migration
 {
     protected $connection = 'transaksi';
 
-    private const PERAN = 'PUBLIC, anon, authenticated, service_role';
+    private const PERAN = 'service_role';
 
     private const ISI_BUAT = <<<'SQL'
         LANGUAGE plpgsql AS $$

@@ -22,7 +22,6 @@ return new class extends Migration
         $connection = $schema->getConnection();
         $connection->statement('ALTER TABLE users ENABLE ROW LEVEL SECURITY');
         $connection->statement('DROP POLICY IF EXISTS "server can delete users" ON users');
-        $connection->statement('CREATE POLICY "server can delete users" ON users FOR DELETE TO anon, authenticated USING (true)');
     }
 
     public function down(): void

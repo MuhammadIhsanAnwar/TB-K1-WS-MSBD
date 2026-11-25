@@ -80,6 +80,9 @@ function modeRingkas(el) {
 async function modeRute(el) {
     const titik = JSON.parse(el.dataset.rute);
     const peta = buatPeta(el);
+    const segarkanUkuran = () => peta.invalidateSize({ pan: false });
+    requestAnimationFrame(segarkanUkuran);
+    setTimeout(segarkanUkuran, 200);
 
     const valid = titik.filter((t) =>
         Number.isFinite(Number(t.lat)) &&
@@ -102,7 +105,7 @@ async function modeRute(el) {
     valid.forEach((t) => {
         if (t.awal) {
             L.circleMarker([Number(t.lat), Number(t.lng)], { radius: 9, color: '#ffffff', weight: 3, fillColor: '#2f6690', fillOpacity: 1 })
-                .bindTooltip('Posisimu', { permanent: true, direction: 'top', offset: [0, -8] })
+                .bindTooltip(t.nama || 'Posisimu', { permanent: true, direction: 'top', offset: [0, -8] })
                 .addTo(penanda);
             return;
         }
@@ -118,6 +121,10 @@ async function modeRute(el) {
         .bindPopup(popup(t))
         .addTo(penanda);
     });
+
+    if (posisi.length > 1) {
+        peta.fitBounds(L.latLngBounds(posisi).pad(0.15));
+    }
 
     const info = L.control({ position: 'bottomleft' });
 
@@ -273,8 +280,7 @@ async function modeRute(el) {
         keterangan.join(' · ') || 'Jalur perjalanan tidak tersedia.';
 
     peta.fitBounds(L.latLngBounds(posisi).pad(0.15));
-
-    setTimeout(() => peta.invalidateSize(), 200);
+    segarkanUkuran();
 }
 
 // Satu tempat beserta area check-in (lingkaran seluas radius aslinya) dan tempat lain dalam 1,5 km.

@@ -94,6 +94,7 @@ class HargaTiketTest extends TestCase
     public function test_weekend_booking_is_rejected_for_a_weekday_only_ticket(): void
     {
         $tanggal = Carbon::today('Asia/Jakarta')->next(Carbon::SATURDAY)->toDateString();
+        $this->withoutExceptionHandling();
 
         $this->withSession(['pengguna' => ['id' => 7, 'peran' => 'wisatawan']])
             ->from('/tempat/medan-zoo/tiket')
@@ -111,6 +112,23 @@ class HargaTiketTest extends TestCase
             ->assertRedirect(route('checkout'))
             ->assertSessionHas('pilihan', fn (array $pilihan) => $pilihan['tanggal'] === $tanggal
                 && $pilihan['item'][0]['harga'] === 15000);
+    }
+
+    public function test_checkout_prefills_phone_number_from_account_session(): void
+    {
+        $tanggal = Carbon::today('Asia/Jakarta')->toDateString();
+
+        $this->withSession([
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'email' => '', 'peran' => 'wisatawan', 'no_hp' => '081234567890'],
+            'pilihan' => [
+                'tempat' => 'medan-zoo',
+                'tanggal' => $tanggal,
+                'item' => [['jenis' => 'Dewasa', 'harga' => 15000, 'jumlah' => 1, 'subtotal' => 15000]],
+            ],
+        ])
+            ->get(route('checkout'))
+            ->assertOk()
+            ->assertSee('name="hp" value="081234567890"', false);
     }
 
     public function test_booking_rejects_dates_other_than_today(): void

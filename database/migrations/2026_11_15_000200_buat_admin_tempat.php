@@ -23,9 +23,7 @@ return new class extends Migration
 
         $connection = DB::connection($this->connection);
         $connection->statement('ALTER TABLE admin_tempat ENABLE ROW LEVEL SECURITY');
-        $connection->statement(
-            'CREATE POLICY "server can manage admin places" ON admin_tempat FOR ALL TO anon, authenticated USING (true) WITH CHECK (true)'
-        );
+        $connection->statement('DROP POLICY IF EXISTS "server can manage admin places" ON admin_tempat');
         $connection->table('users')
             ->where('peran', 'admin')
             ->whereNotNull('tempat_slug')

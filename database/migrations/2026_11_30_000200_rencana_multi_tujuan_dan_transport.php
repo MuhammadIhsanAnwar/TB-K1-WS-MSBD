@@ -203,7 +203,7 @@ return new class extends Migration
                     RETURN QUERY SELECT * FROM rencana WHERE id_rencana = v_id;
                 END $$;
                 GRANT EXECUTE ON FUNCTION fn_simpan_rencana(varchar, bigint, varchar, smallint, text[], varchar, text[])
-                    TO anon, authenticated, service_role;
+                    TO service_role;
                 NOTIFY pgrst, 'reload schema';
                 SQL);
         } else {

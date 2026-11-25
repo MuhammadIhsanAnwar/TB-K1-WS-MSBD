@@ -70,7 +70,7 @@ class AdminDataTest extends TestCase
         ]])->get('/admin/akun')->assertForbidden();
     }
 
-    public function test_editor_relasi_navigation_is_only_visible_to_superadmin(): void
+    public function test_editor_relasi_navigation_is_hidden_from_admin_and_superadmin(): void
     {
         Cache::setDefaultDriver('array');
         Cache::store('array')->flush();
@@ -119,12 +119,20 @@ class AdminDataTest extends TestCase
             'peran' => 'superadmin',
         ]])->get('/admin')->assertOk()
             ->assertSee('Insight')
-            ->assertSee('Editor relasi')
             ->assertSee('Antrean kerja kurator')
             ->assertSee('Dicari tetapi tanpa hasil')
             ->assertSee('Relasi bersumber survei, perlu verifikasi')
             ->assertSee('Tempat yang perlu dilengkapi')
             ->assertSee('Usulan relasi baru');
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/akun')->assertOk()
+            ->assertSee('Kelola akun')
+            ->assertDontSee('Editor relasi');
     }
 
     public function test_admin_role_is_refreshed_from_database_before_denying_admin_dashboard(): void

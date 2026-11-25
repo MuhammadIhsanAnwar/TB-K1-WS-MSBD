@@ -39,6 +39,36 @@ class ServiceRoleAccessMigrationTest extends TestCase
         }
     }
 
+    public function test_db1_hardening_revokes_public_access_and_preserves_service_role_access(): void
+    {
+        $sql = $this->runMigration('2026_12_02_000100_hardening_akses_rest_db1.php', 'katalog');
+
+        foreach ([
+            'REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM PUBLIC, anon, authenticated',
+            'REVOKE EXECUTE ON ALL ROUTINES IN SCHEMA public FROM PUBLIC, anon, authenticated',
+            'ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY',
+            'GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO service_role',
+            'ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO service_role',
+        ] as $expected) {
+            $this->assertStringContainsString($expected, $sql);
+        }
+    }
+
+    public function test_db2_hardening_enables_rls_and_keeps_service_role_access(): void
+    {
+        $sql = $this->runMigration('2026_12_02_000200_hardening_rls_db2.php', 'transaksi');
+
+        foreach ([
+            'REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM PUBLIC, anon, authenticated',
+            'REVOKE EXECUTE ON ALL ROUTINES IN SCHEMA public FROM PUBLIC, anon, authenticated',
+            'ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY',
+            'GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO service_role',
+            'ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO service_role',
+        ] as $expected) {
+            $this->assertStringContainsString($expected, $sql);
+        }
+    }
+
     private function runMigration(string $file, string $connectionName): string
     {
         $sql = '';

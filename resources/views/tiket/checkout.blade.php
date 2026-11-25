@@ -48,7 +48,7 @@
                         </div>
                         <div class="p-field">
                             <label for="hp">Nomor telepon aktif</label>
-                            <input id="hp" type="tel" name="hp" value="{{ old('hp') }}" autocomplete="tel" inputmode="tel" placeholder="0812xxxxxxxx" required aria-describedby="b-hp @error('hp') g-hp @enderror" @error('hp') aria-invalid="true" @enderror>
+                            <input id="hp" type="tel" name="hp" value="{{ old('hp', $u['no_hp'] ?? '') }}" autocomplete="tel" inputmode="tel" placeholder="0812xxxxxxxx" required aria-describedby="b-hp @error('hp') g-hp @enderror" @error('hp') aria-invalid="true" @enderror>
                             <span class="bantu" id="b-hp">Diawali 08 atau +62.</span>
                             @error('hp')<span class="galat" id="g-hp">{{ $message }}</span>@enderror
                         </div>

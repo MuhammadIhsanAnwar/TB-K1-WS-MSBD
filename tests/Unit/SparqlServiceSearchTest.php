@@ -55,4 +55,43 @@ class SparqlServiceSearchTest extends TestCase
         $this->assertStringContainsString('baca-saja', $hasil['pesan']);
         Http::assertNothingSent();
     }
+
+    public function test_database3_update_requires_credentials_in_production(): void
+    {
+        $this->app['env'] = 'production';
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+            'services.sparql.username' => null,
+            'services.sparql.password' => null,
+        ]);
+        Http::fake();
+
+        try {
+            SparqlService::perbarui('INSERT DATA { <https://example.test/s> <https://example.test/p> "value" }');
+            $this->fail('Production SPARQL writes must require credentials.');
+        } catch (\RuntimeException $exception) {
+            $this->assertStringContainsString('wajib dikonfigurasi', $exception->getMessage());
+        }
+
+        Http::assertNothingSent();
+    }
+
+    public function test_database3_update_rejects_partially_configured_credentials(): void
+    {
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+            'services.sparql.username' => 'writer',
+            'services.sparql.password' => '',
+        ]);
+        Http::fake();
+
+        try {
+            SparqlService::perbarui('INSERT DATA { <https://example.test/s> <https://example.test/p> "value" }');
+            $this->fail('Partially configured SPARQL credentials must be rejected.');
+        } catch (\RuntimeException $exception) {
+            $this->assertStringContainsString('wajib dikonfigurasi', $exception->getMessage());
+        }
+
+        Http::assertNothingSent();
+    }
 }

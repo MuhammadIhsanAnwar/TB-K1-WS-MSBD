@@ -59,8 +59,17 @@ class SparqlService
         $http = Http::timeout((int) config('services.sparql.timeout', 30));
         $username = config('services.sparql.username');
         $password = config('services.sparql.password');
-        if ($username !== null && $password !== null) {
-            $http = $http->withBasicAuth($username, $password);
+        $authUsername = is_string($username) && trim($username) !== '' ? $username : null;
+        $authPassword = is_string($password) && trim($password) !== '' ? $password : null;
+        $hasUsername = $authUsername !== null;
+        $hasPassword = $authPassword !== null;
+        if (! $hasUsername || ! $hasPassword) {
+            if (app()->environment('production') || $hasUsername !== $hasPassword) {
+                throw new \RuntimeException('SPARQL_USERNAME dan SPARQL_PASSWORD wajib dikonfigurasi untuk operasi tulis Database 3.');
+            }
+        }
+        if ($authUsername !== null && $authPassword !== null) {
+            $http = $http->withBasicAuth($authUsername, $authPassword);
         }
 
         $response = $http->asForm()->post($endpoint, ['update' => $update]);

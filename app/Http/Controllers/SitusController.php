@@ -128,7 +128,15 @@ class SitusController extends Controller
 
     public function jawab(Request $request, TanyaMasNonovService $asisten, TanyaMasNonovMemori $memori)
     {
-        $data = $request->validate(['pesan' => ['required', 'string', 'max:300']]);
+        $data = $request->validate([
+            'pesan' => ['required', 'string', 'max:300'],
+            'lokasi' => ['sometimes', 'array'],
+            'lokasi.lat' => ['required_with:lokasi', 'numeric', 'between:-90,90'],
+            'lokasi.lng' => ['required_with:lokasi', 'numeric', 'between:-180,180'],
+        ]);
+        $lokasi = isset($data['lokasi'])
+            ? ['lat' => (float) $data['lokasi']['lat'], 'lng' => (float) $data['lokasi']['lng']]
+            : null;
         $pengguna = $request->session()->get('pengguna');
         $idPengguna = filter_var($pengguna['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $idPengguna = $idPengguna === false ? null : (int) $idPengguna;
@@ -160,7 +168,7 @@ class SitusController extends Controller
 
         $konteksPercakapan = array_slice(array_merge($riwayatTersimpan, $riwayat['giliran'] ?? []), -4);
         try {
-            $jawaban = $asisten->jawab($data['pesan'], $pengguna, $konteksPercakapan);
+            $jawaban = $asisten->jawab($data['pesan'], $pengguna, $konteksPercakapan, $lokasi);
         } catch (\Throwable $e) {
             report($e);
             $jawaban = [

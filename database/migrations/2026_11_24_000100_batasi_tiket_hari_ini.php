@@ -40,7 +40,7 @@ return new class extends Migration
             END $$;
 
             GRANT EXECUTE ON PROCEDURE sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar)
-                TO PUBLIC, anon, authenticated, service_role;
+                TO service_role;
             SQL);
     }
 
@@ -77,7 +77,7 @@ return new class extends Migration
             END $$;
 
             GRANT EXECUTE ON PROCEDURE sp_buat_pesanan(bigint, varchar, varchar, varchar, varchar, date, varchar, jsonb, varchar)
-                TO PUBLIC, anon, authenticated, service_role;
+                TO service_role;
             SQL);
     }
 };

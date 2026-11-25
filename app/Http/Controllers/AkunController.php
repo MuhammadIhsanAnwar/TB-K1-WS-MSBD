@@ -168,6 +168,7 @@ class AkunController extends Controller
             'email' => $user['email'],
             'nama' => $user['name'],
             'peran' => $user['peran'],
+            'no_hp' => $user['no_hp'] ?? null,
             'foto_profil' => $user['foto_profil'] ?? null,
         ]);
     }

@@ -3,7 +3,6 @@
     $ikon = [
         'ringkasan' => '<path d="M3 13h7V3H3zM14 21h7V11h-7zM3 21h7v-4H3zM14 7h7V3h-7z"/>',
         'entitas' => '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
-        'relasi' => '<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="10" cy="18" r="2.5"/><path d="M8.3 7l7.4.6M7 8.3l2.2 7.4M16.4 10l-4.6 6.2"/>',
         'ulasan' => '<path d="M4 5h16v11H9l-5 4z"/>',
         'pesan' => '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
         'mitra' => '<path d="M4 10l2-6h12l2 6M4 10v10h16V10M4 10h16M9 20v-5h6v5"/>',
@@ -24,9 +23,6 @@
         ['admin.pesan', 'Pesan pengguna', 'pesan', null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
     ];
-    if ($u['peran'] === 'superadmin') {
-        array_splice($menuKurator, 2, 0, [['admin.relasi', 'Editor relasi', 'relasi', null]]);
-    }
     if ($u['peran'] === 'superadmin') {
         $menuKurator = array_merge($menuKurator, [
             ['admin.tempat.daftar', 'Kelola tempat wisata', 'entitas', null],

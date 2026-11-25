@@ -61,10 +61,11 @@ return new class extends Migration
                 RETURN QUERY SELECT * FROM rencana WHERE id_rencana = v_id;
             END $$;
 
-            -- PostgREST memanggil dengan role anon/authenticated; akses dibatasi ke tabel DB 2 saja
-            GRANT USAGE ON SCHEMA public TO anon, authenticated;
-            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon, authenticated;
-            GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated;
+            -- Semua akses REST dijalankan Laravel dengan kunci service_role di sisi server.
+            GRANT USAGE ON SCHEMA public TO service_role;
+            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO service_role;
+            GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO service_role;
+            GRANT EXECUTE ON ALL ROUTINES IN SCHEMA public TO service_role;
             SQL);
     }
 

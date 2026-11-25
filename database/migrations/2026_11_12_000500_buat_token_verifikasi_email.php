@@ -21,7 +21,6 @@ return new class extends Migration
 
         $connection = $schema->getConnection();
         $connection->statement('ALTER TABLE email_verification_tokens ENABLE ROW LEVEL SECURITY');
-        $connection->statement('CREATE POLICY "server can manage verification tokens" ON email_verification_tokens FOR ALL TO anon, authenticated USING (true) WITH CHECK (true)');
     }
 
     public function down(): void

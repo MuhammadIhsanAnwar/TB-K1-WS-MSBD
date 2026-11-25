@@ -23,7 +23,15 @@
     $tujuanSimpan = $hasil && $tujuan
         ? array_column(array_column($hasil['singgah'], 'tempat'), 'slug')
         : [];
-    $rute = $hasil ? collect($dariLokasi ? [['nama' => 'Posisimu', 'lat' => $hasil['awal']['lat'], 'lng' => $hasil['awal']['lng'], 'awal' => true]] : [])
+    $awalTempat = $hasil && ! $dariLokasi && $mulai !== 'lokasi'
+        ? Katalog::get($mulai)
+        : null;
+    $titikAwal = $dariLokasi
+        ? [['nama' => 'Posisimu', 'lat' => $hasil['awal']['lat'], 'lng' => $hasil['awal']['lng'], 'awal' => true]]
+        : ($awalTempat && ($hasil['singgah'][0]['tempat']['slug'] ?? null) !== $mulai
+            ? [['nama' => $awalTempat['nama'], 'lat' => $awalTempat['lat'], 'lng' => $awalTempat['lng'], 'awal' => true]]
+            : []);
+    $rute = $hasil ? collect($titikAwal)
         ->concat(collect($hasil['singgah'])->map(fn ($s) => [
             'nama' => $s['tempat']['nama'],
             'lat' => $s['tempat']['lat'],

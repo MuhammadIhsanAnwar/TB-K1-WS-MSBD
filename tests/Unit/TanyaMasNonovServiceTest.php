@@ -146,10 +146,14 @@ class TanyaMasNonovServiceTest extends TestCase
 
         $jawaban = (new TanyaMasNonovService($ai, $postgres))
             ->jawab('Tempat makan enak');
+        $jawabanAyam = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('Ayam enak');
 
         $this->assertStringContainsString('Soto Kesawan', $jawaban['teks'][0]);
         $this->assertCount(1, $jawaban['tempat']);
         $this->assertSame('Soto Kesawan', $jawaban['tempat'][0]['nama']);
+        $this->assertStringContainsString('Soto Kesawan', $jawabanAyam['teks'][0]);
+        $this->assertSame('Soto Kesawan', $jawabanAyam['tempat'][0]['nama']);
     }
 
     public function test_lowercase_entity_questions_use_more_database3_facts_as_ai_context(): void
@@ -252,19 +256,45 @@ class TanyaMasNonovServiceTest extends TestCase
 
     public function test_general_questions_are_sent_to_ai_and_answered_as_conversation(): void
     {
-        config(['services.openrouter.api_key' => 'test-openrouter-key']);
+        config([
+            'services.openrouter.api_key' => 'test-openrouter-key',
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+        ]);
+        Katalog::forgetCache();
+        Http::fake([
+            'sparql.test/*' => Http::response([
+                'head' => ['vars' => ['s', 'p', 'o']],
+                'results' => ['bindings' => [
+                    $this->triple('soto-kesawan', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#TempatKuliner', 'uri'),
+                    $this->triple('soto-kesawan', 'https://schema.org/name', 'Soto Kesawan', 'literal'),
+                    $this->triple('soto-kesawan', 'https://schema.org/description', 'Soto khas Medan.', 'literal'),
+                ]],
+            ]),
+        ]);
 
         $ai = Mockery::mock(AIService::class);
         $ai->shouldReceive('jawabBerbasisKonteks')
-            ->twice()
-            ->withArgs(fn (string $pertanyaan, string $sumber, array $konteks, array $riwayat): bool =>
-                in_array($pertanyaan, ['Kamu siapa?', 'Ayam enak'], true)
-                && str_contains($sumber, 'pengetahuan umum')
-                && $konteks === []
-            )
+            ->times(3)
+            ->withArgs(function (string $pertanyaan, string $sumber, array $konteks, array $riwayat): bool {
+                if ($pertanyaan === 'Kamu siapa?') {
+                    return str_contains($sumber, 'fakta publik MedanVisit')
+                        && ($konteks['website']['nama'] ?? null) === 'MedanVisit';
+                }
+
+                if ($pertanyaan === 'Ayam enak') {
+                    return str_contains($sumber, 'AllegroGraph RDF')
+                        && ($konteks['kategori'] ?? null) === 'kuliner'
+                        && ($konteks['hasil'][0]['nama'] ?? null) === 'Soto Kesawan';
+                }
+
+                return $pertanyaan === 'Apa yang ada di MedanVisit?'
+                    && str_contains($sumber, 'Database 3')
+                    && ($konteks['katalog_database3']['contoh_tempat'][0]['nama'] ?? null) === 'Soto Kesawan';
+            })
             ->andReturn(
                 'Saya Mas Nonov, asisten AI MedanVisit.',
                 'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
+                'MedanVisit memiliki informasi tentang tempat wisata dan kuliner di Medan.',
             );
         $postgres = Mockery::mock(PostgreSQLService::class);
         $service = new TanyaMasNonovService($ai, $postgres);
@@ -277,6 +307,126 @@ class TanyaMasNonovServiceTest extends TestCase
             'Iya, ayam memang enak. Kamu ingin rekomendasi kuliner ayam di Medan?',
             $service->jawab('Ayam enak')['teks'][0],
         );
+        $this->assertSame(
+            'MedanVisit memiliki informasi tentang tempat wisata dan kuliner di Medan.',
+            $service->jawab('Apa yang ada di MedanVisit?')['teks'][0],
+        );
+    }
+
+    public function test_nearby_food_uses_browser_location_and_returns_sorted_distances_without_sending_coordinates_to_ai(): void
+    {
+        config([
+            'services.openrouter.api_key' => 'test-openrouter-key',
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+        ]);
+        $this->fakeKatalogDenganKoordinat();
+
+        $ai = Mockery::mock(AIService::class);
+        $ai->shouldReceive('jawabBerbasisKonteks')
+            ->once()
+            ->withArgs(function (string $pertanyaan, string $sumber, array $konteks): bool {
+                $hasil = $konteks['hasil'] ?? [];
+
+                return $pertanyaan === 'Tempat makan terdekat'
+                    && ($konteks['titik_awal'] ?? null) === 'lokasimu saat ini'
+                    && count($hasil) === 2
+                    && ($hasil[0]['nama'] ?? null) === 'Soto Kesawan'
+                    && is_int($hasil[0]['jarak_meter'] ?? null)
+                    && ! str_contains(json_encode($konteks), '3.5613')
+                    && ! str_contains(json_encode($konteks), '98.6568');
+            })
+            ->andReturn('Soto Kesawan adalah pilihan terdekat.');
+        $postgres = Mockery::mock(PostgreSQLService::class);
+
+        $jawaban = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('Tempat makan terdekat', null, [], ['lat' => 3.5613, 'lng' => 98.6568]);
+
+        $this->assertSame('Soto Kesawan adalah pilihan terdekat.', $jawaban['teks'][0]);
+        $this->assertSame(['Soto Kesawan', 'Mie Aceh'], array_column($jawaban['tempat'], 'nama'));
+        $this->assertGreaterThanOrEqual(0, $jawaban['tempat'][0]['jarak']);
+        $this->assertLessThan($jawaban['tempat'][1]['jarak'], $jawaban['tempat'][0]['jarak']);
+    }
+
+    public function test_nearby_followup_from_usu_uses_conversation_context_and_reference_coordinates(): void
+    {
+        config([
+            'services.openrouter.api_key' => 'test-openrouter-key',
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+        ]);
+        $this->fakeKatalogDenganKoordinat();
+
+        $ai = Mockery::mock(AIService::class);
+        $ai->shouldReceive('jawabBerbasisKonteks')
+            ->once()
+            ->withArgs(function (string $pertanyaan, string $sumber, array $konteks): bool {
+                return $pertanyaan === 'Tempat makan terdekat dari USU'
+                    && ($konteks['titik_awal'] ?? null) === 'Universitas Sumatera Utara (USU)'
+                    && ($konteks['hasil'][0]['nama'] ?? null) === 'Soto Kesawan'
+                    && is_int($konteks['hasil'][0]['jarak_meter'] ?? null);
+            })
+            ->andReturn('Soto Kesawan adalah pilihan terdekat dari USU.');
+        $postgres = Mockery::mock(PostgreSQLService::class);
+
+        $jawaban = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('Dari USU', null, [[
+                'pertanyaan' => 'Tempat makan terdekat',
+                'jawaban' => 'Sebutkan titik awal.',
+            ]]);
+
+        $this->assertSame('Soto Kesawan adalah pilihan terdekat dari USU.', $jawaban['teks'][0]);
+        $this->assertSame('Soto Kesawan', $jawaban['tempat'][0]['nama']);
+    }
+
+    public function test_distance_question_from_user_location_returns_the_named_destination_only(): void
+    {
+        config([
+            'services.openrouter.api_key' => 'test-openrouter-key',
+            'services.sparql.endpoint' => 'https://sparql.test/repositories/medanvisit',
+        ]);
+        $this->fakeKatalogDenganKoordinat();
+
+        $ai = Mockery::mock(AIService::class);
+        $ai->shouldReceive('jawabBerbasisKonteks')
+            ->once()
+            ->withArgs(function (string $pertanyaan, string $sumber, array $konteks): bool {
+                return $pertanyaan === 'Berapa jarak saya ke Museum Negeri?'
+                    && ($konteks['titik_awal'] ?? null) === 'lokasimu saat ini'
+                    && count($konteks['hasil'] ?? []) === 1
+                    && ($konteks['hasil'][0]['nama'] ?? null) === 'Museum Negeri';
+            })
+            ->andReturn('Museum Negeri berjarak sekitar 1 meter.');
+        $postgres = Mockery::mock(PostgreSQLService::class);
+
+        $jawaban = (new TanyaMasNonovService($ai, $postgres))
+            ->jawab('Berapa jarak saya ke Museum Negeri?', null, [], ['lat' => 3.5613, 'lng' => 98.6568]);
+
+        $this->assertSame('Museum Negeri berjarak sekitar 1 meter.', $jawaban['teks'][0]);
+        $this->assertCount(1, $jawaban['tempat']);
+        $this->assertSame('Museum Negeri', $jawaban['tempat'][0]['nama']);
+    }
+
+    private function fakeKatalogDenganKoordinat(): void
+    {
+        Katalog::forgetCache();
+        Http::fake([
+            'sparql.test/*' => Http::response([
+                'head' => ['vars' => ['s', 'p', 'o']],
+                'results' => ['bindings' => [
+                    $this->triple('soto-kesawan', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#TempatKuliner', 'uri'),
+                    $this->triple('soto-kesawan', 'https://schema.org/name', 'Soto Kesawan', 'literal'),
+                    $this->triple('soto-kesawan', 'http://www.w3.org/2003/01/geo/wgs84_pos#lat', '3.5614', 'literal'),
+                    $this->triple('soto-kesawan', 'http://www.w3.org/2003/01/geo/wgs84_pos#long', '98.6568', 'literal'),
+                    $this->triple('mie-aceh', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#TempatKuliner', 'uri'),
+                    $this->triple('mie-aceh', 'https://schema.org/name', 'Mie Aceh', 'literal'),
+                    $this->triple('mie-aceh', 'http://www.w3.org/2003/01/geo/wgs84_pos#lat', '3.5620', 'literal'),
+                    $this->triple('mie-aceh', 'http://www.w3.org/2003/01/geo/wgs84_pos#long', '98.6570', 'literal'),
+                    $this->triple('museum-negeri', 'rdf:type', 'https://medanvisit.neoverse.my.id/ontologi#Museum', 'uri'),
+                    $this->triple('museum-negeri', 'https://schema.org/name', 'Museum Negeri', 'literal'),
+                    $this->triple('museum-negeri', 'http://www.w3.org/2003/01/geo/wgs84_pos#lat', '3.56131', 'literal'),
+                    $this->triple('museum-negeri', 'http://www.w3.org/2003/01/geo/wgs84_pos#long', '98.6568', 'literal'),
+                ]],
+            ]),
+        ]);
     }
 
     private function triple(

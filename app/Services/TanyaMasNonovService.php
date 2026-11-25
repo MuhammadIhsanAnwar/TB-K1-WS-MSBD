@@ -10,6 +10,15 @@ use RuntimeException;
 
 class TanyaMasNonovService
 {
+    private const TITIK_ACUAN = [
+        [
+            'nama' => 'Universitas Sumatera Utara (USU)',
+            'alias' => ['usu', 'universitas sumatera utara', 'kampus usu'],
+            'lat' => 3.5613218,
+            'lng' => 98.6568033,
+        ],
+    ];
+
     private const LABEL_KELAS = [
         'mv:SitusSejarah' => 'Sejarah & cagar budaya',
         'mv:Museum' => 'Museum',
@@ -39,7 +48,11 @@ class TanyaMasNonovService
             return ['intent' => 'user_transaction_history', 'source' => 'sql', 'requires_database' => true];
         }
 
-        if (preg_match('/\b(dekat|terdekat|sekitar)\b/u', $teks)) {
+        if (preg_match('/\b(dekat|terdekat|sekitar|jarak|jauh)\b/u', $teks)) {
+            return ['intent' => 'tourism_knowledge', 'source' => 'sparql', 'requires_database' => true];
+        }
+
+        if (preg_match('/\b(ayam|soto|bakso|sate|martabak|nasi goreng|mie|mi|bihun|lontong|bubur|rendang|ikan bakar)\b/u', $teks)) {
             return ['intent' => 'tourism_knowledge', 'source' => 'sparql', 'requires_database' => true];
         }
 
@@ -62,8 +75,9 @@ class TanyaMasNonovService
         return ['intent' => 'general_knowledge', 'source' => 'general', 'requires_database' => false];
     }
 
-    public function jawab(string $pertanyaan, ?array $pengguna = null, array $riwayat = []): array
+    public function jawab(string $pertanyaan, ?array $pengguna = null, array $riwayat = [], ?array $lokasi = null): array
     {
+        $pertanyaan = $this->pertanyaanTerdekatLanjutan($pertanyaan, $riwayat) ?? $pertanyaan;
         $routing = self::klasifikasi($pertanyaan);
 
         if ($routing['source'] === 'sql') {
@@ -77,16 +91,83 @@ class TanyaMasNonovService
             return $this->jawabHybrid($pertanyaan, $pengguna, $riwayat);
         }
         if ($routing['source'] === 'sparql') {
-            return $this->jawabSemantik($pertanyaan, $riwayat);
+            return $this->jawabSemantik($pertanyaan, $riwayat, $lokasi);
         }
 
-        return ['teks' => [$this->jawabAiAtauFallback(
-            $pertanyaan,
-            'pengetahuan umum; konteks percakapan privat dari Database 1 bila tersedia',
-            [],
-            $riwayat,
-            'Maaf, layanan AI Mas Nonov sedang tidak tersedia untuk menjawab pertanyaan umum. Coba lagi sebentar; saya tetap bisa membantu mencari informasi wisata Medan.',
-        )], 'tempat' => []];
+        return $this->jawabUmum($pertanyaan, $riwayat);
+    }
+
+    private function pertanyaanTerdekatLanjutan(string $pertanyaan, array $riwayat): ?string
+    {
+        if (! preg_match('/^\s*(?:dari|mulai\s+dari)\s+([\p{L}\p{N}][\p{L}\p{N}\s,.\'-]{0,80})[?.!]*\s*$/iu', $pertanyaan, $cocok)) {
+            return null;
+        }
+
+        $pertanyaanTerdekat = null;
+        foreach (array_reverse($riwayat) as $giliran) {
+            $sebelumnya = (string) ($giliran['pertanyaan'] ?? '');
+            if (preg_match('/\b(dekat|terdekat|sekitar)\b/iu', $sebelumnya)) {
+                $pertanyaanTerdekat = rtrim($sebelumnya, " \t\n\r\0\x0B?.!");
+                break;
+            }
+        }
+
+        return $pertanyaanTerdekat === null
+            ? null
+            : $pertanyaanTerdekat.' dari '.trim($cocok[1]);
+    }
+
+    private function jawabUmum(string $pertanyaan, array $riwayat): array
+    {
+        $konteks = [
+            'website' => [
+                'nama' => 'MedanVisit',
+                'cakupan' => 'informasi wisata Kota Medan',
+                'fitur' => ['pencarian tempat', 'informasi kuliner', 'tiket', 'ulasan', 'suka', 'perencanaan rute'],
+            ],
+        ];
+        $perluKatalog = (bool) preg_match('/\b(medan|medanvisit|wisata|kuliner|makan|tiket|tempat|rute|perjalanan|museum|situs|website|platform|aplikasi|layanan|fitur|bantu|kemampuan)\b/u', mb_strtolower($pertanyaan));
+        if ($perluKatalog) {
+            $tempat = array_values(Katalog::tempat());
+            $konteks['katalog_database3'] = [
+                'jumlah_tempat' => count($tempat),
+                'kategori' => array_values(array_unique(array_filter(array_column($tempat, 'kategori')))),
+                'contoh_tempat' => array_map(
+                    fn (array $item) => [
+                        'nama' => $item['nama'],
+                        'kategori' => $item['kategori'] ?? null,
+                    ],
+                    array_slice($tempat, 0, 8),
+                ),
+            ];
+        }
+
+        return [
+            'teks' => [$this->jawabAiAtauFallback(
+                $pertanyaan,
+                'pengetahuan umum dan fakta publik MedanVisit'.($perluKatalog ? ' dari Database 3' : '').'; riwayat percakapan sesi dari Database 1 bila tersedia',
+                $konteks,
+                $riwayat,
+                $this->fallbackUmum($pertanyaan, $konteks),
+            )],
+            'tempat' => [],
+        ];
+    }
+
+    private function fallbackUmum(string $pertanyaan, array $konteks): string
+    {
+        $teks = mb_strtolower($pertanyaan);
+        if (preg_match('/\b(hai|halo|hello|assalamualaikum|selamat pagi|selamat siang|selamat sore|selamat malam)\b/u', $teks)) {
+            return 'Hai! Aku Mas Nonov, asisten AI MedanVisit. Ada yang ingin kamu tanyakan?';
+        }
+        if (preg_match('/\b(siapa kamu|kamu siapa|nama kamu|siapa namamu)\b/u', $teks)) {
+            return 'Aku Mas Nonov, asisten AI MedanVisit. Aku bisa membantu mencari informasi tempat wisata, kuliner, tiket, ulasan, dan rute di Kota Medan.';
+        }
+
+        $contohTempat = array_column($konteks['katalog_database3']['contoh_tempat'] ?? [], 'nama');
+        $contoh = $contohTempat === [] ? '' : ' Contoh tempat yang tercatat: '.implode(', ', $contohTempat).'.';
+
+        return 'Aku Mas Nonov, asisten AI MedanVisit. Aku bisa ngobrol dan membantu berdasarkan informasi tempat wisata, kuliner, tiket, ulasan, serta rute di Kota Medan.'.$contoh;
     }
 
     private static function entitasRdfDisebut(string $pertanyaan): ?array
@@ -358,7 +439,7 @@ class TanyaMasNonovService
         ];
     }
 
-    private function jawabSemantik(string $pertanyaan, array $riwayat): array
+    private function jawabSemantik(string $pertanyaan, array $riwayat, ?array $lokasi = null): array
     {
         [$kategori, $kecamatan, $fasilitas] = $this->filterPertanyaan($pertanyaan);
         $teksPertanyaan = mb_strtolower($pertanyaan);
@@ -387,8 +468,8 @@ class TanyaMasNonovService
             return $jawabanLama;
         }
 
-        if (preg_match('/\b(dekat|terdekat|sekitar)\b/u', $teksPertanyaan)) {
-            return $this->jawabTerdekat($pertanyaan, $kategori, $riwayat);
+        if (preg_match('/\b(dekat|terdekat|sekitar|jarak|jauh)\b/u', $teksPertanyaan)) {
+            return $this->jawabTerdekat($pertanyaan, $kategori, $riwayat, $lokasi);
         }
 
         if (preg_match('/\b(berapa|jumlah|total|statistik)\b/u', $teksPertanyaan)) {
@@ -507,30 +588,86 @@ class TanyaMasNonovService
         ];
     }
 
-    private function jawabTerdekat(string $pertanyaan, string|array|null $kategori, array $riwayat): array
+    private function jawabTerdekat(string $pertanyaan, string|array|null $kategori, array $riwayat, ?array $lokasi = null): array
     {
         $entitas = Katalog::tempat();
         $teks = mb_strtolower($pertanyaan);
+        $mintaJarak = (bool) preg_match('/\b(jarak|jauh)\b/u', $teks);
+        $mintaLokasiPribadi = (bool) preg_match('/\b(saya|aku|sini|saat ini)\b/u', $teks);
         $asal = null;
-        foreach ($entitas as $tempat) {
-            $nama = mb_strtolower($tempat['nama']);
-            if (str_contains($teks, $nama) && (! $asal || mb_strlen($tempat['nama']) > mb_strlen($asal['nama']))) {
-                $asal = $tempat;
+
+        if (preg_match('/\b(?:dari|dekat|sekitar)\s+(.+?)(?=\s+\b(?:ke|menuju|dan)\b|[?.!]|$)/u', $teks, $titikTertulis)) {
+            $frasaAsal = trim($titikTertulis[1]);
+            foreach (self::TITIK_ACUAN as $titik) {
+                foreach ($titik['alias'] as $alias) {
+                    if (preg_match('/(?<![\p{L}\p{N}])'.preg_quote($alias, '/').'(?![\p{L}\p{N}])/u', $frasaAsal)) {
+                        $asal = $titik + ['slug' => null];
+                        break 2;
+                    }
+                }
+            }
+            foreach ($entitas as $tempat) {
+                $nama = mb_strtolower($tempat['nama']);
+                if (str_contains($frasaAsal, $nama) && (! $asal || mb_strlen($tempat['nama']) > mb_strlen($asal['nama']))) {
+                    $asal = $tempat;
+                }
+            }
+        }
+
+        if ($asal === null && isset($lokasi['lat'], $lokasi['lng'])) {
+            if (
+                is_numeric($lokasi['lat'])
+                && is_numeric($lokasi['lng'])
+                && (float) $lokasi['lat'] >= -90
+                && (float) $lokasi['lat'] <= 90
+                && (float) $lokasi['lng'] >= -180
+                && (float) $lokasi['lng'] <= 180
+            ) {
+                $asal = [
+                    'nama' => 'lokasimu saat ini',
+                    'lat' => round((float) $lokasi['lat'], 4),
+                    'lng' => round((float) $lokasi['lng'], 4),
+                    'slug' => null,
+                ];
+            }
+        }
+
+        if ($asal === null && ! $mintaJarak && ! $mintaLokasiPribadi) {
+            foreach ($entitas as $tempat) {
+                $nama = mb_strtolower($tempat['nama']);
+                if (str_contains($teks, $nama) && (! $asal || mb_strlen($tempat['nama']) > mb_strlen($asal['nama']))) {
+                    $asal = $tempat;
+                }
             }
         }
 
         if ($asal === null) {
-            return ['teks' => ['Sebutkan nama tempat atau landmark sebagai titik awal agar Mas Nonov dapat menghitung jarak.'], 'tempat' => []];
+            return ['teks' => ['Aku belum menerima lokasi perangkatmu. Izinkan akses lokasi saat diminta, atau sebutkan nama tempat/landmark sebagai titik awal.'], 'tempat' => []];
         }
-        if (empty($asal['lat']) || empty($asal['lng'])) {
+        if (
+            ! isset($asal['lat'], $asal['lng'])
+            || ! is_numeric($asal['lat'])
+            || ! is_numeric($asal['lng'])
+            || (isset($asal['slug']) && $asal['slug'] !== null && ! $this->koordinatTempatValid($asal))
+        ) {
             return ['teks' => ['Koordinat titik awal belum tersedia di katalog, jadi jarak belum bisa dihitung.'], 'tempat' => []];
         }
 
+        $slugTujuan = [];
+        if ($mintaJarak) {
+            foreach ($entitas as $tempat) {
+                if (($tempat['slug'] ?? null) !== ($asal['slug'] ?? null)
+                    && str_contains($teks, mb_strtolower($tempat['nama']))) {
+                    $slugTujuan[] = $tempat['slug'];
+                }
+            }
+        }
+
         $kandidat = array_filter($entitas, fn (array $tempat) =>
-            $tempat['slug'] !== $asal['slug']
+            ($tempat['slug'] ?? null) !== ($asal['slug'] ?? null)
             && ($kategori === null || in_array($tempat['kategori'] ?? null, (array) $kategori, true))
-            && ! empty($tempat['lat'])
-            && ! empty($tempat['lng'])
+            && ($slugTujuan === [] || in_array($tempat['slug'], $slugTujuan, true))
+            && $this->koordinatTempatValid($tempat)
         );
         $kandidat = array_map(fn (array $tempat) => [
             'tempat' => $tempat,
@@ -541,17 +678,40 @@ class TanyaMasNonovService
         $kartu = array_map(fn (array $item) => \App\Support\Asisten::kartu($item['tempat'], $item['jarak']), $terdekat);
         $konteks = [
             'titik_awal' => $asal['nama'],
-            'dasar_jarak' => 'perhitungan garis lurus dari koordinat pada katalog RDF',
+            'dasar_jarak' => $asal['nama'] === 'lokasimu saat ini'
+                ? 'perkiraan jarak garis lurus; koordinat pengguna hanya dipakai untuk perhitungan ini dan tidak disimpan'
+                : 'perkiraan jarak garis lurus dari koordinat tempat atau landmark pada katalog',
             'hasil' => array_map(fn (array $item) => ['nama' => $item['tempat']['nama'], 'jarak_meter' => $item['jarak']], $terdekat),
         ];
-        $fallback = $kartu
-            ? 'Berdasarkan koordinat pada katalog RDF, tempat terdekat dari '.$asal['nama'].' adalah '.$kartu[0]['nama'].', sekitar '.$terdekat[0]['jarak'].' meter dalam garis lurus.'
-            : 'Belum ada tempat lain dengan koordinat yang tersedia untuk dibandingkan.';
+        if ($kartu !== [] && $mintaJarak && count($terdekat) === 1) {
+            $fallback = 'Perkiraan jarak garis lurus dari '.$asal['nama'].' ke '.$kartu[0]['nama'].' sekitar '.number_format($terdekat[0]['jarak'], 0, ',', '.').' meter.';
+        } elseif ($kartu !== []) {
+            $fallback = 'Tempat terdekat dari '.$asal['nama'].': '.implode('; ', array_map(
+                fn (array $item) => $item['tempat']['nama'].', sekitar '.number_format($item['jarak'], 0, ',', '.').' meter garis lurus',
+                $terdekat,
+            )).'.';
+        } else {
+            $fallback = 'Belum ada tempat lain dengan koordinat yang tersedia untuk dibandingkan.';
+        }
 
         return [
-            'teks' => [$this->jawabAiAtauFallback($pertanyaan, 'AllegroGraph; jarak garis lurus dihitung dari koordinat RDF', $konteks, $riwayat, $fallback)],
+            'teks' => [$this->jawabAiAtauFallback($pertanyaan, 'AllegroGraph; jarak garis lurus dihitung dari koordinat pada katalog dan lokasi sementara bila diizinkan', $konteks, $riwayat, $fallback)],
             'tempat' => $kartu,
         ];
+    }
+
+    private function koordinatTempatValid(array $tempat): bool
+    {
+        if (! isset($tempat['lat'], $tempat['lng']) || ! is_numeric($tempat['lat']) || ! is_numeric($tempat['lng'])) {
+            return false;
+        }
+
+        $lat = (float) $tempat['lat'];
+        $lng = (float) $tempat['lng'];
+
+        return $lat >= -90 && $lat <= 90
+            && $lng >= -180 && $lng <= 180
+            && ($lat !== 0.0 || $lng !== 0.0);
     }
 
     private function jawabAiAtauFallback(
@@ -582,7 +742,7 @@ class TanyaMasNonovService
             'sejarah' => ['sejarah', 'bersejarah', 'historis', 'cagar budaya'],
             'museum' => ['museum'],
             'religi' => ['religi', 'ibadah', 'masjid', 'gereja', 'vihara', 'kuil', 'kelenteng'],
-            'kuliner' => ['kuliner', 'makan', 'restoran', 'rumah makan'],
+            'kuliner' => ['kuliner', 'makan', 'restoran', 'rumah makan', 'ayam', 'soto', 'bakso', 'sate', 'martabak', 'nasi goreng', 'mie', 'mi', 'bihun', 'lontong', 'bubur', 'rendang', 'ikan bakar'],
             'ruang-publik' => ['taman', 'ruang publik', 'lapangan'],
             'belanja' => ['belanja', 'mall', 'mal', 'pusat perbelanjaan'],
             'rekreasi-air' => ['rekreasi air', 'kolam renang', 'waterpark', 'water park'],

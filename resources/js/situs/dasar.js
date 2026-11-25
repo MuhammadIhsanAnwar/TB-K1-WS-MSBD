@@ -510,7 +510,10 @@ if (widget) {
 
     const kartuMini = (t) => {
         const foto = t.foto ? `<img src="${esc(t.foto)}" alt="" width="72" height="56" loading="lazy">` : '';
-        const sub = [t.jenis, t.harga].filter(Boolean).join(', ');
+        const jarak = typeof t.jarak === 'number' && Number.isFinite(t.jarak)
+            ? `${t.jarak.toLocaleString('id')} m garis lurus`
+            : null;
+        const sub = [t.jenis, t.harga, jarak].filter(Boolean).join(', ');
         const aksi = [t.url ? `<a href="${esc(t.url)}">Lihat tempat</a>` : '', t.tiket ? `<a href="${esc(t.tiket)}">Pesan tiket</a>` : ''].filter(Boolean).join('');
         return `<div><a class="kartu-mini" href="${esc(t.url ?? '#')}">${foto}<span><b>${esc(t.nama)}</b><span>${esc(sub)}</span></span></a>${aksi ? `<div class="aksi-mini">${aksi}</div>` : ''}</div>`;
     };
@@ -583,6 +586,26 @@ if (widget) {
         return el;
     };
 
+    const bacaLokasiPercakapan = () => new Promise((selesai) => {
+        if (!navigator.geolocation) {
+            selesai(null);
+            return;
+        }
+
+        try {
+            navigator.geolocation.getCurrentPosition(
+                (posisi) => selesai({
+                    lat: Number(posisi.coords.latitude.toFixed(4)),
+                    lng: Number(posisi.coords.longitude.toFixed(4)),
+                }),
+                () => selesai(null),
+                { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 },
+            );
+        } catch {
+            selesai(null);
+        }
+    });
+
     const kirimPesan = async (pesan) => {
         tambahPesan(`<p>${esc(pesan)}</p>`, 'mv-gelembung--aku');
         widget.querySelector('[data-widget-saran]')?.remove();
@@ -600,10 +623,15 @@ if (widget) {
         if (kirim) kirim.disabled = true;
 
         try {
+            const perluLokasi = /\b(terdekat|dekat|sekitar|jarak|jauh)\b/iu.test(pesan);
+            const lokasi = perluLokasi ? await bacaLokasiPercakapan() : null;
+            const muatan = { pesan };
+            if (lokasi) muatan.lokasi = lokasi;
+
             const res = await fetch(widget.dataset.url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': token },
-                body: JSON.stringify({ pesan }),
+                body: JSON.stringify(muatan),
             });
             if (res.status === 429) throw new Error('batas');
             if (!res.ok) throw new Error('galat');

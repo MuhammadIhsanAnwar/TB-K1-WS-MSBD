@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Services\TanyaMasNonovMemori;
 use App\Services\TanyaMasNonovService;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ class TanyaMasNonovTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->withoutMiddleware(ThrottleRequests::class);
 
         config([
             'app.key' => 'base64:'.base64_encode(str_repeat('a', 32)),
@@ -48,7 +50,7 @@ class TanyaMasNonovTest extends TestCase
         $asisten = Mockery::mock(TanyaMasNonovService::class);
         $asisten->shouldReceive('jawab')
             ->once()
-            ->with('Apa tempat wisata di Medan?', null, [])
+            ->with('Apa tempat wisata di Medan?', null, [], null)
             ->andReturn(['teks' => ['Ada banyak pilihan wisata di Medan.'], 'tempat' => []]);
         $this->app->instance(TanyaMasNonovService::class, $asisten);
 
@@ -71,7 +73,7 @@ class TanyaMasNonovTest extends TestCase
         $asisten = Mockery::mock(TanyaMasNonovService::class);
         $asisten->shouldReceive('jawab')
             ->once()
-            ->with('Tempat wisata dekat Bihun Bebek Asie Kumango', null, [])
+            ->with('Tempat wisata dekat Bihun Bebek Asie Kumango', null, [], null)
             ->andReturn(['teks' => ['Ada beberapa tempat wisata di sekitar Bihun Bebek Asie Kumango.'], 'tempat' => []]);
         $this->app->instance(TanyaMasNonovService::class, $asisten);
 
@@ -98,14 +100,15 @@ class TanyaMasNonovTest extends TestCase
         $asisten = Mockery::mock(TanyaMasNonovService::class);
         $asisten->shouldReceive('jawab')
             ->twice()
-            ->withArgs(function (string $pertanyaan, ?array $pengguna, array $riwayat) use (&$jumlahPemanggilan, $pertanyaanLama, $pertanyaanBaru): bool {
+            ->withArgs(function (string $pertanyaan, ?array $pengguna, array $riwayat, ?array $lokasi) use (&$jumlahPemanggilan, $pertanyaanLama, $pertanyaanBaru): bool {
                 $jumlahPemanggilan++;
 
                 if ($jumlahPemanggilan === 1) {
-                    return $pertanyaan === $pertanyaanLama && $riwayat === [];
+                    return $pertanyaan === $pertanyaanLama && $riwayat === [] && $lokasi === null;
                 }
 
                 return $pertanyaan === $pertanyaanBaru
+                    && $lokasi === null
                     && count($riwayat) === 1
                     && ($riwayat[0]['pertanyaan'] ?? null) === $pertanyaanLama
                     && ($riwayat[0]['jawaban'] ?? null) === 'Silakan kunjungi Istana Maimun.';
@@ -143,5 +146,46 @@ class TanyaMasNonovTest extends TestCase
             $pesan[0]->pesan_hash,
         );
         $this->assertSame($pertanyaanLama, Crypt::decryptString($pesan[0]->pesan_terenkripsi));
+    }
+
+    public function test_valid_chat_location_is_passed_to_the_assistant_but_not_saved_as_chat_memory(): void
+    {
+        $lokasi = ['lat' => 3.5613, 'lng' => 98.6568];
+        $asisten = Mockery::mock(TanyaMasNonovService::class);
+        $asisten->shouldReceive('jawab')
+            ->once()
+            ->with('Tempat makan terdekat', null, [], $lokasi)
+            ->andReturn(['teks' => ['Soto Kesawan berjarak sekitar 1 km.'], 'tempat' => []]);
+        $this->app->instance(TanyaMasNonovService::class, $asisten);
+
+        $this->withSession(['_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->postJson(route('tanya.jawab'), [
+                'pesan' => 'Tempat makan terdekat',
+                'lokasi' => $lokasi,
+            ])
+            ->assertOk()
+            ->assertJsonPath('teks.0', 'Soto Kesawan berjarak sekitar 1 km.');
+
+        $pesan = DB::connection('katalog')->table('pesan_tanya_mas_nonov')->first();
+        $this->assertSame('Tempat makan terdekat', Crypt::decryptString($pesan->pesan_terenkripsi));
+        $this->assertStringNotContainsString('3.5613', Crypt::decryptString($pesan->pesan_terenkripsi));
+        $this->assertStringNotContainsString('98.6568', Crypt::decryptString($pesan->pesan_terenkripsi));
+    }
+
+    public function test_invalid_chat_location_is_rejected(): void
+    {
+        $asisten = Mockery::mock(TanyaMasNonovService::class);
+        $asisten->shouldNotReceive('jawab');
+        $this->app->instance(TanyaMasNonovService::class, $asisten);
+
+        $this->withSession(['_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->postJson(route('tanya.jawab'), [
+                'pesan' => 'Tempat makan terdekat',
+                'lokasi' => ['lat' => 100, 'lng' => 98.6568],
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['lokasi.lat']);
     }
 }
