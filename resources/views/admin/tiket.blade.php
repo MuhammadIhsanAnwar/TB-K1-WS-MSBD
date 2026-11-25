@@ -30,6 +30,10 @@
             <header><h2 id="filter-lokasi">Pilih lokasi</h2><span class="meta">Data seluruh periode</span></header>
             <form method="get" action="{{ route('admin.tiket') }}" class="p-form">
                 <div class="p-field">
+                    <label for="q-pesanan-superadmin">Cari lokasi atau transaksi</label>
+                    <input id="q-pesanan-superadmin" type="search" name="q" value="{{ $q }}" placeholder="Nama lokasi, kode tiket, atau jenis tiket…">
+                </div>
+                <div class="p-field">
                     <label for="tempat">Lokasi wisata</label>
                     <select id="tempat" name="tempat">
                         <option value="">Semua lokasi</option>
@@ -47,11 +51,12 @@
             @if ($penjualanPerTempat->isNotEmpty())
                 <div class="p-tabel-bungkus">
                     <table class="p-tabel jadi-daftar">
-                        <thead><tr><th>Lokasi</th><th>Harga tiket</th><th class="n">Pesanan lunas</th><th class="n">Tiket terjual</th><th class="n">Pendapatan</th></tr></thead>
+                        <thead><tr><th class="n">No.</th><th>Lokasi</th><th>Harga tiket</th><th class="n">Pesanan lunas</th><th class="n">Tiket terjual</th><th class="n">Pendapatan</th></tr></thead>
                         <tbody>
                             @foreach ($penjualanPerTempat as $penjualan)
                                 <tr>
-                                    <td><a class="p-tautan-kartu" href="{{ route('admin.tiket', ['tempat' => $penjualan['slug']]) }}">{{ $penjualan['nama'] }}</a></td>
+                                    <td class="n">{{ $loop->iteration }}</td>
+                                    <td><a class="p-tautan-kartu" href="{{ route('admin.tiket', ['tempat' => $penjualan['slug'], 'q' => $q]) }}">{{ $penjualan['nama'] }}</a></td>
                                     <td class="sekunder">
                                         {{ collect($penjualan['harga'])->map(fn ($harga, $jenis) => $jenis.': '.Katalog::rupiah((int) $harga))->implode(' · ') }}
                                         @if ($penjualan['harga_contoh'])
@@ -67,7 +72,7 @@
                     </table>
                 </div>
             @else
-                <div class="p-kosong">Belum ada lokasi wisata yang tersedia.</div>
+                <div class="p-kosong">{{ $q === '' ? 'Belum ada lokasi wisata yang tersedia.' : 'Tidak ada lokasi yang cocok dengan pencarian.' }}</div>
             @endif
         </section>
 
@@ -90,10 +95,11 @@
                 @if ($transaksiTerpilih->isNotEmpty())
                     <div class="p-tabel-bungkus">
                         <table class="p-tabel jadi-daftar">
-                            <thead><tr><th>Tanggal bayar</th><th>Rincian tiket</th><th class="n">Pendapatan</th></tr></thead>
+                            <thead><tr><th class="n">No.</th><th>Tanggal bayar</th><th>Rincian tiket</th><th class="n">Pendapatan</th></tr></thead>
                             <tbody>
                                 @foreach ($transaksiTerpilih as $transaksi)
                                     <tr>
+                                        <td class="n">{{ $loop->iteration }}</td>
                                         <td class="sekunder"><span class="kode">{{ $transaksi['kode'] }}</span><span class="sub">{{ \Illuminate\Support\Carbon::parse($transaksi['waktu'])->locale('id')->translatedFormat('j M Y, H:i') }}</span></td>
                                         <td>{{ collect($transaksi['item'])->map(fn ($item) => number_format($item['jumlah'], 0, ',', '.').' × '.$item['jenis'])->implode(', ') }}</td>
                                         <td class="n">{{ Katalog::rupiah($transaksi['total']) }}</td>
@@ -103,7 +109,7 @@
                         </table>
                     </div>
                 @else
-                    <div class="p-kosong">Belum ada transaksi lunas di lokasi ini.</div>
+                    <div class="p-kosong">{{ $q === '' ? 'Belum ada transaksi lunas di lokasi ini.' : 'Tidak ada transaksi yang cocok dengan pencarian.' }}</div>
                 @endif
             </section>
         @endif
@@ -132,22 +138,28 @@
         <h2>Harga tiket</h2>
         <div class="p-baris" style="margin-top:6px">
             @foreach ($bertiket as $t)
-                <div><span class="dua"><b>{{ $t['nama'] }}</b><span>{{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(', ') }}</span></span><a class="p-tautan-kartu kanan" href="{{ route('admin.entitas.ubah', $t['slug']) }}">Ubah</a></div>
+                <div><span class="num">{{ $loop->iteration }}</span><span class="dua"><b>{{ $t['nama'] }}</b><span>{{ collect($t['tiket'])->map(fn ($h, $j) => $j.' '.Katalog::rupiah($h))->implode(', ') }}</span></span><a class="p-tautan-kartu kanan" href="{{ route('admin.entitas.ubah', $t['slug']) }}">Ubah</a></div>
             @endforeach
         </div>
     </section>
     <section class="p-panel s8" aria-labelledby="judul-pesanan">
-        <header><h2 id="judul-pesanan">Pesanan</h2><span class="meta">{{ $pesanan->count() }} pesanan</span></header>
-        @if ($pesanan->isNotEmpty())
+        <header><h2 id="judul-pesanan">Pesanan</h2><span class="meta">{{ $pesananTampil->count() }} dari {{ $pesanan->count() }} pesanan</span></header>
+        <form class="p-alat" method="get" action="{{ route('admin.tiket') }}" role="search" style="margin-bottom:16px">
+            <label class="sr-only" for="q-pesanan-admin">Cari kode, pemesan, tempat, status, atau jenis tiket</label>
+            <input id="q-pesanan-admin" type="search" name="q" value="{{ $q }}" placeholder="Cari pesanan…">
+            <button class="p-btn p-btn--teks" type="submit">Cari</button>
+        </form>
+        @if ($pesananTampil->isNotEmpty())
             <table class="p-tabel jadi-daftar">
-                <thead><tr><th>Kode</th><th>Pemesan</th><th>Tempat dan tanggal</th><th class="n">Total</th><th class="n">Status</th></tr></thead>
+                <thead><tr><th class="n">No.</th><th>Kode</th><th>Pemesan</th><th>Tempat dan tanggal</th><th class="n">Total</th><th class="n">Status</th></tr></thead>
                 <tbody>
-                    @foreach ($pesanan as $p)
+                    @foreach ($pesananTampil as $p)
                         @php
                             $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
                             $st = ! empty($p['dipakai']) ? ['Sudah check-in', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
                         @endphp
                         <tr>
+                            <td class="n">{{ $loop->iteration }}</td>
                             <td><span class="kode">{{ $p['kode'] }}</span></td>
                             <td class="sekunder">{{ $p['pemesan']['nama'] }}<span class="sub">{{ $p['pemesan']['email'] }}</span></td>
                             <td class="sekunder">{{ Katalog::get($p['tempat'])['nama'] }}<span class="sub">{{ \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id')->translatedFormat('j M Y') }}</span></td>
@@ -158,7 +170,7 @@
                 </tbody>
             </table>
         @else
-            <div class="p-kosong">Belum ada pesanan tiket.</div>
+            <div class="p-kosong">{{ $q === '' ? 'Belum ada pesanan tiket.' : 'Tidak ada pesanan yang cocok dengan pencarian.' }}</div>
         @endif
     </section>
 </div>

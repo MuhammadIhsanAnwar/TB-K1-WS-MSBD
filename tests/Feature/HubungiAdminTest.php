@@ -176,6 +176,49 @@ class HubungiAdminTest extends TestCase
             && str_contains($request->url(), 'kategori=in.%28akun%2Clainnya%29'));
     }
 
+    public function test_superadmin_can_search_messages_and_sees_row_numbers(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/pesan_pengguna?')) {
+                return Http::response([[
+                    'id' => 91,
+                    'nama_pengguna' => 'Rina',
+                    'email_pengguna' => 'rina@example.test',
+                    'kategori' => 'akun',
+                    'nama_tempat' => null,
+                    'pesan' => 'Mohon bantuan untuk akun saya.',
+                    'status' => 'baru',
+                    'created_at' => '2026-11-25T10:00:00+00:00',
+                ]]);
+            }
+            if (str_contains($request->url(), '/balasan_pesan?')) {
+                return Http::response([]);
+            }
+
+            return Http::response([]);
+        });
+
+        $session = ['pengguna' => [
+            'id' => 1,
+            'nama' => 'Superadmin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]];
+
+        $this->withSession($session)
+            ->get('/admin/pesan?q=Rina')
+            ->assertOk()
+            ->assertSee('Rina')
+            ->assertSee('name="q"', false)
+            ->assertSee('class="num">1</span>', false);
+
+        $this->withSession($session)
+            ->get('/admin/pesan?q=tidak-ada')
+            ->assertOk()
+            ->assertDontSee('Rina')
+            ->assertSee('Tidak ada pesan yang cocok dengan pencarian.');
+    }
+
     public function test_account_and_other_messages_are_routed_only_to_the_superadmin_inbox(): void
     {
         Http::fake(function (Request $request) {

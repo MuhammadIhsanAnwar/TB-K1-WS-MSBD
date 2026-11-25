@@ -15,7 +15,9 @@
             Tidak ada ulasan untuk ditampilkan
         @endif
     </p>
-    <form class="p-per-halaman" method="get" action="{{ route('admin.ulasan') }}">
+    <form class="p-per-halaman" method="get" action="{{ route('admin.ulasan') }}" role="search">
+        <label class="sr-only" for="ulasan-q">Cari nama, email, tempat, atau isi ulasan</label>
+        <input id="ulasan-q" type="search" name="q" value="{{ $q }}" placeholder="Cari ulasan…">
         <label for="ulasan-per-halaman">Tampilkan</label>
         <select id="ulasan-per-halaman" name="per_halaman">
             @foreach ([10, 25, 50, 100] as $opsi)
@@ -30,6 +32,7 @@
     <div class="p-baris">
         @foreach ($ulasan as $ul)
             <div style="align-items:flex-start">
+                <span class="num">{{ $ulasan->firstItem() + $loop->index }}</span>
                 <span class="dua" style="flex:1">
                     <b>{{ Katalog::get($ul['tempat'])['nama'] }} <x-bintang :n="$ul['bintang']" /></b>
                     <span style="font-size:14px;color:var(--p-text);margin-top:6px">{{ $ul['teks'] }}</span>
@@ -70,6 +73,6 @@
         </nav>
     @endif
 @else
-    <div class="p-kosong">Belum ada ulasan yang ditayangkan.</div>
+    <div class="p-kosong">{{ $q === '' ? 'Belum ada ulasan yang ditayangkan.' : 'Tidak ada ulasan yang cocok dengan pencarian.' }}</div>
 @endif
 @endsection

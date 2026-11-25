@@ -10,26 +10,31 @@
     <section class="p-panel s8" aria-labelledby="judul-daftar">
         <header>
             <h2 id="judul-daftar">Relasi tayang</h2>
-            <form action="{{ route('admin.relasi') }}" method="get" style="display:flex;gap:8px;align-items:center">
+            <form action="{{ route('admin.relasi') }}" method="get" role="search" style="display:flex;gap:8px;align-items:center">
+                <label class="sr-only" for="relasi-q">Cari subjek, predikat, objek, atau sumber</label>
+                <input id="relasi-q" type="search" name="q" value="{{ $q }}" placeholder="Cari relasi…">
                 <label class="sr-only" for="predikat">Saring predikat</label>
                 <select id="predikat" name="predikat" class="p-btn" onchange="this.form.submit()">
                     <option value="">Semua predikat</option>
                     @foreach (Katalog::LABEL_RELASI as $p => $l)@continue($p === 'beradaDi')<option value="{{ $p }}" @selected($predikat === $p)>{{ $l }}</option>@endforeach
                 </select>
-                <noscript><button class="p-btn" type="submit">Saring</button></noscript>
+                <button class="p-btn" type="submit">Cari / saring</button>
             </form>
         </header>
         <table class="p-tabel jadi-daftar">
-            <thead><tr><th>Subjek</th><th>Predikat</th><th>Objek</th><th>Sumber</th></tr></thead>
+            <thead><tr><th class="n">No.</th><th>Subjek</th><th>Predikat</th><th>Objek</th><th>Sumber</th></tr></thead>
             <tbody>
-                @foreach ($relasi as $r)
+                @forelse ($relasi as $r)
                     <tr>
+                        <td class="n">{{ $loop->iteration }}</td>
                         <td><b>{{ Katalog::get($r[0])['nama'] }}</b></td>
                         <td class="sekunder"><span class="p-pill">{{ Katalog::LABEL_RELASI[$r[1]] }}{{ isset($r['jarak_m']) ? ' ('.$r['jarak_m'].' m)' : '' }}</span></td>
                         <td class="sekunder">{{ Katalog::get($r[2])['nama'] }}</td>
                         <td class="sekunder" style="color:var(--p-muted)">@if (str_contains($r['sumber'], 'perlu verifikasi'))<span class="p-pill warn">Survei, perlu verifikasi</span>@else{{ \Illuminate\Support\Str::of($r['sumber'])->after('wiki/')->replace('_', ' ')->limit(28) }}@endif</td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="5"><div class="p-kosong">{{ $q === '' ? 'Belum ada relasi yang ditayangkan.' : 'Tidak ada relasi yang cocok dengan pencarian.' }}</div></td></tr>
+                @endforelse
             </tbody>
         </table>
     </section>
@@ -48,7 +53,7 @@
             <h3 style="font-size:14px;font-weight:600;margin-bottom:6px">Usulan menunggu ({{ count($usulan) }})</h3>
             <div class="p-baris">
                 @foreach (array_reverse($usulan) as $us)
-                    <div><span class="dua"><b>{{ Katalog::get($us['subjek'])['nama'] }} {{ Katalog::LABEL_RELASI[$us['predikat']] }} {{ Katalog::get($us['objek'])['nama'] }}</b><span>{{ \Illuminate\Support\Str::limit($us['sumber'], 48) }}</span></span></div>
+                    <div><span class="num">{{ $loop->iteration }}</span><span class="dua"><b>{{ Katalog::get($us['subjek'])['nama'] }} {{ Katalog::LABEL_RELASI[$us['predikat']] }} {{ Katalog::get($us['objek'])['nama'] }}</b><span>{{ \Illuminate\Support\Str::limit($us['sumber'], 48) }}</span></span></div>
                 @endforeach
             </div>
         @endif

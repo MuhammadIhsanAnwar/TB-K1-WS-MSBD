@@ -13,10 +13,10 @@
     $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'rencana' => 'Rencana', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
     $rating = $fokus ? (Penyimpanan::ringkasanRatingTempat()[$fokus] ?? null) : null;
-    $dikunjungi = $kunjunganTempat->where('jumlah', '>', 0);
-    $belumDikunjungi = $kunjunganTempat->count() - $dikunjungi->count();
+    $dikunjungi = $kunjunganTempatTampil->where('jumlah', '>', 0);
+    $belumDikunjungi = $kunjunganTempatTampil->count() - $dikunjungi->count();
     // superadmin yang sedang melihat satu tempat tetap membawa pilihan itu saat ganti periode
-    $tautanPeriode = fn ($p) => route('admin.insight', array_filter(['periode' => $p, 'tempat' => $admin ? null : $fokus]));
+    $tautanPeriode = fn ($p) => route('admin.insight', array_filter(['periode' => $p, 'tempat' => $admin ? null : $fokus, 'q' => $q]));
 @endphp
 @section('judul', 'Insight')
 
@@ -26,13 +26,20 @@
         <h1>{{ $namaFokus ? 'Insight '.$namaFokus : 'Insight' }}</h1>
         <p class="sub">
             Dihitung dari pembukaan halaman HTML yang berhasil, di luar panel admin. Angka ini adalah tayangan halaman, bukan jumlah orang unik.
-            @if ($fokus && ! $admin)<a class="p-tautan-kartu" href="{{ route('admin.insight', ['periode' => $periode]) }}">Kembali ke semua tempat</a>@endif
+            @if ($fokus && ! $admin)<a class="p-tautan-kartu" href="{{ route('admin.insight', ['periode' => $periode, 'q' => $q]) }}">Kembali ke semua tempat</a>@endif
         </p>
     </div>
     <nav class="p-seg" aria-label="Periode insight">
         @foreach ([7, 30, 90] as $pilihan)<a href="{{ $tautanPeriode($pilihan) }}" @if ($periode === $pilihan) aria-current="true" @endif>{{ $pilihan }} hari</a>@endforeach
     </nav>
 </div>
+<form class="p-alat" method="get" action="{{ route('admin.insight') }}" role="search" style="margin-bottom:20px">
+    <input type="hidden" name="periode" value="{{ $periode }}">
+    @if ($fokus)<input type="hidden" name="tempat" value="{{ $fokus }}">@endif
+    <label class="sr-only" for="insight-q">Cari nama tempat wisata pada laporan</label>
+    <input id="insight-q" type="search" name="q" value="{{ $q }}" placeholder="Cari nama tempat wisata…">
+    <button class="p-btn p-btn--teks" type="submit">Cari</button>
+</form>
 
 <div class="p-kpi">
     @if ($fokus)
@@ -65,7 +72,7 @@
                 <div class="p-baris">
                     @foreach (array_slice($kunjungan['rute'], 0, 8, true) as $rute => $jumlah)
                         @php $label = $namaRute[$rute] ?? ($rute === 'tempat' ? 'Detail tempat wisata' : ucfirst(str_replace(['.', '_'], ' ', $rute))); @endphp
-                        <div><span>{{ $label }}</span><b class="kanan">{{ number_format($jumlah, 0, ',', '.') }}</b></div>
+                        <div><span class="num">{{ $loop->iteration }}</span><span>{{ $label }}</span><b class="kanan">{{ number_format($jumlah, 0, ',', '.') }}</b></div>
                     @endforeach
                 </div>
             @else
@@ -81,7 +88,8 @@
                 <div class="p-baris">
                     @foreach ($dikunjungi as $baris)
                         <div>
-                            <a class="p-tautan-kartu" href="{{ route('admin.insight', ['periode' => $periode, 'tempat' => $baris['slug']]) }}" @if ($fokus === $baris['slug']) aria-current="true" @endif>{{ $baris['nama'] }}</a>
+                            <span class="num">{{ $loop->iteration }}</span>
+                            <a class="p-tautan-kartu" href="{{ route('admin.insight', ['periode' => $periode, 'tempat' => $baris['slug'], 'q' => $q]) }}" @if ($fokus === $baris['slug']) aria-current="true" @endif>{{ $baris['nama'] }}</a>
                             <b class="kanan">{{ number_format($baris['jumlah'], 0, ',', '.') }}</b>
                         </div>
                     @endforeach
@@ -90,7 +98,7 @@
                     <p class="meta" style="margin-top:10px">{{ $belumDikunjungi }} tempat lain belum dikunjungi dalam periode ini.</p>
                 @endif
             @else
-                <div class="p-kosong">Belum ada halaman tempat wisata yang dikunjungi.</div>
+                <div class="p-kosong">{{ $q === '' ? 'Belum ada halaman tempat wisata yang dikunjungi.' : 'Tidak ada tempat yang cocok dengan pencarian.' }}</div>
             @endif
         </section>
     @endunless
@@ -99,15 +107,15 @@
         <header><h2 id="transaksi-tempat">{{ $namaFokus ? 'Transaksi '.$namaFokus : 'Transaksi per tempat wisata' }}</h2><span class="meta">{{ $periode }} hari · periode pesanan mengikuti tanggal dibuat, penjualan mengikuti waktu pembayaran</span></header>
         @if ($transaksi->isNotEmpty())
             <div class="p-tabel-bungkus"><table class="p-tabel jadi-daftar">
-                <thead><tr><th>Tempat</th><th class="n">Pesanan</th><th class="n">Dibayar</th><th class="n">Tiket</th><th class="n">Pendapatan</th></tr></thead>
+                <thead><tr><th class="n">No.</th><th>Tempat</th><th class="n">Pesanan</th><th class="n">Dibayar</th><th class="n">Tiket</th><th class="n">Pendapatan</th></tr></thead>
                 <tbody>
                     @foreach ($transaksi as $slug => $angka)
-                        <tr><td>{{ Katalog::get($slug)['nama'] ?? $slug }}</td><td class="n">{{ number_format($angka['pesanan'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['dibayar'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['tiket'], 0, ',', '.') }}</td><td class="n">{{ Katalog::rupiah($angka['pendapatan']) }}</td></tr>
+                        <tr><td class="n">{{ $loop->iteration }}</td><td>{{ Katalog::get($slug)['nama'] ?? $slug }}</td><td class="n">{{ number_format($angka['pesanan'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['dibayar'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['tiket'], 0, ',', '.') }}</td><td class="n">{{ Katalog::rupiah($angka['pendapatan']) }}</td></tr>
                     @endforeach
                 </tbody>
             </table></div>
         @else
-            <div class="p-kosong">Belum ada transaksi pada periode ini.</div>
+            <div class="p-kosong">{{ $q === '' ? 'Belum ada transaksi pada periode ini.' : 'Tidak ada transaksi yang cocok dengan pencarian.' }}</div>
         @endif
     </section>
 </div>

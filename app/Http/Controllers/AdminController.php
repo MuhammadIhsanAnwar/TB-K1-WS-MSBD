@@ -28,10 +28,20 @@ class AdminController extends Controller
     public function pesan(Request $request)
     {
         $pengguna = $request->session()->get('pengguna', []);
+        $q = $this->queryPencarian($request);
+        $pesan = collect(PesanLayanan::daftar($pengguna))
+            ->filter(fn ($item) => $q === '' || str_contains(mb_strtolower(implode(' ', [
+                $item['nama_pengguna'],
+                $item['email_pengguna'],
+                $item['pesan'],
+                $item['nama_tempat'] ?? '',
+                PesanLayanan::labelKategori($item['kategori']),
+                $item['status'],
+            ])), $q))
+            ->values();
 
-        return view('admin.pesan', ['pesan' => PesanLayanan::daftar($pengguna)]);
+        return view('admin.pesan', ['pesan' => $pesan, 'q' => $q]);
     }
-
     public function detailPesan(Request $request, int $id)
     {
         $pengguna = $request->session()->get('pengguna', []);
@@ -136,10 +146,15 @@ class AdminController extends Controller
         })->sortByDesc('pendapatan');
 
         // semua tempat wisata dengan jumlah kunjungan halamannya (termasuk yang belum dikunjungi)
+        $q = $this->queryPencarian($request);
         $kunjunganTempat = collect(Katalog::tempat())
             ->when($admin, fn ($tempat) => $tempat->filter(fn ($t) => in_array($t['slug'], $tempatMilik, true)))
             ->map(fn ($t) => ['slug' => $t['slug'], 'nama' => $t['nama'], 'jumlah' => (int) ($kunjungan['tempat'][$t['slug']] ?? 0)])
             ->sortBy([['jumlah', 'desc'], ['nama', 'asc']])->values();
+        $transaksi = $transaksi->filter(fn ($angka, $slug) => $q === ''
+            || str_contains(mb_strtolower(Katalog::get($slug)['nama'] ?? $slug), $q));
+        $kunjunganTempatTampil = $kunjunganTempat->filter(fn ($tempat) => $q === ''
+            || str_contains(mb_strtolower($tempat['nama']), $q))->values();
 
         if ($fokus !== null) {
             $harian = Kunjungan::harianTempat($fokus, $periode);
@@ -153,9 +168,11 @@ class AdminController extends Controller
             'admin' => $admin,
             'akun' => $admin ? [] : collect((new SupabaseApi)->users())->countBy('peran')->all(),
             'kunjunganTempat' => $kunjunganTempat,
+            'kunjunganTempatTampil' => $kunjunganTempatTampil,
             'transaksi' => $transaksi,
             'pesanan' => $pesanan,
             'dibayar' => $dibayar,
+            'q' => $q,
         ]);
     }
 
@@ -168,6 +185,7 @@ class AdminController extends Controller
         $relasiTempat = collect($semuaRelasi)->groupBy('id_admin');
         $peran = $request->query('peran', 'admin');
         $peran = in_array($peran, ['admin', 'wisatawan'], true) ? $peran : 'admin';
+        $q = $this->queryPencarian($request);
         $pilihJumlahBaris = static function ($nilai): int {
             $jumlah = filter_var($nilai, FILTER_VALIDATE_INT);
 
@@ -177,7 +195,9 @@ class AdminController extends Controller
         $barisWisatawan = $pilihJumlahBaris($request->query('per_halaman_wisatawan', 10));
         $perHalaman = $peran === 'admin' ? $barisAdmin : $barisWisatawan;
         $namaHalaman = $peran === 'admin' ? 'halaman_admin' : 'halaman_wisatawan';
-        $akun = $semuaAkun->where('peran', $peran)->map(function (array $user) use ($relasiTempat, $tempat) {
+        $akun = $semuaAkun->where('peran', $peran)
+            ->filter(fn (array $user) => $q === '' || str_contains(mb_strtolower(($user['name'] ?? '').' '.($user['email'] ?? '')), $q))
+            ->map(function (array $user) use ($relasiTempat, $tempat) {
             $user['tempat'] = ($relasiTempat->get($user['id'], collect()))
                 ->map(fn ($relasi) => $tempat->get($relasi['tempat_slug']) ?? [
                     'slug' => $relasi['tempat_slug'],
@@ -203,6 +223,7 @@ class AdminController extends Controller
                     'peran' => $peran,
                     'per_halaman_admin' => $barisAdmin,
                     'per_halaman_wisatawan' => $barisWisatawan,
+                    'q' => $q,
                 ],
             ],
         );
@@ -214,6 +235,7 @@ class AdminController extends Controller
             'peran' => $peran,
             'barisAdmin' => $barisAdmin,
             'barisWisatawan' => $barisWisatawan,
+            'q' => $q,
             'tempatTersedia' => $tersedia,
             'jumlah' => $semuaAkun->countBy('peran')->all(),
         ]);
@@ -380,7 +402,7 @@ class AdminController extends Controller
     public function entitas(Request $request)
     {
         $jenis = $request->query('jenis', $request->route('jenis'));
-        $q = mb_strtolower((string) $request->query('q', ''));
+        $q = $this->queryPencarian($request);
         $milik = $this->slugsKelolaan($request);
         if ($milik !== null) {
             $jenis = 'tempat';
@@ -408,7 +430,7 @@ class AdminController extends Controller
         if (! array_key_exists($kategori, Katalog::KATEGORI)) {
             $kategori = '';
         }
-        $q = mb_strtolower(trim((string) $request->query('q', '')));
+        $q = $this->queryPencarian($request);
         $perHalaman = filter_var($request->query('per_halaman', 10), FILTER_VALIDATE_INT);
         $perHalaman = in_array($perHalaman, [10, 25, 50, 100], true) ? $perHalaman : 10;
         $halaman = filter_var($request->query('page', 1), FILTER_VALIDATE_INT);
@@ -729,12 +751,33 @@ class AdminController extends Controller
     public function relasi(Request $request)
     {
         $predikat = $request->query('predikat');
+        $q = $this->queryPencarian($request);
+        $relasi = collect(Katalog::relasi())->reject(fn ($r) => $r[1] === 'beradaDi')
+            ->filter(fn ($r) => (! $predikat || $r[1] === $predikat)
+                && ($q === '' || str_contains(mb_strtolower(implode(' ', [
+                    Katalog::get($r[0])['nama'] ?? $r[0],
+                    Katalog::LABEL_RELASI[$r[1]] ?? $r[1],
+                    Katalog::get($r[2])['nama'] ?? $r[2],
+                    $r['sumber'],
+                ])), $q)))
+            ->values();
+        $usulan = collect($this->usulanRelasi())
+            ->filter(fn ($usulan) => $q === '' || str_contains(mb_strtolower(implode(' ', [
+                Katalog::get($usulan['subjek'])['nama'] ?? $usulan['subjek'],
+                Katalog::LABEL_RELASI[$usulan['predikat']] ?? $usulan['predikat'],
+                Katalog::get($usulan['objek'])['nama'] ?? $usulan['objek'],
+                $usulan['sumber'],
+                $usulan['oleh'],
+            ])), $q))
+            ->values()
+            ->all();
 
         return view('admin.relasi', [
-            'relasi' => collect(Katalog::relasi())->reject(fn ($r) => $r[1] === 'beradaDi')->filter(fn ($r) => ! $predikat || $r[1] === $predikat)->values(),
+            'relasi' => $relasi,
             'predikat' => $predikat,
+            'q' => $q,
             'pilihan' => collect(Katalog::entitas())->reject(fn ($e) => $e['jenis'] === 'wilayah')->sortBy('nama'),
-            'usulan' => $this->usulanRelasi(),
+            'usulan' => $usulan,
         ]);
     }
 
@@ -755,18 +798,19 @@ class AdminController extends Controller
     public function ulasan(Request $request)
     {
         $milik = $this->slugsKelolaan($request);
+        $q = $this->queryPencarian($request);
         $perHalaman = filter_var($request->query('per_halaman', 10), FILTER_VALIDATE_INT);
         $perHalaman = in_array($perHalaman, [10, 25, 50, 100], true) ? $perHalaman : 10;
         $halaman = filter_var($request->query('page', 1), FILTER_VALIDATE_INT);
         $halaman = $halaman === false ? 1 : max(1, $halaman);
-        $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman);
+        $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman, $q);
         $jumlah = $hasil['jumlah'];
         $halamanTerakhir = max(1, (int) ceil($jumlah / $perHalaman));
 
         if ($halaman > $halamanTerakhir) {
             $halaman = $halamanTerakhir;
             if ($jumlah > 0) {
-                $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman);
+                $hasil = Penyimpanan::ulasanHalaman($milik, 'tayang', $perHalaman, ($halaman - 1) * $perHalaman, $q);
             }
         }
 
@@ -775,13 +819,14 @@ class AdminController extends Controller
             $jumlah,
             $perHalaman,
             $halaman,
-            ['path' => $request->url(), 'query' => ['per_halaman' => $perHalaman]],
+            ['path' => $request->url(), 'query' => ['per_halaman' => $perHalaman, 'q' => $q]],
         );
 
         return view('admin.ulasan', [
             'jumlah' => $jumlah,
             'ulasan' => $ulasan,
             'perHalaman' => $perHalaman,
+            'q' => $q,
         ]);
     }
 
@@ -798,6 +843,7 @@ class AdminController extends Controller
     public function tiket(Request $request)
     {
         $milik = $this->slugsKelolaan($request);
+        $q = $this->queryPencarian($request);
         $pesanan = collect(Penyimpanan::pesanan())->values();
         $bertiket = collect(Katalog::bertiket());
         $superadmin = $request->session()->get('pengguna.peran') === 'superadmin';
@@ -808,6 +854,7 @@ class AdminController extends Controller
             $tempat = $tempat->filter(fn ($t) => in_array($t['slug'], $milik, true));
             $bertiket = $bertiket->filter(fn ($t) => in_array($t['slug'], $milik, true));
         }
+        $pesananTampil = $pesanan->filter(fn ($p) => $this->pesananCocokDenganPencarian($p, $q))->values();
 
         $lunas = $pesanan->where('status', 'lunas');
         $penjualanPerTempat = $tempat->mapWithKeys(function (array $t) use ($lunas) {
@@ -823,10 +870,17 @@ class AdminController extends Controller
                 'pendapatan' => $pesananTempat->sum('total'),
             ]];
         })->sortBy('nama');
+        if ($q !== '') {
+            $penjualanPerTempat = $penjualanPerTempat->filter(fn ($penjualan) => str_contains(mb_strtolower($penjualan['nama']), $q)
+                || $lunas->where('tempat', $penjualan['slug'])->contains(fn ($pesanan) => $this->pesananCocokDenganPencarian($pesanan, $q)));
+        }
 
         $pilihan = $request->query('tempat');
         $fokus = is_string($pilihan) && $tempat->has($pilihan) ? $pilihan : null;
         $pesananTerpilih = $fokus === null ? collect() : $lunas->where('tempat', $fokus)->values();
+        if ($q !== '') {
+            $pesananTerpilih = $pesananTerpilih->filter(fn ($pesanan) => $this->pesananCocokDenganPencarian($pesanan, $q))->values();
+        }
         $tiketPerJenis = $pesananTerpilih
             ->flatMap(fn ($p) => $p['item'])
             ->groupBy('jenis')
@@ -842,7 +896,6 @@ class AdminController extends Controller
                 'item' => $p['item'],
                 'total' => $p['total'],
             ]);
-
         return view('admin.tiket', [
             'pesanan' => $pesanan,
             'bertiket' => $bertiket,
@@ -852,7 +905,36 @@ class AdminController extends Controller
             'fokusLaporan' => $fokus,
             'tiketPerJenis' => $tiketPerJenis,
             'transaksiTerpilih' => $transaksiTerpilih,
+            'pesananTampil' => $pesananTampil,
+            'q' => $q,
         ]);
+    }
+
+    private function queryPencarian(Request $request): string
+    {
+        $q = $request->query('q');
+
+        return is_string($q) ? mb_strtolower(trim(mb_substr($q, 0, 100))) : '';
+    }
+
+    private function pesananCocokDenganPencarian(array $pesanan, string $q): bool
+    {
+        if ($q === '') {
+            return true;
+        }
+
+        $tempat = Katalog::get($pesanan['tempat'])['nama'] ?? $pesanan['tempat'];
+        $cariDi = mb_strtolower(implode(' ', [
+            $pesanan['kode'],
+            $pesanan['pemesan']['nama'],
+            $pesanan['pemesan']['email'],
+            $tempat,
+            $pesanan['tanggal'],
+            $pesanan['status'],
+            implode(' ', array_column($pesanan['item'], 'jenis')),
+        ]));
+
+        return str_contains($cariDi, $q);
     }
 
     public function validasi(Request $request)

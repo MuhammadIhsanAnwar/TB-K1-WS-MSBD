@@ -27,7 +27,7 @@ class AdminUlasanPaginationTest extends TestCase
         Cache::store('array')->flush();
         Database3Catalog::forgetCache();
         Katalog::forgetCache();
-        Cache::put('database3.catalog.triples.v8', [
+        Cache::put('database3.catalog.triples.v9', [
             ['res:istana-maimun', 'rdf:type', 'mv:SitusSejarah'],
             ['res:istana-maimun', 'schema:name', 'Istana Maimun'],
         ]);
@@ -84,7 +84,6 @@ class AdminUlasanPaginationTest extends TestCase
                     ['tempat_slug' => 'taman-cadika'],
                 ]);
             }
-
             return Http::response([]);
         });
 
@@ -102,6 +101,31 @@ class AdminUlasanPaginationTest extends TestCase
             return str_contains($request->url(), '/rest/v1/ulasan?')
                 && ($query['tempat_slug'] ?? null) === 'in.(istana-maimun,taman-cadika)'
                 && ($query['limit'] ?? null) === '25';
+        });
+    }
+
+    public function test_review_search_is_applied_by_supabase_and_numbered(): void
+    {
+        Http::fake(fn (Request $request) => str_contains($request->url(), '/rest/v1/ulasan?')
+            ? Http::response([$this->sampleReview()], 200, ['Content-Range' => '0-0/1'])
+            : Http::response([]));
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/ulasan?q=Rina')
+            ->assertOk()
+            ->assertSee('Rina')
+            ->assertSee('name="q"', false)
+            ->assertSee('class="num">1</span>', false);
+
+        Http::assertSent(function (Request $request): bool {
+            parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+
+            return str_contains($request->url(), '/rest/v1/ulasan?')
+                && str_contains($query['or'] ?? '', 'nama_pengguna.ilike.*rina*');
         });
     }
 

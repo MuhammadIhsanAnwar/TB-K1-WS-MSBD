@@ -266,9 +266,11 @@ class AdminScanTiketTest extends TestCase
                 'tempat_slugs' => ['medan-zoo'],
             ],
         ])
-            ->get('/admin/tiket')
+            ->get('/admin/tiket?q=MV-AAAA1111')
             ->assertOk()
             ->assertSee('MV-AAAA1111')
+            ->assertSee('No.')
+            ->assertSee('name="q"', false)
             ->assertSee('Sudah check-in');
     }
 

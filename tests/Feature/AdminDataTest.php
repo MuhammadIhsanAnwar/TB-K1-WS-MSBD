@@ -118,6 +118,13 @@ class AdminDataTest extends TestCase
             ->assertSee('halaman_admin=2');
 
         $this->withSession($superadmin)
+            ->get('/admin/akun?peran=admin&q=admin-2%40example.test')
+            ->assertOk()
+            ->assertSee('admin-2@example.test')
+            ->assertDontSee('admin-1@example.test')
+            ->assertSee('class="num">1</span>', false);
+
+        $this->withSession($superadmin)
             ->get('/admin/akun?peran=wisatawan&per_halaman_admin=25&per_halaman_wisatawan=10')
             ->assertOk()
             ->assertSee('wisatawan-1@example.test')
@@ -306,6 +313,7 @@ class AdminDataTest extends TestCase
             ->assertOk()
             ->assertSee('Kelola tempat wisata')
             ->assertSee('Menampilkan 1&ndash;10 dari 12', false)
+            ->assertSee('No.')
             ->assertSee('Tempat 01')
             ->assertSee('Tempat 10')
             ->assertDontSee('Tempat 11')
@@ -501,12 +509,23 @@ class AdminDataTest extends TestCase
         $superadminResponse->assertOk()
             ->assertSee('Rp35.000')
             ->assertSee('Museum Test')
+            ->assertSee('No.')
             ->assertSee('tempat-lain')
             ->assertSee('2 pesanan dibayar');
         $this->assertMatchesRegularExpression(
             '/<div class="label">Tiket terjual<\\/div><div class="nilai">3<\\/div>/',
             $superadminResponse->getContent(),
         );
+        $superadminSearch = $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/insight?periode=7&q=Museum');
+        $superadminSearch->assertOk()
+            ->assertSee('Museum Test')
+            ->assertDontSee('tempat-lain')
+            ->assertSee('Rp35.000');
         $superadminRingkasan = $this->withSession(['pengguna' => [
             'id' => 1,
             'nama' => 'Super Admin',

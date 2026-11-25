@@ -55,7 +55,6 @@ class AdminTiketLaporanTest extends TestCase
         $bindings[] = $triple($base.'id/istana-maimun', 'https://schema.org/offers', $offer, 'uri');
         $bindings[] = $triple($offer, 'https://schema.org/name', 'Dewasa');
         $bindings[] = $triple($offer, 'https://schema.org/price', '10000');
-        $bindings[] = $triple($base.'id/istana-maimun', $ontology.'hargaContoh', 'true');
 
         $orders = [
             $this->order(1, 'MV-ISTANA1', 'istana-maimun', 25000, 'lunas'),
@@ -101,9 +100,9 @@ class AdminTiketLaporanTest extends TestCase
             ->assertSee('<b>3</b>', false)
             ->assertSee('Rp35.000')
             ->assertSee('Dewasa')
+            ->assertSee('No.')
             ->assertSee('Harga tiket')
             ->assertSee('Dewasa: Rp10.000')
-            ->assertSee('Harga contoh, konfirmasi ke pengelola')
             ->assertSee('Anak')
             ->assertSee('MV-ISTANA1')
             ->assertSee('MV-ISTANA2')
@@ -111,6 +110,28 @@ class AdminTiketLaporanTest extends TestCase
             ->assertDontSee('MV-UNPAID1')
             ->assertDontSee('Pembeli Rahasia')
             ->assertDontSee('Validasi di loket');
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/tiket?q=MV-ISTANA1')
+            ->assertOk()
+            ->assertSee('Istana Maimun')
+            ->assertDontSee('Museum Negeri')
+            ->assertSee('name="q"', false)
+            ->assertSee('No.');
+
+        $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin/tiket?tempat=istana-maimun&q=MV-ISTANA1')
+            ->assertOk()
+            ->assertSee('MV-ISTANA1')
+            ->assertDontSee('MV-ISTANA2');
     }
 
     private function order(int $id, string $code, string $place, int $total, string $status): array

@@ -24,15 +24,16 @@
     @if ($jenis)<input type="hidden" name="jenis" value="{{ $jenis }}">@endif
     <label class="sr-only" for="q">Cari nama</label>
     <input id="q" type="search" name="q" value="{{ $q }}" placeholder="Cari nama…" style="width:280px">
-    <span class="isi"></span>
+    <button class="p-btn p-btn--teks" type="submit">Cari</button>
     <span class="hitung">{{ $data->count() }} entitas</span>
 </form>
 <div class="p-tabel-bungkus">
     <table class="p-tabel jadi-daftar">
-        <thead><tr><th>Nama</th><th>Jenis</th><th>Keterangan</th><th class="n">Relasi</th><th class="n"><span class="sr-only">Aksi</span></th></tr></thead>
+        <thead><tr><th class="n">No.</th><th>Nama</th><th>Jenis</th><th>Keterangan</th><th class="n">Relasi</th><th class="n"><span class="sr-only">Aksi</span></th></tr></thead>
         <tbody>
             @forelse ($data as $e)
                 <tr>
+                    <td class="n">{{ $loop->iteration }}</td>
                     <td><a class="nama" href="{{ route('admin.entitas.ubah', $e['slug']) }}">{{ $e['nama'] }}</a>@if ($e['jenis'] === 'tempat')<span class="sub">{{ $e['kecamatan'] }}</span>@endif</td>
                     <td class="sekunder"><span class="kelas" data-kelas="{{ $e['jenis'] }}" style="font-weight:500">{{ Katalog::KELAS[$e['jenis']] }}</span></td>
                     <td class="sekunder" style="color:var(--p-muted)">{{ \Illuminate\Support\Str::limit($e['ringkas'], 70) }}</td>
@@ -40,7 +41,7 @@
                     <td class="n"><a class="p-btn" href="{{ route('admin.entitas.ubah', $e['slug']) }}">Ubah</a></td>
                 </tr>
             @empty
-                <tr><td colspan="5"><div class="p-kosong">Tidak ada entitas bernama “{{ $q }}”.</div></td></tr>
+                <tr><td colspan="6"><div class="p-kosong">Tidak ada entitas bernama “{{ $q }}”.</div></td></tr>
             @endforelse
         </tbody>
     </table>

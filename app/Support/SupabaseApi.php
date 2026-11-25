@@ -478,7 +478,7 @@ class SupabaseApi
         return $this->sertakanRatingUlasan($this->getRows('ulasan', $filters));
     }
 
-    public function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset): array
+    public function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset, string $q = ''): array
     {
         $filters = [
             'select' => '*',
@@ -497,6 +497,13 @@ class SupabaseApi
                 return ['baris' => [], 'jumlah' => 0];
             }
             $filters['tempat_slug'] = 'in.('.implode(',', $tempatSlugs).')';
+        }
+
+        $q = preg_replace('/[^\p{L}\p{N}\s@._-]/u', ' ', mb_substr($q, 0, 100)) ?? '';
+        $q = trim(preg_replace('/\s+/u', ' ', $q) ?? '');
+        if ($q !== '') {
+            $slug = str_replace(' ', '-', $q);
+            $filters['or'] = '(nama_pengguna.ilike.*'.$q.'*,email_pengguna.ilike.*'.$q.'*,teks.ilike.*'.$q.'*,tempat_slug.ilike.*'.$q.'*,tempat_slug.ilike.*'.$slug.'*)';
         }
 
         $response = $this->request()

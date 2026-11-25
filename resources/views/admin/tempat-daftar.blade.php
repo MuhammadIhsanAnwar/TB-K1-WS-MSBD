@@ -43,11 +43,12 @@
     <div class="p-tabel-bungkus">
         <table class="p-tabel jadi-daftar">
             <thead>
-                <tr><th>Nama tempat wisata</th><th>Kategori</th><th>Kecamatan</th><th>Jam operasional</th><th class="n"><span class="sr-only">Aksi</span></th></tr>
+                <tr><th class="n">No.</th><th>Nama tempat wisata</th><th>Kategori</th><th>Kecamatan</th><th>Jam operasional</th><th class="n"><span class="sr-only">Aksi</span></th></tr>
             </thead>
             <tbody>
                 @foreach ($tempat as $item)
                     <tr>
+                        <td class="n">{{ $tempat->firstItem() + $loop->index }}</td>
                         <td><a class="nama" href="{{ route('admin.entitas.ubah', $item['slug']) }}">{{ $item['nama'] }}</a></td>
                         <td class="sekunder">{{ Katalog::KATEGORI[$item['kategori'] ?? ''] ?? 'Tidak dikategorikan' }}</td>
                         <td class="sekunder">{{ $item['kecamatan'] ?: 'Tidak tercatat' }}</td>

@@ -13,11 +13,19 @@
 @endif
 
 <nav class="p-alat" aria-label="Filter peran akun" style="margin-bottom:16px">
-    <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan]) }}"
+    <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan, 'q' => $q]) }}"
        @if ($peran === 'admin') aria-current="page" @endif>Akun admin ({{ $jumlah['admin'] ?? 0 }})</a>
-    <a class="p-btn {{ $peran === 'wisatawan' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'wisatawan', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan]) }}"
+    <a class="p-btn {{ $peran === 'wisatawan' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'wisatawan', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan, 'q' => $q]) }}"
        @if ($peran === 'wisatawan') aria-current="page" @endif>Akun wisatawan ({{ $jumlah['wisatawan'] ?? 0 }})</a>
 </nav>
+<form class="p-alat" method="get" action="{{ route('admin.akun') }}" role="search" style="margin-bottom:16px">
+    <input type="hidden" name="peran" value="{{ $peran }}">
+    <input type="hidden" name="per_halaman_admin" value="{{ $barisAdmin }}">
+    <input type="hidden" name="per_halaman_wisatawan" value="{{ $barisWisatawan }}">
+    <label class="sr-only" for="akun-q">Cari nama atau email akun</label>
+    <input id="akun-q" type="search" name="q" value="{{ $q }}" placeholder="Cari nama atau email akun…">
+    <button class="p-btn p-btn--teks" type="submit">Cari</button>
+</form>
 
 <div class="p-kpi">
     <div><div class="label">Total akun</div><div class="nilai">{{ number_format(array_sum($jumlah), 0, ',', '.') }}</div><div class="ket">seluruh peran</div></div>
@@ -53,6 +61,7 @@
     <form class="p-alat" method="get" action="{{ route('admin.akun') }}" style="margin-bottom:16px">
         <input type="hidden" name="peran" value="wisatawan">
         <input type="hidden" name="per_halaman_admin" value="{{ $barisAdmin }}">
+        <input type="hidden" name="q" value="{{ $q }}">
         <label for="wisatawan-per-halaman">Tampilkan</label>
         <select id="wisatawan-per-halaman" name="per_halaman_wisatawan">
             @foreach ([10, 25, 50, 100] as $opsi)
@@ -72,6 +81,7 @@
     @forelse ($akun as $user)
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
+                <span class="num">{{ $akun->firstItem() + $loop->index }}</span>
                 <b>{{ $user['name'] }}</b>
                 <span class="meta">{{ $user['email'] }}@if (! empty($user['email_verified_at'])) · terverifikasi @endif @if ($user['ditangguhkan']) · <b style="color:var(--p-negative)">ditangguhkan</b> @endif</span>
             </summary>
@@ -99,7 +109,7 @@
             </div>
         </details>
     @empty
-        <div class="p-kosong">Belum ada akun wisatawan.</div>
+        <div class="p-kosong">{{ $q === '' ? 'Belum ada akun wisatawan.' : 'Tidak ada akun wisatawan yang cocok dengan pencarian.' }}</div>
     @endforelse
     @if ($akun->lastPage() > 1)
         <nav class="p-paginasi" aria-label="Halaman akun wisatawan">
@@ -135,6 +145,7 @@
     <form class="p-alat" method="get" action="{{ route('admin.akun') }}" style="margin-bottom:16px">
         <input type="hidden" name="peran" value="admin">
         <input type="hidden" name="per_halaman_wisatawan" value="{{ $barisWisatawan }}">
+        <input type="hidden" name="q" value="{{ $q }}">
         <label for="admin-per-halaman">Tampilkan</label>
         <select id="admin-per-halaman" name="per_halaman_admin">
             @foreach ([10, 25, 50, 100] as $opsi)
@@ -154,6 +165,7 @@
     @forelse ($akun as $user)
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
+                <span class="num">{{ $akun->firstItem() + $loop->index }}</span>
                 <b>{{ $user['name'] }}</b>
                 <span class="meta">{{ $user['email'] }} · {{ $user['tempat']->count() }} tempat @if ($user['ditangguhkan']) · <b style="color:var(--p-negative)">ditangguhkan</b> @endif</span>
             </summary>
@@ -221,7 +233,7 @@
             </div>
         </details>
     @empty
-        <div class="p-kosong">Belum ada akun admin.</div>
+        <div class="p-kosong">{{ $q === '' ? 'Belum ada akun admin.' : 'Tidak ada akun admin yang cocok dengan pencarian.' }}</div>
     @endforelse
     @if ($akun->lastPage() > 1)
         <nav class="p-paginasi" aria-label="Halaman akun admin">

@@ -203,13 +203,13 @@ class Penyimpanan
         return $aman ? self::aman($baca, []) : $baca();
     }
 
-    public static function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset): array
+    public static function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset, string $q = ''): array
     {
         if ($tempatSlugs === []) {
             return ['ulasan' => [], 'jumlah' => 0];
         }
 
-        $hasil = self::api()->ulasanHalaman($tempatSlugs, $status, $batas, $offset);
+        $hasil = self::api()->ulasanHalaman($tempatSlugs, $status, $batas, $offset, $q);
 
         return [
             'ulasan' => self::bentukUlasan($hasil['baris']),
