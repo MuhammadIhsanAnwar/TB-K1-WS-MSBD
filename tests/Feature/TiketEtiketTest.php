@@ -149,4 +149,77 @@ class TiketEtiketTest extends TestCase
             ->assertDontSee('prototipe')
             ->assertDontSee('Simulasikan pembayaran berhasil');
     }
+
+    public function test_paid_ticket_can_issue_qr_when_ticket_relation_was_not_embedded(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), 'sparql.test')) {
+                return Http::response([
+                    'head' => ['vars' => ['s', 'p', 'o']],
+                    'results' => ['bindings' => []],
+                ]);
+            }
+
+            if (str_contains($request->url(), '/e_tiket?')) {
+                if ($request->method() === 'POST') {
+                    return Http::response([[
+                        'id_etiket' => 9,
+                        'id_pesanan' => 7,
+                        'kode_qr' => 'QR-' . strtoupper(substr(hash('sha256', 'medanvisit|MV-AAAA1111'), 0, 12)),
+                    ]], 201);
+                }
+
+                return Http::response([]);
+            }
+
+            if (str_contains($request->url(), '/pesanan_item?')) {
+                return Http::response([[
+                    'id_pesanan' => 7,
+                    'jenis_pengunjung' => 'Dewasa',
+                    'harga' => 15000,
+                    'jumlah' => 1,
+                    'subtotal' => 15000,
+                ]]);
+            }
+
+            if (str_contains($request->url(), '/pesanan?')) {
+                return Http::response([[
+                    'id_pesanan' => 7,
+                    'kode' => 'MV-AAAA1111',
+                    'id_pengguna' => 12,
+                    'nama_pemesan' => 'Rina',
+                    'email_pemesan' => 'rina@example.test',
+                    'hp_pemesan' => '081234567890',
+                    'tempat_slug' => 'kolam-renang-selayang',
+                    'tanggal_kunjungan' => '2026-11-25',
+                    'total' => 15000,
+                    'metode' => 'qris',
+                    'status' => 'lunas',
+                    'batas_bayar' => '2026-11-25T03:15:00+00:00',
+                    'created_at' => '2026-11-25T03:00:00+00:00',
+                    'pembayaran' => [['dibayar_pada' => '2026-11-25T03:05:00+00:00']],
+                    'e_tiket' => [],
+                ]]);
+            }
+
+            return Http::response([], 404);
+        });
+
+        $kodeQr = 'QR-' . strtoupper(substr(hash('sha256', 'medanvisit|MV-AAAA1111'), 0, 12));
+
+        $this->withSession(['pengguna' => [
+            'id' => 12,
+            'nama' => 'Rina',
+            'peran' => 'wisatawan',
+        ]])
+            ->get('/tiket/MV-AAAA1111')
+            ->assertOk()
+            ->assertSee($kodeQr)
+            ->assertSee('Rina');
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/e_tiket?'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/e_tiket?'));
+    }
 }

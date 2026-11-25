@@ -347,7 +347,18 @@ class TiketController extends Controller
     public function eTiket(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
-        abort_unless($p['status'] === 'lunas' && ! empty($p['kode_qr']), 404);
+        abort_unless($p['status'] === 'lunas', 404);
+        if (empty($p['kode_qr'])) {
+            try {
+                $kodeQr = Penyimpanan::pastikanKodeQr($p);
+                if ($kodeQr !== null) {
+                    $p['kode_qr'] = $kodeQr;
+                }
+            } catch (Throwable $e) {
+                Log::warning("E-tiket {$kode} belum bisa diterbitkan: ".$e->getMessage());
+            }
+        }
+        abort_unless(! empty($p['kode_qr']), 503, 'E-tiket belum berhasil diterbitkan. Silakan coba lagi.');
         $t = $this->detailTempat($p);
         $status = ! empty($p['dipakai']) ? 'dipakai' : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
 

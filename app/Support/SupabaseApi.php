@@ -238,6 +238,33 @@ class SupabaseApi
         ]);
     }
 
+    public function cariEtiket(int $idPesanan): ?array
+    {
+        return $this->getRows('e_tiket', [
+            'select' => 'id_etiket,id_pesanan,kode_qr,dipakai_pada',
+            'id_pesanan' => 'eq.'.$idPesanan,
+            'limit' => 1,
+        ])[0] ?? null;
+    }
+
+    public function buatEtiket(int $idPesanan, string $kodeQr): array
+    {
+        $rows = $this->request()
+            ->withHeaders([
+                'Prefer' => 'resolution=merge-duplicates,return=representation',
+            ])
+            ->post($this->url('e_tiket').'?'.http_build_query(['on_conflict' => 'id_pesanan']), [
+                'id_pesanan' => $idPesanan,
+                'kode_qr' => $kodeQr,
+                'diterbitkan_pada' => now()->toIso8601String(),
+                'dipakai_pada' => null,
+            ])
+            ->throw()
+            ->json();
+
+        return $rows[0] ?? throw new RuntimeException('Supabase tidak dapat menerbitkan identitas QR e-tiket.');
+    }
+
     public function pesananItem(array $idPesanan): array
     {
         if (! $idPesanan) {

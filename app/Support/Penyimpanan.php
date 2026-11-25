@@ -66,6 +66,21 @@ class Penyimpanan
         return self::bentukPesanan(self::api()->pesananDenganKodeQr($kodeQr))[0] ?? null;
     }
 
+    public static function pastikanKodeQr(array $pesanan): ?string
+    {
+        $api = self::api();
+        $idPesanan = (int) $pesanan['id'];
+        $etiket = $api->cariEtiket($idPesanan);
+        if (! empty($etiket['kode_qr'])) {
+            return (string) $etiket['kode_qr'];
+        }
+
+        $kodeQr = 'QR-'.strtoupper(substr(hash('sha256', 'medanvisit|'.$pesanan['kode']), 0, 12));
+        $etiket = $api->buatEtiket($idPesanan, $kodeQr);
+
+        return ! empty($etiket['kode_qr']) ? (string) $etiket['kode_qr'] : null;
+    }
+
     /**
      * Membuat pesanan lewat function sp_buat_pesanan (pesanan + item dalam satu transaksi,
      * total dihitung trigger, batas bayar 15 menit).
