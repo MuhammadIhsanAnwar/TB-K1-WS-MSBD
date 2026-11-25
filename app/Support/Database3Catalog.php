@@ -296,6 +296,9 @@ final class Database3Catalog
             $name = self::first($offerProperties, 'schema:name', null);
             $price = self::first($offerProperties, 'schema:price', null);
             if ($name !== null && $price !== null) {
+                if (mb_strtolower(trim($name)) === 'hari kerja') {
+                    $name = 'Umum';
+                }
                 $offers[$name] = $price;
             }
         }

@@ -10,7 +10,7 @@
         <section class="ketentuan__bagian" aria-labelledby="k-tiket">
             <h2 id="k-tiket">Pembelian tiket</h2>
             <ol>
-                <li>E-tiket berlaku untuk satu kali masuk pada tanggal yang dipilih, untuk jumlah dan jenis tiket yang tertera.</li>
+                <li>E-tiket berlaku untuk satu kali masuk pada tanggal yang dipilih selama jam operasional, sesuai jumlah dan jenis tiket yang tertera. Tiket kedaluwarsa setelah tanggal kunjungan berakhir.</li>
                 <li>Pembayaran harus selesai dalam 15 menit setelah pesanan dibuat. Lewat dari itu, pesanan kedaluwarsa dan tiket tidak terbit.</li>
                 <li>Tiket yang sudah dibayar tidak dapat dikembalikan. Pesanan yang belum dibayar bisa dibatalkan kapan saja dari halaman pesanan.</li>
                 <li>Tunjukkan kode QR di loket. Petugas memindai kode itu dan menandainya sudah dipakai.</li>

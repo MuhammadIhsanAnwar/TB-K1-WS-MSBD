@@ -1942,7 +1942,7 @@ res:medan-zoo a mv:RuangPublik ;
     schema:isAccessibleForFree false ;
     schema:name "Medan Zoo"@id ;
     schema:offers [ a schema:Offer ;
-            schema:name "Hari kerja"@id ;
+            schema:name "Umum"@id ;
             schema:price 15000 ;
             schema:priceCurrency "IDR" ] .
 

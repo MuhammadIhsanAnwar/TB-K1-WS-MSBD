@@ -149,10 +149,17 @@ class Penyimpanan
             'pemesan' => ['nama' => $p['nama_pemesan'], 'email' => $p['email_pemesan'], 'hp' => $p['hp_pemesan']],
             'tempat' => $p['tempat_slug'],
             'tanggal' => Carbon::parse($p['tanggal_kunjungan'])->toDateString(),
-            'item' => ($item[$p['id_pesanan']] ?? collect())->map(fn ($i) => [
-                'jenis' => $i['jenis_pengunjung'], 'harga' => (int) $i['harga'],
-                'jumlah' => (int) $i['jumlah'], 'subtotal' => (int) $i['subtotal'],
-            ])->values()->all(),
+            'item' => ($item[$p['id_pesanan']] ?? collect())->map(function ($i) {
+                $jenis = $i['jenis_pengunjung'];
+                $jenisNormal = mb_strtolower(trim($jenis));
+
+                return [
+                    'jenis' => in_array($jenisNormal, ['hari kerja', 'umum'], true) ? 'Tiket umum' : $jenis,
+                    'harga' => (int) $i['harga'],
+                    'jumlah' => (int) $i['jumlah'],
+                    'subtotal' => (int) $i['subtotal'],
+                ];
+            })->values()->all(),
             'total' => (int) $p['total'],
             'metode' => $p['metode'],
             'status' => $p['status'],

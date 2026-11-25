@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Support\Kunjungan;
+use App\Support\Katalog;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -184,6 +185,75 @@ class AdminScanTiketTest extends TestCase
         Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
             && str_contains($request->url(), '/e_tiket?')
             && str_contains($request->url(), 'dipakai_pada=is.null'));
+    }
+
+    public function test_admin_ticket_list_shows_scanned_ticket_as_checked_in(): void
+    {
+        Katalog::forgetCache();
+        config(['services.sparql.endpoint' => 'https://sparql.test/query']);
+        $place = 'https://medanvisit.neoverse.my.id/id/medan-zoo';
+        $bindings = [
+            [
+                's' => ['type' => 'uri', 'value' => $place],
+                'p' => ['type' => 'uri', 'value' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+                'o' => ['type' => 'uri', 'value' => 'https://medanvisit.neoverse.my.id/ontologi#RuangPublik'],
+            ],
+            [
+                's' => ['type' => 'uri', 'value' => $place],
+                'p' => ['type' => 'uri', 'value' => 'https://schema.org/name'],
+                'o' => ['type' => 'literal', 'value' => 'Medan Zoo'],
+            ],
+        ];
+
+        Http::fake(function (Request $request) use ($bindings) {
+            if (str_contains($request->url(), 'sparql.test')) {
+                return Http::response([
+                    'head' => ['vars' => ['s', 'p', 'o']],
+                    'results' => ['bindings' => $bindings],
+                ]);
+            }
+            if (str_contains($request->url(), '/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'medan-zoo']]);
+            }
+            if (str_contains($request->url(), '/users?')) {
+                return Http::response([[
+                    'id' => 3,
+                    'name' => 'Admin',
+                    'email' => 'admin@example.test',
+                    'peran' => 'admin',
+                    'no_hp' => null,
+                    'ditangguhkan_pada' => null,
+                ]]);
+            }
+            if (str_contains($request->url(), '/pesanan_item?')) {
+                return Http::response([[
+                    'id_pesanan' => 7,
+                    'jenis_pengunjung' => 'Dewasa',
+                    'harga' => 15000,
+                    'jumlah' => 1,
+                    'subtotal' => 15000,
+                ]]);
+            }
+            if (str_contains($request->url(), '/pesanan?')) {
+                return Http::response([$this->pesanan('2026-11-23', '2026-11-23T03:10:00+00:00')]);
+            }
+
+            return Http::response([], 404);
+        });
+
+        $this->withSession([
+            'pengguna' => [
+                'id' => 3,
+                'nama' => 'Admin',
+                'email' => 'admin@example.test',
+                'peran' => 'admin',
+                'tempat_slugs' => ['medan-zoo'],
+            ],
+        ])
+            ->get('/admin/tiket')
+            ->assertOk()
+            ->assertSee('MV-AAAA1111')
+            ->assertSee('Sudah check-in');
     }
 
     private function pesanan(string $tanggal, ?string $dipakai = null, ?string $kodeQr = 'QR-IDENTITAS'): array

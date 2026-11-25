@@ -337,8 +337,10 @@ class TiketController extends Controller
         });
         $kelompok = [
             'aktif' => $semua->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString()),
-            'selesai' => $semua->filter(fn ($p) => $p['status'] === 'lunas' && (! empty($p['dipakai']) || $p['tanggal'] < now('Asia/Jakarta')->toDateString())),
-            'dibatalkan' => $semua->filter(fn ($p) => in_array($p['status'], ['dibatalkan', 'kedaluwarsa'], true)),
+            'checkin' => $semua->filter(fn ($p) => $p['status'] === 'lunas' && ! empty($p['dipakai'])),
+            'kedaluwarsa' => $semua->filter(fn ($p) => $p['status'] === 'kedaluwarsa'
+                || ($p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString())),
+            'dibatalkan' => $semua->where('status', 'dibatalkan'),
         ];
 
         return view('tiket.daftar', ['tab' => array_key_exists($tab, $kelompok) ? $tab : 'aktif', 'kelompok' => $kelompok]);
@@ -360,8 +362,16 @@ class TiketController extends Controller
         }
         abort_unless(! empty($p['kode_qr']), 503, 'E-tiket belum berhasil diterbitkan. Silakan coba lagi.');
         $t = $this->detailTempat($p);
-        $status = ! empty($p['dipakai']) ? 'dipakai' : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
+        $berlakuSampai = Carbon::parse($p['tanggal'], 'Asia/Jakarta')->endOfDay();
+        $status = ! empty($p['dipakai'])
+            ? 'dipakai'
+            : (now('Asia/Jakarta')->greaterThan($berlakuSampai) ? 'kedaluwarsa' : 'aktif');
 
-        return view('tiket.etiket', ['p' => $p, 't' => $t, 'status' => $status, 'tanggal' => Carbon::parse($p['tanggal'])->locale('id')]);
+        return view('tiket.etiket', [
+            'p' => $p,
+            't' => $t,
+            'status' => $status,
+            'tanggal' => Carbon::parse($p['tanggal'], 'Asia/Jakarta')->locale('id'),
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.situs')
 @php
-    $statusLabel = ['aktif' => ['Aktif, siap dipindai', 'pos'], 'dipakai' => ['Sudah check-in', ''], 'kedaluwarsa' => ['Tanggal lewat', 'neg']][$status];
+    $statusLabel = ['aktif' => ['Aktif, siap dipindai', 'pos'], 'dipakai' => ['Sudah check-in', ''], 'kedaluwarsa' => ['Kedaluwarsa', 'neg']][$status];
 @endphp
 @section('judul', 'E-tiket '.$t['nama'])
 @section('tanpa-kaki', '1')
@@ -30,6 +30,10 @@
             <div>
                 <dt>Jam operasional</dt>
                 <dd>{{ $t['jam'] }}</dd>
+            </div>
+            <div>
+                <dt>Masa berlaku</dt>
+                <dd>Berlaku hanya pada tanggal kunjungan selama jam operasional. Kedaluwarsa setelah hari kunjungan berakhir.</dd>
             </div>
             <div>
                 <dt>Total pengunjung</dt>

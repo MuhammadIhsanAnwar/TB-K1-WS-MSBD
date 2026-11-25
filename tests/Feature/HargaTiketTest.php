@@ -58,7 +58,7 @@ class HargaTiketTest extends TestCase
         $this->assertArrayNotHasKey('offers', $museum);
         $this->assertTrue($park['isAccessibleForFree']);
         $this->assertCount(1, $zoo['offers']);
-        $this->assertSame('Hari kerja', $zoo['offers'][0]['name']);
+        $this->assertSame('Umum', $zoo['offers'][0]['name']);
         $this->assertSame(15000, $zoo['offers'][0]['price']);
     }
 
