@@ -8,6 +8,7 @@ use App\Support\Penyimpanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 class TiketController extends Controller
@@ -36,6 +37,23 @@ class TiketController extends Controller
         }
 
         return $p;
+    }
+
+    private function detailTempat(array $p): array
+    {
+        $tempat = Katalog::get($p['tempat']);
+        if ($tempat !== null) {
+            return $tempat + ['di_peta' => true];
+        }
+
+        return [
+            'slug' => $p['tempat'],
+            'nama' => Str::headline(str_replace('-', ' ', $p['tempat'])),
+            'jam' => 'Informasi jam operasional tidak tersedia.',
+            'lat' => null,
+            'lng' => null,
+            'di_peta' => false,
+        ];
     }
 
     public function pilih(Request $request, string $slug)
@@ -178,7 +196,7 @@ class TiketController extends Controller
             $p = $this->sinkronAman($kode) ?? $p;
         }
 
-        return view('tiket.status', ['p' => $p, 't' => Katalog::get($p['tempat']), 'metode' => self::METODE]);
+        return view('tiket.status', ['p' => $p, 't' => $this->detailTempat($p), 'metode' => self::METODE]);
     }
 
     /** Buka jendela pembayaran Midtrans: token Snap untuk JavaScript, atau alihkan ke halaman Midtrans. */
@@ -330,7 +348,7 @@ class TiketController extends Controller
     {
         $p = $this->milik($request, $kode);
         abort_unless($p['status'] === 'lunas' && ! empty($p['kode_qr']), 404);
-        $t = Katalog::get($p['tempat']);
+        $t = $this->detailTempat($p);
         $status = ! empty($p['dipakai']) ? 'dipakai' : ($p['tanggal'] < now('Asia/Jakarta')->toDateString() ? 'kedaluwarsa' : 'aktif');
 
         return view('tiket.etiket', ['p' => $p, 't' => $t, 'status' => $status, 'tanggal' => Carbon::parse($p['tanggal'])->locale('id')]);

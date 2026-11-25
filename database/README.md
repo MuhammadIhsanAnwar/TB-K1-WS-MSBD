@@ -135,6 +135,22 @@ php artisan migrate --database=katalog
 
 Migration yang memiliki `protected $connection = 'transaksi'` tetap dijalankan
 ke DB 2, sedangkan tabel pelacak migration tetap berada di DB 1.
+
+Jika Artisan melaporkan `connection ... failed: Connection timed out`, koneksi
+belum mencapai PostgreSQL; ini masalah akses jaringan, bukan syntax migration atau
+kredensial. Periksa host dan port yang dikonfigurasi dari PowerShell:
+
+```powershell
+Test-NetConnection <DB_HOST> -Port <DB_PORT>
+```
+
+Untuk migration, gunakan endpoint pooler Supabase mode session jika koneksi
+langsung tidak dapat dijangkau. Mode transaction pooler tidak cocok untuk
+migration. Jika `TcpTestSucceeded` bernilai `False`, gunakan jaringan yang
+mengizinkan koneksi keluar ke port tersebut atau jalankan migration dari
+lingkungan yang memiliki akses; mengulang Artisan atau mengganti kredensial
+tidak memperbaiki timeout jaringan.
+
 Migration akses `service_role` DB 1 dan DB 2 perlu dijalankan sebelum menggunakan
 panel admin dan fitur analitik setelah deploy. Kunci `service_role` hanya boleh
 dipakai di server; jangan pernah mengirimkannya ke browser.

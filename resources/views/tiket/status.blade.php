@@ -55,26 +55,19 @@
                     data-status-url="{{ route('pesanan.status-lokal', $p['kode']) }}">
                         <p>Tekan <b>Bayar</b>, lalu pilih cara bayar di jendela Midtrans: QRIS, virtual account bank, dompet digital, atau kartu. Nominalnya {{ Katalog::rupiah($p['total']) }}. Untuk virtual account, nomornya muncul setelah bank dipilih.</p>
                         @unless (Midtrans::produksi())
-                            <div class="p-pesan p-pesan--info" style="margin-top:16px;display:block">
-                                Mode uji coba (sandbox): tidak ada uang yang ditarik. Untuk virtual account, salin nomornya lalu bayar di
-                                <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">simulator Midtrans</a>
-                                dengan bank yang sama. Untuk QRIS, URL gambar QR-nya muncul di halaman ini setelah QRIS dipilih.
-                                Untuk kartu, pakai kartu uji 4811 1111 1111 1114, CVV 123, OTP 112233.
-                                Halaman ini diperbarui sendiri setelah pembayaran diterima.
-                            </div>
                             {{-- simulator QRIS meminta URL gambar QR; jendela Midtrans hanya menampilkan gambarnya --}}
                             <div class="bayar-qris" data-qris-sandbox data-qris-url="{{ route('pesanan.qris', $p['kode']) }}" hidden>
                                 <img data-qris-gambar alt="Kode QRIS pesanan {{ $p['kode'] }}" width="160" height="160">
                                 <div class="bayar-qris__isi">
-                                    <b>Uji QRIS di simulator</b>
+                                    <b>Pembayaran QRIS</b>
                                     <ol>
                                         <li>Salin URL gambar QR di bawah.</li>
-                                        <li>Buka simulator QRIS, tempel di kolom <i>QR Code Image Url</i>, tekan <i>Scan QR</i>, lalu <i>Pay</i>.</li>
+                                        <li>Buka halaman QRIS dan masukkan URL tersebut untuk melanjutkan.</li>
                                     </ol>
-                                    <input type="text" readonly data-qris-teks aria-label="URL gambar QRIS untuk simulator">
+                                    <input type="text" readonly data-qris-teks aria-label="URL gambar QRIS">
                                     <div class="bayar-qris__aksi">
                                         <button type="button" class="mv-btn mv-btn--garis mv-btn--kecil" data-salin="">Salin URL</button>
-                                        <a class="mv-tautan" href="https://simulator.sandbox.midtrans.com/v2/qris/index" target="_blank" rel="noopener">Buka simulator QRIS</a>
+                                        <a class="mv-btn mv-btn--garis mv-btn--kecil" href="https://simulator.sandbox.midtrans.com/v2/qris/index" target="_blank" rel="noopener">Buka simulator pembayaran QRIS</a>
                                     </div>
                                 </div>
                             </div>
@@ -85,6 +78,9 @@
                                 @csrf
                                 <button class="mv-btn mv-btn--utama" type="submit">Bayar {{ Katalog::rupiah($p['total']) }}</button>
                             </form>
+                            @unless (Midtrans::produksi())
+                                <a class="mv-btn mv-btn--garis" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">Buka simulator pembayaran</a>
+                            @endunless
                             <form method="post" action="{{ route('pesanan.batal', $p['kode']) }}">
                                 @csrf
                                 <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
@@ -93,12 +89,12 @@
                     </div>
                 @elseif ($p['metode'] === 'qris')
                     <div style="display:grid;justify-items:start;gap:10px">
-                        <div class="mv-etiket__qr" data-qr="QRIS-PROTOTIPE-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS contoh untuk pesanan {{ $p['kode'] }}"></div>
-                        <p class="kecil redup">Pindai melalui aplikasi bank atau dompet digital. Kode QRIS ini merupakan simulasi prototipe dan tidak menarik saldo nyata.</p>
+                        <div class="mv-etiket__qr" data-qr="QRIS-PESANAN-{{ $p['kode'] }}-{{ $p['total'] }}" data-qr-label="Kode QRIS pesanan {{ $p['kode'] }}"></div>
+                        <p class="kecil redup">Pindai kode QR melalui aplikasi bank atau dompet digital.</p>
                     </div>
                 @elseif ($p['metode'] === 'va')
                     <div class="p-field">
-                        <span class="label" style="font-weight:600">Nomor virtual account <span class="contoh">contoh</span></span>
+                        <span class="label" style="font-weight:600">Nomor virtual account</span>
                         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
                             <span class="mv-etiket__kode">{{ $vaNomor }}</span>
                             <button class="mv-btn mv-btn--garis mv-btn--kecil" type="button" data-salin="{{ $vaNomor }}">Salin nomor</button>
@@ -113,13 +109,14 @@
                 @endif
 
                 @unless ($midtrans)
-                    <div class="p-pesan p-pesan--info" style="margin-top:20px">Mode prototipe: klik tombol simulasi di bawah untuk menerbitkan e-tiket secara langsung.</div>
-
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
                         <form method="post" action="{{ route('pesanan.simulasi', $p['kode']) }}">
                             @csrf
-                            <button class="mv-btn mv-btn--utama" type="submit">Simulasikan pembayaran berhasil</button>
+                            <button class="mv-btn mv-btn--utama" type="submit">Bayar sekarang</button>
                         </form>
+                        @unless (Midtrans::produksi())
+                            <a class="mv-btn mv-btn--garis" href="https://simulator.sandbox.midtrans.com" target="_blank" rel="noopener">Buka simulator pembayaran</a>
+                        @endunless
                         <form method="post" action="{{ route('pesanan.batal', $p['kode']) }}">
                             @csrf
                             <button class="mv-btn mv-btn--bahaya" type="submit">Batalkan pesanan</button>
@@ -132,14 +129,18 @@
                     <span class="p-pill neg">Kedaluwarsa</span>
                 </header>
                 <p>Pesanan melewati batas 15 menit sehingga dibatalkan otomatis tanpa ada dana yang ditarik.</p>
-                <a class="mv-btn mv-btn--utama" style="margin-top:16px" href="{{ route('tiket.pilih', $t['slug']) }}">Buat pesanan baru</a>
+                @if ($t['di_peta'])
+                    <a class="mv-btn mv-btn--utama" style="margin-top:16px" href="{{ route('tiket.pilih', $t['slug']) }}">Buat pesanan baru</a>
+                @endif
             @else
                 <header>
                     <h2 id="judul-bayar">Pesanan telah dibatalkan</h2>
                     <span class="p-pill">Dibatalkan</span>
                 </header>
                 <p>Pesanan ini dibatalkan atas permintaanmu sebelum pembayaran selesai.</p>
-                <a class="mv-btn mv-btn--utama" style="margin-top:16px" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan ulang tiket</a>
+                @if ($t['di_peta'])
+                    <a class="mv-btn mv-btn--utama" style="margin-top:16px" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan ulang tiket</a>
+                @endif
             @endif
         </section>
 

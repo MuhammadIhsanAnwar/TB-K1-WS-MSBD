@@ -54,8 +54,10 @@
 
     <div class="tidak-dicetak" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px">
         <button class="mv-btn mv-btn--utama" type="button" data-cetak>Simpan PDF / Cetak</button>
-        <a class="mv-btn mv-btn--hijau" href="{{ route('tempat', $t['slug']) }}">Halaman tempat</a>
-        <a class="mv-btn mv-btn--garis" href="https://www.openstreetmap.org/?mlat={{ $t['lat'] }}&mlon={{ $t['lng'] }}#map=18/{{ $t['lat'] }}/{{ $t['lng'] }}" rel="noopener">Petunjuk arah</a>
+        @if ($t['di_peta'])
+            <a class="mv-btn mv-btn--hijau" href="{{ route('tempat', $t['slug']) }}">Halaman tempat</a>
+            <a class="mv-btn mv-btn--garis" href="https://www.openstreetmap.org/?mlat={{ $t['lat'] }}&mlon={{ $t['lng'] }}#map=18/{{ $t['lat'] }}/{{ $t['lng'] }}" rel="noopener">Petunjuk arah</a>
+        @endif
     </div>
 </div>
 @endsection

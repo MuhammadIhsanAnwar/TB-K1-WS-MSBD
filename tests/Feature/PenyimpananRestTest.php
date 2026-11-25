@@ -318,8 +318,13 @@ class PenyimpananRestTest extends TestCase
             if ($request->method() === 'POST') {
                 return Http::response([['id_ulasan' => 42]], 201);
             }
+            if (str_contains($request->url(), '/ulasan?')) {
+                return $request->method() === 'DELETE'
+                    ? Http::response([['id_ulasan' => 42]])
+                    : Http::response([]);
+            }
 
-            return Http::response([['id_ulasan' => 42]], 200);
+            return Http::response([]);
         });
 
         $ulasan = Penyimpanan::tulisUlasan([
@@ -347,7 +352,7 @@ class PenyimpananRestTest extends TestCase
             && str_contains($request->url(), 'id_ulasan=eq.42'));
     }
 
-    public function test_reviews_read_their_rating_from_the_normalized_rating_relation(): void
+    public function test_reviews_read_ratings_without_relying_on_postgrest_embedded_relations(): void
     {
         Http::fake([
             'https://transaksi.test/rest/v1/ulasan?*' => Http::response([[
@@ -356,10 +361,14 @@ class PenyimpananRestTest extends TestCase
                 'tempat_slug' => 'istana-maimun',
                 'nama_pengguna' => 'Rina',
                 'email_pengguna' => 'rina@example.test',
-                'rating_tempat' => ['bintang' => 4],
                 'teks' => 'Tempatnya menarik dan informasinya berguna.',
                 'status' => 'tayang',
                 'created_at' => '2026-11-15T10:00:00Z',
+            ]]),
+            'https://transaksi.test/rest/v1/rating_tempat?*' => Http::response([[
+                'id_pengguna' => 7,
+                'tempat_slug' => 'istana-maimun',
+                'bintang' => 4,
             ]]),
         ]);
 
@@ -368,7 +377,11 @@ class PenyimpananRestTest extends TestCase
         $this->assertSame(4, $ulasan[0]['bintang']);
         Http::assertSent(fn (Request $request) => $request->method() === 'GET'
             && str_contains($request->url(), '/ulasan?')
-            && str_contains($request->url(), 'rating_tempat'));
+            && ! str_contains($request->url(), 'rating_tempat'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/rating_tempat?')
+            && str_contains($request->url(), 'id_pengguna=in.%287%29')
+            && str_contains($request->url(), 'tempat_slug=in.%28istana-maimun%29'));
     }
 
     public function test_saved_plans_are_loaded_for_the_current_user_with_normalized_relations(): void

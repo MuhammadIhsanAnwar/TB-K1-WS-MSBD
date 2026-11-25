@@ -395,18 +395,18 @@ class SupabaseApi
 
     public function ulasan(?string $tempat = null, ?string $status = null, ?int $idPengguna = null): array
     {
-        $filters = ['select' => '*,rating_tempat(bintang)', 'order' => 'created_at.desc,id_ulasan.desc'];
+        $filters = ['select' => '*', 'order' => 'created_at.desc,id_ulasan.desc'];
         $tempat === null || $filters['tempat_slug'] = 'eq.'.$tempat;
         $status === null || $filters['status'] = 'eq.'.$status;
         $idPengguna === null || $filters['id_pengguna'] = 'eq.'.$idPengguna;
 
-        return $this->getRows('ulasan', $filters);
+        return $this->sertakanRatingUlasan($this->getRows('ulasan', $filters));
     }
 
     public function ulasanHalaman(?array $tempatSlugs, string $status, int $batas, int $offset): array
     {
         $filters = [
-            'select' => '*,rating_tempat(bintang)',
+            'select' => '*',
             'status' => 'eq.'.$status,
             'order' => 'created_at.desc,id_ulasan.desc',
             'limit' => max(1, min($batas, 100)),
@@ -430,9 +430,43 @@ class SupabaseApi
             ->throw();
 
         return [
-            'baris' => $response->json(),
+            'baris' => $this->sertakanRatingUlasan($response->json()),
             'jumlah' => $this->jumlahDariContentRange($response, 'ulasan'),
         ];
+    }
+
+    private function sertakanRatingUlasan(array $ulasan): array
+    {
+        if ($ulasan === []) {
+            return [];
+        }
+
+        $idPengguna = array_values(array_unique(array_map(
+            static fn (array $baris): int => (int) $baris['id_pengguna'],
+            $ulasan,
+        )));
+        $tempat = array_values(array_unique(array_map(
+            static fn (array $baris): string => (string) $baris['tempat_slug'],
+            $ulasan,
+        )));
+        $rating = $this->getRows('rating_tempat', [
+            'select' => 'id_pengguna,tempat_slug,bintang',
+            'id_pengguna' => 'in.('.implode(',', $idPengguna).')',
+            'tempat_slug' => 'in.('.implode(',', $tempat).')',
+        ]);
+        $ratingPerUlasan = [];
+        foreach ($rating as $baris) {
+            $ratingPerUlasan[$baris['id_pengguna'].'|'.$baris['tempat_slug']] = [
+                'bintang' => (int) $baris['bintang'],
+            ];
+        }
+
+        foreach ($ulasan as &$baris) {
+            $baris['rating_tempat'] = $ratingPerUlasan[$baris['id_pengguna'].'|'.$baris['tempat_slug']] ?? [];
+        }
+        unset($baris);
+
+        return $ulasan;
     }
 
     public function ringkasanUlasan(): array
