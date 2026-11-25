@@ -145,7 +145,7 @@
                     @foreach ($pesanan as $p)
                         @php
                             $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
-                            $st = ! empty($p['dipakai']) ? ['Dipakai', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
+                            $st = ! empty($p['dipakai']) ? ['Sudah check-in', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
                         @endphp
                         <tr>
                             <td><span class="kode">{{ $p['kode'] }}</span></td>

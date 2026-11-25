@@ -778,11 +778,24 @@ class AdminController extends Controller
         if ($p) {
             $this->pastikanBolehKelola($request, $p['tempat']);
         }
+        if ($p
+            && $p['status'] === 'lunas'
+            && empty($p['dipakai'])
+            && $p['tanggal'] === now('Asia/Jakarta')->toDateString()
+            && empty($p['kode_qr'])) {
+            $kodeQr = Penyimpanan::pastikanKodeQr($p);
+            if ($kodeQr !== null) {
+                $p['kode_qr'] = $kodeQr;
+            }
+        }
+
         $hasil = $this->hasilValidasiTiket($p, $kode);
         if ($hasil['status'] === 'valid') {
             if (Penyimpanan::tandaiTiketDipakai((int) $p['id'], now('Asia/Jakarta')->toIso8601String())) {
-                $hasil['judul'] = 'Valid dan sudah dipakai';
-                $hasil['teks'] .= ' Tiket dinonaktifkan dan masuk ke riwayat.';
+                $jumlahPengunjung = array_sum(array_column($p['item'], 'jumlah'));
+                Kunjungan::catatCheckin($p['tempat'], $jumlahPengunjung);
+                $hasil['judul'] = 'Valid dan sudah check-in';
+                $hasil['teks'] .= ' Check-in mencakup '.$jumlahPengunjung.' pengunjung. Tiket dinonaktifkan dan masuk ke riwayat.';
             } else {
                 $p = str_starts_with($kode, 'QR-')
                     ? (Penyimpanan::cariPesananQr($kode) ?? $p)
@@ -799,7 +812,7 @@ class AdminController extends Controller
         return match (true) {
             ! $pesanan => ['status' => 'tidak', 'judul' => 'Tidak ditemukan', 'teks' => 'Tidak ada tiket dengan identitas '. $kode.'.'],
             $pesanan['status'] !== 'lunas' => ['status' => 'tidak', 'judul' => 'Belum dibayar', 'teks' => 'Pesanan '.$pesanan['kode'].' berstatus '.$pesanan['status'].'.'],
-            ! empty($pesanan['dipakai']) => ['status' => 'dipakai', 'judul' => 'Sudah dipakai', 'teks' => 'Tiket ini dipakai '.substr($pesanan['dipakai'], 11, 5).'.'],
+            ! empty($pesanan['dipakai']) => [            'status' => 'dipakai', 'judul' => 'Sudah check-in', 'teks' => 'Tiket ini dipakai '.substr($pesanan['dipakai'], 11, 5).'.'],
             $pesanan['tanggal'] < now('Asia/Jakarta')->toDateString() => [
                 'status' => 'kedaluwarsa',
                 'judul' => 'Tiket kedaluwarsa',

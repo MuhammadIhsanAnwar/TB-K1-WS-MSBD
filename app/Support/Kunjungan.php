@@ -51,17 +51,39 @@ final class Kunjungan
         return $harian;
     }
 
+    public static function catatCheckin(string $slug, int $jumlah): void
+    {
+        $jumlah = max(1, $jumlah);
+        $jam = now('Asia/Jakarta')->format('YmdH');
+        self::tambahDimensi("medanvisit.checkin.jam.$jam", $slug, $jumlah);
+    }
+
+    public static function ringkasanCheckinTerbaru(int $jam = 3): array
+    {
+        $tempat = [];
+        for ($i = 0; $i < max(1, $jam); $i++) {
+            $jamKey = now('Asia/Jakarta')->subHours($i)->format('YmdH');
+            foreach (Cache::get("medanvisit.checkin.jam.$jamKey", []) as $slug => $jumlah) {
+                $tempat[$slug] = ($tempat[$slug] ?? 0) + (int) $jumlah;
+            }
+        }
+
+        arsort($tempat);
+
+        return $tempat;
+    }
+
     private static function tambah(string $key): void
     {
         Cache::add($key, 0, now('Asia/Jakarta')->addYears(5));
         Cache::increment($key);
     }
 
-    private static function tambahDimensi(string $key, string $dimensi): void
+    private static function tambahDimensi(string $key, string $dimensi, int $nilai = 1): void
     {
-        Cache::lock($key.'.lock', 5)->block(2, function () use ($key, $dimensi): void {
+        Cache::lock($key.'.lock', 5)->block(2, function () use ($key, $dimensi, $nilai): void {
             $jumlah = Cache::get($key, []);
-            $jumlah[$dimensi] = ($jumlah[$dimensi] ?? 0) + 1;
+            $jumlah[$dimensi] = ($jumlah[$dimensi] ?? 0) + $nilai;
             Cache::put($key, $jumlah, now('Asia/Jakarta')->addYears(5));
         });
     }

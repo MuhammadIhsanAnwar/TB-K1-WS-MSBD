@@ -6,6 +6,7 @@ use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
+use App\Support\RekomendasiTempat;
 use App\Support\Semantik;
 use App\Services\TanyaMasNonovService;
 use App\Services\TanyaMasNonovMemori;
@@ -35,11 +36,13 @@ class SitusController extends Controller
             $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
         }
         unset($t);
+        $tempat = RekomendasiTempat::urutkan(array_values($tempat));
 
         return view('situs.beranda', [
             'kategori' => $kategori,
             'bertiket' => Katalog::bertiket(),
-            'petaTempat' => array_values($tempat),
+            'petaTempat' => $tempat,
+            'rekomendasiUtama' => $tempat[0] ?? null,
             'ringkasanRatingTempat' => $ratingTempat,
             'jumlahSukaTempat' => $jumlahSukaTempat,
         ]);
@@ -81,6 +84,17 @@ class SitusController extends Controller
             Penyimpanan::catatCari($q, count($hasil));
         }
         $perJenis = collect($hasil)->countBy('jenis')->all();
+        $cepat = [];
+        if ($q === '') {
+            $ratingTempat = Penyimpanan::ringkasanRatingTempat();
+            $jumlahSukaTempat = Penyimpanan::ringkasanSukaTempat();
+            $cepat = RekomendasiTempat::urutkan(array_map(function (array $tempat) use ($ratingTempat, $jumlahSukaTempat) {
+                $tempat['rating'] = $ratingTempat[$tempat['slug']]['rating'] ?? 0;
+                $tempat['jumlahSuka'] = $jumlahSukaTempat[$tempat['slug']] ?? 0;
+
+                return $tempat;
+            }, array_values(Katalog::tempat())));
+        }
         if ($jenis) {
             $hasil = array_values(array_filter($hasil, fn ($e) => $e['jenis'] === $jenis));
         }
@@ -91,7 +105,7 @@ class SitusController extends Controller
             'hasil' => $hasil,
             'perJenis' => $perJenis,
             'koreksi' => $hasil ? null : Katalog::koreksi($q),
-            'cepat' => array_slice(array_values(Katalog::tempat()), 0, 4),
+            'cepat' => array_slice($cepat, 0, 4),
         ]);
     }
 
@@ -209,6 +223,7 @@ class SitusController extends Controller
     {
         $tempat = array_values(Katalog::tempat());
         $kunjungan = Kunjungan::ringkasan(365)['tempat'];
+        $checkinTerbaru = Kunjungan::ringkasanCheckinTerbaru();
 
         // Rating dibaca dari ringkasan tabel rating DB 2; ulasan tetap dihitung terpisah.
         $ulasan = Penyimpanan::ringkasanUlasan();
@@ -220,10 +235,11 @@ class SitusController extends Controller
             $t['rating'] = $rating['rating'];
             $t['jumlahRating'] = $rating['jumlahRating'];
             $t['jumlahUlasan'] = $ulasan[$t['slug']]['jumlahUlasan'] ?? 0;
-            $t['jumlahKunjungan'] = $kunjungan[$t['slug']] ?? 0;
+            $t['jumlahKunjungan'] = $checkinTerbaru[$t['slug']] ?? ($kunjungan[$t['slug']] ?? 0);
             $t['jumlahSuka'] = $jumlahSukaTempat[$t['slug']] ?? 0;
         }
         unset($t);
+        $tempat = RekomendasiTempat::urutkan(array_values($tempat));
 
         return view('situs.peta', compact('tempat'));
     }
@@ -260,11 +276,12 @@ class SitusController extends Controller
             : [];
         $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
         $rating = Penyimpanan::ringkasanRatingTempat()[$slug] ?? ['rating' => 0, 'jumlahRating' => 0];
+        $ramai = Kunjungan::ringkasanCheckinTerbaru()[$slug] ?? 0;
 
         return view('situs.tempat', ['e' => $t] + [
             'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
             'ratingTempat' => ['rata' => $rating['rating'], 'jumlah' => $rating['jumlahRating']],
-            'ramai' => 0,
+            'ramai' => $ramai,
             'dekat' => $this->terdekat($t, 4),
             'jumlahSuka' => $jumlahSuka,
             'sudahDisukai' => in_array($slug, $disukai, true),

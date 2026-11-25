@@ -1,6 +1,6 @@
 @extends('layouts.situs')
 @php
-    $statusLabel = ['aktif' => ['Aktif, siap dipindai', 'pos'], 'dipakai' => ['Sudah dipakai', ''], 'kedaluwarsa' => ['Tanggal lewat', 'neg']][$status];
+    $statusLabel = ['aktif' => ['Aktif, siap dipindai', 'pos'], 'dipakai' => ['Sudah check-in', ''], 'kedaluwarsa' => ['Tanggal lewat', 'neg']][$status];
 @endphp
 @section('judul', 'E-tiket '.$t['nama'])
 @section('tanpa-kaki', '1')
@@ -32,7 +32,11 @@
                 <dd>{{ $t['jam'] }}</dd>
             </div>
             <div>
-                <dt>Jumlah pengunjung</dt>
+                <dt>Total pengunjung</dt>
+                <dd>{{ array_sum(array_column($p['item'], 'jumlah')) }} orang</dd>
+            </div>
+            <div>
+                <dt>Rincian tiket</dt>
                 <dd>{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }}</dd>
             </div>
             <div>

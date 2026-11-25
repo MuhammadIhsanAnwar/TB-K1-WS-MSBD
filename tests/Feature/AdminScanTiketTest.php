@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Support\Kunjungan;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -13,6 +15,8 @@ class AdminScanTiketTest extends TestCase
     {
         parent::setUp();
 
+        config(['cache.default' => 'array']);
+        Cache::store('array')->flush();
         Carbon::setTestNow(Carbon::parse('2026-11-23 10:00:00', 'Asia/Jakarta'));
         config([
             'services.supabase.katalog.url' => 'https://katalog.test',
@@ -68,12 +72,14 @@ class AdminScanTiketTest extends TestCase
                 'peran' => 'admin',
                 'tempat_slugs' => ['medan-zoo'],
             ],
-        ])
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from('/admin/tiket')
             ->post('/admin/tiket/validasi', ['kode' => 'QR-IDENTITAS'])
             ->assertRedirect('/admin/tiket')
             ->assertSessionHas('hasil.status', 'dipakai');
 
+        $this->assertSame([], Kunjungan::ringkasanCheckinTerbaru());
         Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
             && str_contains($request->url(), '/e_tiket?')
             && str_contains($request->url(), 'dipakai_pada=is.null'));
@@ -109,7 +115,8 @@ class AdminScanTiketTest extends TestCase
                 'peran' => 'admin',
                 'tempat_slugs' => ['medan-zoo'],
             ],
-        ])
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from('/admin/tiket')
             ->post('/admin/tiket/validasi', ['kode' => 'QR-IDENTITAS'])
             ->assertRedirect('/admin/tiket')
@@ -119,7 +126,67 @@ class AdminScanTiketTest extends TestCase
             && str_contains($request->url(), '/e_tiket?'));
     }
 
-    private function pesanan(string $tanggal, ?string $dipakai = null): array
+    public function test_order_code_scan_repairs_missing_qr_and_counts_all_included_visitors_once(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'medan-zoo']]);
+            }
+
+            if (str_contains($request->url(), '/e_tiket?')) {
+                if ($request->method() === 'POST') {
+                    return Http::response([[
+                        'id_etiket' => 9,
+                        'id_pesanan' => 7,
+                        'kode_qr' => 'QR-NEWIDENTITY',
+                    ]], 201);
+                }
+
+                if ($request->method() === 'PATCH') {
+                    return Http::response([['id_pesanan' => 7, 'dipakai_pada' => '2026-11-23T03:00:00+00:00']]);
+                }
+
+                return Http::response([]);
+            }
+
+            if (str_contains($request->url(), '/pesanan_item?')) {
+                return Http::response([
+                    ['id_pesanan' => 7, 'jenis_pengunjung' => 'Dewasa', 'harga' => 15000, 'jumlah' => 2, 'subtotal' => 30000],
+                    ['id_pesanan' => 7, 'jenis_pengunjung' => 'Anak', 'harga' => 8000, 'jumlah' => 1, 'subtotal' => 8000],
+                ]);
+            }
+
+            if (str_contains($request->url(), '/pesanan?')) {
+                return Http::response([$this->pesanan('2026-11-23', kodeQr: null)]);
+            }
+
+            return Http::response([], 404);
+        });
+
+        $this->withSession([
+            'pengguna' => [
+                'id' => 3,
+                'peran' => 'admin',
+                'tempat_slugs' => ['medan-zoo'],
+            ],
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->from('/admin/tiket')
+            ->post('/admin/tiket/validasi', ['kode' => 'MV-AAAA1111'])
+            ->assertRedirect('/admin/tiket')
+            ->assertSessionHas('hasil.status', 'valid')
+            ->assertSessionHas('hasil.judul', 'Valid dan sudah check-in')
+            ->assertSessionHas('hasil.teks', fn (string $teks) => str_contains($teks, '3 pengunjung'));
+
+        $this->assertSame(3, Kunjungan::ringkasanCheckinTerbaru()['medan-zoo']);
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/e_tiket?'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
+            && str_contains($request->url(), '/e_tiket?')
+            && str_contains($request->url(), 'dipakai_pada=is.null'));
+    }
+
+    private function pesanan(string $tanggal, ?string $dipakai = null, ?string $kodeQr = 'QR-IDENTITAS'): array
     {
         return [
             'id_pesanan' => 7,
@@ -136,8 +203,8 @@ class AdminScanTiketTest extends TestCase
             'batas_bayar' => '2026-11-23T03:15:00+00:00',
             'created_at' => '2026-11-23T03:00:00+00:00',
             'pembayaran' => [['dibayar_pada' => '2026-11-23T03:05:00+00:00']],
-            'e_tiket' => [[
-                'kode_qr' => 'QR-IDENTITAS',
+            'e_tiket' => $kodeQr === null ? [] : [[
+                'kode_qr' => $kodeQr,
                 'dipakai_pada' => $dipakai,
             ]],
         ];

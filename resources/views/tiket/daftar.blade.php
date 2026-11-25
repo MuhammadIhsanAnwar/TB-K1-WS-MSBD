@@ -33,6 +33,7 @@
                     <tr>
                         <th>Tujuan wisata</th>
                         <th>Tanggal kunjungan</th>
+                        <th class="n">Pengunjung</th>
                         <th>Rincian tiket</th>
                         <th class="n">Total</th>
                         <th class="n">Status</th>
@@ -48,12 +49,13 @@
                                 <span class="sub nums">{{ $p['kode'] }}</span>
                             </td>
                             <td class="sekunder">{{ \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id')->translatedFormat('j M Y') }}</td>
+                            <td class="n">{{ array_sum(array_column($p['item'], 'jumlah')) }} orang</td>
                             <td class="sekunder">{{ collect($p['item'])->map(fn ($i) => $i['jumlah'].' '.mb_strtolower($i['jenis']))->implode(', ') }}</td>
                             <td class="n nums">{{ Katalog::rupiah($p['total']) }}</td>
                             <td class="n">
     @php
         $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
-        $st = ! empty($p['dipakai']) ? ['Sudah dipakai', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
+        $st = ! empty($p['dipakai']) ? ['Sudah check-in', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Siap dipakai', 'pos'], 'menunggu' => ['Menunggu bayar', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
     @endphp
     <span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span>
 </td>

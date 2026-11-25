@@ -89,6 +89,7 @@ class TiketEtiketTest extends TestCase
             ->assertSee('Kolam Renang Selayang')
             ->assertSee('QR-IDENTITAS')
             ->assertSee('data-qr="QR-IDENTITAS"', false)
+            ->assertSee('2 orang')
             ->assertSee('2 dewasa')
             ->assertSee('Rina')
             ->assertDontSee('Belum ada di peta');

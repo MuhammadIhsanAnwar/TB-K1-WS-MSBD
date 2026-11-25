@@ -4,7 +4,7 @@
     use App\Support\Katalog;
     use App\Support\Penyimpanan;
     $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
-    $semuaTempat = Katalog::tempat();
+    $semuaTempat = collect($petaTempat)->keyBy('slug')->all();
     $ringkasanUlasan = Penyimpanan::ringkasanUlasan();
     foreach ($semuaTempat as &$tempatStat) {
         $ringkasanRating = $ringkasanRatingTempat[$tempatStat['slug']] ?? ['rating' => 0, 'jumlahRating' => 0];
@@ -35,10 +35,12 @@
     ])->values();
     // Tiga pilihan sampul selalu muncul lebih dulu, lalu enam destinasi berikutnya
     // melengkapi halaman unggulan pertama.
-    $urutTempat = collect($unggulan)
+    $slugRekomendasi = $rekomendasiUtama['slug'] ?? null;
+    $urutTempat = collect($rekomendasiUtama ? [$rekomendasiUtama] : [])
+        ->concat(collect($unggulan)
         ->map(fn ($slug) => $semuaTempat[$slug] ?? null)
-        ->filter()
-        ->concat(collect($semuaTempat)->reject(fn ($t) => in_array($t['slug'], $unggulan, true))->sortBy('nama'))
+        ->filter(fn ($t) => $t && $t['slug'] !== $slugRekomendasi))
+        ->concat(collect($semuaTempat)->reject(fn ($t) => $t['slug'] === $slugRekomendasi || in_array($t['slug'], $unggulan, true))->sortBy('nama'))
         ->values();
     $perHalamanTempat = 9;
     $perHalamanTiket = 6;
@@ -158,7 +160,7 @@
         <div class="mv-grid-tempat" data-grid-beranda aria-live="polite">
             @foreach ($urutTempat as $idx => $t)
                 @php
-                    $adalahLebar = in_array($t['slug'], $unggulan, true);
+                    $adalahLebar = $t['slug'] === $slugRekomendasi || in_array($t['slug'], $unggulan, true);
                     $nadaPita = ['hijau', 'krem', 'kuning'][$idx % 3];
                     $sedangBuka = Katalog::bukaSekarang($t);
                     $berkasFoto = $t['foto'] ?: 'kesawan.jpg';
@@ -179,6 +181,9 @@
                     </div>
                     <div class="mv-kartu-tempat__isi">
                         <strong class="mv-kartu-tempat__nama">{{ $t['nama'] }}</strong>
+                        @if ($t['slug'] === $slugRekomendasi)
+                            <span class="mv-kartu-tempat__meta">Rekomendasi utama · peringkat gabungan rating dan like</span>
+                        @endif
                         <span class="mv-kartu-tempat__meta">{{ \Illuminate\Support\Str::limit($t['ringkas'], $adalahLebar ? 115 : 80) }}</span>
                         <div class="mv-kartu-tempat__statistik" aria-label="Statistik {{ $t['nama'] }}">
                             <span><b>{{ number_format($t['jumlahSuka'], 0, ',', '.') }}</b> like</span>
