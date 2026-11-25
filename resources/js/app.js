@@ -4,7 +4,7 @@ import { mulaiLokasi } from './situs/lokasi.js';
 
 const ada = (sel) => document.querySelector(sel);
 
-if (document.body.classList.contains('situs')) mulaiLokasi();
+if (ada('[data-dekat]') || ada('[data-lokasi-saya]')) mulaiLokasi();
 
 if (ada('[data-peta-koordinat]')) {
     import('./admin/peta-koordinat.js')

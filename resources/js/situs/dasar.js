@@ -515,6 +515,65 @@ if (widget) {
         return `<div><a class="kartu-mini" href="${esc(t.url ?? '#')}">${foto}<span><b>${esc(t.nama)}</b><span>${esc(sub)}</span></span></a>${aksi ? `<div class="aksi-mini">${aksi}</div>` : ''}</div>`;
     };
 
+    const formatInlineJawaban = (teks) => esc(String(teks).replace(/[ \t]+([,.;!?])/g, '$1'))
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+    const formatJawaban = (teks) => {
+        const baris = String(teks ?? '').replace(/\r\n?/g, '\n').trim().split('\n');
+        const blok = [];
+        let paragraf = [];
+        let jenisDaftar = null;
+        let itemDaftar = [];
+
+        const tutupParagraf = () => {
+            if (!paragraf.length) return;
+            blok.push(`<p>${paragraf.map(formatInlineJawaban).join('<br>')}</p>`);
+            paragraf = [];
+        };
+        const tutupDaftar = () => {
+            if (!jenisDaftar) return;
+            blok.push(`<${jenisDaftar}>${itemDaftar.map((item) => `<li>${formatInlineJawaban(item)}</li>`).join('')}</${jenisDaftar}>`);
+            jenisDaftar = null;
+            itemDaftar = [];
+        };
+
+        baris.forEach((barisSaatIni) => {
+            const teksBaris = barisSaatIni.trim();
+            if (!teksBaris) {
+                tutupParagraf();
+                return;
+            }
+
+            const judul = teksBaris.match(/^#{1,4}\s+(.+)$/);
+            if (judul) {
+                tutupParagraf();
+                tutupDaftar();
+                blok.push(`<p class="mv-jawaban__judul"><strong>${formatInlineJawaban(judul[1])}</strong></p>`);
+                return;
+            }
+
+            const bernomor = teksBaris.match(/^\d+[.)]\s+(.+)$/);
+            const berpoin = teksBaris.match(/^[-*•]\s+(.+)$/);
+            const jenisBerikut = bernomor ? 'ol' : berpoin ? 'ul' : null;
+            if (jenisBerikut) {
+                tutupParagraf();
+                if (jenisDaftar && jenisDaftar !== jenisBerikut) tutupDaftar();
+                jenisDaftar = jenisBerikut;
+                itemDaftar.push(bernomor ? bernomor[1] : berpoin[1]);
+                return;
+            }
+
+            tutupDaftar();
+            paragraf.push(teksBaris);
+        });
+
+        tutupParagraf();
+        tutupDaftar();
+
+        return blok.join('');
+    };
+
     const tambahPesan = (html, kelas) => {
         const el = document.createElement('div');
         el.className = `mv-gelembung ${kelas}`;
@@ -552,7 +611,7 @@ if (widget) {
             ketik.remove();
 
             const adaTempat = Array.isArray(j.tempat) && j.tempat.length > 0;
-            const isi = (j.teks ?? []).map((p) => `<p>${esc(p)}</p>`).join('')
+            const isi = (j.teks ?? []).map(formatJawaban).join('')
                 + (j.tempat ?? []).map(kartuMini).join('')
                 + (j.tautan ? `<div class="aksi-mini"><a href="${esc(j.tautan.url)}">${esc(j.tautan.label)}</a></div>` : '');
             

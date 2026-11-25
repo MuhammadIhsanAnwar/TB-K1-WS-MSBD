@@ -371,6 +371,44 @@ class PenyimpananRestTest extends TestCase
             && str_contains($request->url(), 'rating_tempat'));
     }
 
+    public function test_saved_plans_are_loaded_for_the_current_user_with_normalized_relations(): void
+    {
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/rencana?')) {
+                return Http::response([[
+                    'id_rencana' => 9,
+                    'kode' => 'mdn-abcd',
+                    'id_pengguna' => 7,
+                    'judul' => 'Rute sejarah',
+                    'durasi_jam' => 4,
+                    'tempat_mulai_slug' => 'istana-maimun',
+                    'created_at' => '2026-11-15T10:00:00Z',
+                ]]);
+            }
+            if (str_contains($request->url(), '/rencana_minat?')) {
+                return Http::response([['id_rencana' => 9, 'kode_kategori' => 'sejarah']]);
+            }
+            if (str_contains($request->url(), '/rencana_moda?')) {
+                return Http::response([['id_rencana' => 9, 'moda' => 'jalan']]);
+            }
+            if (str_contains($request->url(), '/rencana_tujuan?')) {
+                return Http::response([['id_rencana' => 9, 'urutan' => 1, 'tempat_slug' => 'museum-sumut']]);
+            }
+
+            return Http::response([]);
+        });
+
+        $rencana = Penyimpanan::rencana(7);
+
+        $this->assertSame('mdn-abcd', $rencana[0]['kode']);
+        $this->assertSame(['sejarah'], $rencana[0]['minat']);
+        $this->assertSame(['jalan'], $rencana[0]['moda']);
+        $this->assertSame(['museum-sumut'], $rencana[0]['tujuan']);
+        Http::assertSent(fn (Request $request) => $request->method() === 'GET'
+            && str_contains($request->url(), '/rencana?')
+            && str_contains($request->url(), 'id_pengguna=eq.7'));
+    }
+
     public function test_saved_plans_send_and_read_ordered_destinations_and_travel_modes(): void
     {
         Http::fake(function (Request $request) {

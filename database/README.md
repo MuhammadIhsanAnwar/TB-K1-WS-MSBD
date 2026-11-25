@@ -20,6 +20,7 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `migrations/2026_11_15_000200_buat_admin_tempat.php` | hubungan admin dengan tempat wisata di DB 1; mengisi relasi dari `users.tempat_slug` yang sudah ada |
 | `migrations/2026_11_18_000200_buat_pengaturan_situs.php` | pengaturan DB 1 untuk sampul beranda dan override status operasional tempat |
 | `migrations/2026_11_24_000100_batasi_tiket_hari_ini.php` | DB 2 menolak pesanan dengan tanggal kunjungan selain hari ini |
+| `migrations/2026_11_25_000100_hak_akses_rencana_service_role_db2.php` | memberi `service_role` akses DB 2 untuk membaca dan mengelola rencana perjalanan melalui REST/RPC |
 | `migrations/2026_11_26_000100_buat_suka_tempat.php` | DB 2 menyimpan satu suka per akun dan tempat serta menyediakan ringkasan jumlah suka |
 | `migrations/2026_11_26_000200_buat_rating_tempat.php` | Riwayat migration DB 2 untuk membuat tabel rating; trigger lama dinormalisasi oleh migration berikutnya |
 | `migrations/2026_11_27_000100_normalisasi_db1_db2.php` | Memusatkan relasi admin-tempat, rating, dan moda rencana; ringkasan ulasan dihitung sebagai view |
@@ -50,7 +51,7 @@ Membuka database lewat DBeaver: koneksi PostgreSQL baru, host `localhost`, port 
 | Koneksi | Variabel `.env` | Isi |
 |---|---|---|
 | `katalog` (DB 1) | `DB_*` | users, admin_tempat, email_verification_tokens, password_reset_tokens, pesan_pengguna, balasan_pesan, pengaturan_situs, sessions, cache, jobs, failed_jobs |
-| `transaksi` (DB 2) | `DB2_*` | pesanan, pesanan_item, pembayaran, e_tiket, ulasan, rating_tempat, suka_tempat, rencana, rencana_minat, rencana_moda, log_pencarian |
+| `transaksi` (DB 2) | `DB2_*` | pesanan, pesanan_item, pembayaran, e_tiket, ulasan, rating_tempat, suka_tempat, rencana, rencana_minat, rencana_moda, rencana_tujuan, log_pencarian |
 | Database 3 | `SPARQL_*` | tempat wisata, kategori, kecamatan, tiket, entitas, relasi, dan jalur dalam RDF |
 
 `tempat_slug` di DB 2 merujuk ke resource RDF di Database 3. Kecocokannya dijaga aplikasi.

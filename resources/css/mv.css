@@ -960,6 +960,13 @@
   font-size: var(--mv-s-ui);
   line-height: 1.5;
 }
+.mv-gelembung p { margin: 0; }
+.mv-gelembung p + p { margin-top: .65em; }
+.mv-gelembung ul,
+.mv-gelembung ol { margin: .45em 0; padding-inline-start: 1.4em; }
+.mv-gelembung li + li { margin-top: .25em; }
+.mv-gelembung strong { font-weight: 700; }
+.mv-gelembung .mv-jawaban__judul { margin-bottom: .35em; }
 .mv-gelembung--asisten {
   align-self: flex-start;
   background: var(--mv-putih);
