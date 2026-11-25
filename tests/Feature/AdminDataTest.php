@@ -102,14 +102,27 @@ class AdminDataTest extends TestCase
             'nama' => 'Admin',
             'email' => 'admin@example.test',
             'peran' => 'admin',
-        ]])->get('/admin')->assertOk()->assertDontSee('Editor relasi');
+        ]])->get('/admin')->assertOk()
+            ->assertDontSee('Editor relasi')
+            ->assertDontSee('Antrean kerja kurator')
+            ->assertDontSee('Dicari tetapi tanpa hasil')
+            ->assertDontSee('Relasi bersumber survei, perlu verifikasi')
+            ->assertDontSee('Tempat yang perlu dilengkapi')
+            ->assertDontSee('Usulan relasi baru')
+            ->assertSee('Ulasan terbaru');
 
         $this->withSession(['pengguna' => [
             'id' => 1,
             'nama' => 'Super Admin',
             'email' => 'superadmin@example.test',
             'peran' => 'superadmin',
-        ]])->get('/admin')->assertOk()->assertSee('Editor relasi');
+        ]])->get('/admin')->assertOk()
+            ->assertSee('Editor relasi')
+            ->assertSee('Antrean kerja kurator')
+            ->assertSee('Dicari tetapi tanpa hasil')
+            ->assertSee('Relasi bersumber survei, perlu verifikasi')
+            ->assertSee('Tempat yang perlu dilengkapi')
+            ->assertSee('Usulan relasi baru');
     }
 
     public function test_admin_role_is_refreshed_from_database_before_denying_admin_dashboard(): void

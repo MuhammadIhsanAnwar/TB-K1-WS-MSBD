@@ -61,6 +61,7 @@ class AdminController extends Controller
 
     public function ringkasan(Request $request)
     {
+        $superadmin = $request->session()->get('pengguna.peran') === 'superadmin';
         $periode = (int) $request->query('periode', 30);
         $periode = in_array($periode, [7, 30, 90], true) ? $periode : 30;
         $sejak = now('Asia/Jakarta')->subDays($periode)->toIso8601String();
@@ -70,20 +71,22 @@ class AdminController extends Controller
         }
 
         $lunas = collect(Penyimpanan::pesanan())->filter(fn ($p) => $p['status'] === 'lunas' && ($p['dibayar'] ?? '') >= $sejak);
-        $tanpaSumber = collect(Katalog::relasi())->filter(fn ($r) => str_contains($r['sumber'], 'perlu verifikasi'));
-        $tanpaFoto = collect(Katalog::tempat())->filter(fn ($t) => empty($t['foto']));
+        $tempat = $superadmin ? Katalog::tempat() : [];
+        $tanpaSumber = collect($superadmin ? Katalog::relasi() : [])
+            ->filter(fn ($r) => str_contains($r['sumber'], 'perlu verifikasi'));
+        $tanpaFoto = collect($tempat)->filter(fn ($t) => empty($t['foto']));
 
         return view('admin.ringkasan', [
             'periode' => $periode,
-            'jumlahTempat' => count(Katalog::tempat()),
+            'jumlahTempat' => count($tempat),
             'tiket' => $lunas->sum(fn ($p) => array_sum(array_column($p['item'], 'jumlah'))),
             'pendapatan' => $lunas->sum('total'),
             'ulasanTerbaru' => $ulasanTerbaru->values()->all(),
-            'celah' => Penyimpanan::celahKonten(),
-            'jumlahCari' => Penyimpanan::jumlahCari(),
+            'celah' => $superadmin ? Penyimpanan::celahKonten() : [],
+            'jumlahCari' => $superadmin ? Penyimpanan::jumlahCari() : 0,
             'tanpaSumber' => $tanpaSumber,
             'tanpaFoto' => $tanpaFoto,
-            'usulan' => $this->usulanRelasi(),
+            'usulan' => $superadmin ? $this->usulanRelasi() : [],
         ]);
     }
 
