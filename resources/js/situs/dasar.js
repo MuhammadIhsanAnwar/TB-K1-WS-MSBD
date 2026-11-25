@@ -245,7 +245,7 @@ document.querySelectorAll('[data-cari-cepat]').forEach((form, nomor) => {
                     <span class="mv-saran-butir__jenis">${esc(label)}</span>
                 </a>`;
             }).join('');
-            const kosong = `<div class="mv-saran-status" role="status">Tidak ada nama persis untuk “${esc(q)}”${jenis ? ' di jenis ini' : ''}. Tekan Cari atau tanyakan ke Mas Nonov.</div>`;
+            const kosong = `<div class="mv-saran-status" role="status">Belum ada saran yang cukup mirip untuk “${esc(q)}”${jenis ? ' di jenis ini' : ''}. Tekan Cari atau tanyakan ke Mas Nonov.</div>`;
             kotak.innerHTML = (butir || kosong) + `
                 <div class="mv-saran-kaki">
                     <a href="${esc(urlSemua)}">Semua hasil “${esc(q)}”</a>

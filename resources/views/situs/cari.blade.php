@@ -9,9 +9,10 @@
 @section('isi')
 <header class="kepala-halaman">
     <h1>{{ $q ? 'Hasil untuk “'.$q.'”' : 'Cari di MedanVisit' }}</h1>
-    <form class="tanya-medan kepala-halaman__cari" action="{{ route('cari') }}" method="get" role="search" style="max-width: none">
+    <form class="tanya-medan kepala-halaman__cari" action="{{ route('cari') }}" method="get" role="search" data-ui data-cari-cepat style="max-width: none">
         <label><span class="sr-only">Cari tempat, tokoh, atau kuliner</span><input type="search" name="q" value="{{ $q }}" placeholder="istana, kuliner melayu, tjong a fie" required></label>
         <button class="tombol" type="submit">Cari</button>
+        <div class="mv-saran-kotak" data-saran-hasil hidden></div>
     </form>
 </header>
 

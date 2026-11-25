@@ -21,7 +21,7 @@ SELECT ?s ?p ?o WHERE {
     schema:streetAddress, mv:cerita, mv:kelurahan, mv:keteranganJam,
     mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
     mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh, mv:hariTiket,
-    mv:koordinatPerkiraan, mv:masa, mv:kalimat, dcterms:source,
+    mv:koordinatPerkiraan, mv:masa, mv:kalimat, mv:alias, dcterms:source,
     mv:dibangunOleh, mv:memimpin, mv:terlibatDalam, mv:merepresentasikan,
     mv:khasDari, mv:dekatDengan, mv:bergaya, mv:bagianDari,
     mv:berkaitanDengan, mv:memilikiSejarah, mv:menjual, mv:dilayaniOleh,

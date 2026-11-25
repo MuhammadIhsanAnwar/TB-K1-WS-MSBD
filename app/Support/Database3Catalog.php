@@ -39,6 +39,7 @@ final class Database3Catalog
         self::$triples = self::$entities = self::$relations = null;
         Cache::forget('database3.catalog.triples.v7');
         Cache::forget('database3.catalog.triples.v8');
+        Cache::forget('database3.catalog.triples.v9');
     }
 
     public static function entities(): array
@@ -73,6 +74,7 @@ final class Database3Catalog
                 'slug' => $slug,
                 'jenis' => $type,
                 'nama' => $nama,
+                'alias' => $properties['mv:alias'] ?? [],
                 'ringkas' => self::first($properties, 'schema:description', ''),
                 'foto' => self::imageName(self::first($properties, 'schema:image', null)),
                 'masa' => self::first($properties, 'mv:masa', null),
@@ -168,7 +170,7 @@ final class Database3Catalog
             return self::$triples;
         }
 
-        return self::$triples = Cache::remember('database3.catalog.triples.v8', now()->addMinutes(10), function (): array {
+        return self::$triples = Cache::remember('database3.catalog.triples.v9', now()->addMinutes(10), function (): array {
             $result = SparqlService::jalankan(<<<'SPARQL'
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -192,6 +194,7 @@ final class Database3Catalog
                         mv:jamContoh, mv:radiusCheckin, mv:durasiSinggah, mv:jamBuka,
                         mv:jamTutup, mv:fasilitas, mv:caraMenuju, mv:hargaContoh, mv:koordinatPerkiraan,
                         mv:masa, mv:kalimat,
+                        mv:alias,
                         mv:hariTiket,
                         dcterms:source, mv:dibangunOleh, mv:memimpin, mv:terlibatDalam,
                         mv:merepresentasikan, mv:khasDari, mv:dekatDengan, mv:bergaya,

@@ -55,5 +55,8 @@ menjalankan query tersebut.
   ditempel langsung dengan nilai placeholder.
 - Cache katalog RDF disimpan selama 10 menit. JSON-LD untuk halaman dibentuk dari entitas
   hasil pemetaan RDF (dan ringkasan rating DB 2), bukan query SPARQL `CONSTRUCT` terpisah.
+- Pencarian memakai katalog RDF dari SPARQL, termasuk `mv:alias`, lalu merangking typo dan
+  singkatan di aplikasi. Alias nama dapat ditambahkan sebagai literal pada resource, misalnya
+  `mv:alias "Lapmer"@id` untuk `res:lapangan-merdeka`.
 - Query eksplorasi hanya untuk skema/data yang tersedia di AllegroGraph; beberapa contoh
   mengasumsikan kelas atau relasi tertentu telah ada pada dataset aktif.

@@ -700,6 +700,9 @@ class Katalog
         if ($q === '') {
             return [];
         }
+        $q = trim((string) preg_replace('/[^\p{L}\p{N}]+/u', ' ', $q));
+        $kataQuery = preg_split('/\s+/u', $q, -1, PREG_SPLIT_NO_EMPTY);
+        $aliasKompak = str_replace(' ', '', $q);
 
         $hasil = [];
         foreach (self::entitas() as $slug => $entity) {
@@ -707,18 +710,27 @@ class Katalog
                 continue;
             }
             $kategori = $entity['kategori'] ?? '';
-$labelKategori = self::KATEGORI[$kategori] ?? '';
-
-$teks = mb_strtolower(
-    $entity['nama'].' '.
-    ($entity['ringkas'] ?? '').' '.
-    ($entity['kecamatan'] ?? '').' '.
-    $kategori.' '.
-    $labelKategori
-);
+            $labelKategori = self::KATEGORI[$kategori] ?? '';
+            $aliasNama = self::singkatanNama($entity['nama']);
+            $alias = array_values(array_unique(array_merge($entity['alias'] ?? [], $aliasNama)));
+            $teks = mb_strtolower(implode(' ', array_filter([
+                $entity['nama'],
+                $entity['slug'],
+                $entity['ringkas'] ?? '',
+                $entity['kecamatan'] ?? '',
+                $kategori,
+                $labelKategori,
+                implode(' ', $alias),
+            ])));
             $nama = mb_strtolower($entity['nama']);
             $skor = 0;
-            foreach (preg_split('/\s+/', $q) as $kata) {
+            if (in_array($aliasKompak, array_map(
+                fn ($nilai) => str_replace(' ', '', mb_strtolower($nilai)),
+                $alias
+            ), true)) {
+                $skor += 4;
+            }
+            foreach ($kataQuery as $kata) {
                 if (mb_strlen($kata) < 3) {
                     continue;
                 }
@@ -726,13 +738,14 @@ $teks = mb_strtolower(
                     $skor += 2;
                 } else {
                     foreach (preg_split('/[\s\-]+/', $nama) as $bagianNama) {
-                        if (mb_strlen($bagianNama) >= 4 && levenshtein($kata, $bagianNama) <= 1) {
+                        $batasJarak = mb_strlen($kata) >= 6 ? 2 : 1;
+                        if (mb_strlen($bagianNama) >= 4 && levenshtein($kata, $bagianNama) <= $batasJarak) {
                             $skor += 1.5;
                         }
                     }
                 }
             }
-            similar_text($q, $nama, $persen);
+            similar_text(str_replace(' ', '', $q), str_replace(' ', '', $nama), $persen);
             $skor += $persen / 50;
             if ($skor >= 1.6) {
                 $hasil[$slug] = $skor;
@@ -741,6 +754,25 @@ $teks = mb_strtolower(
         arsort($hasil);
 
         return array_map(fn ($slug) => self::get($slug), array_keys($hasil));
+    }
+
+    private static function singkatanNama(string $nama): array
+    {
+        $bagian = preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($nama), -1, PREG_SPLIT_NO_EMPTY);
+        if (count($bagian) < 2) {
+            return [];
+        }
+
+        $prefixTiga = implode('', array_map(
+            fn ($kata) => mb_strlen($kata) <= 2 ? $kata : mb_substr($kata, 0, 3),
+            $bagian
+        ));
+        $prefixDua = implode('', array_map(
+            fn ($kata) => mb_strlen($kata) <= 2 ? $kata : mb_substr($kata, 0, 2),
+            $bagian
+        ));
+
+        return array_values(array_unique([$prefixTiga, $prefixDua]));
     }
 
     public static function koreksi(string $q): ?string

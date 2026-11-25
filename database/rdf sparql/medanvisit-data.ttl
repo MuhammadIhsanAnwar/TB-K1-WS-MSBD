@@ -9,6 +9,10 @@
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+mv:alias a owl:DatatypeProperty ;
+    rdfs:label "alias pencarian"@id ;
+    rdfs:comment "Nama alternatif atau singkatan untuk membantu pencarian entitas."@id .
+
 res:bihun-bebek-asie-kumango a mv:TempatKuliner ;
     rdfs:label "Bihun Bebek Asie Kumango"@id ;
     dcterms:source <https://bihunbebekasie.com/menu/> ;
@@ -5537,6 +5541,7 @@ res:kec-medan-marelan a mv:Kecamatan ;
     schema:name "Medan Marelan"@id .
 
 res:lapangan-merdeka a mv:RuangPublik ;
+    mv:alias "Lapmer"@id, "Lap Mer"@id, "Esplanade"@id ;
     rdfs:label "Lapangan Merdeka"@id ;
     dcterms:source <https://cagarbudaya.sumutprov.go.id/cagar-budaya/11/lapangan-merdeka>,
         <https://cagarbudayamedan.com/sites/lapangan-merdeka>,
