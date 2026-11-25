@@ -349,8 +349,8 @@ class Katalog
     private const JARAK_LANGKAH_PERTAMA = 25000;
 
     /**
-     * Susun rute dari rekomendasi minat atau tujuan pilihan, selama tempat masih muat dalam waktu
-     * dan buka saat didatangi (jam buka dari Database 3).
+     * Rute otomatis dibatasi durasi; rute manual selalu mencakup tujuan pilihan dan menghitung
+     * durasi aktual. Keduanya tetap memperhatikan jam buka tempat dari Database 3.
      *
      * Dengan $posisi (lat, lng pengguna), rute dimulai dari titik itu: persinggahan pertama adalah tempat
      * terdekat yang cocok, dan hasilnya membawa 'awal' untuk penanda di peta.
@@ -430,7 +430,7 @@ class Katalog
                 }
 
                 $durasiAwal = (int) ($awal['singgah'] ?? 45);
-                if ($durasiAwal > $sisaMenit) {
+                if (! $manual && $durasiAwal > $sisaMenit) {
                     throw new RuntimeException('Singgah di '.$awal['nama'].' butuh sekitar '.$durasiAwal.' menit, lebih lama dari waktu yang dipilih. Pilih waktu yang lebih panjang.');
                 }
 
@@ -457,7 +457,8 @@ class Katalog
                 }
                 $kira = self::perpindahan($kini, $pool[$slug], $moda);
                 $singgah = (int) ($pool[$slug]['singgah'] ?? 45);
-                if ($kira['menit'] + $singgah <= $sisaMenit && self::bukaSelama($pool[$slug], $hari, $jam + $kira['menit'], $singgah)) {
+                if (($manual || $kira['menit'] + $singgah <= $sisaMenit)
+                    && self::bukaSelama($pool[$slug], $hari, $jam + $kira['menit'], $singgah)) {
                     $slugCalon = $slug;
                     break;
                 }
@@ -471,7 +472,8 @@ class Katalog
             $perpindahan = self::perpindahanDenganRute($kini, $calon, $moda);
             $durasiSinggah = (int) ($calon['singgah'] ?? 45);
             // rute jalan sungguhan bisa lebih lama dari perkiraan garis lurus: periksa ulang
-            if ($perpindahan['menit'] + $durasiSinggah > $sisaMenit || ! self::bukaSelama($calon, $hari, $jam + $perpindahan['menit'], $durasiSinggah)) {
+            if ((! $manual && $perpindahan['menit'] + $durasiSinggah > $sisaMenit)
+                || ! self::bukaSelama($calon, $hari, $jam + $perpindahan['menit'], $durasiSinggah)) {
                 continue;
             }
 
@@ -489,14 +491,14 @@ class Katalog
 
         if ($urut === []) {
             throw new RuntimeException($manual
-                ? 'Tempat tujuan pilihanmu tidak muat dalam durasi tersebut. Pilih durasi lebih panjang atau kurangi tujuan.'
+                ? 'Belum ada tujuan pilihan yang dapat dikunjungi sesuai jam operasionalnya.'
                 : 'Dari lokasimu belum ada tempat yang cocok, buka, dan muat dalam waktu yang dipilih. Tambah minat atau perpanjang waktu.');
         }
 
         if ($manual) {
             $terkunjungi = array_column(array_column($urut, 'tempat'), 'slug');
             if (array_diff($tujuan, $terkunjungi) !== []) {
-                throw new RuntimeException('Semua tempat tujuan pilihan harus muat dalam durasi. Pilih durasi lebih panjang atau kurangi tujuan.');
+                throw new RuntimeException('Sebagian tujuan pilihan tidak dapat dikunjungi sesuai jam operasionalnya. Periksa jam buka atau pilih tujuan lain.');
             }
         }
 

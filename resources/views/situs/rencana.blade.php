@@ -43,6 +43,12 @@
             'moda' => $s['pindah']['moda'] ?? null,
         ]))->values() : null;
 
+    $mulaiRute = $hasil
+        ? $hasil['singgah'][0]['mulai'] - ($hasil['singgah'][0]['pindah']['menit'] ?? 0)
+        : 0;
+    $durasiRuteAktual = $hasil
+        ? max(1, (int) ceil(($hasil['selesai'] - $mulaiRute) / 60))
+        : 0;
     $judulRute = $dibagikan['judul'] ?? (($durasi <= 4 ? 'Setengah hari' : 'Sehari').' dari '.($mulai === 'lokasi' ? 'lokasimu' : (Katalog::get($mulai)['nama'] ?? 'tempat pilihan')));
     // lokasi pengguna tidak disimpan: rencana yang disimpan dimulai dari persinggahan pertama
     $mulaiSimpan = $dariLokasi ? $hasil['singgah'][0]['tempat']['slug'] : $mulai;
@@ -169,8 +175,8 @@
                         <dt>Tempat tujuan</dt>
                     </div>
                     <div>
-                        <dd>Hingga {{ $durasi }} jam</dd>
-                        <dt>Batas waktu rute</dt>
+                        <dd>Sekitar {{ $durasiRuteAktual }} jam</dd>
+                        <dt>Perkiraan durasi rute</dt>
                     </div>
                     <div>
                         <dd>{{ count($hasil['singgah']) }} tempat</dd>

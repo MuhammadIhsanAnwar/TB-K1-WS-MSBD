@@ -16,6 +16,8 @@ use Illuminate\Validation\Rule;
 
 class SitusController extends Controller
 {
+    private const ULASAN_PER_HALAMAN = 5;
+
     public function beranda()
     {
         $tempat = Katalog::tempat();
@@ -278,14 +280,44 @@ class SitusController extends Controller
         $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
         $rating = Penyimpanan::ringkasanRatingTempat()[$slug] ?? ['rating' => 0, 'jumlahRating' => 0];
         $ramai = Kunjungan::ringkasanCheckinTerbaru()[$slug] ?? 0;
+        $hasilUlasan = Penyimpanan::ulasanHalaman([$slug], 'tayang', self::ULASAN_PER_HALAMAN, 0, aman: true);
+        $ulasanSaya = $idPengguna !== false && ($pengguna['peran'] ?? null) === 'wisatawan'
+            ? (Penyimpanan::ulasan($slug, 'tayang', (int) $idPengguna, aman: true)[0] ?? null)
+            : null;
 
         return view('situs.tempat', ['e' => $t] + [
-            'ulasan' => Penyimpanan::ulasan($slug, 'tayang', aman: true),
+            'ulasan' => $hasilUlasan['ulasan'],
+            'jumlahUlasan' => $hasilUlasan['jumlah'],
+            'ulasanSaya' => $ulasanSaya,
             'ratingTempat' => ['rata' => $rating['rating'], 'jumlah' => $rating['jumlahRating']],
             'ramai' => $ramai,
             'dekat' => $this->terdekat($t, 4),
             'jumlahSuka' => $jumlahSuka,
             'sudahDisukai' => in_array($slug, $disukai, true),
+        ]);
+    }
+
+    public function ulasanTempat(Request $request, string $slug)
+    {
+        $tempat = Katalog::get($slug);
+        abort_unless($tempat && $tempat['jenis'] === 'tempat', 404);
+
+        $data = $request->validate([
+            'offset' => ['required', 'integer', 'min:0', 'max:1000000'],
+        ]);
+        $hasil = Penyimpanan::ulasanHalaman(
+            [$slug],
+            'tayang',
+            self::ULASAN_PER_HALAMAN,
+            (int) $data['offset'],
+        );
+        $jumlahDimuat = count($hasil['ulasan']);
+        $offsetBerikutnya = (int) $data['offset'] + $jumlahDimuat;
+
+        return response()->json([
+            'html' => view('situs.partials.ulasan', ['ulasan' => $hasil['ulasan']])->render(),
+            'hasMore' => $jumlahDimuat > 0 && $offsetBerikutnya < $hasil['jumlah'],
+            'nextOffset' => $offsetBerikutnya,
         ]);
     }
 

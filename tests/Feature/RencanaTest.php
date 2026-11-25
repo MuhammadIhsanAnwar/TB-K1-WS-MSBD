@@ -141,6 +141,29 @@ class RencanaTest extends TestCase
             ->assertSee('2 tujuan dipilih');
     }
 
+    public function test_manual_route_includes_all_selected_places_even_when_it_takes_longer_than_eight_hours(): void
+    {
+        $tempat = ['awal' => $this->tempat('awal', 3.5900, 98.6700)];
+        $tujuan = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $slug = 'tujuan-'.$i;
+            $tempat[$slug] = array_replace($this->tempat($slug, 3.5900, 98.6700), ['singgah' => 60]);
+            $tujuan[] = $slug;
+        }
+        (new ReflectionProperty(Katalog::class, 'entities'))->setValue(null, $tempat);
+
+        $this->get('/rencana?'.http_build_query([
+            'mode' => 'manual',
+            'mulai' => 'awal',
+            'tujuan' => $tujuan,
+        ]))
+            ->assertOk()
+            ->assertSee('10 tujuan dipilih')
+            ->assertSee('10 tempat')
+            ->assertSee('Perkiraan durasi rute')
+            ->assertDontSee('harus muat dalam durasi');
+    }
+
     public function test_guest_manual_route_map_includes_a_place_start_and_one_destination(): void
     {
         $query = http_build_query([

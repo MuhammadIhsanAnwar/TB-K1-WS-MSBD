@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(SitusController::class)->group(function () {
     Route::get('/data/wisata.json', 'wisataJson')->name('data.wisata');
     Route::get('/data/wisata/{slug}.json', 'tempatJson')->name('data.tempat');
+    Route::get('/tempat/{slug}/ulasan', 'ulasanTempat')->middleware('throttle:60,1')->name('tempat.ulasan');
 });
 
 // ---------- publik ----------

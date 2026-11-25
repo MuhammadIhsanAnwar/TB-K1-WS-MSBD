@@ -38,9 +38,6 @@
 @section('foto-kaki', $t['foto'] ?: 'storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png')
 @section('foto-og', $t['foto'] ? Foto::url($t['foto']) : asset('storage/logo_app/png/MedanVisit_logo_horizontal_gelap.png'))
 
-@php
-    $ulasanSaya = collect($ulasan)->firstWhere('id_pengguna', (int) ($u['id'] ?? 0));
-@endphp
 @push('kepala')
     <script type="application/ld+json">{!! json_encode(\App\Support\Semantik::jsonldTempat($t, $ratingTempat), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 @endpush
@@ -73,7 +70,7 @@
                 <div class="mv-tempat-statistik" aria-label="Statistik tempat">
                     <span><b>{{ number_format($jumlahSuka, 0, ',', '.') }}</b> like</span>
                     <span><b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> rating</span>
-                    <span><b>{{ count($ulasan) }}</b> ulasan</span>
+                    <span><b>{{ number_format($jumlahUlasan, 0, ',', '.') }}</b> ulasan</span>
                 </div>
                 @if ($t['tiket'] && ! $akunPengelola)
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
@@ -208,33 +205,24 @@
                     <b>{{ number_format($ratingTempat['rata'], 1, ',', '.') }}</b> dari 5, dari {{ $ratingTempat['jumlah'] }} rating
                 </p>
             @endif
-            @if ($ulasan)
-                <div class="ulasan-daftar">
-                    @foreach ($ulasan as $ul)
-                        <article style="background:var(--mv-putih);padding:18px 20px">
-                            <p><b>{{ $ul['nama'] }}</b> <x-bintang :n="$ul['bintang']" /></p>
-                            <p>{{ $ul['teks'] }}</p>
-                            <p class="kecil redup">{{ \Illuminate\Support\Carbon::parse($ul['waktu'])->locale('id')->translatedFormat('j F Y') }}</p>
-                        </article>
-                    @endforeach
-                </div>
-            @else
-                <div class="kosong" style="background:var(--mv-putih);padding:22px 24px">
-                    <p>Belum ada ulasan untuk {{ $t['nama'] }}. Jadilah pengunjung pertama yang membagikan pengalaman.</p>
-                </div>
-            @endif
 
             @if (($u['peran'] ?? null) === 'wisatawan')
-                <form class="form-ulasan" method="post" action="{{ route('ulasan.tulis', $t['slug']) }}" novalidate style="margin-top:24px;background:var(--mv-putih);padding:24px">
+                <form class="form-ulasan" method="post" action="{{ route('ulasan.tulis', $t['slug']) }}" novalidate>
                     @csrf
                     @if ($ulasanSaya)
                         <p class="kecil redup" style="margin-bottom:10px">Kamu sudah mengulas tempat ini. Mengirim lagi akan memperbarui ulasanmu, bukan menambah ulasan baru.</p>
                     @endif
                     <fieldset class="isian">
                         <legend>{{ $ulasanSaya ? 'Perbarui penilaianmu' : 'Penilaian kunjunganmu' }}</legend>
-                        <div class="pilih-banyak" style="margin-top:8px">
-                            @for ($b = 1; $b <= 5; $b++)
-                                <label><input type="radio" name="bintang" value="{{ $b }}" @checked(old('bintang', $ulasanSaya['bintang'] ?? null) == $b)>{{ $b }} bintang</label>
+                        <div class="ulasan-rating" role="radiogroup" aria-label="Pilih rating dari 1 sampai 5 bintang">
+                            @for ($b = 5; $b >= 1; $b--)
+                                <label title="{{ $b }} bintang">
+                                    <input type="radio" name="bintang" value="{{ $b }}" @checked(old('bintang', $ulasanSaya['bintang'] ?? null) == $b)>
+                                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                                        <path d="M10 1.8l2.5 5.2 5.7.8-4.1 4 1 5.6L10 14.7l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/>
+                                    </svg>
+                                    <span class="sr-only">{{ $b }} bintang</span>
+                                </label>
                             @endfor
                         </div>
                         @error('bintang')<p class="isian__galat">{{ $message }}</p>@enderror
@@ -244,13 +232,27 @@
                         <textarea id="teks-ulasan" name="teks" maxlength="600" placeholder="Tips waktu berkunjung, suasana, atau hal menarik yang kamu temukan&hellip;" @error('teks') aria-invalid="true" aria-describedby="galat-teks" @enderror>{{ old('teks', $ulasanSaya['teks'] ?? '') }}</textarea>
                         @error('teks')<p class="isian__galat" id="galat-teks">{{ $message }}</p>@enderror
                     </div>
-                    <button class="mv-btn mv-btn--hijau" type="submit" style="margin-top:18px">{{ $ulasanSaya ? 'Perbarui ulasan' : 'Kirim ulasan' }}</button>
+                    <button class="mv-btn mv-btn--hijau" type="submit">{{ $ulasanSaya ? 'Perbarui ulasan' : 'Kirim ulasan' }}</button>
                 </form>
             @elseif (! $u)
-                <p style="margin-top:18px">
+                <p class="form-ulasan__masuk">
                     <a class="mv-tautan" href="{{ route('masuk', ['kembali' => route('tempat', $t['slug'], false).'#ulasan']) }}">Masuk untuk menulis ulasan kunjungan</a>
                 </p>
             @endif
+
+            @if ($ulasan)
+                <div class="ulasan-daftar" data-ulasan-daftar>
+                    @include('situs.partials.ulasan', ['ulasan' => $ulasan])
+                </div>
+            @else
+                <div class="kosong" style="background:var(--mv-putih);padding:22px 24px">
+                    <p>Belum ada ulasan untuk {{ $t['nama'] }}. Jadilah pengunjung pertama yang membagikan pengalaman.</p>
+                </div>
+            @endif
+            @if (count($ulasan) < $jumlahUlasan)
+                <button class="mv-btn mv-btn--garis ulasan-muat" type="button" data-ulasan-muat data-url="{{ route('tempat.ulasan', $t['slug']) }}" data-offset="{{ count($ulasan) }}">Muat ulasan lainnya</button>
+            @endif
+            <p class="sr-only" aria-live="polite" data-ulasan-status></p>
         </section>
     </article>
 

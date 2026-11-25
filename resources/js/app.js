@@ -19,6 +19,7 @@ if (ada('[data-panggung]')) import('./situs/panggung.js');
 if (ada('[data-peta]')) import('./situs/peta.js');
 if (ada('[data-dekat]')) import('./situs/dekat.js');
 if (ada('[data-hubungi-admin]')) import('./situs/hubungi-admin.js');
+if (ada('[data-ulasan-muat]')) import('./situs/ulasan.js');
 if (ada('[data-pengaturan]')) import('./situs/pengaturan.js');
 if (ada('[data-sampul-atur]')) import('./admin/sampul-beranda.js');
 if (ada('[data-rencana-form]')) import('./situs/rencana.js');

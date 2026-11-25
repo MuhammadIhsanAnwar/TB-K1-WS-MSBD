@@ -91,7 +91,7 @@
     "src": "node_modules/leaflet/dist/images/marker-icon.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BRW8wL8p.css",
+    "file": "assets/app-CyEI0JoT.css",
     "name": "app",
     "names": [
       "app.css"
@@ -116,7 +116,7 @@
     "isDynamicEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-_OsIn7b_.js",
+    "file": "assets/app-6WKYQZxF.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -126,6 +126,7 @@
       "resources/js/situs/peta.js",
       "resources/js/situs/dekat.js",
       "resources/js/situs/hubungi-admin.js",
+      "resources/js/situs/ulasan.js",
       "resources/js/situs/pengaturan.js",
       "resources/js/admin/sampul-beranda.js",
       "resources/js/situs/rencana.js",
@@ -156,7 +157,7 @@
     "isDynamicEntry": true
   },
   "resources/js/situs/dekat.js": {
-    "file": "assets/dekat-kFkED6kg.js",
+    "file": "assets/dekat-BZwBh46e.js",
     "name": "dekat",
     "src": "resources/js/situs/dekat.js",
     "isDynamicEntry": true,
@@ -190,7 +191,7 @@
     "isDynamicEntry": true
   },
   "resources/js/situs/peta.js": {
-    "file": "assets/peta-rRsOYJx9.js",
+    "file": "assets/peta-DO2asIGq.js",
     "name": "peta",
     "src": "resources/js/situs/peta.js",
     "isDynamicEntry": true,
@@ -221,5 +222,11 @@
     "imports": [
       "_rolldown-runtime-CbXtAM7H.js"
     ]
+  },
+  "resources/js/situs/ulasan.js": {
+    "file": "assets/ulasan-B2pbr1gU.js",
+    "name": "ulasan",
+    "src": "resources/js/situs/ulasan.js",
+    "isDynamicEntry": true
   }
 }
