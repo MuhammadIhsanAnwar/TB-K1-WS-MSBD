@@ -119,6 +119,58 @@ class PenyimpananRestTest extends TestCase
             && $r->hasHeader('Authorization', 'Bearer secret-key'));
     }
 
+    public function test_all_orders_and_items_are_read_across_postgrest_page_limits(): void
+    {
+        $buatPesanan = static fn (int $id): array => [
+            'id_pesanan' => $id,
+            'kode' => 'MV-'.str_pad((string) $id, 8, '0', STR_PAD_LEFT),
+            'id_pengguna' => 3,
+            'nama_pemesan' => 'Rina',
+            'email_pemesan' => 'rina@example.test',
+            'hp_pemesan' => '0812',
+            'tempat_slug' => 'istana-maimun',
+            'tanggal_kunjungan' => '2026-11-20',
+            'total' => 10000,
+            'metode' => 'qris',
+            'status' => 'lunas',
+            'batas_bayar' => '2026-11-14T10:15:00+00:00',
+            'created_at' => '2026-11-14T10:00:00+00:00',
+            'pembayaran' => [['dibayar_pada' => '2026-11-14T10:05:00+00:00', 'referensi' => 'REF-'.$id]],
+            'e_tiket' => [['kode_qr' => 'QR-'.$id, 'dipakai_pada' => null]],
+        ];
+        $buatItem = static fn (int $id): array => [
+            'id_pesanan' => $id,
+            'jenis_pengunjung' => 'Dewasa',
+            'harga' => 10000,
+            'jumlah' => 1,
+            'subtotal' => 10000,
+        ];
+        Http::fake(function (Request $request) use ($buatPesanan, $buatItem) {
+            parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+            $offset = (int) ($query['offset'] ?? 0);
+            if (str_contains($request->url(), '/pesanan_item?')) {
+                return Http::response(array_map($buatItem, range($offset + 1, min($offset + 500, 501))));
+            }
+            if (str_contains($request->url(), '/pesanan?')) {
+                return Http::response(array_map($buatPesanan, range($offset + 1, min($offset + 500, 501))));
+            }
+
+            return Http::response([], 404);
+        });
+
+        $pesanan = Penyimpanan::pesanan();
+
+        $this->assertCount(501, $pesanan);
+        $this->assertSame(501, array_sum(array_map(
+            static fn (array $baris): int => array_sum(array_column($baris['item'], 'jumlah')),
+            $pesanan,
+        )));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/pesanan?')
+            && str_contains($request->url(), 'offset=500'));
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), '/pesanan_item?')
+            && str_contains($request->url(), 'offset=500'));
+    }
+
     public function test_qr_lookup_filters_orders_through_an_inner_ticket_relation(): void
     {
         Http::fake([
@@ -212,12 +264,12 @@ class PenyimpananRestTest extends TestCase
 
     public function test_ticket_usage_is_claimed_only_when_the_database_row_is_still_unused(): void
     {
-        $patches = 0;
-        Http::fake(function (Request $request) use (&$patches) {
-            if ($request->method() === 'PATCH') {
-                $patches++;
+        $claims = 0;
+        Http::fake(function (Request $request) use (&$claims) {
+            if (str_contains($request->url(), '/rpc/sp_pakai_etiket')) {
+                $claims++;
 
-                return Http::response($patches === 1 ? [['id_pesanan' => 7]] : []);
+                return Http::response($claims === 1 ? 'true' : 'false');
             }
 
             return Http::response([], 404);
@@ -228,10 +280,10 @@ class PenyimpananRestTest extends TestCase
         $this->assertTrue(Penyimpanan::tandaiTiketDipakai(7, $waktu));
         $this->assertFalse(Penyimpanan::tandaiTiketDipakai(7, $waktu));
 
-        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
-            && str_contains($request->url(), '/e_tiket?')
-            && str_contains($request->url(), 'dipakai_pada=is.null')
-            && $request['dipakai_pada'] === $waktu);
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/rpc/sp_pakai_etiket')
+            && $request['p_id_pesanan'] === 7
+            && $request['p_dipakai_pada'] === $waktu);
     }
 
     public function test_place_likes_are_toggled_per_user_through_database_2(): void
@@ -298,7 +350,9 @@ class PenyimpananRestTest extends TestCase
 
     public function test_only_logged_in_tourists_can_like_a_place(): void
     {
-        $this->post('/tempat/taman-cadika/sukai')
+        $this->withSession(['_token' => 'test-csrf'])
+            ->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->post('/tempat/taman-cadika/sukai')
             ->assertRedirect(route('masuk', ['kembali' => '/tempat/taman-cadika/sukai']));
     }
 

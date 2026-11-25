@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TanyaMasNonovMemori;
+use App\Services\TanyaMasNonovService;
 use App\Support\Katalog;
 use App\Support\Kunjungan;
 use App\Support\Penyimpanan;
 use App\Support\PesanLayanan;
 use App\Support\RekomendasiTempat;
 use App\Support\Semantik;
-use App\Services\TanyaMasNonovService;
-use App\Services\TanyaMasNonovMemori;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class SitusController extends Controller
 {
@@ -264,6 +264,7 @@ class SitusController extends Controller
             'Access-Control-Allow-Origin' => '*',
         ]);
     }
+
     public function tempat(string $slug)
     {
         $t = Katalog::get($slug);
@@ -340,6 +341,9 @@ class SitusController extends Controller
         $hasil = null;
         $pref = null;
         $rencanaEdit = null;
+        $mode = in_array($request->query('mode'), ['otomatis', 'manual'], true)
+            ? $request->query('mode')
+            : null;
 
         if ($request->filled('edit')) {
             $pengguna = $request->session()->get('pengguna', []);
@@ -352,23 +356,50 @@ class SitusController extends Controller
         }
 
         if ($request->hasAny(['minat', 'durasi', 'moda', 'mulai', 'tujuan', 'tujuan_dikirim'])) {
-            $pref = $request->validate([
-                'minat' => ['required', 'array', 'min:1'], 'minat.*' => ['in:'.implode(',', array_keys(Katalog::KATEGORI))],
-                'durasi' => ['required', 'integer', 'in:2,4,6,8'],
-                'moda' => ['required', 'array', 'min:1'], 'moda.*' => ['in:jalan,motor,mobil'],
+            $mode = in_array($request->input('mode'), ['otomatis', 'manual'], true)
+                ? $request->input('mode')
+                : ($request->filled('tujuan') ? 'manual' : 'otomatis');
+            $request->merge(['mode' => $mode]);
+
+            $aturan = [
+                'mode' => ['required', Rule::in(['otomatis', 'manual'])],
                 'mulai' => ['required', 'string'],
-                'tujuan' => ['sometimes', 'array', 'max:10'],
-                'tujuan.*' => ['string', 'distinct', Rule::in(array_keys(Katalog::tempat()))],
                 'tujuan_dikirim' => ['sometimes', 'in:1'],
                 // "lokasi": mulai dari posisi pengguna sekarang (koordinat dari browser)
                 'lat' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-90,90'],
                 'lng' => ['required_if:mulai,lokasi', 'nullable', 'numeric', 'between:-180,180'],
-            ], [
+            ];
+            if ($mode === 'otomatis') {
+                $aturan += [
+                    'minat' => ['required', 'array', 'min:1'],
+                    'minat.*' => ['in:'.implode(',', array_keys(Katalog::KATEGORI))],
+                    'durasi' => ['required', 'integer', 'in:2,4,6,8'],
+                    'moda' => ['required', 'array', 'min:1'],
+                    'moda.*' => ['in:jalan,motor,mobil'],
+                ];
+            } else {
+                $aturan += [
+                    'tujuan' => ['required', 'array', 'min:1', 'max:10'],
+                    'tujuan.*' => ['required', 'string', 'distinct', Rule::in(array_keys(Katalog::tempat()))],
+                ];
+            }
+
+            $pref = $request->validate($aturan, [
                 'minat.required' => 'Pilih minimal satu minat.',
+                'durasi.required' => 'Pilih lama waktu perjalanan.',
                 'moda.required' => 'Pilih minimal satu moda transportasi.',
+                'tujuan.required' => 'Pilih setidaknya satu tempat tujuan.',
+                'tujuan.min' => 'Pilih setidaknya satu tempat tujuan.',
                 'lat.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
                 'lng.required_if' => 'Lokasimu belum terbaca. Izinkan akses lokasi di browser, atau pilih tempat awal dari daftar.',
             ]);
+            if ($mode === 'manual') {
+                $pref = array_replace($pref, [
+                    'minat' => array_keys(Katalog::KATEGORI),
+                    'durasi' => 8,
+                    'moda' => ['jalan', 'motor', 'mobil'],
+                ]);
+            }
             if ($request->has('tujuan_dikirim') && ! array_key_exists('tujuan', $pref)) {
                 $pref['tujuan'] = [];
             }
@@ -378,6 +409,7 @@ class SitusController extends Controller
         }
 
         if ($pref !== null) {
+            $mode = $pref['mode'] ?? (! empty($pref['tujuan']) ? 'manual' : 'otomatis');
             $posisi = $pref['mulai'] === 'lokasi' ? ['lat' => (float) $pref['lat'], 'lng' => (float) $pref['lng']] : null;
             try {
                 $hasil = Katalog::susunRute(
@@ -392,6 +424,7 @@ class SitusController extends Controller
                 return view('situs.rencana', [
                     'hasil' => null,
                     'pref' => $pref,
+                    'mode' => $mode,
                     'tempat' => Katalog::tempat(),
                     'rencanaEdit' => $rencanaEdit,
                 ])
@@ -402,6 +435,7 @@ class SitusController extends Controller
         return view('situs.rencana', [
             'hasil' => $hasil,
             'pref' => $pref,
+            'mode' => $mode,
             'tempat' => Katalog::tempat(),
             'rencanaEdit' => $rencanaEdit,
         ]);
@@ -413,6 +447,7 @@ class SitusController extends Controller
         if ($r === null) {
             abort(404);
         }
+        $mode = ! empty($r['tujuan']) ? 'manual' : 'otomatis';
 
         try {
             $hasil = Katalog::susunRute(
@@ -424,13 +459,13 @@ class SitusController extends Controller
             );
         } catch (\RuntimeException $e) {
             // misalnya tempat awal sudah dihapus dari Database 3
-            return view('situs.rencana', ['hasil' => null, 'pref' => $r, 'tempat' => Katalog::tempat()])
+            return view('situs.rencana', ['hasil' => null, 'pref' => $r, 'mode' => $mode, 'tempat' => Katalog::tempat()])
                 ->withErrors(['rute' => 'Rencana ini tidak bisa disusun lagi: '.$e->getMessage()]);
         }
 
         return view('situs.rencana', [
             'hasil' => $hasil,
-            'pref' => $r, 'tempat' => Katalog::tempat(), 'dibagikan' => $r,
+            'pref' => $r, 'mode' => $mode, 'tempat' => Katalog::tempat(), 'dibagikan' => $r,
         ]);
     }
 

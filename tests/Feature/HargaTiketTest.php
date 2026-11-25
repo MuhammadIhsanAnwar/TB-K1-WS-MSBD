@@ -96,7 +96,10 @@ class HargaTiketTest extends TestCase
         $tanggal = Carbon::today('Asia/Jakarta')->next(Carbon::SATURDAY)->toDateString();
         $this->withoutExceptionHandling();
 
-        $this->withSession(['pengguna' => ['id' => 7, 'peran' => 'wisatawan']])
+        $this->withSession([
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'peran' => 'wisatawan'],
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from('/tempat/medan-zoo/tiket')
             ->post('/tempat/medan-zoo/tiket', ['tanggal' => $tanggal, 'jumlah' => [1]])
             ->assertRedirect('/tempat/medan-zoo/tiket')
@@ -107,7 +110,10 @@ class HargaTiketTest extends TestCase
     {
         $tanggal = Carbon::today('Asia/Jakarta')->toDateString();
 
-        $this->withSession(['pengguna' => ['id' => 7, 'peran' => 'wisatawan']])
+        $this->withSession([
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'peran' => 'wisatawan'],
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->post('/tempat/medan-zoo/tiket', ['tanggal' => $tanggal, 'jumlah' => [1]])
             ->assertRedirect(route('checkout'))
             ->assertSessionHas('pilihan', fn (array $pilihan) => $pilihan['tanggal'] === $tanggal
@@ -135,7 +141,10 @@ class HargaTiketTest extends TestCase
     {
         $besok = Carbon::tomorrow('Asia/Jakarta')->toDateString();
 
-        $this->withSession(['pengguna' => ['id' => 7, 'peran' => 'wisatawan']])
+        $this->withSession([
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'peran' => 'wisatawan'],
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from('/tempat/medan-zoo/tiket')
             ->post('/tempat/medan-zoo/tiket', ['tanggal' => $besok, 'jumlah' => [1]])
             ->assertRedirect('/tempat/medan-zoo/tiket')
@@ -146,7 +155,10 @@ class HargaTiketTest extends TestCase
     {
         Carbon::setTestNow(Carbon::parse('2026-11-23 18:00:00', 'Asia/Jakarta'));
 
-        $this->withSession(['pengguna' => ['id' => 7, 'peran' => 'wisatawan']])
+        $this->withSession([
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'peran' => 'wisatawan'],
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from('/tempat/medan-zoo/tiket')
             ->post('/tempat/medan-zoo/tiket', [
                 'tanggal' => Carbon::today('Asia/Jakarta')->toDateString(),
@@ -161,13 +173,14 @@ class HargaTiketTest extends TestCase
         Carbon::setTestNow(Carbon::parse('2026-11-23 18:00:00', 'Asia/Jakarta'));
 
         $this->withSession([
-            'pengguna' => ['id' => 7, 'peran' => 'wisatawan'],
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'peran' => 'wisatawan'],
             'pilihan' => [
                 'tempat' => 'medan-zoo',
                 'tanggal' => Carbon::today('Asia/Jakarta')->toDateString(),
                 'item' => [['jenis' => 'Dewasa', 'harga' => 15000, 'jumlah' => 1, 'subtotal' => 15000]],
             ],
-        ])
+            '_token' => 'test-csrf',
+        ])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->from(route('checkout'))
             ->post(route('checkout'))
             ->assertRedirect(route('checkout'))

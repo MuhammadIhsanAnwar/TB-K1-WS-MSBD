@@ -9,6 +9,7 @@ use App\Support\PesanLayanan;
 use App\Support\Penyimpanan;
 use App\Support\StatusOperasional;
 use App\Support\SupabaseApi;
+use App\Support\TiketKedaluwarsa;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -64,13 +65,18 @@ class AdminController extends Controller
         $superadmin = $request->session()->get('pengguna.peran') === 'superadmin';
         $periode = (int) $request->query('periode', 30);
         $periode = in_array($periode, [7, 30, 90], true) ? $periode : 30;
-        $sejak = now('Asia/Jakarta')->subDays($periode)->toIso8601String();
+        $sejak = now('Asia/Jakarta')->subDays($periode - 1)->startOfDay()->toIso8601String();
+        $tempatMilik = $superadmin ? [] : ($this->slugsKelolaan($request) ?? []);
         $ulasanTerbaru = collect(Penyimpanan::ulasan(null, 'tayang', aman: true));
-        if ($milik = $this->slugsKelolaan($request)) {
-            $ulasanTerbaru = $ulasanTerbaru->filter(fn ($ulasan) => in_array($ulasan['tempat'], $milik, true));
+        if ($tempatMilik) {
+            $ulasanTerbaru = $ulasanTerbaru->filter(fn ($ulasan) => in_array($ulasan['tempat'], $tempatMilik, true));
         }
 
-        $lunas = collect(Penyimpanan::pesanan())->filter(fn ($p) => $p['status'] === 'lunas' && ($p['dibayar'] ?? '') >= $sejak);
+        $dibayar = collect(Penyimpanan::pesanan())->filter(
+            fn ($pesanan) => ! empty($pesanan['dibayar'])
+                && $pesanan['dibayar'] >= $sejak
+                && ($superadmin || in_array($pesanan['tempat'], $tempatMilik, true))
+        );
         $tempat = $superadmin ? Katalog::tempat() : [];
         $tanpaSumber = collect($superadmin ? Katalog::relasi() : [])
             ->filter(fn ($r) => str_contains($r['sumber'], 'perlu verifikasi'));
@@ -79,8 +85,8 @@ class AdminController extends Controller
         return view('admin.ringkasan', [
             'periode' => $periode,
             'jumlahTempat' => count($tempat),
-            'tiket' => $lunas->sum(fn ($p) => array_sum(array_column($p['item'], 'jumlah'))),
-            'pendapatan' => $lunas->sum('total'),
+            'tiket' => $dibayar->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))),
+            'pendapatan' => $dibayar->sum('total'),
             'ulasanTerbaru' => $ulasanTerbaru->values()->all(),
             'celah' => $superadmin ? Penyimpanan::celahKonten() : [],
             'jumlahCari' => $superadmin ? Penyimpanan::jumlahCari() : 0,
@@ -95,7 +101,7 @@ class AdminController extends Controller
         $periode = (int) $request->query('periode', 30);
         $periode = in_array($periode, [7, 30, 90], true) ? $periode : 30;
         $kunjungan = Kunjungan::ringkasan($periode);
-        $sejak = now('Asia/Jakarta')->subDays($periode)->toIso8601String();
+        $sejak = now('Asia/Jakarta')->subDays($periode - 1)->startOfDay()->toIso8601String();
 
         $admin = $request->session()->get('pengguna.peran') === 'admin';
         $tempatMilik = $this->slugsKelolaan($request) ?? [];
@@ -104,16 +110,30 @@ class AdminController extends Controller
             ? (in_array($pilihan, $tempatMilik, true) ? $pilihan : ($tempatMilik[0] ?? null))
             : (is_string($pilihan) && (Katalog::get($pilihan)['jenis'] ?? null) === 'tempat' ? $pilihan : null);
 
-        $pesanan = collect(Penyimpanan::pesanan(aman: true))->filter(
-            fn ($pesanan) => ($pesanan['waktu'] ?? '') >= $sejak
-                && ($admin ? in_array($pesanan['tempat'], $tempatMilik, true) : ($fokus === null || $pesanan['tempat'] === $fokus))
+        $semuaPesanan = collect(Penyimpanan::pesanan());
+        $dalamCakupan = fn (array $pesanan): bool => $admin
+            ? in_array($pesanan['tempat'], $tempatMilik, true)
+            : ($fokus === null || $pesanan['tempat'] === $fokus);
+        $pesanan = $semuaPesanan->filter(
+            fn ($pesanan) => ($pesanan['waktu'] ?? '') >= $sejak && $dalamCakupan($pesanan)
         );
-        $transaksi = $pesanan->groupBy('tempat')->map(fn ($baris) => [
-            'pesanan' => $baris->count(),
-            'lunas' => $baris->where('status', 'lunas')->count(),
-            'tiket' => $baris->where('status', 'lunas')->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))),
-            'pendapatan' => $baris->where('status', 'lunas')->sum('total'),
-        ])->sortByDesc('pendapatan');
+        $dibayar = $semuaPesanan->filter(
+            fn ($pesanan) => ! empty($pesanan['dibayar'])
+                && $pesanan['dibayar'] >= $sejak
+                && $dalamCakupan($pesanan)
+        );
+        $slugTransaksi = $pesanan->pluck('tempat')->merge($dibayar->pluck('tempat'))->unique();
+        $transaksi = $slugTransaksi->mapWithKeys(function (string $slug) use ($pesanan, $dibayar) {
+            $pesananTempat = $pesanan->where('tempat', $slug);
+            $dibayarTempat = $dibayar->where('tempat', $slug);
+
+            return [$slug => [
+                'pesanan' => $pesananTempat->count(),
+                'dibayar' => $dibayarTempat->count(),
+                'tiket' => $dibayarTempat->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))),
+                'pendapatan' => $dibayarTempat->sum('total'),
+            ]];
+        })->sortByDesc('pendapatan');
 
         // semua tempat wisata dengan jumlah kunjungan halamannya (termasuk yang belum dikunjungi)
         $kunjunganTempat = collect(Katalog::tempat())
@@ -135,6 +155,7 @@ class AdminController extends Controller
             'kunjunganTempat' => $kunjunganTempat,
             'transaksi' => $transaksi,
             'pesanan' => $pesanan,
+            'dibayar' => $dibayar,
         ]);
     }
 
@@ -147,6 +168,15 @@ class AdminController extends Controller
         $relasiTempat = collect($semuaRelasi)->groupBy('id_admin');
         $peran = $request->query('peran', 'admin');
         $peran = in_array($peran, ['admin', 'wisatawan'], true) ? $peran : 'admin';
+        $pilihJumlahBaris = static function ($nilai): int {
+            $jumlah = filter_var($nilai, FILTER_VALIDATE_INT);
+
+            return in_array($jumlah, [10, 25, 50, 100], true) ? $jumlah : 10;
+        };
+        $barisAdmin = $pilihJumlahBaris($request->query('per_halaman_admin', 10));
+        $barisWisatawan = $pilihJumlahBaris($request->query('per_halaman_wisatawan', 10));
+        $perHalaman = $peran === 'admin' ? $barisAdmin : $barisWisatawan;
+        $namaHalaman = $peran === 'admin' ? 'halaman_admin' : 'halaman_wisatawan';
         $akun = $semuaAkun->where('peran', $peran)->map(function (array $user) use ($relasiTempat, $tempat) {
             $user['tempat'] = ($relasiTempat->get($user['id'], collect()))
                 ->map(fn ($relasi) => $tempat->get($relasi['tempat_slug']) ?? [
@@ -157,12 +187,33 @@ class AdminController extends Controller
 
             return $user;
         })->values();
+        $jumlahAkun = $akun->count();
+        $halaman = filter_var($request->query($namaHalaman, 1), FILTER_VALIDATE_INT);
+        $halaman = $halaman === false ? 1 : max(1, $halaman);
+        $halaman = min($halaman, max(1, (int) ceil($jumlahAkun / $perHalaman)));
+        $akun = new LengthAwarePaginator(
+            $akun->forPage($halaman, $perHalaman)->values(),
+            $jumlahAkun,
+            $perHalaman,
+            $halaman,
+            [
+                'path' => $request->url(),
+                'pageName' => $namaHalaman,
+                'query' => [
+                    'peran' => $peran,
+                    'per_halaman_admin' => $barisAdmin,
+                    'per_halaman_wisatawan' => $barisWisatawan,
+                ],
+            ],
+        );
         $tempatTerhubung = collect($semuaRelasi)->pluck('tempat_slug')->all();
         $tersedia = $tempat->reject(fn ($t) => in_array($t['slug'], $tempatTerhubung, true))->values();
 
         return view('admin.akun', [
             'akun' => $akun,
             'peran' => $peran,
+            'barisAdmin' => $barisAdmin,
+            'barisWisatawan' => $barisWisatawan,
             'tempatTersedia' => $tersedia,
             'jumlah' => $semuaAkun->countBy('peran')->all(),
         ]);
@@ -348,6 +399,43 @@ class AdminController extends Controller
             'q' => $q,
             'jumlahRelasi' => collect(Katalog::relasi())->flatMap(fn ($r) => [$r[0], $r[2]])->countBy()->all(),
             'perJenis' => collect(Katalog::entitas())->reject(fn ($e) => $e['jenis'] === 'wilayah')->countBy('jenis')->all(),
+        ]);
+    }
+
+    public function daftarTempat(Request $request)
+    {
+        $kategori = (string) $request->query('kategori', '');
+        if (! array_key_exists($kategori, Katalog::KATEGORI)) {
+            $kategori = '';
+        }
+        $q = mb_strtolower(trim((string) $request->query('q', '')));
+        $perHalaman = filter_var($request->query('per_halaman', 10), FILTER_VALIDATE_INT);
+        $perHalaman = in_array($perHalaman, [10, 25, 50, 100], true) ? $perHalaman : 10;
+        $halaman = filter_var($request->query('page', 1), FILTER_VALIDATE_INT);
+        $halaman = $halaman === false ? 1 : max(1, $halaman);
+        $data = collect(Katalog::tempat())
+            ->filter(fn ($tempat) => ($kategori === '' || ($tempat['kategori'] ?? '') === $kategori)
+                && ($q === '' || str_contains(mb_strtolower($tempat['nama']), $q)))
+            ->sortBy(fn ($tempat) => mb_strtolower($tempat['nama']))
+            ->values();
+        $jumlah = $data->count();
+        $halaman = min($halaman, max(1, (int) ceil($jumlah / $perHalaman)));
+        $tempat = new LengthAwarePaginator(
+            $data->forPage($halaman, $perHalaman)->values(),
+            $jumlah,
+            $perHalaman,
+            $halaman,
+            [
+                'path' => $request->url(),
+                'query' => ['kategori' => $kategori, 'q' => $q, 'per_halaman' => $perHalaman],
+            ],
+        );
+
+        return view('admin.tempat-daftar', [
+            'tempat' => $tempat,
+            'kategori' => $kategori,
+            'q' => $q,
+            'perHalaman' => $perHalaman,
         ]);
     }
 
@@ -635,7 +723,7 @@ class AdminController extends Controller
             $api->hapusTempatAdmin($pemilik['id_admin'], $slug);
         }
 
-        return redirect()->route('admin.entitas', ['jenis' => 'tempat'])->with('pesan', 'Tempat wisata '.$tempat['nama'].' berhasil dihapus dari Database 3.');
+        return redirect()->route('admin.tempat.daftar')->with('pesan', 'Tempat wisata '.$tempat['nama'].' berhasil dihapus dari Database 3.');
     }
 
     public function relasi(Request $request)
@@ -777,6 +865,7 @@ class AdminController extends Controller
 
         if ($p) {
             $this->pastikanBolehKelola($request, $p['tempat']);
+            $p = TiketKedaluwarsa::perbarui($p);
         }
         if ($p
             && $p['status'] === 'lunas'

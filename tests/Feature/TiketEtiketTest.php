@@ -84,6 +84,9 @@ class TiketEtiketTest extends TestCase
                     'e_tiket' => [['kode_qr' => 'QR-IDENTITAS', 'dipakai_pada' => null]],
                 ]]);
             }
+            if (str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket')) {
+                return Http::response('true');
+            }
 
             return Http::response([], 404);
         });
@@ -102,7 +105,7 @@ class TiketEtiketTest extends TestCase
             ->assertSee('2 dewasa')
             ->assertSee('1 tiket umum')
             ->assertDontSee('hari kerja')
-            ->assertSee('Kedaluwarsa setelah hari kunjungan berakhir')
+            ->assertSee('Kedaluwarsa saat jam operasional berakhir')
             ->assertSee('Rina')
             ->assertDontSee('Belum ada di peta');
 
@@ -313,6 +316,9 @@ class TiketEtiketTest extends TestCase
             }
             if (str_contains($request->url(), '/pesanan?')) {
                 return Http::response($orders);
+            }
+            if (str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket')) {
+                return Http::response('true');
             }
 
             return Http::response([], 404);

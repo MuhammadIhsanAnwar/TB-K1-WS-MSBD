@@ -6,6 +6,7 @@ use App\Support\Database3CatalogWriter;
 use App\Support\Katalog;
 use App\Support\Kunjungan;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class AdminDataTest extends TestCase
         Cache::setDefaultDriver('array');
         Cache::store('array')->flush();
         Katalog::forgetCache();
+        Carbon::setTestNow();
 
         parent::tearDown();
     }
@@ -70,6 +72,61 @@ class AdminDataTest extends TestCase
         ]])->get('/admin/akun')->assertForbidden();
     }
 
+    public function test_account_lists_have_independent_page_sizes_and_pagination(): void
+    {
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+            'services.supabase.katalog.url' => 'https://supabase.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+        ]);
+        $users = [];
+        foreach (range(1, 12) as $number) {
+            $users[] = [
+                'id' => $number,
+                'name' => 'Admin '.$number,
+                'email' => 'admin-'.$number.'@example.test',
+                'peran' => 'admin',
+            ];
+            $users[] = [
+                'id' => $number + 100,
+                'name' => 'Wisatawan '.$number,
+                'email' => 'wisatawan-'.$number.'@example.test',
+                'peran' => 'wisatawan',
+            ];
+        }
+        Http::fake(function (Request $request) use ($users) {
+            if (str_contains($request->url(), '/rest/v1/users?')) {
+                return Http::response($users, 200);
+            }
+
+            return Http::response([], 200);
+        });
+        $superadmin = ['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]];
+
+        $this->withSession($superadmin)
+            ->get('/admin/akun?peran=admin&per_halaman_admin=10')
+            ->assertOk()
+            ->assertSee('admin-1@example.test')
+            ->assertDontSee('admin-11@example.test')
+            ->assertSee('name="per_halaman_admin"', false)
+            ->assertSee('halaman_admin=2');
+
+        $this->withSession($superadmin)
+            ->get('/admin/akun?peran=wisatawan&per_halaman_admin=25&per_halaman_wisatawan=10')
+            ->assertOk()
+            ->assertSee('wisatawan-1@example.test')
+            ->assertDontSee('wisatawan-11@example.test')
+            ->assertSee('name="per_halaman_wisatawan"', false)
+            ->assertSee('value="25"', false)
+            ->assertSee('halaman_wisatawan=2');
+    }
+
     public function test_editor_relasi_navigation_is_hidden_from_admin_and_superadmin(): void
     {
         Cache::setDefaultDriver('array');
@@ -104,6 +161,7 @@ class AdminDataTest extends TestCase
             'peran' => 'admin',
         ]])->get('/admin')->assertOk()
             ->assertSee('Insight')
+            ->assertSee('Tempat wisata saya')
             ->assertDontSee('Editor relasi')
             ->assertDontSee('Antrean kerja kurator')
             ->assertDontSee('Dicari tetapi tanpa hasil')
@@ -119,6 +177,8 @@ class AdminDataTest extends TestCase
             'peran' => 'superadmin',
         ]])->get('/admin')->assertOk()
             ->assertSee('Insight')
+            ->assertSee('Kelola tempat wisata')
+            ->assertDontSee('<span>Entitas</span>', false)
             ->assertSee('Antrean kerja kurator')
             ->assertSee('Dicari tetapi tanpa hasil')
             ->assertSee('Relasi bersumber survei, perlu verifikasi')
@@ -189,7 +249,7 @@ class AdminDataTest extends TestCase
         Http::fake(['*' => fn (Request $request) => str_contains($request->url(), '/rest/v1/')
             ? Http::response([], 200)
             : Http::response(['head' => ['vars' => ['s', 'p', 'o']], 'results' => ['bindings' => []]], 200)]);
-        Cache::put('database3.catalog.triples.v8', [
+        Cache::put('database3.catalog.triples.v9', [
             ['res:museum-test', 'rdf:type', 'mv:Museum'],
             ['res:museum-test', 'schema:name', 'Museum Test'],
         ]);
@@ -212,6 +272,58 @@ class AdminDataTest extends TestCase
             $response->getContent(),
         );
         $this->withSession($session)->get('/admin/tempat/baru')->assertOk()->assertSee('Tambah tempat wisata');
+    }
+
+    public function test_superadmin_place_list_uses_catalog_data_with_category_filter_and_pagination(): void
+    {
+        Cache::setDefaultDriver('array');
+        Cache::store('array')->flush();
+        Katalog::forgetCache();
+
+        $triples = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $slug = 'tempat-'.str_pad((string) $i, 2, '0', STR_PAD_LEFT);
+            $jenis = $i <= 6 ? 'mv:Museum' : 'mv:RuangPublik';
+            $triples[] = ['res:'.$slug, 'rdf:type', $jenis];
+            $triples[] = ['res:'.$slug, 'schema:name', 'Tempat '.str_pad((string) $i, 2, '0', STR_PAD_LEFT)];
+        }
+        Cache::put('database3.catalog.triples.v9', $triples);
+        config([
+            'services.supabase.katalog.url' => 'https://katalog.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+        ]);
+        Http::fake(['*' => Http::response([], 200)]);
+        $session = ['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]];
+
+        $this->withSession($session)
+            ->get('/admin/tempat?per_halaman=10')
+            ->assertOk()
+            ->assertSee('Kelola tempat wisata')
+            ->assertSee('Menampilkan 1&ndash;10 dari 12', false)
+            ->assertSee('Tempat 01')
+            ->assertSee('Tempat 10')
+            ->assertDontSee('Tempat 11')
+            ->assertSee('page=2');
+
+        $this->withSession($session)
+            ->get('/admin/tempat?per_halaman=10&page=2')
+            ->assertOk()
+            ->assertSee('Tempat 11')
+            ->assertSee('Tempat 12');
+
+        $this->withSession($session)
+            ->get('/admin/tempat?kategori=museum&per_halaman=10')
+            ->assertOk()
+            ->assertSee('Menampilkan 1&ndash;6 dari 6', false)
+            ->assertSee('Tempat 01')
+            ->assertSee('Tempat 06')
+            ->assertDontSee('Tempat 07');
     }
 
     public function test_admin_insight_renders_graph_for_managed_place(): void
@@ -252,6 +364,188 @@ class AdminDataTest extends TestCase
             ->assertDontSee('Jumlah tempat wisata')
             ->assertSee('data-grafik=', false)
             ->assertDontSee('p-batang', false);
+    }
+
+    public function test_admin_and_superadmin_insights_use_stored_transaction_totals_with_correct_scope(): void
+    {
+        Cache::setDefaultDriver('array');
+        Cache::store('array')->flush();
+        Carbon::setTestNow(Carbon::parse('2026-11-25 12:00:00', 'Asia/Jakarta'));
+        Katalog::forgetCache();
+        config([
+            'services.sparql.endpoint' => 'https://sparql.test/query',
+            'services.supabase.katalog.url' => 'https://katalog.test',
+            'services.supabase.katalog.publishable_key' => 'test-key',
+            'services.supabase.katalog.secret_key' => 'test-secret',
+            'services.supabase.transaksi.url' => 'https://transaksi.test',
+            'services.supabase.transaksi.publishable_key' => 'test-key',
+            'services.supabase.transaksi.secret_key' => 'test-secret',
+        ]);
+        Cache::put('database3.catalog.triples.v9', [
+            ['res:museum-test', 'rdf:type', 'mv:Museum'],
+            ['res:museum-test', 'schema:name', 'Museum Test'],
+        ]);
+        Kunjungan::catat('tempat', 'museum-test');
+        Kunjungan::catat('tempat', 'tempat-lain');
+
+        $akun = [
+            [
+                'id' => 1,
+                'name' => 'Super Admin',
+                'email' => 'superadmin@example.test',
+                'peran' => 'superadmin',
+                'foto_profil' => null,
+                'no_hp' => null,
+                'ditangguhkan_pada' => null,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Admin',
+                'email' => 'admin@example.test',
+                'peran' => 'admin',
+                'foto_profil' => null,
+                'no_hp' => null,
+                'ditangguhkan_pada' => null,
+            ],
+        ];
+        $pesanan = [
+            [
+                'id_pesanan' => 1,
+                'kode' => 'MV-MUSEUM01',
+                'id_pengguna' => 3,
+                'nama_pemesan' => 'Rina',
+                'email_pemesan' => 'rina@example.test',
+                'hp_pemesan' => '0812',
+                'tempat_slug' => 'museum-test',
+                'tanggal_kunjungan' => '2026-11-25',
+                'total' => 30000,
+                'metode' => 'qris',
+                'status' => 'lunas',
+                'batas_bayar' => '2026-11-25T04:15:00+00:00',
+                'created_at' => '2026-11-25T04:00:00+00:00',
+                'pembayaran' => [['dibayar_pada' => '2026-11-25T04:05:00+00:00', 'referensi' => 'REF-1']],
+                'e_tiket' => [['kode_qr' => 'QR-1', 'dipakai_pada' => null]],
+            ],
+            [
+                'id_pesanan' => 2,
+                'kode' => 'MV-OTHER001',
+                'id_pengguna' => 4,
+                'nama_pemesan' => 'Budi',
+                'email_pemesan' => 'budi@example.test',
+                'hp_pemesan' => '0813',
+                'tempat_slug' => 'tempat-lain',
+                'tanggal_kunjungan' => '2026-11-25',
+                'total' => 5000,
+                'metode' => 'qris',
+                'status' => 'kedaluwarsa',
+                'batas_bayar' => '2026-10-25T04:15:00+00:00',
+                'created_at' => '2026-10-25T04:00:00+00:00',
+                'pembayaran' => [['dibayar_pada' => '2026-11-24T04:05:00+00:00', 'referensi' => 'REF-2']],
+                'e_tiket' => [['kode_qr' => 'QR-2', 'dipakai_pada' => null]],
+            ],
+            [
+                'id_pesanan' => 3,
+                'kode' => 'MV-PENDING01',
+                'id_pengguna' => 5,
+                'nama_pemesan' => 'Dina',
+                'email_pemesan' => 'dina@example.test',
+                'hp_pemesan' => '0814',
+                'tempat_slug' => 'museum-test',
+                'tanggal_kunjungan' => '2026-11-25',
+                'total' => 9000,
+                'metode' => 'qris',
+                'status' => 'menunggu',
+                'batas_bayar' => '2026-11-25T04:15:00+00:00',
+                'created_at' => '2026-11-25T04:00:00+00:00',
+                'pembayaran' => [],
+                'e_tiket' => [],
+            ],
+        ];
+        Http::fake(function (Request $request) use ($akun, $pesanan) {
+            $url = $request->url();
+            if (str_contains($url, 'sparql.test')) {
+                return Http::response(['head' => ['vars' => ['s', 'p', 'o']], 'results' => ['bindings' => []]]);
+            }
+            if (str_contains($url, '/users?') && str_contains($url, 'email=eq.')) {
+                $email = str_contains($url, 'superadmin') ? 'superadmin@example.test' : 'admin@example.test';
+
+                return Http::response(array_values(array_filter($akun, fn (array $user) => $user['email'] === $email)));
+            }
+            if (str_contains($url, '/users?')) {
+                return Http::response($akun);
+            }
+            if (str_contains($url, '/admin_tempat?')) {
+                return Http::response([['tempat_slug' => 'museum-test']]);
+            }
+            if (str_contains($url, '/pesanan_item?')) {
+                return Http::response([
+                    ['id_pesanan' => 1, 'jenis_pengunjung' => 'Dewasa', 'harga' => 15000, 'jumlah' => 2, 'subtotal' => 30000],
+                    ['id_pesanan' => 2, 'jenis_pengunjung' => 'Anak', 'harga' => 5000, 'jumlah' => 1, 'subtotal' => 5000],
+                    ['id_pesanan' => 3, 'jenis_pengunjung' => 'Dewasa', 'harga' => 9000, 'jumlah' => 1, 'subtotal' => 9000],
+                ]);
+            }
+            if (str_contains($url, '/pesanan?')) {
+                return Http::response($pesanan);
+            }
+
+            return Http::response([], 200);
+        });
+
+        $superadminResponse = $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])
+            ->get('/admin/insight?periode=7');
+        $superadminResponse->assertOk()
+            ->assertSee('Rp35.000')
+            ->assertSee('Museum Test')
+            ->assertSee('tempat-lain')
+            ->assertSee('2 pesanan dibayar');
+        $this->assertMatchesRegularExpression(
+            '/<div class="label">Tiket terjual<\\/div><div class="nilai">3<\\/div>/',
+            $superadminResponse->getContent(),
+        );
+        $superadminRingkasan = $this->withSession(['pengguna' => [
+            'id' => 1,
+            'nama' => 'Super Admin',
+            'email' => 'superadmin@example.test',
+            'peran' => 'superadmin',
+        ]])->get('/admin?periode=7');
+        $superadminRingkasan->assertOk()->assertSee('Rp35.000 dari pembayaran tiket pada periode ini');
+        $this->assertMatchesRegularExpression(
+            '/<div class="label">Tiket terjual<\\/div>\\s*<div class="nilai">3<\\/div>/',
+            $superadminRingkasan->getContent(),
+        );
+
+        $adminResponse = $this->withSession(['pengguna' => [
+            'id' => 2,
+            'nama' => 'Admin',
+            'email' => 'admin@example.test',
+            'peran' => 'admin',
+        ]])
+            ->get('/admin/insight?periode=7');
+        $adminResponse->assertOk()
+            ->assertSee('Rp30.000')
+            ->assertSee('Museum Test')
+            ->assertDontSee('tempat-lain')
+            ->assertSee('1 pesanan dibayar');
+        $this->assertMatchesRegularExpression(
+            '/<div class="label">Tiket terjual<\\/div><div class="nilai">2<\\/div>/',
+            $adminResponse->getContent(),
+        );
+        $adminRingkasan = $this->withSession(['pengguna' => [
+            'id' => 2,
+            'nama' => 'Admin',
+            'email' => 'admin@example.test',
+            'peran' => 'admin',
+        ]])->get('/admin?periode=7');
+        $adminRingkasan->assertOk()->assertSee('Rp30.000 dari pembayaran tiket pada periode ini');
+        $this->assertMatchesRegularExpression(
+            '/<div class="label">Tiket terjual<\\/div>\\s*<div class="nilai">2<\\/div>/',
+            $adminRingkasan->getContent(),
+        );
     }
 
     public function test_sync_page_uses_database_labels_and_omits_transaction_totals(): void

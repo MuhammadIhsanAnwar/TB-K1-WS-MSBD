@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\Katalog;
 use App\Support\Midtrans;
 use App\Support\Penyimpanan;
+use App\Support\TiketKedaluwarsa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,7 @@ class TiketController extends Controller
             $p = Penyimpanan::ubahPesanan($kode, ['status' => 'kedaluwarsa']);
         }
 
-        return $p;
+        return TiketKedaluwarsa::perbarui($p);
     }
 
     private function detailTempat(array $p): array
@@ -61,7 +62,7 @@ class TiketController extends Controller
         $t = $this->tempatBertiket($slug);
         $lama = $request->session()->get('pilihan');
         $waktu = now('Asia/Jakarta');
-        $statusOperasional = Katalog::statusOperasional($t, $waktu);
+        $statusOperasional = Katalog::statusMenurutJadwal($t, $waktu);
 
         return view('tiket.pilih', [
             't' => $t,
@@ -89,7 +90,7 @@ class TiketController extends Controller
                 'tanggal' => 'Tiket hanya dapat dipesan untuk hari ini.',
             ]);
         }
-        if (! Katalog::bukaSekarang($t, now('Asia/Jakarta'))) {
+        if (Katalog::statusMenurutJadwal($t, now('Asia/Jakarta')) !== true) {
             return back()->withInput()->withErrors([
                 'tanggal' => $this->pesanJamPemesanan($t),
             ]);
@@ -130,7 +131,7 @@ class TiketController extends Controller
                 ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
         }
         $t = $this->tempatBertiket($pilihan['tempat']);
-        $statusOperasional = Katalog::statusOperasional($t, now('Asia/Jakarta'));
+        $statusOperasional = Katalog::statusMenurutJadwal($t, now('Asia/Jakarta'));
 
         return view('tiket.checkout', [
             'pilihan' => $pilihan,
@@ -154,7 +155,7 @@ class TiketController extends Controller
             return redirect()->route('tiket.pilih', $pilihan['tempat'])
                 ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
         }
-        if (! Katalog::bukaSekarang($t, now('Asia/Jakarta'))) {
+        if (Katalog::statusMenurutJadwal($t, now('Asia/Jakarta')) !== true) {
             return redirect()->route('checkout')
                 ->withErrors(['jam_operasional' => $this->pesanJamPemesanan($t)]);
         }
@@ -322,7 +323,7 @@ class TiketController extends Controller
     {
         return Katalog::jadwal($tempat) === null
             ? 'Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.'
-            : 'Tiket hanya dapat dipesan saat tempat sedang buka ('.$tempat['jam'].').';
+            : 'Tiket hanya dapat dipesan selama jam operasional terjadwal ('.$tempat['jam'].').';
     }
 
     public function daftar(Request $request)
@@ -333,7 +334,7 @@ class TiketController extends Controller
                 $p = Penyimpanan::ubahPesanan($p['kode'], ['status' => 'kedaluwarsa']);
             }
 
-            return $p;
+            return TiketKedaluwarsa::perbarui($p);
         });
         $kelompok = [
             'aktif' => $semua->filter(fn ($p) => in_array($p['status'], ['menunggu', 'lunas'], true) && empty($p['dipakai']) && $p['tanggal'] >= now('Asia/Jakarta')->toDateString()),
@@ -348,7 +349,7 @@ class TiketController extends Controller
     public function eTiket(Request $request, string $kode)
     {
         $p = $this->milik($request, $kode);
-        abort_unless($p['status'] === 'lunas', 404);
+        abort_unless(in_array($p['status'], ['lunas', 'kedaluwarsa'], true), 404);
         if (empty($p['kode_qr'])) {
             try {
                 $kodeQr = Penyimpanan::pastikanKodeQr($p);
@@ -361,10 +362,9 @@ class TiketController extends Controller
         }
         abort_unless(! empty($p['kode_qr']), 503, 'E-tiket belum berhasil diterbitkan. Silakan coba lagi.');
         $t = $this->detailTempat($p);
-        $berlakuSampai = Carbon::parse($p['tanggal'], 'Asia/Jakarta')->endOfDay();
         $status = ! empty($p['dipakai'])
             ? 'dipakai'
-            : (now('Asia/Jakarta')->greaterThan($berlakuSampai) ? 'kedaluwarsa' : 'aktif');
+            : ($p['status'] === 'kedaluwarsa' ? 'kedaluwarsa' : 'aktif');
 
         return view('tiket.etiket', [
             'p' => $p,

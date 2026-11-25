@@ -18,11 +18,15 @@
     $svg = fn ($k) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'.$ikon[$k].'</svg>';
     $menuKurator = [
         ['admin.insight', 'Insight', 'statistik', null],
-        ['admin.entitas', $u['peran'] === 'admin' ? 'Tempat wisata saya' : 'Entitas', 'entitas', null],
+    ];
+    if ($u['peran'] === 'admin') {
+        $menuKurator[] = ['admin.entitas', 'Tempat wisata saya', 'entitas', null];
+    }
+    $menuKurator = array_merge($menuKurator, [
         ['admin.ulasan', 'Ulasan', 'ulasan', null],
         ['admin.pesan', 'Pesan pengguna', 'pesan', null],
         ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
-    ];
+    ]);
     if ($u['peran'] === 'superadmin') {
         $menuKurator = array_merge($menuKurator, [
             ['admin.tempat.daftar', 'Kelola tempat wisata', 'entitas', null],

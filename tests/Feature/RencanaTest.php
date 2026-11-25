@@ -76,9 +76,8 @@ class RencanaTest extends TestCase
         $response = $this->get('/rencana?'.$query);
         $response
             ->assertOk()
-            ->assertSee('Jalan kaki')
-            ->assertSee('Motor')
-            ->assertSee('Mobil')
+            ->assertSee('Susun Sendiri')
+            ->assertSee('name="mode" value="manual"', false)
             ->assertSee('name="tujuan[]"', false)
             ->assertSee('tujuan-satu')
             ->assertSee('tujuan-dua')
@@ -91,6 +90,55 @@ class RencanaTest extends TestCase
         $this->assertSame('awal', $rute[0]['nama'] ?? null);
         $this->assertTrue($rute[0]['awal'] ?? false);
         $this->assertCount(3, $rute);
+    }
+
+    public function test_route_page_first_shows_only_the_two_planning_modes(): void
+    {
+        $this->get('/rencana')
+            ->assertOk()
+            ->assertSee('Susun Otomatis')
+            ->assertSee('Susun Sendiri')
+            ->assertSee('Pilih salah satu cara penyusunan rute')
+            ->assertDontSee('data-rencana-form', false)
+            ->assertDontSee('name="minat[]"', false)
+            ->assertDontSee('name="tujuan[]"', false);
+    }
+
+    public function test_automatic_mode_shows_preferences_but_not_manual_destinations(): void
+    {
+        $query = http_build_query([
+            'mode' => 'otomatis',
+            'minat' => ['sejarah'],
+            'durasi' => 4,
+            'moda' => ['motor'],
+            'mulai' => 'awal',
+        ]);
+
+        $this->get('/rencana?'.$query)
+            ->assertOk()
+            ->assertSee('Susun Otomatis')
+            ->assertSee('name="minat[]"', false)
+            ->assertSee('name="durasi"', false)
+            ->assertSee('name="moda[]"', false)
+            ->assertDontSee('name="tujuan[]"', false);
+    }
+
+    public function test_manual_mode_needs_only_a_start_and_selected_destinations(): void
+    {
+        $query = http_build_query([
+            'mode' => 'manual',
+            'mulai' => 'awal',
+            'tujuan' => ['tujuan-satu', 'tujuan-dua'],
+        ]);
+
+        $this->get('/rencana?'.$query)
+            ->assertOk()
+            ->assertSee('name="tujuan[]"', false)
+            ->assertSee('name="mulai"', false)
+            ->assertDontSee('name="minat[]"', false)
+            ->assertDontSee('name="durasi"', false)
+            ->assertDontSee('name="moda[]"', false)
+            ->assertSee('2 tujuan dipilih');
     }
 
     public function test_guest_manual_route_map_includes_a_place_start_and_one_destination(): void

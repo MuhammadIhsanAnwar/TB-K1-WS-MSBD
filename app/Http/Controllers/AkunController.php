@@ -632,6 +632,42 @@ class AkunController extends Controller
         return view('akun.ulasan', ['ulasan' => Penyimpanan::ulasan(idPengguna: (int) $this->pengguna($request)['id'])]);
     }
 
+    public function perbaruiUlasanSaya(Request $request, string $id)
+    {
+        $u = $this->pengguna($request);
+        $ulasan = collect(Penyimpanan::ulasan(idPengguna: (int) $u['id']))
+            ->first(fn ($ulasan) => $ulasan['id'] === $id);
+        abort_unless($ulasan, 404);
+
+        $data = $request->validate([
+            'bintang' => ['required', 'integer', 'between:1,5'],
+            'teks' => ['required', 'string', 'min:10', 'max:600'],
+        ], [
+            'bintang.required' => 'Pilih jumlah bintang.',
+            'teks.min' => 'Tulis minimal 10 karakter supaya ulasanmu berguna bagi orang lain.',
+        ]);
+        Penyimpanan::tulisUlasan($data + [
+            'tempat' => $ulasan['tempat'],
+            'id_pengguna' => (int) $u['id'],
+            'email' => $u['email'],
+            'nama' => $u['nama'],
+        ]);
+
+        return redirect()->route('ulasan.saya')->with('pesan', 'Ulasan dan rating berhasil diperbarui.');
+    }
+
+    public function hapusUlasanSaya(Request $request, string $id)
+    {
+        $idPengguna = (int) $this->pengguna($request)['id'];
+        $ulasan = collect(Penyimpanan::ulasan(idPengguna: $idPengguna))
+            ->first(fn ($ulasan) => $ulasan['id'] === $id);
+        abort_unless($ulasan, 404);
+
+        Penyimpanan::hapusUlasan($id);
+
+        return redirect()->route('ulasan.saya')->with('pesan', 'Ulasan dan rating berhasil dihapus.');
+    }
+
     public function tulisUlasan(Request $request, string $slug)
     {
         abort_unless(Katalog::get($slug), 404);

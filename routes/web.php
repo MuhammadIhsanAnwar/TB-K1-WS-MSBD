@@ -56,6 +56,8 @@ Route::controller(AkunController::class)->middleware('kunjungan')->group(functio
         Route::post('/akun/pengaturan', 'simpanPengaturan');
         Route::get('/ulasan-saya', 'ulasanSaya')->middleware('peran:wisatawan')->name('ulasan.saya');
         Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->middleware('peran:wisatawan')->name('ulasan.tulis');
+        Route::put('/ulasan-saya/{id}', 'perbaruiUlasanSaya')->middleware('peran:wisatawan')->whereNumber('id')->name('ulasan.perbarui');
+        Route::delete('/ulasan-saya/{id}', 'hapusUlasanSaya')->middleware('peran:wisatawan')->whereNumber('id')->name('ulasan.hapus-saya');
         Route::get('/rencana/saya', 'rencanaSaya')->middleware('peran:wisatawan')->name('rencana.saya');
         Route::post('/rencana/simpan', 'simpanRencana')->middleware('peran:wisatawan')->name('rencana.simpan');
         Route::put('/rencana/{kode}', 'perbaruiRencana')->middleware('peran:wisatawan')->name('rencana.perbarui');
@@ -108,14 +110,14 @@ Route::controller(AdminController::class)->middleware('peran:admin,superadmin')-
 Route::controller(AdminController::class)->prefix('admin')->name('admin.')->group(function () {
     Route::get('/insight', 'insight')->middleware('peran:admin,superadmin')->name('insight');
     Route::middleware('peran:superadmin')->group(function () {
-    Route::get('/akun', 'akunAdmin')->name('akun');
-    Route::post('/akun', 'buatAkun')->name('akun.buat');
-    Route::patch('/akun/{id}', 'ubahAkun')->name('akun.ubah');
-    Route::delete('/akun/{id}', 'hapusAkun')->name('akun.hapus');
-    Route::patch('/akun/{id}/tangguhkan', 'tangguhkanAkun')->name('akun.tangguhkan');
-    Route::post('/akun/{id}/tempat', 'tautkanTempat')->name('akun.tempat.tautkan');
-    Route::delete('/akun/{id}/tempat/{slug}', 'lepasTempat')->name('akun.tempat.lepas');
-    Route::get('/tempat', 'entitas')->defaults('jenis', 'tempat')->name('tempat.daftar');
+        Route::get('/akun', 'akunAdmin')->name('akun');
+        Route::post('/akun', 'buatAkun')->name('akun.buat');
+        Route::patch('/akun/{id}', 'ubahAkun')->name('akun.ubah');
+        Route::delete('/akun/{id}', 'hapusAkun')->name('akun.hapus');
+        Route::patch('/akun/{id}/tangguhkan', 'tangguhkanAkun')->name('akun.tangguhkan');
+        Route::post('/akun/{id}/tempat', 'tautkanTempat')->name('akun.tempat.tautkan');
+        Route::delete('/akun/{id}/tempat/{slug}', 'lepasTempat')->name('akun.tempat.lepas');
+        Route::get('/tempat', 'daftarTempat')->name('tempat.daftar');
     });
 });
 

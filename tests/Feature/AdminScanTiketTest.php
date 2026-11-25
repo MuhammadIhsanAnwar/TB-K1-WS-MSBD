@@ -8,6 +8,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use ReflectionProperty;
 use Tests\TestCase;
 
 class AdminScanTiketTest extends TestCase
@@ -27,6 +28,16 @@ class AdminScanTiketTest extends TestCase
             'services.supabase.transaksi.publishable_key' => 'pub-key',
             'services.supabase.transaksi.secret_key' => 'secret-key',
         ]);
+        Katalog::forgetCache();
+        (new ReflectionProperty(Katalog::class, 'entities'))->setValue(null, [
+            'medan-zoo' => [
+                'slug' => 'medan-zoo',
+                'jenis' => 'tempat',
+                'nama' => 'Medan Zoo',
+                'jam' => 'Setiap hari, 09.00-17.00',
+                'jam_menit' => [540, 1020],
+            ],
+        ]);
     }
 
     protected function tearDown(): void
@@ -44,8 +55,8 @@ class AdminScanTiketTest extends TestCase
                 return Http::response([['tempat_slug' => 'medan-zoo']]);
             }
 
-            if ($request->method() === 'PATCH' && str_contains($request->url(), '/e_tiket?')) {
-                return Http::response([]);
+            if (str_contains($request->url(), '/rpc/sp_pakai_etiket')) {
+                return Http::response('false');
             }
 
             if (str_contains($request->url(), '/pesanan_item?')) {
@@ -70,6 +81,7 @@ class AdminScanTiketTest extends TestCase
         $this->withSession([
             'pengguna' => [
                 'id' => 3,
+                'nama' => 'Admin',
                 'peran' => 'admin',
                 'tempat_slugs' => ['medan-zoo'],
             ],
@@ -82,9 +94,8 @@ class AdminScanTiketTest extends TestCase
             ->assertSessionHas('hasil.judul', 'Sudah check-in');
 
         $this->assertSame([], Kunjungan::ringkasanCheckinTerbaru());
-        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
-            && str_contains($request->url(), '/e_tiket?')
-            && str_contains($request->url(), 'dipakai_pada=is.null'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/rpc/sp_pakai_etiket'));
     }
 
     public function test_expired_ticket_qr_is_rejected_without_claiming_it(): void
@@ -107,6 +118,9 @@ class AdminScanTiketTest extends TestCase
             if (str_contains($request->url(), '/pesanan?')) {
                 return Http::response([$this->pesanan('2026-11-22')]);
             }
+            if (str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket')) {
+                return Http::response('true');
+            }
 
             return Http::response([], 404);
         });
@@ -114,6 +128,7 @@ class AdminScanTiketTest extends TestCase
         $this->withSession([
             'pengguna' => [
                 'id' => 3,
+                'nama' => 'Admin',
                 'peran' => 'admin',
                 'tempat_slugs' => ['medan-zoo'],
             ],
@@ -125,8 +140,8 @@ class AdminScanTiketTest extends TestCase
             ->assertSessionHas('hasil.status', 'kedaluwarsa')
             ->assertSessionHas('hasil.judul', 'Tiket kedaluwarsa');
 
-        Http::assertNotSent(fn (Request $request) => $request->method() === 'PATCH'
-            && str_contains($request->url(), '/e_tiket?'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket'));
     }
 
     public function test_order_code_scan_repairs_missing_qr_and_counts_all_included_visitors_once(): void
@@ -145,11 +160,10 @@ class AdminScanTiketTest extends TestCase
                     ]], 201);
                 }
 
-                if ($request->method() === 'PATCH') {
-                    return Http::response([['id_pesanan' => 7, 'dipakai_pada' => '2026-11-23T03:00:00+00:00']]);
-                }
-
                 return Http::response([]);
+            }
+            if (str_contains($request->url(), '/rpc/sp_pakai_etiket')) {
+                return Http::response('true');
             }
 
             if (str_contains($request->url(), '/pesanan_item?')) {
@@ -169,6 +183,7 @@ class AdminScanTiketTest extends TestCase
         $this->withSession([
             'pengguna' => [
                 'id' => 3,
+                'nama' => 'Admin',
                 'peran' => 'admin',
                 'tempat_slugs' => ['medan-zoo'],
             ],
@@ -184,9 +199,8 @@ class AdminScanTiketTest extends TestCase
         $this->assertSame(3, Kunjungan::ringkasanCheckinTerbaru()['medan-zoo']);
         Http::assertSent(fn (Request $request) => $request->method() === 'POST'
             && str_contains($request->url(), '/e_tiket?'));
-        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
-            && str_contains($request->url(), '/e_tiket?')
-            && str_contains($request->url(), 'dipakai_pada=is.null'));
+        Http::assertSent(fn (Request $request) => $request->method() === 'POST'
+            && str_contains($request->url(), '/rpc/sp_pakai_etiket'));
     }
 
     public function test_admin_ticket_list_shows_scanned_ticket_as_checked_in(): void

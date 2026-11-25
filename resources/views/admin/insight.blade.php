@@ -10,7 +10,6 @@
         'nama' => 'Tayangan',
         'nilai' => array_values($kunjungan['harian']),
     ];
-    $totalLunas = $pesanan->where('status', 'lunas');
     $namaRute = ['beranda' => 'Beranda', 'cari' => 'Pencarian', 'peta' => 'Peta', 'rencana' => 'Rencana', 'tanya' => 'Tanya'];
     $namaFokus = $fokus ? (Katalog::get($fokus)['nama'] ?? $fokus) : null;
     $rating = $fokus ? (Penyimpanan::ringkasanRatingTempat()[$fokus] ?? null) : null;
@@ -41,8 +40,8 @@
     @else
         <div><div class="label">Kunjungan website</div><div class="nilai">{{ number_format($kunjungan['total'], 0, ',', '.') }}</div><div class="ket">pembukaan halaman publik yang berhasil dalam {{ $periode }} hari</div></div>
     @endif
-    <div><div class="label">Tiket terjual</div><div class="nilai">{{ number_format($totalLunas->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))), 0, ',', '.') }}</div><div class="ket">dari {{ $totalLunas->count() }} pesanan lunas</div></div>
-    <div><div class="label">Pendapatan tiket</div><div class="nilai">{{ Katalog::rupiah($totalLunas->sum('total')) }}</div><div class="ket">berdasarkan pesanan lunas</div></div>
+    <div><div class="label">Tiket terjual</div><div class="nilai">{{ number_format($dibayar->sum(fn ($pesanan) => array_sum(array_column($pesanan['item'], 'jumlah'))), 0, ',', '.') }}</div><div class="ket">dari {{ $dibayar->count() }} pesanan dibayar</div></div>
+    <div><div class="label">Pendapatan tiket</div><div class="nilai">{{ Katalog::rupiah($dibayar->sum('total')) }}</div><div class="ket">berdasarkan pembayaran yang diterima</div></div>
     @if ($fokus)
         <div><div class="label">Rating tempat</div><div class="nilai">{{ $rating && $rating['jumlahRating'] ? number_format($rating['rating'], 1, ',', '.') : '-' }}</div><div class="ket">{{ $rating['jumlahRating'] ?? 0 }} rating pengguna</div></div>
     @else
@@ -97,13 +96,13 @@
     @endunless
 
     <section class="p-panel s12" aria-labelledby="transaksi-tempat">
-        <header><h2 id="transaksi-tempat">{{ $namaFokus ? 'Transaksi '.$namaFokus : 'Transaksi per tempat wisata' }}</h2><span class="meta">{{ $periode }} hari · hanya pesanan lunas dihitung sebagai penjualan</span></header>
+        <header><h2 id="transaksi-tempat">{{ $namaFokus ? 'Transaksi '.$namaFokus : 'Transaksi per tempat wisata' }}</h2><span class="meta">{{ $periode }} hari · periode pesanan mengikuti tanggal dibuat, penjualan mengikuti waktu pembayaran</span></header>
         @if ($transaksi->isNotEmpty())
             <div class="p-tabel-bungkus"><table class="p-tabel jadi-daftar">
-                <thead><tr><th>Tempat</th><th class="n">Pesanan</th><th class="n">Lunas</th><th class="n">Tiket</th><th class="n">Pendapatan</th></tr></thead>
+                <thead><tr><th>Tempat</th><th class="n">Pesanan</th><th class="n">Dibayar</th><th class="n">Tiket</th><th class="n">Pendapatan</th></tr></thead>
                 <tbody>
                     @foreach ($transaksi as $slug => $angka)
-                        <tr><td>{{ Katalog::get($slug)['nama'] ?? $slug }}</td><td class="n">{{ number_format($angka['pesanan'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['lunas'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['tiket'], 0, ',', '.') }}</td><td class="n">{{ Katalog::rupiah($angka['pendapatan']) }}</td></tr>
+                        <tr><td>{{ Katalog::get($slug)['nama'] ?? $slug }}</td><td class="n">{{ number_format($angka['pesanan'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['dibayar'], 0, ',', '.') }}</td><td class="n">{{ number_format($angka['tiket'], 0, ',', '.') }}</td><td class="n">{{ Katalog::rupiah($angka['pendapatan']) }}</td></tr>
                     @endforeach
                 </tbody>
             </table></div>

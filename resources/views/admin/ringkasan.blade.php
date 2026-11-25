@@ -28,7 +28,7 @@
     <div>
         <div class="label">Tiket terjual</div>
         <div class="nilai">{{ number_format($tiket, 0, ',', '.') }}</div>
-        <div class="ket">{{ Katalog::rupiah($pendapatan) }} dari pesanan lunas</div>
+        <div class="ket">{{ Katalog::rupiah($pendapatan) }} dari pembayaran tiket pada periode ini</div>
     </div>
 
     @if (session('pengguna.peran') === 'superadmin')

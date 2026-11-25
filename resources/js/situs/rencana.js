@@ -28,23 +28,25 @@ if (form) {
     };
     pilih.addEventListener('change', aturKabar);
 
-    cariTujuan.addEventListener('input', () => {
-        const kata = cariTujuan.value.trim().toLocaleLowerCase('id');
-        daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
-            item.hidden = !item.dataset.tujuanItem.includes(kata);
+    if (cariTujuan && daftarTujuan) {
+        cariTujuan.addEventListener('input', () => {
+            const kata = cariTujuan.value.trim().toLocaleLowerCase('id');
+            daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
+                item.hidden = !item.dataset.tujuanItem.includes(kata);
+            });
         });
-    });
 
-    kosongkanTujuan.addEventListener('click', () => {
-        daftarTujuan.querySelectorAll('input[name="tujuan[]"]').forEach((checkbox) => {
-            checkbox.checked = false;
+        kosongkanTujuan.addEventListener('click', () => {
+            daftarTujuan.querySelectorAll('input[name="tujuan[]"]').forEach((checkbox) => {
+                checkbox.checked = false;
+            });
+            cariTujuan.value = '';
+            daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
+                item.hidden = false;
+            });
+            cariTujuan.focus();
         });
-        cariTujuan.value = '';
-        daftarTujuan.querySelectorAll('[data-tujuan-item]').forEach((item) => {
-            item.hidden = false;
-        });
-        cariTujuan.focus();
-    });
+    }
 
     form.addEventListener('submit', (e) => {
         // tempat awal dari daftar: koordinat lama tidak ikut dikirim

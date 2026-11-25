@@ -71,13 +71,31 @@ class StatusOperasionalTest extends TestCase
 
         StatusOperasional::simpan('medan-zoo', 'buka', 7);
         $this->assertTrue(Katalog::bukaSekarang($tempat, $malam));
+        $this->assertFalse(Katalog::statusMenurutJadwal($tempat, $malam));
 
         StatusOperasional::simpan('medan-zoo', 'jadwal', 7);
         $this->assertFalse(Katalog::bukaSekarang($tempat, $malam));
+        $this->assertSame(
+            '2026-11-23 17:00:00',
+            Katalog::batasOperasional($tempat, '2026-11-23')->format('Y-m-d H:i:s'),
+        );
 
         Http::assertSent(fn (Request $request) => $request->method() === 'POST'
             && str_contains($request->url(), '/pengaturan_situs?')
             && str_starts_with($request['kunci'], 'status_operasional_')
             && strlen($request['kunci']) <= 60);
+    }
+
+    public function test_overnight_opening_hours_expire_tickets_at_the_next_day_closing_time(): void
+    {
+        $tempat = [
+            'jam' => 'Setiap hari, 22.00-02.00',
+            'jam_menit' => [1320, 120],
+        ];
+
+        $this->assertSame(
+            '2026-11-24 02:00:00',
+            Katalog::batasOperasional($tempat, '2026-11-23')->format('Y-m-d H:i:s'),
+        );
     }
 }

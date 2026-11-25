@@ -66,6 +66,23 @@ class Penyimpanan
         return self::bentukPesanan(self::api()->pesananDenganKodeQr($kodeQr))[0] ?? null;
     }
 
+    public static function pesananLunasBelumCheckin(string $sampaiTanggal): array
+    {
+        return array_map(fn (array $p) => [
+            'id' => (int) $p['id_pesanan'],
+            'kode' => (string) $p['kode'],
+            'tempat' => (string) $p['tempat_slug'],
+            'tanggal' => Carbon::parse($p['tanggal_kunjungan'])->toDateString(),
+            'status' => 'lunas',
+            'dipakai' => null,
+        ], self::api()->pesananLunasBelumCheckin($sampaiTanggal));
+    }
+
+    public static function kedaluwarsakanEtiket(int $idPesanan): bool
+    {
+        return self::api()->kedaluwarsakanEtiket($idPesanan);
+    }
+
     public static function pastikanKodeQr(array $pesanan): ?string
     {
         $api = self::api();

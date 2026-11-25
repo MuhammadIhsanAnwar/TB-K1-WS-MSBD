@@ -33,7 +33,7 @@
             </div>
             <div>
                 <dt>Masa berlaku</dt>
-                <dd>Berlaku hanya pada tanggal kunjungan selama jam operasional. Kedaluwarsa setelah hari kunjungan berakhir.</dd>
+                <dd>Berlaku selama jam operasional pada tanggal kunjungan. Kedaluwarsa saat jam operasional berakhir.</dd>
             </div>
             <div>
                 <dt>Total pengunjung</dt>

@@ -13,9 +13,9 @@
 @endif
 
 <nav class="p-alat" aria-label="Filter peran akun" style="margin-bottom:16px">
-    <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin']) }}"
+    <a class="p-btn {{ $peran === 'admin' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'admin', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan]) }}"
        @if ($peran === 'admin') aria-current="page" @endif>Akun admin ({{ $jumlah['admin'] ?? 0 }})</a>
-    <a class="p-btn {{ $peran === 'wisatawan' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'wisatawan']) }}"
+    <a class="p-btn {{ $peran === 'wisatawan' ? 'p-btn--utama' : '' }}" href="{{ route('admin.akun', ['peran' => 'wisatawan', 'per_halaman_admin' => $barisAdmin, 'per_halaman_wisatawan' => $barisWisatawan]) }}"
        @if ($peran === 'wisatawan') aria-current="page" @endif>Akun wisatawan ({{ $jumlah['wisatawan'] ?? 0 }})</a>
 </nav>
 
@@ -49,7 +49,26 @@
 
 @if ($peran === 'wisatawan')
 <section class="p-panel" style="margin-top:24px" aria-labelledby="judul-daftar-wisatawan">
-    <header><h2 id="judul-daftar-wisatawan">Akun wisatawan</h2><span class="meta">{{ $akun->count() }} akun · nama dan email</span></header>
+    <header><h2 id="judul-daftar-wisatawan">Akun wisatawan</h2><span class="meta">{{ $akun->total() }} akun · nama dan email</span></header>
+    <form class="p-alat" method="get" action="{{ route('admin.akun') }}" style="margin-bottom:16px">
+        <input type="hidden" name="peran" value="wisatawan">
+        <input type="hidden" name="per_halaman_admin" value="{{ $barisAdmin }}">
+        <label for="wisatawan-per-halaman">Tampilkan</label>
+        <select id="wisatawan-per-halaman" name="per_halaman_wisatawan">
+            @foreach ([10, 25, 50, 100] as $opsi)
+                <option value="{{ $opsi }}" @selected($barisWisatawan === $opsi)>{{ $opsi }}</option>
+            @endforeach
+        </select>
+        <span>baris per halaman</span>
+        <button class="p-btn p-btn--teks" type="submit">Terapkan</button>
+    </form>
+    <p class="p-ulasan-kontrol__rentang">
+        @if ($akun->count())
+            Menampilkan {{ $akun->firstItem() }}&ndash;{{ $akun->lastItem() }} dari {{ $akun->total() }} akun wisatawan
+        @else
+            Belum ada akun wisatawan.
+        @endif
+    </p>
     @forelse ($akun as $user)
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
@@ -82,10 +101,56 @@
     @empty
         <div class="p-kosong">Belum ada akun wisatawan.</div>
     @endforelse
+    @if ($akun->lastPage() > 1)
+        <nav class="p-paginasi" aria-label="Halaman akun wisatawan">
+            <div class="p-paginasi__arah">
+                @if ($akun->onFirstPage())
+                    <span class="p-btn p-btn--teks" aria-disabled="true">Sebelumnya</span>
+                @else
+                    <a class="p-btn p-btn--teks" href="{{ $akun->previousPageUrl() }}">Sebelumnya</a>
+                @endif
+            </div>
+            <div class="p-paginasi__angka">
+                @foreach ($akun->getUrlRange(max(1, $akun->currentPage() - 2), min($akun->lastPage(), $akun->currentPage() + 2)) as $nomor => $url)
+                    @if ($nomor === $akun->currentPage())
+                        <span class="p-btn p-btn--utama" aria-current="page">{{ $nomor }}</span>
+                    @else
+                        <a class="p-btn" href="{{ $url }}">{{ $nomor }}</a>
+                    @endif
+                @endforeach
+            </div>
+            <div class="p-paginasi__arah">
+                @if ($akun->hasMorePages())
+                    <a class="p-btn p-btn--teks" href="{{ $akun->nextPageUrl() }}">Berikutnya</a>
+                @else
+                    <span class="p-btn p-btn--teks" aria-disabled="true">Berikutnya</span>
+                @endif
+            </div>
+        </nav>
+    @endif
 </section>
 @else
 <section class="p-panel" style="margin-top:24px" aria-labelledby="judul-daftar-admin">
-    <header><h2 id="judul-daftar-admin">Akun admin</h2><span class="meta">{{ $akun->count() }} akun · nama, email, dan tempat kelolaan</span></header>
+    <header><h2 id="judul-daftar-admin">Akun admin</h2><span class="meta">{{ $akun->total() }} akun · nama, email, dan tempat kelolaan</span></header>
+    <form class="p-alat" method="get" action="{{ route('admin.akun') }}" style="margin-bottom:16px">
+        <input type="hidden" name="peran" value="admin">
+        <input type="hidden" name="per_halaman_wisatawan" value="{{ $barisWisatawan }}">
+        <label for="admin-per-halaman">Tampilkan</label>
+        <select id="admin-per-halaman" name="per_halaman_admin">
+            @foreach ([10, 25, 50, 100] as $opsi)
+                <option value="{{ $opsi }}" @selected($barisAdmin === $opsi)>{{ $opsi }}</option>
+            @endforeach
+        </select>
+        <span>baris per halaman</span>
+        <button class="p-btn p-btn--teks" type="submit">Terapkan</button>
+    </form>
+    <p class="p-ulasan-kontrol__rentang">
+        @if ($akun->count())
+            Menampilkan {{ $akun->firstItem() }}&ndash;{{ $akun->lastItem() }} dari {{ $akun->total() }} akun admin
+        @else
+            Belum ada akun admin.
+        @endif
+    </p>
     @forelse ($akun as $user)
         <details class="p-baris" style="padding:12px 0">
             <summary style="cursor:pointer">
@@ -158,6 +223,33 @@
     @empty
         <div class="p-kosong">Belum ada akun admin.</div>
     @endforelse
+    @if ($akun->lastPage() > 1)
+        <nav class="p-paginasi" aria-label="Halaman akun admin">
+            <div class="p-paginasi__arah">
+                @if ($akun->onFirstPage())
+                    <span class="p-btn p-btn--teks" aria-disabled="true">Sebelumnya</span>
+                @else
+                    <a class="p-btn p-btn--teks" href="{{ $akun->previousPageUrl() }}">Sebelumnya</a>
+                @endif
+            </div>
+            <div class="p-paginasi__angka">
+                @foreach ($akun->getUrlRange(max(1, $akun->currentPage() - 2), min($akun->lastPage(), $akun->currentPage() + 2)) as $nomor => $url)
+                    @if ($nomor === $akun->currentPage())
+                        <span class="p-btn p-btn--utama" aria-current="page">{{ $nomor }}</span>
+                    @else
+                        <a class="p-btn" href="{{ $url }}">{{ $nomor }}</a>
+                    @endif
+                @endforeach
+            </div>
+            <div class="p-paginasi__arah">
+                @if ($akun->hasMorePages())
+                    <a class="p-btn p-btn--teks" href="{{ $akun->nextPageUrl() }}">Berikutnya</a>
+                @else
+                    <span class="p-btn p-btn--teks" aria-disabled="true">Berikutnya</span>
+                @endif
+            </div>
+        </nav>
+    @endif
 </section>
 @endif
 @endsection

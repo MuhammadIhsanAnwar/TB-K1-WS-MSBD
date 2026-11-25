@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Carbon;
 use RuntimeException;
 
 /**
@@ -662,11 +663,17 @@ class Katalog
             return $manual === 'buka';
         }
 
+        return self::statusMenurutJadwal($tempat, $waktu);
+    }
+
+    /** Status buka berdasarkan jam terjadwal saja; tidak memakai override admin. */
+    public static function statusMenurutJadwal(array $tempat, ?\DateTimeInterface $waktu = null): ?bool
+    {
         $jadwal = self::jadwal($tempat);
         if (! $jadwal) {
             return null;
         }
-        $waktu = \Illuminate\Support\Carbon::instance($waktu ?? now())->setTimezone('Asia/Jakarta');
+        $waktu = Carbon::instance($waktu ?? now())->setTimezone('Asia/Jakarta');
         $hari = (int) $waktu->isoFormat('E');
         $sekarang = $waktu->hour * 60 + $waktu->minute;
         foreach (self::rentangUntukHari($jadwal, $hari) as [$buka, $tutup]) {
@@ -686,6 +693,41 @@ class Katalog
         }
 
         return false;
+    }
+
+    /** Batas berlaku tiket pada tanggal kunjungannya: penutupan terakhir pada hari itu. */
+    public static function batasOperasional(array $tempat, string|\DateTimeInterface $tanggal): Carbon
+    {
+        $hari = ($tanggal instanceof \DateTimeInterface
+            ? Carbon::instance($tanggal)
+            : Carbon::parse($tanggal, 'Asia/Jakarta'))
+            ->setTimezone('Asia/Jakarta')
+            ->startOfDay();
+        $jadwal = self::jadwal($tempat);
+        if (! $jadwal) {
+            return $hari->endOfDay();
+        }
+
+        $nomorHari = (int) $hari->isoFormat('E');
+        $waktuTutup = [];
+        foreach (self::rentangUntukHari($jadwal, $nomorHari) as [$buka, $tutup]) {
+            if ($buka === $tutup) {
+                $waktuTutup[] = $hari->copy()->endOfDay();
+            } elseif ($tutup < $buka) {
+                $waktuTutup[] = $hari->copy()->addDay()->setTime(intdiv($tutup, 60), $tutup % 60);
+            } else {
+                $waktuTutup[] = $hari->copy()->setTime(intdiv($tutup, 60), $tutup % 60);
+            }
+        }
+
+        $kemarin = $nomorHari === 1 ? 7 : $nomorHari - 1;
+        foreach (self::rentangUntukHari($jadwal, $kemarin) as [$buka, $tutup]) {
+            if ($tutup < $buka) {
+                $waktuTutup[] = $hari->copy()->setTime(intdiv($tutup, 60), $tutup % 60);
+            }
+        }
+
+        return collect($waktuTutup)->sort()->last() ?? $hari->copy()->endOfDay();
     }
 
     /** Apakah tempat sedang buka, menurut jam WIB atau override pengelola. */

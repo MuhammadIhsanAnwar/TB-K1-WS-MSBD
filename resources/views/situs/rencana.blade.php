@@ -6,9 +6,10 @@
     $pref ??= null;
     $dibagikan ??= null;
     $rencanaEdit ??= null;
+    $mode ??= $pref['mode'] ?? ($pref === null ? null : (! empty($pref['tujuan']) ? 'manual' : 'otomatis'));
     $kategoriTempat = array_values(array_unique(array_filter(array_column($tempat, 'kategori'))));
     $minat = $pref['minat'] ?? $kategoriTempat;
-    $durasi = (int) ($pref['durasi'] ?? 4);
+    $durasi = (int) ($pref['durasi'] ?? ($mode === 'manual' ? 8 : 4));
     $moda = $pref['moda'] ?? ['jalan', 'motor', 'mobil'];
     $tujuan = $pref['tujuan'] ?? [];
     // bawaan: mulai dari posisi pengguna sekarang (dibaca browser saat rute disusun)
@@ -54,98 +55,141 @@
 
 @section('isi')
 <div class="rencana">
-    <form class="rencana__form" action="{{ route('rencana') }}" method="get" novalidate data-rencana-form>
+    <div class="rencana__form">
         <h1 style="font-size:var(--s-head);margin-bottom:12px">Rencana perjalanan</h1>
-        <p style="margin-bottom:32px">Pilih minat untuk rekomendasi otomatis, atau tentukan beberapa tujuan sendiri. Rute diurutkan agar perjalanan lebih praktis.</p>
+        <p style="margin-bottom:20px">Pilih cara menyusun rute terlebih dahulu.</p>
+
+        @php
+            $parameterEdit = $rencanaEdit ? ['edit' => $rencanaEdit['kode']] : [];
+        @endphp
+        <div role="group" aria-label="Pilih cara menyusun rute" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px">
+            <a class="tombol {{ $mode === 'otomatis' ? 'tombol--hijau' : 'tombol--garis' }}"
+                href="{{ route('rencana', array_merge(['mode' => 'otomatis'], $parameterEdit)) }}"
+                @if ($mode === 'otomatis') aria-current="page" @endif>Susun Otomatis</a>
+            <a class="tombol {{ $mode === 'manual' ? 'tombol--hijau' : 'tombol--garis' }}"
+                href="{{ route('rencana', array_merge(['mode' => 'manual'], $parameterEdit)) }}"
+                @if ($mode === 'manual') aria-current="page" @endif>Susun Sendiri</a>
+        </div>
 
         @if ($errors->any())
             <div class="pesan pesan--galat" role="alert" style="margin-bottom:24px">{{ $errors->first() }}</div>
         @endif
 
-        @if ($rencanaEdit)
-            <input type="hidden" name="edit" value="{{ $rencanaEdit['kode'] }}">
+        @if ($mode)
+            <p style="margin:-8px 0 24px">
+                @if ($mode === 'otomatis')
+                    Rekomendasi tempat disusun dari minat, waktu, transportasi, dan titik awalmu.
+                @else
+                    Pilih titik awal dan tempat tujuan yang ingin dikunjungi. Urutan tujuan akan disusun otomatis.
+                @endif
+            </p>
+
+            <form action="{{ route('rencana') }}" method="get" novalidate data-rencana-form>
+                <input type="hidden" name="mode" value="{{ $mode }}">
+                @if ($rencanaEdit)
+                    <input type="hidden" name="edit" value="{{ $rencanaEdit['kode'] }}">
+                @endif
+
+                @if ($mode === 'otomatis')
+                    <fieldset>
+                        <legend>Minat</legend>
+                        <div class="pilih-banyak">
+                            @foreach (Katalog::KATEGORI as $k => $label)
+                                <label><input type="checkbox" name="minat[]" value="{{ $k }}" @checked(in_array($k, $minat, true))>{{ $label }}</label>
+                            @endforeach
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Lama waktu</legend>
+                        <div class="pilih-banyak">
+                            @foreach ([2 => '2 jam', 4 => '4 jam', 6 => '6 jam', 8 => 'Seharian'] as $d => $label)
+                                <label><input type="radio" name="durasi" value="{{ $d }}" @checked($durasi === $d)>{{ $label }}</label>
+                            @endforeach
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Transportasi</legend>
+                        <div class="pilih-banyak">
+                            <label><input type="checkbox" name="moda[]" value="jalan" @checked(in_array('jalan', $moda, true))>Jalan kaki</label>
+                            <label><input type="checkbox" name="moda[]" value="motor" @checked(in_array('motor', $moda, true))>Motor</label>
+                            <label><input type="checkbox" name="moda[]" value="mobil" @checked(in_array('mobil', $moda, true))>Mobil</label>
+                        </div>
+                    </fieldset>
+                @else
+                    <fieldset>
+                        <legend>Tempat tujuan</legend>
+                        <p class="isian__bantuan">Pilih 1–10 tempat tujuan.</p>
+                        <div class="isian" style="margin:12px 0">
+                            <label for="cari-tujuan">Cari tempat</label>
+                            <input id="cari-tujuan" type="search" autocomplete="off" placeholder="Ketik nama tempat" data-cari-tujuan>
+                        </div>
+                        <div class="rencana__tujuan-list" data-daftar-tujuan>
+                            @foreach ($tempat as $t)
+                                <label class="rencana__tujuan-item" data-tujuan-item="{{ mb_strtolower($t['nama']) }}">
+                                    <input type="checkbox" name="tujuan[]" value="{{ $t['slug'] }}" @checked(in_array($t['slug'], $tujuan, true))>
+                                    <span>{{ $t['nama'] }}<small>{{ Katalog::KATEGORI[$t['kategori']] ?? 'Tempat wisata' }}</small></span>
+                                </label>
+                            @endforeach
+                        </div>
+                        <button class="tombol tombol--garis" type="button" style="margin-top:10px" data-kosongkan-tujuan>Hapus pilihan tujuan</button>
+                    </fieldset>
+                @endif
+
+                <div class="isian" style="margin-bottom:28px">
+                    <label for="mulai">Titik awal</label>
+                    <select id="mulai" name="mulai" data-pilih-mulai aria-describedby="kabar-lokasi">
+                        <option value="lokasi" @selected($mulai === 'lokasi')>Lokasi saya sekarang</option>
+                        @foreach ($tempat as $t)
+                            <option value="{{ $t['slug'] }}" @selected($t['slug'] === $mulai)>{{ $t['nama'] }}</option>
+                        @endforeach
+                    </select>
+                    {{-- diisi browser saat "Lokasi saya sekarang" dipilih; dibulatkan sekitar 11 m --}}
+                    <input type="hidden" name="lat" value="{{ $pref['lat'] ?? '' }}" data-lat>
+                    <input type="hidden" name="lng" value="{{ $pref['lng'] ?? '' }}" data-lng>
+                    <p class="isian__bantuan" id="kabar-lokasi" data-kabar-lokasi role="status" aria-live="polite" @unless ($mulai === 'lokasi') hidden @endunless>Browser akan meminta izin membaca lokasimu saat rute disusun.</p>
+                </div>
+
+                <button class="tombol tombol--lebar" type="submit">{{ $hasil ? 'Susun ulang rute' : 'Susun rute' }}</button>
+            </form>
+        @else
+            <p class="isian__bantuan">Pilih Susun Otomatis atau Susun Sendiri untuk menampilkan pilihan rutenya.</p>
         @endif
-        <input type="hidden" name="tujuan_dikirim" value="1">
-
-        <fieldset>
-            <legend>Minat</legend>
-            <div class="pilih-banyak">
-                @foreach (Katalog::KATEGORI as $k => $label)
-                    <label><input type="checkbox" name="minat[]" value="{{ $k }}" @checked(in_array($k, $minat, true))>{{ $label }}</label>
-                @endforeach
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Lama waktu</legend>
-            <div class="pilih-banyak">
-                @foreach ([2 => '2 jam', 4 => '4 jam', 6 => '6 jam', 8 => 'Seharian'] as $d => $label)
-                    <label><input type="radio" name="durasi" value="{{ $d }}" @checked($durasi === $d)>{{ $label }}</label>
-                @endforeach
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Transportasi</legend>
-            <div class="pilih-banyak">
-                <label><input type="checkbox" name="moda[]" value="jalan" @checked(in_array('jalan', $moda, true))>Jalan kaki</label>
-                <label><input type="checkbox" name="moda[]" value="motor" @checked(in_array('motor', $moda, true))>Motor</label>
-                <label><input type="checkbox" name="moda[]" value="mobil" @checked(in_array('mobil', $moda, true))>Mobil</label>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Tempat tujuan <span class="redup">(opsional)</span></legend>
-            <p class="isian__bantuan">Pilih hingga 10 tempat untuk menentukan tujuan. Jika dikosongkan, tempat direkomendasikan dari minatmu.</p>
-            <div class="isian" style="margin:12px 0">
-                <label for="cari-tujuan">Cari tempat</label>
-                <input id="cari-tujuan" type="search" autocomplete="off" placeholder="Ketik nama tempat" data-cari-tujuan>
-            </div>
-            <div class="rencana__tujuan-list" data-daftar-tujuan>
-                @foreach ($tempat as $t)
-                    <label class="rencana__tujuan-item" data-tujuan-item="{{ mb_strtolower($t['nama']) }}">
-                        <input type="checkbox" name="tujuan[]" value="{{ $t['slug'] }}" @checked(in_array($t['slug'], $tujuan, true))>
-                        <span>{{ $t['nama'] }}<small>{{ Katalog::KATEGORI[$t['kategori']] ?? 'Tempat wisata' }}</small></span>
-                    </label>
-                @endforeach
-            </div>
-            <button class="tombol tombol--garis" type="button" style="margin-top:10px" data-kosongkan-tujuan>Hapus pilihan tujuan</button>
-        </fieldset>
-
-        <div class="isian" style="margin-bottom:28px">
-            <label for="mulai">Mulai dari</label>
-            <select id="mulai" name="mulai" data-pilih-mulai aria-describedby="kabar-lokasi">
-                <option value="lokasi" @selected($mulai === 'lokasi')>Lokasi saya sekarang</option>
-                @foreach ($tempat as $t)
-                    <option value="{{ $t['slug'] }}" @selected($t['slug'] === $mulai)>{{ $t['nama'] }}</option>
-                @endforeach
-            </select>
-            {{-- diisi browser saat "Lokasi saya sekarang" dipilih; dibulatkan sekitar 11 m --}}
-            <input type="hidden" name="lat" value="{{ $pref['lat'] ?? '' }}" data-lat>
-            <input type="hidden" name="lng" value="{{ $pref['lng'] ?? '' }}" data-lng>
-            <p class="isian__bantuan" id="kabar-lokasi" data-kabar-lokasi role="status" aria-live="polite" @unless ($mulai === 'lokasi') hidden @endunless>Browser akan meminta izin membaca lokasimu saat rute disusun.</p>
-        </div>
-
-        <button class="tombol tombol--lebar" type="submit">{{ $hasil ? 'Susun ulang rute' : 'Susun rute' }}</button>
-    </form>
+    </div>
 
     <section class="rencana__hasil" aria-labelledby="judul-hasil">
         @if ($hasil)
             <h2 id="judul-hasil" style="font-size:2.25rem">{{ $judulRute }}</h2>
 
             <dl class="mv-rencana-spek nums" style="margin:14px 0 24px;max-width:560px">
-                <div>
-                    <dd>{{ count($hasil['singgah']) }} tempat</dd>
-                    <dt>{{ collect($minat)->map(fn ($m) => Katalog::KATEGORI[$m])->implode(', ') }}</dt>
-                </div>
-                <div>
-                    <dd>{{ $durasi }} jam</dd>
-                    <dt>Durasi rencana</dt>
-                </div>
-                <div>
-                    <dd>{{ collect($moda)->map(fn ($m) => ['jalan' => 'Jalan kaki', 'motor' => 'Motor', 'mobil' => 'Mobil'][$m] ?? $m)->implode(' & ') }}</dd>
-                    <dt>Transportasi</dt>
-                </div>
+                @if ($mode === 'manual')
+                    <div>
+                        <dd>{{ count($tujuan) }} tujuan dipilih</dd>
+                        <dt>Tempat tujuan</dt>
+                    </div>
+                    <div>
+                        <dd>Hingga {{ $durasi }} jam</dd>
+                        <dt>Batas waktu rute</dt>
+                    </div>
+                    <div>
+                        <dd>{{ count($hasil['singgah']) }} tempat</dd>
+                        <dt>Berhasil disusun</dt>
+                    </div>
+                @else
+                    <div>
+                        <dd>{{ count($hasil['singgah']) }} tempat</dd>
+                        <dt>{{ collect($minat)->map(fn ($m) => Katalog::KATEGORI[$m])->implode(', ') }}</dt>
+                    </div>
+                    <div>
+                        <dd>{{ $durasi }} jam</dd>
+                        <dt>Durasi rencana</dt>
+                    </div>
+                    <div>
+                        <dd>{{ collect($moda)->map(fn ($m) => ['jalan' => 'Jalan kaki', 'motor' => 'Motor', 'mobil' => 'Mobil'][$m] ?? $m)->implode(' & ') }}</dd>
+                        <dt>Transportasi</dt>
+                    </div>
+                @endif
             </dl>
 
             <div class="slip" aria-label="Urutan singgah">
@@ -229,7 +273,15 @@
             </div>
         @else
             <h2 id="judul-hasil" style="font-size:2.25rem">Rutemu muncul di sini</h2>
-            <p style="margin-top:12px">Pilih tempat awal, minat, durasi, dan transportasi. Tentukan beberapa tujuan sendiri atau biarkan rekomendasi menyusunnya otomatis.</p>
+            <p style="margin-top:12px">
+                @if ($mode === 'manual')
+                    Pilih titik awal dan satu atau beberapa tempat tujuan untuk mulai menyusun rute.
+                @elseif ($mode === 'otomatis')
+                    Pilih minat, lama waktu, transportasi, dan titik awal untuk menyusun rekomendasi perjalanan.
+                @else
+                    Pilih salah satu cara penyusunan rute di sebelah kiri untuk memulai.
+                @endif
+            </p>
             <x-foto :berkas="$fotoRute['foto'] ?? 'kesawan.jpg'" :alt="$fotoRute['nama'] ?? 'Tempat wisata di Medan'" style="margin-top:28px;width:100%;aspect-ratio:16/10;object-fit:cover" />
         @endif
     </section>

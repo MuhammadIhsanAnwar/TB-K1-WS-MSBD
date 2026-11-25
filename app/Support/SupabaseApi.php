@@ -223,10 +223,23 @@ class SupabaseApi
         }
         if ($kode !== null) {
             $filters['kode'] = 'eq.'.$kode;
-            $filters['limit'] = 1;
+
+            return $this->getRows('pesanan', $filters + ['limit' => 1]);
         }
 
-        return $this->getRows('pesanan', $filters);
+        $hasil = [];
+        $batas = 500;
+        $offset = 0;
+        do {
+            $baris = $this->getRows('pesanan', array_merge($filters, [
+                'limit' => $batas,
+                'offset' => $offset,
+            ]));
+            array_push($hasil, ...$baris);
+            $offset += count($baris);
+        } while (count($baris) === $batas);
+
+        return $hasil;
     }
 
     public function pesananDenganKodeQr(string $kodeQr): array
@@ -236,6 +249,28 @@ class SupabaseApi
             'e_tiket.kode_qr' => 'eq.'.$kodeQr,
             'limit' => 1,
         ]);
+    }
+
+    public function pesananLunasBelumCheckin(string $sampaiTanggal): array
+    {
+        $hasil = [];
+        $batas = 500;
+        $offset = 0;
+        do {
+            $baris = $this->getRows('pesanan', [
+                'select' => 'id_pesanan,kode,tempat_slug,tanggal_kunjungan,e_tiket!inner(dipakai_pada)',
+                'status' => 'eq.lunas',
+                'tanggal_kunjungan' => 'lte.'.$sampaiTanggal,
+                'e_tiket.dipakai_pada' => 'is.null',
+                'order' => 'id_pesanan.asc',
+                'limit' => $batas,
+                'offset' => $offset,
+            ]);
+            array_push($hasil, ...$baris);
+            $offset += count($baris);
+        } while (count($baris) === $batas);
+
+        return $hasil;
     }
 
     public function cariEtiket(int $idPesanan): ?array
@@ -271,11 +306,24 @@ class SupabaseApi
             return [];
         }
 
-        return $this->getRows('pesanan_item', [
+        $filters = [
             'select' => '*',
             'id_pesanan' => 'in.('.implode(',', array_map('intval', $idPesanan)).')',
             'order' => 'id_item.asc',
-        ]);
+        ];
+        $hasil = [];
+        $batas = 500;
+        $offset = 0;
+        do {
+            $baris = $this->getRows('pesanan_item', array_merge($filters, [
+                'limit' => $batas,
+                'offset' => $offset,
+            ]));
+            array_push($hasil, ...$baris);
+            $offset += count($baris);
+        } while (count($baris) === $batas);
+
+        return $hasil;
     }
 
     /** Membuat pesanan lewat function sp_buat_pesanan (total & item dihitung database). */
@@ -331,15 +379,15 @@ class SupabaseApi
 
     public function pakaiTiket(int $idPesanan, string $waktu): bool
     {
-        $rows = $this->request()
-            ->withHeaders(['Prefer' => 'return=representation'])
-            ->patch($this->url('e_tiket').'?'.http_build_query(['id_pesanan' => 'eq.'.$idPesanan, 'dipakai_pada' => 'is.null']), [
-                'dipakai_pada' => $waktu,
-            ])
-            ->throw()
-            ->json();
+        return $this->rpc('sp_pakai_etiket', [
+            'p_id_pesanan' => $idPesanan,
+            'p_dipakai_pada' => $waktu,
+        ]) === true;
+    }
 
-        return is_array($rows) && $rows !== [];
+    public function kedaluwarsakanEtiket(int $idPesanan): bool
+    {
+        return $this->rpc('sp_kedaluwarsakan_etiket', ['p_id_pesanan' => $idPesanan]) === true;
     }
 
     public function ringkasanSukaTempat(): array
