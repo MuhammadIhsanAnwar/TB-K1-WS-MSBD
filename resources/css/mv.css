@@ -2321,6 +2321,13 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   gap: 8px;
   align-content: start;
 }
+.mv-peta-lebih {
+  justify-self: center;
+  margin-block: 4px;
+}
+.mv-peta-lebih[hidden] { display: none; }
+html:not(.js) .mv-peta-kartu[hidden] { display: grid; }
+html:not(.js) .mv-peta-lebih { display: none; }
 .mv-peta-kartu {
   display: grid;
   grid-template-columns: 76px minmax(0, 1fr);
@@ -2362,6 +2369,7 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   color: var(--mv-emas-teks);
 }
 .mv-peta-kanvas {
+  position: relative;
   width: 100%;
   height: 100%;
   background: #dfe4dd;

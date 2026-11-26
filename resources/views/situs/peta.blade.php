@@ -2,6 +2,7 @@
 @php
     use App\Support\Katalog;
     $akunPengelola = in_array(session('pengguna.peran'), ['admin', 'superadmin'], true);
+    $jumlahAwalTampil = 10;
     $warnaKat = ['sejarah' => '#e3a51c', 'religi' => '#6a4c9c', 'kuliner' => '#c9541e', 'museum' => '#2f6690', 'ruang-publik' => '#2e7d4f', 'belanja' => '#9b6b3d', 'rekreasi-air' => '#2f8a8a'];
     $json = collect($tempat)->map(fn ($t) => [
         'slug' => $t['slug'],
@@ -79,14 +80,20 @@
         </div>
 
         <div class="mv-peta-status">
-            <span data-peta-hitung role="status">{{ count($tempat) }} dari {{ count($tempat) }} tempat</span>
+            <span data-peta-hitung role="status">
+                @if (count($tempat) > $jumlahAwalTampil)
+                    Menampilkan {{ $jumlahAwalTampil }} dari {{ count($tempat) }} tempat
+                @else
+                    {{ count($tempat) }} dari {{ count($tempat) }} tempat
+                @endif
+            </span>
             <span data-pesan-lokasi role="status" aria-live="polite" style="font-weight:500;color:var(--mv-redup)"></span>
         </div>
 
-        <div class="mv-peta-daftar" data-peta-daftar>
-            @foreach ($tempat as $t)
+        <div id="daftar-tempat-peta" class="mv-peta-daftar" data-peta-daftar data-batas-awal="{{ min(count($tempat), $jumlahAwalTampil) }}" data-ukuran-batch="{{ $jumlahAwalTampil }}">
+            @foreach ($tempat as $i => $t)
                 @php $berkas = $t['foto'] ?: 'kesawan.jpg'; @endphp
-                <article class="mv-peta-kartu" data-slug="{{ $t['slug'] }}">
+                <article class="mv-peta-kartu" data-slug="{{ $t['slug'] }}" @if ($i >= $jumlahAwalTampil) hidden @endif>
                     <button type="button" data-fokus-peta="{{ $t['slug'] }}" aria-label="Tunjukkan {{ $t['nama'] }} di peta" style="padding:0;border:0;background:none">
                         <x-foto :berkas="$berkas" alt="" :kecil="true" />
                     </button>
@@ -130,6 +137,7 @@
                 </article>
             @endforeach
 
+            <button class="mv-btn mv-btn--garis mv-btn--kecil mv-peta-lebih" type="button" data-peta-lebih aria-controls="daftar-tempat-peta" @if (count($tempat) <= $jumlahAwalTampil) hidden @endif>Tampilkan lebih banyak tempat</button>
             <div class="kosong" data-peta-kosong hidden style="padding:24px 16px;text-align:center">
                 <p style="margin-inline:auto">Tidak ada tempat yang cocok dengan saringan ini.</p>
                 <button class="mv-btn mv-btn--hijau mv-btn--kecil" type="button" data-hapus-saring style="margin-top:12px">Atur ulang saringan</button>
@@ -138,7 +146,7 @@
     </aside>
 
     <div class="mv-peta-kanvas" data-peta data-peta-mode="alat" data-tempat="{{ json_encode($json) }}" tabindex="0" aria-label="Peta interaktif tempat wisata Kota Medan">
-        <p class="peta-diam" style="padding:24px">Peta sedang dimuat. Daftar tempat di panel samping tetap dapat digunakan sepenuhnya.</p>
+        <p class="peta-diam" role="status" aria-live="polite" style="padding:24px">Peta sedang dimuat. Daftar tempat di panel samping tetap dapat digunakan sepenuhnya.</p>
     </div>
 </div>
 @endsection

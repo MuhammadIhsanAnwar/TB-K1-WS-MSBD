@@ -309,13 +309,21 @@ function modeAlat(el) {
     const daftar = document.querySelector('[data-peta-daftar]');
     const hitung = document.querySelector('[data-peta-hitung]');
     const kosong = document.querySelector('[data-peta-kosong]');
+    const tombolLebih = daftar.querySelector('[data-peta-lebih]');
     const inputCari = document.querySelector('[data-peta-cari]');
     const pilihUrut = document.querySelector('[data-peta-urut]');
     const lembar = document.querySelector('[data-lembar-peta]');
+    const batasAwal = Number(daftar.dataset.batasAwal);
+    const ukuranBatch = Number(daftar.dataset.ukuranBatch);
+    if (!Number.isInteger(batasAwal) || batasAwal < 0 || !Number.isInteger(ukuranBatch) || ukuranBatch < 1) {
+        throw new Error('Batas tampilan daftar peta tidak valid.');
+    }
     const saring = { kategori: new Set(Object.keys(WARNA)), buka: false, tiket: false, teks: '', urut: 'bawaan' };
     const titikPusat = { lat: 3.5752, lng: 98.6838 }; // Istana Maimun sebagai patokan jarak awal
     let lokasi = null;
     let lokasiPenanda = null;
+    let batasTampil = batasAwal;
+    let urutanTampil = [];
 
     const penanda = new Map();
     tempat.forEach((t) => {
@@ -338,6 +346,11 @@ function modeAlat(el) {
     });
 
     function sorot(slug, terbang = true) {
+        const posisi = urutanTampil.findIndex((t) => t.slug === slug);
+        if (posisi >= batasTampil) {
+            batasTampil = Math.ceil((posisi + 1) / ukuranBatch) * ukuranBatch;
+            gambar();
+        }
         daftar.querySelectorAll('[data-slug]').forEach((a) => (a.dataset.slug === slug ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
         const t = tempat.find((x) => x.slug === slug);
         if (terbang && t) {
@@ -354,7 +367,8 @@ function modeAlat(el) {
         return Math.round(2 * r * Math.asin(Math.sqrt(h)));
     }
 
-    function gambar() {
+    function gambar(resetBatas = false) {
+        if (resetBatas) batasTampil = batasAwal;
         const kini = waktuWib();
         const kueri = saring.teks.toLowerCase();
         let tampil = tempat.filter((t) => {
@@ -409,11 +423,14 @@ function modeAlat(el) {
             );
         }
 
+        urutanTampil = tampil;
         const terlihat = new Set(tampil.map((t) => t.slug));
         penanda.forEach((m, slug) => (terlihat.has(slug) ? m.addTo(peta) : m.remove()));
+        const posisiTempat = new Map(tampil.map((t, i) => [t.slug, i]));
         daftar.querySelectorAll('[data-slug]').forEach((a) => {
-            const t = tampil.find((x) => x.slug === a.dataset.slug);
-            a.hidden = !t;
+            const posisi = posisiTempat.get(a.dataset.slug);
+            const t = posisi === undefined ? null : tampil[posisi];
+            a.hidden = !t || posisi >= batasTampil;
             const j = a.querySelector('[data-jarak]');
             if (j) {
                 j.textContent = t && t.jarak != null
@@ -423,22 +440,32 @@ function modeAlat(el) {
         });
         tampil.forEach((t) => {
             const kartu = daftar.querySelector(`[data-slug="${t.slug}"]`);
-            if (kartu) daftar.insertBefore(kartu, kosong);
+            if (kartu) daftar.insertBefore(kartu, tombolLebih ?? kosong);
         });
+        const jumlahTerlihat = Math.min(batasTampil, tampil.length);
+        const ringkasanTempat = tampil.length > jumlahTerlihat
+            ? `Menampilkan ${jumlahTerlihat} dari ${tampil.length} tempat`
+            : `${tampil.length} dari ${tempat.length} tempat`;
         const tanpaJam = tempat.filter((t) => !t.buka && saring.kategori.has(t.kategori)).length;
         hitung.textContent = saring.buka && tanpaJam
-            ? `${tampil.length} dari ${tempat.length} tempat buka sekarang (jam WIB). ${tanpaJam} tempat tanpa jam buka tidak ditampilkan.`
-            : `${tampil.length} dari ${tempat.length} tempat`;
+            ? `${ringkasanTempat} buka sekarang (jam WIB). ${tanpaJam} tempat tanpa jam buka tidak ditampilkan.`
+            : ringkasanTempat;
+        if (tombolLebih) tombolLebih.hidden = jumlahTerlihat >= tampil.length;
         kosong.hidden = tampil.length > 0;
     }
 
+    tombolLebih?.addEventListener('click', () => {
+        batasTampil = Math.min(batasTampil + ukuranBatch, urutanTampil.length);
+        gambar();
+    });
+
     inputCari?.addEventListener('input', () => {
         saring.teks = inputCari.value.trim();
-        gambar();
+        gambar(true);
     });
     pilihUrut?.addEventListener('change', () => {
         saring.urut = pilihUrut.value;
-        gambar();
+        gambar(true);
     });
 
     document.querySelectorAll('[data-saring-kategori]').forEach((b) => {
@@ -446,7 +473,7 @@ function modeAlat(el) {
             const k = b.dataset.saringKategori;
             saring.kategori.has(k) ? saring.kategori.delete(k) : saring.kategori.add(k);
             b.setAttribute('aria-pressed', saring.kategori.has(k) ? 'true' : 'false');
-            gambar();
+            gambar(true);
         });
     });
     document.querySelectorAll('[data-saring]').forEach((b) => {
@@ -454,7 +481,7 @@ function modeAlat(el) {
             const k = b.dataset.saring;
             saring[k] = !saring[k];
             b.setAttribute('aria-pressed', saring[k] ? 'true' : 'false');
-            gambar();
+            gambar(true);
         });
     });
     document.querySelector('[data-hapus-saring]')?.addEventListener('click', () => {
@@ -466,7 +493,7 @@ function modeAlat(el) {
         if (pilihUrut) pilihUrut.value = 'bawaan';
         document.querySelectorAll('[data-saring-kategori]').forEach((b) => b.setAttribute('aria-pressed', 'true'));
         document.querySelectorAll('[data-saring]').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-        gambar();
+        gambar(true);
     });
 
     // Lokasi saya: diikuti terus (watchPosition) sampai tombol ditekan lagi. Daftar diurutkan ulang
