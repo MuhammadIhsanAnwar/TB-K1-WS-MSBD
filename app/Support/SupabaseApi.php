@@ -2,8 +2,8 @@
 
 namespace App\Support;
 
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -60,6 +60,54 @@ class SupabaseApi
                 .'atau akun masih dirujuk tabel lain (mis. pesan_pengguna.id_admin_tujuan).'
             );
         }
+    }
+
+    public function usersNonaktifKedaluwarsa(string $sebelum): array
+    {
+        return $this->getRows('users', [
+            'select' => 'id',
+            'dinonaktifkan_pada' => 'not.is.null',
+            'hapus_otomatis_pada' => 'lte.'.$sebelum,
+            'order' => 'hapus_otomatis_pada.asc',
+        ]);
+    }
+
+    public function simpanOtpTindakanAkun(int|string $userId, array $otp): void
+    {
+        $this->requestForIdempotentWrite()
+            ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
+            ->post($this->url('account_action_otps').'?'.http_build_query(['on_conflict' => 'user_id']), [
+                ['user_id' => $userId] + $otp,
+            ])
+            ->throw();
+    }
+
+    public function otpTindakanAkun(int|string $userId): ?array
+    {
+        return $this->getRows('account_action_otps', ['user_id' => 'eq.'.$userId])[0] ?? null;
+    }
+
+    public function tambahPercobaanOtpTindakanAkun(int|string $userId, int $percobaan): void
+    {
+        $rows = $this->request()
+            ->withHeaders(['Prefer' => 'return=representation'])
+            ->patch($this->url('account_action_otps').'?'.http_build_query(['user_id' => 'eq.'.$userId]), [
+                'attempts' => $percobaan,
+                'updated_at' => now()->toDateTimeString(),
+            ])
+            ->throw()
+            ->json();
+
+        if (! $rows) {
+            throw new RuntimeException('Supabase tidak menemukan kode OTP tindakan akun.');
+        }
+    }
+
+    public function hapusOtpTindakanAkun(int|string $userId): void
+    {
+        $this->request()
+            ->delete($this->url('account_action_otps').'?'.http_build_query(['user_id' => 'eq.'.$userId]))
+            ->throw();
     }
 
     public function adminTempat(): array

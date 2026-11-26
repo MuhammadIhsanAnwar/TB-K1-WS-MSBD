@@ -8,7 +8,6 @@ use App\Http\Controllers\SitusController;
 use App\Http\Controllers\TiketController;
 use Illuminate\Support\Facades\Route;
 
-
 // Dokumen Linked Data publik. Tidak memakai pencatatan kunjungan supaya crawler
 // dan pemakai data tidak membuat statistik kunjungan HTML.
 Route::controller(SitusController::class)->group(function () {
@@ -55,6 +54,9 @@ Route::controller(AkunController::class)->middleware('kunjungan')->group(functio
         Route::get('/akun', 'akun')->name('akun');
         Route::get('/akun/pengaturan', 'pengaturan')->name('akun.pengaturan');
         Route::post('/akun/pengaturan', 'simpanPengaturan');
+        Route::post('/akun/tindakan/kirim-kode', 'kirimKodeTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.kirim');
+        Route::post('/akun/tindakan/verifikasi', 'verifikasiTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.verifikasi');
+        Route::post('/akun/tindakan/batalkan', 'batalkanTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.batalkan');
         Route::get('/ulasan-saya', 'ulasanSaya')->middleware('peran:wisatawan')->name('ulasan.saya');
         Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->middleware('peran:wisatawan')->name('ulasan.tulis');
         Route::put('/ulasan-saya/{id}', 'perbaruiUlasanSaya')->middleware('peran:wisatawan')->whereNumber('id')->name('ulasan.perbarui');

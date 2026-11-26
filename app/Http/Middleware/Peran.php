@@ -45,6 +45,14 @@ class Peran
                     ->withErrors(['email' => 'Akun ini ditangguhkan. Hubungi admin melalui halaman Hubungi Admin.']);
             }
 
+            if ($akun && ! empty($akun['dinonaktifkan_pada'])) {
+                $request->session()->forget('pengguna');
+                $request->session()->invalidate();
+
+                return redirect()->route('masuk')
+                    ->withErrors(['email' => 'Akun ini sedang dinonaktifkan. Masuk kembali sebelum masa 3 bulan berakhir untuk mengaktifkannya.']);
+            }
+
             if ($akun && ($pengguna['no_hp'] ?? null) !== ($akun['no_hp'] ?? null)) {
                 $pengguna['no_hp'] = $akun['no_hp'] ?? null;
                 $request->session()->put('pengguna', $pengguna);
