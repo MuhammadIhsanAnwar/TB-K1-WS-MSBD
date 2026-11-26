@@ -9,21 +9,22 @@ Pengecualian runtime: memori Tanya Mas Nonov menggunakan Query Builder Laravel l
 
 | File | Fitur dan query yang dicakup | Database |
 |---|---|---|
-| `01-ai-dan-ringkasan.sql` | Ringkasan popularitas, jumlah pesanan/pencarian, profil, riwayat, ranking ulasan dan suka; definisi view ringkasan | DB 1 + DB 2 |
-| `02-akun-admin-pesan-pengaturan.sql` | Akun, admin-tempat, inbox/balasan, verifikasi email, reset kata sandi, pengaturan situs, pemeriksaan tabel | DB 1 |
-| `03-pesanan-pembayaran-tiket.sql` | Daftar/detail pesanan, pembayaran, transaksi demo, pembatalan, metode bayar, item, QR/check-in | DB 2 |
-| `04-ulasan-dan-rating.sql` | Ulasan, rating, suka, upsert seeder, moderasi, ringkasan | DB 2 |
+| `01-ai-dan-ringkasan.sql` | Popularitas, jumlah pesanan/pencarian, profil, riwayat, ranking ulasan dan suka, definisi view ringkasan | DB 1 + DB 2 |
+| `02-akun-admin-pesan-pengaturan.sql` | Akun dan penonaktifan, OTP tindakan akun, admin-tempat, inbox/balasan, verifikasi email, reset kata sandi, pengaturan situs | DB 1 |
+| `03-pesanan-pembayaran-tiket.sql` | Pesanan dan item, pembayaran, transaksi demo, pembatalan, metode bayar, penerbitan QR, check-in dan kedaluwarsa tiket | DB 2 |
+| `04-ulasan-dan-rating.sql` | Ulasan dan moderasi, rating, suka, upsert seeder, ringkasan | DB 2 |
 | `05-log-pencarian-dan-analitik.sql` | Log pencarian, jumlah log, kata kunci tanpa hasil | DB 2 |
-| `06-rencana-perjalanan.sql` | Rencana perjalanan, moda, minat, penyimpanan atomik | DB 2 |
+| `06-rencana-perjalanan.sql` | Rencana perjalanan, tujuan berurutan, moda, minat, penyimpanan/perubahan/penghapusan atomik | DB 2 |
 | `08-memori-tanya-mas-nonov.sql` | Simpan, baca, dan perbarui memori chat terenkripsi | DB 1 |
-| `workbook/` | Workbook 60 topik PostgreSQL, dipisah ke file per kegunaan; bukan inventaris query runtime | DB 1 atau DB 2 secara terpisah |
 
 ## Pemetaan implementasi aktif
 
 Operasi pada `app/Support/SupabaseApi.php` dipetakan ke file berikut:
 
-- **Akun dan administrasi DB 1**: `findUserByEmail`, `users`, `createUser`, `updateUser`,
-  `deleteUser`, `adminTempat`, `tempatAdmin`, `assignTempatAdmin`, `hapusTempatAdmin`,
+- **Akun dan administrasi DB 1**: `findUserByEmail`, `findUserById`, `users`,
+  `usersNonaktifKedaluwarsa`, `simpanTautanTindakanAkun`, `tautanTindakanAkun`,
+  `hapusTautanTindakanAkun`, `createUser`, `updateUser`, `deleteUser`,
+  `adminTempat`, `tempatAdmin`, `assignTempatAdmin`, `hapusTempatAdmin`,
   `adminUntukTempat`, `pesanPenggunaInbox`, `pesanPengguna`, `buatPesanPengguna`,
   `balasanPesanPengguna`, `buatBalasanPesan`, `ubahStatusBalasanEmail`,
   `tandaiPesanDibalas`, `createVerificationToken`, `findVerificationToken`,
@@ -32,16 +33,19 @@ Operasi pada `app/Support/SupabaseApi.php` dipetakan ke file berikut:
   `simpanPengaturanSitus`, dan `ping` → file `02`.
 - **Pesanan dan tiket DB 2**: `pesanan`, `pesananDenganKodeQr`, `pesananItem`,
   `buatPesanan`, `buatTransaksiDemo`, `bayarPesanan`, `pesananSeederDemo`,
-  `batalkanPesanan`, `ubahMetodePesanan`, `pakaiTiket`, `jumlahPesanan`, dan
-  `riwayatPesanan` → file `01` dan `03`.
+  `batalkanPesanan`, `ubahMetodePesanan`, `cariEtiket`, `buatEtiket`,
+  `pesananLunasBelumCheckin`, `pakaiTiket`, `kedaluwarsakanEtiket`,
+  `jumlahPesanan`, dan `riwayatPesanan` → file `01` dan `03`.
 - **Popularitas, ulasan, rating, dan suka DB 2**: `ringkasanSukaTempat`,
   `ringkasanPopularitasTempat`, `peringkatUlasan`, `peringkatSuka`,
   `sukaTempatPengguna`, `sudahSukaTempat`, `tambahSukaTempat`, `hapusSukaTempat`,
-  `ulasan`, `ringkasanUlasan`, `ringkasanRatingTempat`, `upsertRatingTempat`,
-  `tulisUlasan`, `upsertUlasan`, `upsertSukaTempat`, `ubahUlasan`, dan
-  `hapusUlasan` → file `01` dan `04`.
+  `ulasan`, `ulasanHalaman`, `ringkasanUlasan`, `ringkasanRatingTempat`,
+  `upsertRatingTempat`, `tulisUlasan`, `upsertUlasan`, `upsertSukaTempat`,
+  `ubahUlasan`, dan `hapusUlasan` → file `01` dan `04`.
 - **Pencarian DB 2**: `catatCari`, `celahKonten`, dan `jumlahCari` → file `01` dan `05`.
 - **Rencana DB 2**: `rencana`, `rencanaMinat`, `rencanaModa`, dan `simpanRencana` → file `06`.
+- **Tujuan dan perubahan rencana DB 2**: `rencanaTujuan`, `perbaruiRencana`,
+  `hapusRencana` → file `06`.
 - Query generik internal `getRows`, `semua`, `insert`, `upsertRows`, `ubahBaris`, dan
   `rpc` dijelaskan melalui operasi fitur yang memanggilnya, bukan diduplikasi sebagai query
   terpisah. Validasi, retry, header, dan serialisasi JSON tetap ditangani `SupabaseApi`.
@@ -51,6 +55,10 @@ profil, dan riwayat yang sama; `ringkasanUlasanTempat()` mendelegasikan ke ringk
 gabungan. Query-query tersebut berada di file `01` dan `04`.
 `app/Services/TanyaMasNonovMemori.php` menggunakan Query Builder DB 1 untuk file `08`.
 Query kalkulasi konten wisata sendiri berada di AllegroGraph/SPARQL, bukan PostgreSQL.
+Insight tayangan halaman dan check-in memakai Laravel Cache melalui `app/Support/Kunjungan.php`,
+bukan query tabel PostgreSQL khusus. Query migrasi skema dan operasi seeder tetap berada di
+`database/migrations/` dan `database/seeders/`; file dalam folder ini hanya mendokumentasikan
+query fitur website.
 
 ## Parameter, database, dan schema objects
 
@@ -74,12 +82,10 @@ Query kalkulasi konten wisata sendiri berada di AllegroGraph/SPARQL, bukan Postg
   dibutuhkan Tanya Mas Nonov dibaca dari `ringkasan_popularitas_tempat`; nama dan kategori
   tempat tetap dicocokkan dengan katalog RDF di aplikasi.
 
-## Batasan workbook dan administrasi
+## Batasan dan cara membaca
 
-`workbook/README.md` menjelaskan workbook 60 topik yang dipisah per kegunaan. Contoh utama
-memakai tabel TEMP; jalankan pada satu database uji sekali waktu, bukan sekaligus di DB 1 dan DB 2.
-`postgres_fdw`, distributed query, prepared transaction, `CHECKPOINT`,
-`VACUUM`, `REINDEX`, cursor, dan operasi DBA lain bukan request web; beberapa contoh sengaja
-dikomentari atau memerlukan role/infrastruktur yang tidak tersedia pada Supabase biasa.
-Materialized view juga tidak digunakan untuk metrik yang harus segera mencerminkan perubahan.
-Jangan menjalankan seluruh workbook sebagai satu transaksi.
+Semua statement adalah padanan relasional untuk memahami operasi aplikasi. Runtime Supabase
+mengirim request PostgREST/RPC melalui HTTPS; ia tidak mengirim statement SQL dokumentasi ini.
+Placeholder `$1`, `$2`, dan seterusnya mewakili bind value. Placeholder `{{...}}` menandai
+bagian dinamis yang dibatasi/di-allowlist oleh aplikasi, bukan teks yang boleh diinterpolasi.
+Objek dan definisi database yang sebenarnya tetap bersumber dari `database/migrations/`.

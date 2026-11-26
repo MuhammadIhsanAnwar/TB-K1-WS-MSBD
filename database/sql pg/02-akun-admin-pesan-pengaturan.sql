@@ -8,11 +8,23 @@ FROM users
 WHERE email = lower($1)
 LIMIT 1;
 
+SELECT *
+FROM users
+WHERE id = $1
+LIMIT 1;
+
 SELECT id, name, email, peran, tanggal_lahir, no_hp,
        email_verified_at, created_at, ditangguhkan_pada, alasan_tangguh
 FROM users
 ORDER BY id DESC
 LIMIT $1 OFFSET $2;
+
+-- Akun nonaktif yang sudah melewati jadwal penghapusan otomatis.
+SELECT id
+FROM users
+WHERE dinonaktifkan_pada IS NOT NULL
+  AND hapus_otomatis_pada <= $1
+ORDER BY hapus_otomatis_pada ASC;
 
 SELECT id_admin, tempat_slug
 FROM admin_tempat
@@ -33,6 +45,25 @@ RETURNING *;
 DELETE FROM users
 WHERE id = $1
 RETURNING id;
+
+-- OTP untuk konfirmasi tindakan akun; satu baris per pengguna, diperbarui saat diminta ulang.
+INSERT INTO account_action_otps
+  (user_id, tindakan, code_hash, expires_at, attempts, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+ON CONFLICT (user_id) DO UPDATE
+SET tindakan = EXCLUDED.tindakan,
+    code_hash = EXCLUDED.code_hash,
+    expires_at = EXCLUDED.expires_at,
+    attempts = EXCLUDED.attempts,
+    updated_at = EXCLUDED.updated_at;
+
+SELECT *
+FROM account_action_otps
+WHERE user_id = $1
+LIMIT 1;
+
+DELETE FROM account_action_otps
+WHERE user_id = $1;
 
 -- ---------- relasi admin-tempat ----------
 SELECT id_admin, tempat_slug

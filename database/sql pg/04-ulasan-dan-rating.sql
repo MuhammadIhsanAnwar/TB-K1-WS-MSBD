@@ -1,14 +1,48 @@
 -- Padanan PostgreSQL untuk operasi ulasan SupabaseApi.php.
 -- Rating tersimpan sekali di rating_tempat; ulasan merujuknya dengan kunci pengguna-tempat.
 
-SELECT u.*, r.bintang
-FROM ulasan AS u
-JOIN rating_tempat AS r
-  ON r.id_pengguna = u.id_pengguna AND r.tempat_slug = u.tempat_slug
-WHERE ($1::varchar IS NULL OR u.tempat_slug = $1)
-  AND ($2::varchar IS NULL OR u.status = $2)
-  AND ($3::bigint IS NULL OR u.id_pengguna = $3)
-ORDER BY u.created_at DESC, u.id_ulasan DESC;
+-- Daftar ulasan dengan filter opsional; rating diambil dalam query terpisah di bawah.
+SELECT *
+FROM ulasan
+WHERE ($1::varchar IS NULL OR tempat_slug = $1)
+  AND ($2::varchar IS NULL OR status = $2)
+  AND ($3::bigint IS NULL OR id_pengguna = $3)
+ORDER BY created_at DESC, id_ulasan DESC;
+
+-- Halaman moderasi/ulasan publik; aplikasi meminta jumlah total dan halaman terpisah.
+SELECT COUNT(*) AS jumlah
+FROM ulasan
+WHERE status = $1
+  AND ($2::varchar[] IS NULL OR tempat_slug = ANY($2))
+  AND (
+    $3::text IS NULL
+    OR nama_pengguna ILIKE '%' || $3 || '%'
+    OR email_pengguna ILIKE '%' || $3 || '%'
+    OR teks ILIKE '%' || $3 || '%'
+    OR tempat_slug ILIKE '%' || $3 || '%'
+    OR tempat_slug ILIKE '%' || replace($3, ' ', '-') || '%'
+  );
+
+SELECT *
+FROM ulasan
+WHERE status = $1
+  AND ($2::varchar[] IS NULL OR tempat_slug = ANY($2))
+  AND (
+    $3::text IS NULL
+    OR nama_pengguna ILIKE '%' || $3 || '%'
+    OR email_pengguna ILIKE '%' || $3 || '%'
+    OR teks ILIKE '%' || $3 || '%'
+    OR tempat_slug ILIKE '%' || $3 || '%'
+    OR tempat_slug ILIKE '%' || replace($3, ' ', '-') || '%'
+  )
+ORDER BY created_at DESC, id_ulasan DESC
+LIMIT $4 OFFSET $5;
+
+-- Rating untuk pasangan pengguna-tempat pada satu halaman ulasan.
+SELECT id_pengguna, tempat_slug, bintang
+FROM rating_tempat
+WHERE id_pengguna = ANY($1::bigint[])
+  AND tempat_slug = ANY($2::varchar[]);
 
 SELECT tempat_slug, rata_rata_bintang, jumlah_ulasan
 FROM ringkasan_ulasan;
@@ -42,7 +76,9 @@ INSERT INTO rating_tempat
   (id_pengguna, tempat_slug, bintang, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT (id_pengguna, tempat_slug) DO UPDATE
-SET bintang = EXCLUDED.bintang, updated_at = EXCLUDED.updated_at;
+SET bintang = EXCLUDED.bintang,
+    created_at = EXCLUDED.created_at,
+    updated_at = EXCLUDED.updated_at;
 
 INSERT INTO ulasan
   (id_pengguna, tempat_slug, nama_pengguna, email_pengguna,
@@ -66,6 +102,7 @@ SET nama_pengguna = EXCLUDED.nama_pengguna,
     email_pengguna = EXCLUDED.email_pengguna,
     teks = EXCLUDED.teks,
     status = EXCLUDED.status,
+    created_at = EXCLUDED.created_at,
     updated_at = EXCLUDED.updated_at;
 
 -- Upsert suka batch seeder: conflict target adalah primary key gabungan.

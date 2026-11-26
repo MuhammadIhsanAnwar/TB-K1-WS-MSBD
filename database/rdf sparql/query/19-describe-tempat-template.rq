@@ -1,3 +1,0 @@
-# Template query SparqlService::deskripsikanTempat().
-# Ganti {{IRI_TEMPAT}} sebelum dijalankan.
-DESCRIBE <{{IRI_TEMPAT}}>

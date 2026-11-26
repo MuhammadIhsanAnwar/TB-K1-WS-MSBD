@@ -34,10 +34,10 @@ lalu jalankan `rdf:kirim` ke Database 3.
 | `app/Console/Commands/KirimRdf.php` | mengirim RDF wisata ke Database 3 |
 | `migrations/2026_11_11_000200_kirim_rdf_ke_database3.php` | migration SPARQL untuk ontologi dan data RDF Database 3 |
 | `seeders/AdminTempatSeeder.php` | membuat satu akun admin untuk tiap tempat wisata dan memastikan tautannya tersimpan di `admin_tempat` (jalankan setelah migration DB 1) |
-| `sql pg/` | Query PostgreSQL website dipisah berdasarkan fitur (lihat `sql pg/README.md`) serta workbook 60 kategori; bukan dump lengkap untuk membuat database |
+| `sql pg/` | Dokumentasi padanan query PostgreSQL runtime, dipisah berdasarkan fitur (lihat `sql pg/README.md`); bukan dump lengkap untuk membuat database |
 | `rdf sparql/medanvisit-ontologi.ttl` | ontologi (TBox): kelas dan properti, diperlukan untuk penggantian graph |
 | `rdf sparql/medanvisit-data.ttl` | sumber data wisata (ABox), dikirim langsung ke Database 3 |
-| `rdf sparql/query/` | Query SPARQL dipisah berdasarkan kegunaan; `query/README.md` membedakan query runtime, template admin, dan contoh eksplorasi |
+| `rdf sparql/query/` | Query SPARQL dan pola update yang dipakai website, dipisah berdasarkan kegunaan (lihat `query/README.md`) |
 
 ## Server lokal (pengembangan)
 

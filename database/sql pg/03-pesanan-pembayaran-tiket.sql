@@ -32,6 +32,32 @@ LEFT JOIN pembayaran AS pay ON pay.id_pesanan = p.id_pesanan
 WHERE tiket.kode_qr = $1
 LIMIT 1;
 
+-- Tiket dari satu pesanan; dipakai sebelum menerbitkan atau menampilkan QR.
+SELECT id_etiket, id_pesanan, kode_qr, dipakai_pada
+FROM e_tiket
+WHERE id_pesanan = $1
+LIMIT 1;
+
+-- Terbitkan/perbarui QR secara idempoten berdasarkan satu tiket per pesanan.
+INSERT INTO e_tiket (id_pesanan, kode_qr, diterbitkan_pada, dipakai_pada)
+VALUES ($1, $2, $3, NULL)
+ON CONFLICT (id_pesanan) DO UPDATE
+SET kode_qr = EXCLUDED.kode_qr,
+    diterbitkan_pada = EXCLUDED.diterbitkan_pada,
+    dipakai_pada = NULL
+RETURNING *;
+
+-- Pesanan lunas yang tanggal kunjungannya telah lewat dan tiketnya belum dipakai.
+SELECT p.id_pesanan, p.kode, p.tempat_slug, p.tanggal_kunjungan,
+       tiket.dipakai_pada
+FROM pesanan AS p
+JOIN e_tiket AS tiket ON tiket.id_pesanan = p.id_pesanan
+WHERE p.status = 'lunas'
+  AND p.tanggal_kunjungan <= $1
+  AND tiket.dipakai_pada IS NULL
+ORDER BY p.id_pesanan ASC
+LIMIT $2 OFFSET $3;
+
 -- Buat pesanan secara atomik melalui function RPC; aturan bisnis berada di function/procedure DB.
 SELECT public.sp_buat_pesanan(
   $1::bigint, $2::varchar, $3::varchar, $4::varchar,
@@ -68,7 +94,7 @@ WHERE kode = $1 AND status = 'menunggu'
 RETURNING id_pesanan, kode, metode;
 
 -- Check-in QR tiket; hanya tandai bila belum digunakan.
-UPDATE e_tiket
-SET dipakai_pada = $2
-WHERE id_pesanan = $1 AND dipakai_pada IS NULL
-RETURNING id_pesanan, dipakai_pada;
+SELECT public.sp_pakai_etiket($1::bigint, $2::timestamptz) AS berhasil;
+
+-- Kedaluwarsakan tiket lunas yang belum dipakai setelah tanggal kunjungannya lewat.
+SELECT public.sp_kedaluwarsakan_etiket($1::bigint) AS berhasil;
