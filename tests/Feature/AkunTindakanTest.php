@@ -250,6 +250,17 @@ class AkunTindakanTest extends TestCase
             && str_contains($request->url(), '/users?'));
     }
 
+    public function test_session_for_deleted_account_is_cleared_on_any_next_web_request(): void
+    {
+        Http::fake(fn () => Http::response([]));
+
+        $this->withSession(['pengguna' => $this->sessionUser($this->user())])
+            ->get('/lupa-password')
+            ->assertRedirect(route('masuk'))
+            ->assertSessionMissing('pengguna')
+            ->assertSessionHasErrors('email');
+    }
+
     private function user(array $attributes = []): array
     {
         return array_merge([

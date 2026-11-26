@@ -25,7 +25,7 @@ class Peran
             && $request->is('admin', 'admin/*')
             && ! empty($pengguna['email'])
         ) {
-            $akun = (new SupabaseApi)->findUserByEmail($pengguna['email']);
+            $akun = $request->attributes->get('akun_sesi');
             if ($akun) {
                 $pengguna['id'] = $akun['id'];
                 $pengguna['nama'] = $akun['name'];
@@ -36,7 +36,7 @@ class Peran
         }
 
         if (! empty($pengguna['email'])) {
-            $akun = (new SupabaseApi)->findUserByEmail($pengguna['email']);
+            $akun = $request->attributes->get('akun_sesi');
             if ($akun && ! empty($akun['ditangguhkan_pada'])) {
                 $request->session()->forget('pengguna');
                 $request->session()->invalidate();
