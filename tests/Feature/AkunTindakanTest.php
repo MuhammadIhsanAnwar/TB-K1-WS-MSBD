@@ -85,6 +85,65 @@ class AkunTindakanTest extends TestCase
             && ! empty($request['hapus_otomatis_pada']));
     }
 
+    public function test_google_account_can_reverify_with_google_before_deactivation(): void
+    {
+        config([
+            'services.google.client_id' => 'google-client',
+            'services.google.client_secret' => 'google-secret',
+        ]);
+        $user = $this->user(['google_id' => 'google-subject']);
+        $token = 'token-for-google-deactivation-test';
+        $url = $this->signedActionUrl($user, $token);
+        $otp = [
+            'user_id' => $user['id'],
+            'tindakan' => 'nonaktifkan',
+            'code_hash' => hash('sha256', $token),
+            'expires_at' => now()->addMinutes(20)->toDateTimeString(),
+            'attempts' => 0,
+        ];
+        Http::fake(function (Request $request) use ($user, $otp) {
+            if (str_contains($request->url(), 'oauth2.googleapis.com/token')) {
+                return Http::response(['access_token' => 'google-access-token']);
+            }
+            if (str_contains($request->url(), 'openidconnect.googleapis.com')) {
+                return Http::response([
+                    'email_verified' => true,
+                    'email' => $user['email'],
+                    'sub' => $user['google_id'],
+                ]);
+            }
+            if (str_contains($request->url(), '/account_action_otps')) {
+                return Http::response([$otp]);
+            }
+            if ($request->method() === 'PATCH') {
+                return Http::response([array_merge($user, $request->data())]);
+            }
+
+            return Http::response([$user]);
+        });
+
+        $this->get($url)->assertOk()->assertSee('Akun ini menggunakan Google');
+        $this->post($url, ['pilihan' => 'google'])
+            ->assertRedirect(route('masuk.google'));
+        $oauthResponse = $this->get(route('masuk.google'));
+        $oauthResponse->assertRedirect();
+        parse_str((string) parse_url($oauthResponse->headers->get('Location'), PHP_URL_QUERY), $oauthQuery);
+
+        $this->get(route('masuk.google.callback', [
+            'code' => 'authorization-code',
+            'state' => $oauthQuery['state'],
+        ]))->assertRedirect($url);
+
+        $this->get($url)->assertOk()->assertSee('Akun Google berhasil diverifikasi.');
+        $this->post($url, ['pilihan' => 'ya'])
+            ->assertRedirect(route('masuk'))
+            ->assertSessionHas('pesan', 'Akun dinonaktifkan. Masuk kembali dalam 3 bulan untuk mengaktifkannya lagi.');
+
+        Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
+            && str_contains($request->url(), '/users?')
+            && ! empty($request['dinonaktifkan_pada']));
+    }
+
     public function test_correct_password_and_confirmation_permanently_delete_account(): void
     {
         $user = $this->user();

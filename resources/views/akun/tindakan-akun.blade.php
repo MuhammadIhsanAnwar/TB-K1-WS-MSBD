@@ -9,11 +9,12 @@
         </header>
         @if ($terverifikasi)
             <p>
+                {{ $akunGoogle ? 'Akun Google berhasil diverifikasi.' : 'Password terverifikasi.' }}
                 @if ($tindakan === 'nonaktifkan')
-                    Password terverifikasi. Apakah anda yakin ingin menonaktifkan akun?
+                    Apakah anda yakin ingin menonaktifkan akun?
                     Kamu dapat mengaktifkannya kembali dengan masuk dalam 3 bulan.
                 @else
-                    Password terverifikasi. Apakah anda yakin ingin menghapus akun secara permanen?
+                    Apakah anda yakin ingin menghapus akun secara permanen?
                     Tindakan ini tidak dapat dibatalkan.
                 @endif
             </p>
@@ -24,6 +25,13 @@
                 </button>
                 <button class="p-btn" type="submit" name="pilihan" value="tidak">Tidak</button>
             </form>
+        @elseif ($akunGoogle)
+            <p>Akun ini menggunakan Google untuk masuk. Klik tombol berikut, lalu pilih akun Google yang sama. Google akan meminta password jika diperlukan.</p>
+            <form method="post" action="{{ request()->fullUrl() }}">
+                @csrf
+                <button class="mv-btn mv-btn--utama" type="submit" name="pilihan" value="google">Verifikasi dengan Google</button>
+            </form>
+            @error('google')<p role="alert" class="isian__galat">{{ $message }}</p>@enderror
         @else
             <p>Masukkan password akunmu untuk melanjutkan tindakan ini.</p>
             <form method="post" action="{{ request()->fullUrl() }}" class="isian">
@@ -37,6 +45,9 @@
                 @endif
                 <button class="mv-btn mv-btn--utama" type="submit">Lanjutkan</button>
             </form>
+        @endif
+        @if (session('pesan'))
+            <p role="status" class="isian__bantuan" style="margin-top:12px">{{ session('pesan') }}</p>
         @endif
     </section>
 </div>

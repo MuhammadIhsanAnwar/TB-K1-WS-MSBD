@@ -398,12 +398,18 @@ class AkunController extends Controller
     $state = Str::random(40);
 
     $request->session()->put('google_oauth_state', $state);
-    $request->session()->put(
-        'google_oauth_kembali',
-        $this->aman($request->query('kembali'))
-    );
+    $tindakanGoogle = $request->session()->get('google_tindakan');
+    if (is_array($tindakanGoogle)) {
+        $tindakanGoogle['state'] = $state;
+        $request->session()->put('google_tindakan', $tindakanGoogle);
+    } else {
+        $request->session()->put(
+            'google_oauth_kembali',
+            $this->aman($request->query('kembali'))
+        );
+    }
 
-    $query = http_build_query([
+    $parameter = [
         'client_id' => $config['client_id'],
         'redirect_uri' => $this->googleRedirectUri(),
         'response_type' => 'code',
@@ -411,7 +417,11 @@ class AkunController extends Controller
         'state' => $state,
         'access_type' => 'online',
         'prompt' => 'select_account',
-    ]);
+    ];
+    if (is_array($tindakanGoogle) && ! empty($tindakanGoogle['email'])) {
+        $parameter['login_hint'] = $tindakanGoogle['email'];
+    }
+    $query = http_build_query($parameter);
 
     return redirect(
         'https://accounts.google.com/o/oauth2/v2/auth?' . $query
@@ -421,8 +431,7 @@ class AkunController extends Controller
     public function googleCallback(Request $request)
 {
     if ($request->filled('error')) {
-        return redirect()->route('masuk')
-            ->withErrors(['email' => 'Login Google dibatalkan.']);
+        return $this->gagalGoogle($request, 'Verifikasi Google dibatalkan.');
     }
 
     $expectedState = $request->session()->pull('google_oauth_state');
@@ -457,10 +466,7 @@ class AkunController extends Controller
                 ', ' . $response->json('error', 'unknown_error')
             ));
 
-            return redirect()->route('masuk')
-                ->withErrors([
-                    'email' => 'Login Google gagal. Silakan mulai proses login dari awal.'
-                ]);
+            return $this->gagalGoogle($request, 'Login Google gagal. Silakan coba verifikasi kembali.');
         }
 
         $token = $response->json();
@@ -481,28 +487,61 @@ class AkunController extends Controller
     } catch (\Illuminate\Http\Client\ConnectionException $e) {
         report($e);
 
-        return redirect()->route('masuk')
-            ->withErrors([
-                'email' => 'Tidak dapat terhubung ke Google. Coba lagi.'
-            ]);
+        return $this->gagalGoogle($request, 'Tidak dapat terhubung ke Google. Coba lagi.');
     } catch (\Throwable $e) {
         report($e);
 
-        return redirect()->route('masuk')
-            ->withErrors([
-                'email' => 'Terjadi kesalahan saat memproses login Google.'
-            ]);
+        return $this->gagalGoogle($request, 'Terjadi kesalahan saat memproses login Google.');
     }
 
-    abort_unless(
-        ($profile['email_verified'] ?? false) &&
-        !empty($profile['email']) &&
-        !empty($profile['sub']),
-        422,
-        'Akun Google belum terverifikasi.'
-    );
+    if (
+        ! ($profile['email_verified'] ?? false)
+        || empty($profile['email'])
+        || empty($profile['sub'])
+    ) {
+        if ($request->session()->has('google_tindakan')) {
+            return $this->gagalGoogle($request, 'Akun Google belum terverifikasi.');
+        }
+
+        abort(422, 'Akun Google belum terverifikasi.');
+    }
 
     $api = new SupabaseApi;
+    $tindakanGoogle = $request->session()->pull('google_tindakan');
+    if (is_array($tindakanGoogle)) {
+        abort_unless(
+            is_string($expectedState)
+                && is_string($tindakanGoogle['state'] ?? null)
+                && hash_equals($expectedState, $tindakanGoogle['state']),
+            419,
+            'Sesi verifikasi Google tidak valid. Silakan coba lagi.'
+        );
+
+        $user = $api->findUserById($tindakanGoogle['user_id']);
+        $this->validasiTautanTindakanAkunHash(
+            (string) $tindakanGoogle['user_id'],
+            $tindakanGoogle['token_hash']
+        );
+        if (
+            ! $user
+            || empty($user['google_id'])
+            || ! hash_equals((string) $user['google_id'], (string) $profile['sub'])
+            || strcasecmp($user['email'], $profile['email']) !== 0
+        ) {
+            return redirect()->to($tindakanGoogle['url'])
+                ->withErrors(['google' => 'Pilih akun Google yang terhubung dengan akun MedanVisit ini.']);
+        }
+
+        $request->session()->regenerate();
+        $request->session()->put('tindakan_akun_identity_verified', [
+            'user_id' => (string) $user['id'],
+            'token_hash' => $tindakanGoogle['token_hash'],
+        ]);
+
+        return redirect()->to($tindakanGoogle['url'])
+            ->with('pesan', 'Akun Google berhasil diverifikasi. Silakan pilih Ya atau Tidak.');
+    }
+
     $user = $api->findUserByEmail($profile['email']);
 
     if (!$user) {
@@ -551,6 +590,19 @@ class AkunController extends Controller
         $kembali ?? $this->tujuan($user['peran'])
     )->with('sambutan', $user['name']);
 }
+
+    private function gagalGoogle(Request $request, string $message)
+    {
+        $tindakanGoogle = $request->session()->pull('google_tindakan');
+        $request->session()->forget(['google_oauth_state', 'google_oauth_kembali']);
+
+        if (is_array($tindakanGoogle) && is_string($tindakanGoogle['url'] ?? null)) {
+            return redirect()->to($tindakanGoogle['url'])->withErrors(['google' => $message]);
+        }
+
+        return redirect()->route('masuk')->withErrors(['email' => $message]);
+    }
+
     public function pengaturan(Request $request)
     {
         $u = $this->pengguna($request);
@@ -712,7 +764,9 @@ class AkunController extends Controller
     public function formulirTindakanAkun(Request $request, string $userId, string $token)
     {
         $otp = $this->validasiTautanTindakanAkun($userId, $token);
-        $grant = $request->session()->get('tindakan_akun_password_verified');
+        $user = (new SupabaseApi)->findUserById($userId);
+        abort_unless($user, 404, 'Akun tidak ditemukan.');
+        $grant = $request->session()->get('tindakan_akun_identity_verified');
         $terverifikasi = is_array($grant)
             && (string) ($grant['user_id'] ?? '') === $userId
             && ($grant['token_hash'] ?? '') === hash('sha256', $token);
@@ -722,6 +776,7 @@ class AkunController extends Controller
             'token' => $token,
             'tindakan' => $otp['tindakan'],
             'terverifikasi' => $terverifikasi,
+            'akunGoogle' => ! empty($user['google_id']),
         ]);
     }
 
@@ -729,15 +784,28 @@ class AkunController extends Controller
     {
         $otp = $this->validasiTautanTindakanAkun($userId, $token);
         $hashToken = hash('sha256', $token);
-        $grant = $request->session()->get('tindakan_akun_password_verified');
+        $grant = $request->session()->get('tindakan_akun_identity_verified');
         $terverifikasi = is_array($grant)
             && (string) ($grant['user_id'] ?? '') === $userId
             && ($grant['token_hash'] ?? '') === $hashToken;
         $pilihan = $request->input('pilihan');
 
+        if ($pilihan === 'google') {
+            $user = (new SupabaseApi)->findUserById($userId);
+            abort_unless($user && ! empty($user['google_id']), 403, 'Akun ini tidak menggunakan login Google.');
+            $request->session()->put('google_tindakan', [
+                'user_id' => (string) $user['id'],
+                'email' => $user['email'],
+                'token_hash' => $hashToken,
+                'url' => $request->fullUrl(),
+            ]);
+
+            return redirect()->route('masuk.google');
+        }
+
         if ($pilihan === 'tidak') {
             (new SupabaseApi)->hapusTautanTindakanAkun($userId);
-            $request->session()->forget('tindakan_akun_password_verified');
+            $request->session()->forget('tindakan_akun_identity_verified');
 
             return redirect()->route('masuk')->with('pesan', 'Tindakan akun dibatalkan. Akunmu tidak berubah.');
         }
@@ -752,7 +820,7 @@ class AkunController extends Controller
             }
 
             $request->session()->regenerate();
-            $request->session()->put('tindakan_akun_password_verified', [
+            $request->session()->put('tindakan_akun_identity_verified', [
                 'user_id' => $userId,
                 'token_hash' => $hashToken,
             ]);
@@ -782,7 +850,7 @@ class AkunController extends Controller
             return back()->with('galat', 'Tindakan akun gagal diproses. Coba lagi dari tautan email.');
         }
 
-        $request->session()->forget('tindakan_akun_password_verified');
+        $request->session()->forget('tindakan_akun_identity_verified');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
@@ -793,11 +861,16 @@ class AkunController extends Controller
 
     private function validasiTautanTindakanAkun(string $userId, string $token): array
     {
+        return $this->validasiTautanTindakanAkunHash($userId, hash('sha256', $token));
+    }
+
+    private function validasiTautanTindakanAkunHash(string $userId, string $hashToken): array
+    {
         $otp = (new SupabaseApi)->tautanTindakanAkun($userId);
         abort_unless(
             $otp
                 && in_array($otp['tindakan'] ?? null, ['nonaktifkan', 'hapus'], true)
-                && hash_equals($otp['code_hash'], hash('sha256', $token))
+                && hash_equals($otp['code_hash'], $hashToken)
                 && now()->lessThan(\Carbon\Carbon::parse($otp['expires_at'])),
             410,
             'Tautan tindakan akun sudah tidak berlaku. Silakan minta tautan baru.'
