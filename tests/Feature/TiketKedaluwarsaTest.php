@@ -6,7 +6,6 @@ use App\Support\Katalog;
 use App\Support\TiketKedaluwarsa;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use ReflectionProperty;
 use Tests\TestCase;
@@ -17,8 +16,6 @@ class TiketKedaluwarsaTest extends TestCase
     {
         parent::setUp();
 
-        Cache::setDefaultDriver('array');
-        Cache::store('array')->flush();
         config([
             'services.supabase.transaksi.url' => 'https://transaksi.test',
             'services.supabase.transaksi.secret_key' => 'test-secret',
@@ -39,7 +36,6 @@ class TiketKedaluwarsaTest extends TestCase
     protected function tearDown(): void
     {
         Carbon::setTestNow();
-        Cache::store('array')->flush();
         Katalog::forgetCache();
 
         parent::tearDown();
@@ -75,21 +71,30 @@ class TiketKedaluwarsaTest extends TestCase
         Http::assertNotSent(fn (Request $request) => str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket'));
     }
 
-    public function test_manual_open_override_moves_expiry_to_the_end_of_the_next_day(): void
+    public function test_booking_outside_schedule_expires_at_next_day_closing(): void
     {
         Http::fake(fn (Request $request) => str_contains($request->url(), '/rpc/sp_kedaluwarsakan_etiket')
             ? Http::response('true')
             : Http::response([]));
-        Cache::put('medanvisit.status_operasional', ['medan-zoo' => 'buka'], now()->addDay());
+        Carbon::setTestNow(Carbon::parse('2026-11-23 18:00:00', 'Asia/Jakarta'));
 
-        $pesanan = $this->pesanan();
+        $pesanan = $this->pesanan(['waktu' => '2026-11-23T18:00:00+07:00']);
         $this->assertSame(
-            '2026-11-24 23:59:59',
+            '2026-11-24 17:00:00',
             TiketKedaluwarsa::berlakuSampai($pesanan)->format('Y-m-d H:i:s'),
         );
         $this->assertSame('lunas', TiketKedaluwarsa::perbarui($pesanan)['status']);
 
-        Carbon::setTestNow(Carbon::parse('2026-11-24 23:59:59', 'Asia/Jakarta'));
+        $dipesanSaatJadwalBuka = $this->pesanan(['waktu' => '2026-11-23T10:00:00+07:00']);
+        $this->assertSame(
+            '2026-11-23 17:00:00',
+            TiketKedaluwarsa::berlakuSampai($dipesanSaatJadwalBuka)->format('Y-m-d H:i:s'),
+        );
+
+        Carbon::setTestNow(Carbon::parse('2026-11-24 16:59:59', 'Asia/Jakarta'));
+        $this->assertSame('lunas', TiketKedaluwarsa::perbarui($pesanan)['status']);
+
+        Carbon::setTestNow(Carbon::parse('2026-11-24 17:00:00', 'Asia/Jakarta'));
         $kedaluwarsa = TiketKedaluwarsa::perbarui($pesanan);
 
         $this->assertSame('kedaluwarsa', $kedaluwarsa['status']);
@@ -105,6 +110,7 @@ class TiketKedaluwarsaTest extends TestCase
                     'kode' => 'MV-AAAA1111',
                     'tempat_slug' => 'medan-zoo',
                     'tanggal_kunjungan' => '2026-11-23',
+                    'created_at' => '2026-11-23T10:00:00+07:00',
                     'e_tiket' => [['dipakai_pada' => null]],
                 ]]);
             }
@@ -119,6 +125,7 @@ class TiketKedaluwarsaTest extends TestCase
         Http::assertSent(fn (Request $request) => $request->method() === 'GET'
             && str_contains($request->url(), '/pesanan?')
             && str_contains($request->url(), 'status=eq.lunas')
+            && str_contains($request->url(), 'created_at')
             && str_contains($request->url(), 'e_tiket.dipakai_pada=is.null'));
     }
 
@@ -129,6 +136,7 @@ class TiketKedaluwarsaTest extends TestCase
             'kode' => 'MV-AAAA1111',
             'tempat' => 'medan-zoo',
             'tanggal' => '2026-11-23',
+            'waktu' => '2026-11-23T10:00:00+07:00',
             'status' => 'lunas',
             'dipakai' => null,
         ], $ubah);

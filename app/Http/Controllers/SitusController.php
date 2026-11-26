@@ -279,7 +279,7 @@ class SitusController extends Controller
             : [];
         $jumlahSuka = Penyimpanan::ringkasanSukaTempat()[$slug] ?? 0;
         $rating = Penyimpanan::ringkasanRatingTempat()[$slug] ?? ['rating' => 0, 'jumlahRating' => 0];
-        $ramai = Kunjungan::ringkasanCheckinTerbaru()[$slug] ?? 0;
+        $ramai = ! empty($t['tiket']) ? (Kunjungan::ringkasanCheckinTerbaru()[$slug] ?? 0) : 0;
         $hasilUlasan = Penyimpanan::ulasanHalaman([$slug], 'tayang', self::ULASAN_PER_HALAMAN, 0, aman: true);
         $ulasanSaya = $idPengguna !== false && ($pengguna['peran'] ?? null) === 'wisatawan'
             ? (Penyimpanan::ulasan($slug, 'tayang', (int) $idPengguna, aman: true)[0] ?? null)

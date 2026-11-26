@@ -62,6 +62,14 @@ class SitusTempatTest extends TestCase
                     'results' => ['bindings' => $bindings],
                 ]);
             }
+            if (str_contains($request->url(), '/users?')) {
+                return Http::response([[
+                    'id' => 17,
+                    'name' => 'Wisatawan',
+                    'email' => 'wisatawan@example.test',
+                    'peran' => 'wisatawan',
+                ]]);
+            }
             if (str_contains($request->url(), '/ringkasan_suka_tempat?')) {
                 return Http::response([['tempat_slug' => 'kolam-renang-primbana', 'jumlah_suka' => 12]]);
             }
@@ -82,6 +90,9 @@ class SitusTempatTest extends TestCase
         $this->get('/tempat/kolam-renang-primbana')
             ->assertOk()
             ->assertSee('Kolam Renang Primbana')
+            ->assertDontSee('Kepadatan pengunjung saat ini')
+            ->assertSee('class="mv-tempat-kepala__aksi"', false)
+            ->assertSee('Rute dari sini')
             ->assertSee('<span><b>12</b> like</span>', false)
             ->assertSee('<span><b>4,5</b> rating</span>', false)
             ->assertSee('Suka tempat ini')

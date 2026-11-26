@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Support\Kunjungan;
 use App\Support\Katalog;
+use App\Support\Kunjungan;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -270,6 +270,7 @@ class AdminScanTiketTest extends TestCase
             ->assertOk()
             ->assertSee('MV-AAAA1111')
             ->assertSee('No.')
+            ->assertSee('class="p-tabel-bungkus"', false)
             ->assertSee('name="q"', false)
             ->assertSee('Sudah check-in');
     }

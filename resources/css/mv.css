@@ -2055,6 +2055,19 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  width: 100%;
+}
+.mv-tempat-kepala__aksi {
+  display: flex;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.mv-tempat-kepala__aksi .mv-btn { padding-inline: 16px; }
+.mv-tempat-kepala__aksi form {
+  margin: 0;
 }
 .mv-tempat-media {
   position: relative;

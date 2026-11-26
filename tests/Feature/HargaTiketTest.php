@@ -181,7 +181,7 @@ class HargaTiketTest extends TestCase
             ->get('/tempat/medan-zoo/tiket')
             ->assertOk()
             ->assertSee('data-operasional-buka="1"', false)
-            ->assertSee('tiket kedaluwarsa pada akhir hari berikutnya');
+            ->assertSee('tiket kedaluwarsa saat jam operasional berakhir pada hari berikutnya');
 
         $tanggal = Carbon::today('Asia/Jakarta')->toDateString();
         $this->withSession($session)->withHeader('X-CSRF-TOKEN', 'test-csrf')
@@ -193,10 +193,15 @@ class HargaTiketTest extends TestCase
             'tanggal' => $tanggal,
             'item' => [['jenis' => 'Hari kerja', 'harga' => 15000, 'jumlah' => 1, 'subtotal' => 15000]],
         ];
-        $this->withSession($session + ['pilihan' => $pilihan])
+        $response = $this->withSession($session + ['pilihan' => $pilihan])
             ->get(route('checkout'))
             ->assertOk()
-            ->assertSee('Tempat ditetapkan Buka sekarang. Jika belum check-in, tiket kedaluwarsa pada akhir hari berikutnya.');
+            ->assertSee('Tempat ditetapkan Buka sekarang. Jika belum check-in, tiket kedaluwarsa saat jam operasional berakhir pada hari berikutnya.');
+        $form = substr($response->getContent(), strpos($response->getContent(), '<form class="tiket-alur"'));
+        $this->assertGreaterThan(
+            strpos($form, '<div>'),
+            strpos($form, 'class="p-pesan p-pesan--info" role="status"'),
+        );
 
         $this->from(route('checkout'))->withSession($session + ['pilihan' => $pilihan])->withHeader('X-CSRF-TOKEN', 'test-csrf')
             ->post(route('checkout'), [])

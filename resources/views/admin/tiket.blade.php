@@ -150,25 +150,27 @@
             <button class="p-btn p-btn--teks" type="submit">Cari</button>
         </form>
         @if ($pesananTampil->isNotEmpty())
-            <table class="p-tabel jadi-daftar">
-                <thead><tr><th class="n">No.</th><th>Kode</th><th>Pemesan</th><th>Tempat dan tanggal</th><th class="n">Total</th><th class="n">Status</th></tr></thead>
-                <tbody>
-                    @foreach ($pesananTampil as $p)
-                        @php
-                            $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
-                            $st = ! empty($p['dipakai']) ? ['Sudah check-in', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
-                        @endphp
-                        <tr>
-                            <td class="n">{{ $loop->iteration }}</td>
-                            <td><span class="kode">{{ $p['kode'] }}</span></td>
-                            <td class="sekunder">{{ $p['pemesan']['nama'] }}<span class="sub">{{ $p['pemesan']['email'] }}</span></td>
-                            <td class="sekunder">{{ Katalog::get($p['tempat'])['nama'] }}<span class="sub">{{ \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id')->translatedFormat('j M Y') }}</span></td>
-                            <td class="n">{{ Katalog::rupiah($p['total']) }}</td>
-                            <td class="n"><span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span></td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="p-tabel-bungkus">
+                <table class="p-tabel jadi-daftar">
+                    <thead><tr><th class="n">No.</th><th>Kode</th><th>Pemesan</th><th>Tempat dan tanggal</th><th class="n">Total</th><th class="n">Status</th></tr></thead>
+                    <tbody>
+                        @foreach ($pesananTampil as $p)
+                            @php
+                                $kedaluwarsa = $p['status'] === 'lunas' && empty($p['dipakai']) && $p['tanggal'] < now('Asia/Jakarta')->toDateString();
+                                $st = ! empty($p['dipakai']) ? ['Sudah check-in', ''] : ($kedaluwarsa ? ['Kedaluwarsa', 'neg'] : ['lunas' => ['Lunas', 'pos'], 'menunggu' => ['Menunggu', 'warn'], 'kedaluwarsa' => ['Kedaluwarsa', 'neg'], 'dibatalkan' => ['Dibatalkan', '']][$p['status']]);
+                            @endphp
+                            <tr>
+                                <td class="n">{{ $loop->iteration }}</td>
+                                <td><span class="kode">{{ $p['kode'] }}</span></td>
+                                <td class="sekunder">{{ $p['pemesan']['nama'] }}<span class="sub">{{ $p['pemesan']['email'] }}</span></td>
+                                <td class="sekunder">{{ Katalog::get($p['tempat'])['nama'] }}<span class="sub">{{ \Illuminate\Support\Carbon::parse($p['tanggal'])->locale('id')->translatedFormat('j M Y') }}</span></td>
+                                <td class="n">{{ Katalog::rupiah($p['total']) }}</td>
+                                <td class="n"><span class="p-pill {{ $st[1] }}">{{ $st[0] }}</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @else
             <div class="p-kosong">{{ $q === '' ? 'Belum ada pesanan tiket.' : 'Tidak ada pesanan yang cocok dengan pencarian.' }}</div>
         @endif

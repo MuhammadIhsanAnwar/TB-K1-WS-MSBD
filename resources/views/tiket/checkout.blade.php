@@ -25,15 +25,15 @@
 
     <form class="tiket-alur" method="post" action="{{ route('checkout') }}" novalidate>
         @csrf
-        @if ($bukaManual)
-            <p class="p-pesan p-pesan--info" role="status">Tempat ditetapkan Buka sekarang. Jika belum check-in, tiket kedaluwarsa pada akhir hari berikutnya.</p>
-        @endif
-        @if (! $jadwalDiketahui || ! $tempatBuka)
-            <p class="p-pesan p-pesan--info" role="alert">
-                {{ $errors->first('jam_operasional') ?: ($jadwalDiketahui ? 'Pemesanan hanya dapat dilakukan saat tempat sedang buka ('.$t['jam'].').' : 'Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.') }}
-            </p>
-        @endif
         <div>
+            @if ($bukaManual)
+                <p class="p-pesan p-pesan--info" role="status">Tempat ditetapkan Buka sekarang. Jika belum check-in, tiket kedaluwarsa saat jam operasional berakhir pada hari berikutnya.</p>
+            @endif
+            @if (! $jadwalDiketahui || ! $tempatBuka)
+                <p class="p-pesan p-pesan--info" role="alert">
+                    {{ $errors->first('jam_operasional') ?: ($jadwalDiketahui ? 'Pemesanan hanya dapat dilakukan saat tempat sedang buka ('.$t['jam'].').' : 'Pemesanan sementara tidak tersedia karena jam operasional tempat belum dapat dipastikan.') }}
+                </p>
+            @endif
             <section class="p-panel" aria-labelledby="judul-pemesan">
                 <header><h2 id="judul-pemesan">Identitas pemesan</h2></header>
                 <div class="p-form" style="max-width:none">

@@ -75,21 +75,23 @@
                 @if ($t['tiket'] && ! $akunPengelola)
                     <a class="mv-btn mv-btn--utama" href="{{ route('tiket.pilih', $t['slug']) }}">Pesan tiket mulai {{ Katalog::rupiah(Katalog::hargaTermurah($t)) }}</a>
                 @endif
-                @unless ($akunPengelola)
-                    <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'motor'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
-                @endunless
-                <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
-                    @csrf
-                    <button type="submit" class="mv-btn mv-btn--garis mv-btn--suka {{ $sudahDisukai ? 'mv-btn--suka-aktif' : '' }}" aria-pressed="{{ $sudahDisukai ? 'true' : 'false' }}">
-                        <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
-                            fill="{{ $sudahDisukai ? 'currentColor' : 'none' }}" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
-                        </svg>
-                        {{ $sudahDisukai ? 'Batal suka' : 'Suka tempat ini' }}
-                        ({{ number_format($jumlahSuka, 0, ',', '.') }})
-                    </button>
-                </form>
+                <div class="mv-tempat-kepala__aksi">
+                    @unless ($akunPengelola)
+                        <a class="mv-btn mv-btn--garis" href="{{ route('rencana', ['minat' => ['sejarah', 'religi', 'kuliner'], 'durasi' => 4, 'moda' => ['jalan', 'motor'], 'mulai' => $t['slug']]) }}">Rute dari sini</a>
+                    @endunless
+                    <form method="POST" action="{{ route('tempat.sukai', $t['slug']) }}">
+                        @csrf
+                        <button type="submit" class="mv-btn mv-btn--garis mv-btn--suka {{ $sudahDisukai ? 'mv-btn--suka-aktif' : '' }}" aria-pressed="{{ $sudahDisukai ? 'true' : 'false' }}">
+                            <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
+                                fill="{{ $sudahDisukai ? 'currentColor' : 'none' }}" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                            </svg>
+                            {{ $sudahDisukai ? 'Batal suka' : 'Suka tempat ini' }}
+                            ({{ number_format($jumlahSuka, 0, ',', '.') }})
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -165,16 +167,18 @@
                 @endif
             </dl>
 
-            <div class="ramai" style="margin-top:20px;padding:18px 20px;background:var(--mv-putih)">
-                <div class="ramai__judul">
-                    <span>Kepadatan pengunjung saat ini</span>
-                    <span>{{ $tingkatRamai ?? 'Belum ada catatan jam ini' }}</span>
+            @if (! empty($t['tiket']))
+                <div class="ramai" style="margin-top:20px;padding:18px 20px;background:var(--mv-putih)">
+                    <div class="ramai__judul">
+                        <span>Kepadatan pengunjung saat ini</span>
+                        <span>{{ $tingkatRamai ?? 'Belum ada catatan jam ini' }}</span>
+                    </div>
+                    <div class="ramai__trek" aria-hidden="true">
+                        <div class="ramai__isi" style="width: {{ min(100, $ramai * 10) }}%"></div>
+                    </div>
+                    <p class="kecil redup"><span class="nums">{{ $ramai }}</span> check-in tercatat lewat MedanVisit dalam 3 jam terakhir.</p>
                 </div>
-                <div class="ramai__trek" aria-hidden="true">
-                    <div class="ramai__isi" style="width: {{ min(100, $ramai * 10) }}%"></div>
-                </div>
-                <p class="kecil redup"><span class="nums">{{ $ramai }}</span> check-in tercatat lewat MedanVisit dalam 3 jam terakhir.</p>
-            </div>
+            @endif
         </section>
 
         <section class="mv-seksi-detail" id="dekat" aria-labelledby="judul-dekat">

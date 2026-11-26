@@ -73,6 +73,7 @@ class Penyimpanan
             'kode' => (string) $p['kode'],
             'tempat' => (string) $p['tempat_slug'],
             'tanggal' => Carbon::parse($p['tanggal_kunjungan'])->toDateString(),
+            'waktu' => self::waktu($p['created_at'] ?? null),
             'status' => 'lunas',
             'dipakai' => null,
         ], self::api()->pesananLunasBelumCheckin($sampaiTanggal));

@@ -295,7 +295,7 @@ class SupabaseApi
         $offset = 0;
         do {
             $baris = $this->getRows('pesanan', [
-                'select' => 'id_pesanan,kode,tempat_slug,tanggal_kunjungan,e_tiket!inner(dipakai_pada)',
+                'select' => 'id_pesanan,kode,tempat_slug,tanggal_kunjungan,created_at,e_tiket!inner(dipakai_pada)',
                 'status' => 'eq.lunas',
                 'tanggal_kunjungan' => 'lte.'.$sampaiTanggal,
                 'e_tiket.dipakai_pada' => 'is.null',
