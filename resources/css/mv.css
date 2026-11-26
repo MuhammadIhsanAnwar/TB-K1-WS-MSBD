@@ -2062,7 +2062,7 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   flex: 1 0 100%;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
 }
 .mv-tempat-kepala__aksi .mv-btn { padding-inline: 16px; }
@@ -2839,7 +2839,13 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
     transition: height 240ms var(--ease-out);
   }
   .mv-peta-samping[data-tinggi="intip"] { height: 142px; }
-  .mv-peta-samping[data-tinggi="penuh"] { height: 86%; }
+  .mv-peta-samping[data-tinggi="daftar"] { height: 84%; }
+  .mv-peta-samping[data-tinggi="penuh"] { height: 94%; }
+  .mv-peta-daftar {
+    min-height: 0;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   .mv-peta-toggle-lembar {
     display: inline-flex;
     gap: 4px;
