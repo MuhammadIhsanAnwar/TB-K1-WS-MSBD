@@ -2837,14 +2837,20 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
     height: 70%;
     border-top: 2px solid var(--mv-hijau);
     transition: height 240ms var(--ease-out);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
   }
   .mv-peta-samping[data-tinggi="intip"] { height: 142px; }
   .mv-peta-samping[data-tinggi="daftar"] { height: 84%; }
   .mv-peta-samping[data-tinggi="penuh"] { height: 94%; }
+  .mv-peta-kepala,
+  .mv-peta-status { flex: 0 0 auto; }
   .mv-peta-daftar {
+    flex: 0 0 auto;
     min-height: 0;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
+    overflow: visible;
   }
   .mv-peta-toggle-lembar {
     display: inline-flex;
