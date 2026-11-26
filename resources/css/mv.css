@@ -2241,13 +2241,17 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   display: flex;
   flex-direction: column;
   background: var(--mv-putih);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .mv-peta-kepala {
   padding: 16px 18px 14px;
   background: var(--mv-putih);
   display: grid;
   gap: 10px;
+  flex: 0 0 auto;
 }
 .mv-peta-kepala__baris {
   display: flex;
@@ -2306,10 +2310,11 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
   display: flex;
   justify-content: space-between;
   gap: 8px;
+  flex: 0 0 auto;
 }
 .mv-peta-daftar {
-  flex: 1;
-  overflow-y: auto;
+  flex: 0 0 auto;
+  overflow: visible;
   padding: 10px;
   background: var(--mv-kertas);
   display: grid;
@@ -2837,21 +2842,10 @@ body:not(.panel-app) :where(.p-btn, .p-seg, .p-seg button, .p-panel, .p-pill) {
     height: 70%;
     border-top: 2px solid var(--mv-hijau);
     transition: height 240ms var(--ease-out);
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
   }
   .mv-peta-samping[data-tinggi="intip"] { height: 142px; }
   .mv-peta-samping[data-tinggi="daftar"] { height: 84%; }
   .mv-peta-samping[data-tinggi="penuh"] { height: 94%; }
-  .mv-peta-kepala,
-  .mv-peta-status { flex: 0 0 auto; }
-  .mv-peta-daftar {
-    flex: 0 0 auto;
-    min-height: 0;
-    overflow: visible;
-  }
   .mv-peta-toggle-lembar {
     display: inline-flex;
     gap: 4px;
