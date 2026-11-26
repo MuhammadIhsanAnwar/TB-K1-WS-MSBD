@@ -138,7 +138,8 @@ class AdminEntitasFotoTest extends TestCase
             ->get('/admin/entitas/'.$slug)
             ->assertOk()
             ->assertSee('Status buka/tutup')
-            ->assertSee(route('admin.entitas.status-operasional', $slug), false);
+            ->assertSee(route('admin.entitas.status-operasional', $slug), false)
+            ->assertSee(route('admin.tempat.daftar'), false);
 
         $response = $this->withSession(['pengguna' => $pengguna])
             ->post('/admin/entitas/'.$slug, [

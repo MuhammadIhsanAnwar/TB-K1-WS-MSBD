@@ -34,7 +34,7 @@
             <a class="p-btn" href="{{ $url }}">Lihat di situs</a>
         @endif
 
-        <a class="p-btn" href="{{ route('admin.entitas') }}">
+        <a class="p-btn" href="{{ $e['jenis'] === 'tempat' ? route('admin.tempat.daftar') : route('admin.entitas') }}">
             Kembali ke daftar
         </a>
     </div>
