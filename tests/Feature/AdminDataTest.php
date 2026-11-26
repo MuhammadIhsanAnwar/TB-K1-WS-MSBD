@@ -578,7 +578,18 @@ class AdminDataTest extends TestCase
             'services.supabase.transaksi.secret_key' => 'test-secret',
             'services.sparql.endpoint' => 'https://sparql.test/query',
         ]);
-        Http::fake(['*' => Http::response([], 200)]);
+        Http::fake(function (Request $request) {
+            if (str_contains($request->url(), '/users?')) {
+                return Http::response([[
+                    'id' => 1,
+                    'name' => 'Super Admin',
+                    'email' => 'superadmin@example.test',
+                    'peran' => 'superadmin',
+                ]], 200);
+            }
+
+            return Http::response([], 200);
+        });
         $session = ['pengguna' => [
             'id' => 1,
             'nama' => 'Super Admin',
@@ -592,7 +603,24 @@ class AdminDataTest extends TestCase
             ->assertSee('Database 2 PostgreSQL Supabase - Transaksi')
             ->assertSee('Database 3 SPARQL Allegrograph - Tempat Wisata')
             ->assertDontSee('Isi Database 2 (transaksi)')
-            ->assertDontSee('pencarian tercatat');
+            ->assertDontSee('pencarian tercatat')
+            ->assertSee('href="'.route('admin.sinkronisasi').'"', false);
+    }
+
+    public function test_admin_cannot_access_the_sync_page(): void
+    {
+        config(['services.sparql.endpoint' => 'https://sparql.test/query']);
+        Http::fake(['*' => Http::response([
+            'head' => ['vars' => ['s', 'p', 'o']],
+            'results' => ['bindings' => []],
+        ], 200)]);
+
+        $this->withSession(['pengguna' => [
+            'id' => 7,
+            'nama' => 'Admin',
+            'email' => '',
+            'peran' => 'admin',
+        ]])->get('/admin/sinkronisasi')->assertForbidden();
     }
 
     public function test_place_update_and_delete_use_the_configured_sparql_endpoint(): void

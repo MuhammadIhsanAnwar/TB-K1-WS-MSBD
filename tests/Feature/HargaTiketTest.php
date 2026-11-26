@@ -168,6 +168,42 @@ class HargaTiketTest extends TestCase
             ->assertSessionHasErrors('tanggal');
     }
 
+    public function test_manual_open_override_allows_booking_and_checkout_outside_scheduled_hours(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-23 18:00:00', 'Asia/Jakarta'));
+        Cache::put('medanvisit.status_operasional', ['medan-zoo' => 'buka'], now()->addMinute());
+        $session = [
+            'pengguna' => ['id' => 7, 'nama' => 'Pengguna Tes', 'email' => '', 'peran' => 'wisatawan'],
+            '_token' => 'test-csrf',
+        ];
+
+        $this->withSession($session)
+            ->get('/tempat/medan-zoo/tiket')
+            ->assertOk()
+            ->assertSee('data-operasional-buka="1"', false)
+            ->assertSee('tiket kedaluwarsa pada akhir hari berikutnya');
+
+        $tanggal = Carbon::today('Asia/Jakarta')->toDateString();
+        $this->withSession($session)->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->post('/tempat/medan-zoo/tiket', ['tanggal' => $tanggal, 'jumlah' => [1]])
+            ->assertRedirect(route('checkout'));
+
+        $pilihan = [
+            'tempat' => 'medan-zoo',
+            'tanggal' => $tanggal,
+            'item' => [['jenis' => 'Hari kerja', 'harga' => 15000, 'jumlah' => 1, 'subtotal' => 15000]],
+        ];
+        $this->withSession($session + ['pilihan' => $pilihan])
+            ->get(route('checkout'))
+            ->assertOk()
+            ->assertSee('Tempat ditetapkan Buka sekarang. Jika belum check-in, tiket kedaluwarsa pada akhir hari berikutnya.');
+
+        $this->from(route('checkout'))->withSession($session + ['pilihan' => $pilihan])->withHeader('X-CSRF-TOKEN', 'test-csrf')
+            ->post(route('checkout'), [])
+            ->assertRedirect(route('checkout'))
+            ->assertSessionHasErrors(['nama', 'email', 'hp', 'setuju']);
+    }
+
     public function test_checkout_rechecks_opening_hours_before_creating_an_order(): void
     {
         Carbon::setTestNow(Carbon::parse('2026-11-23 18:00:00', 'Asia/Jakarta'));

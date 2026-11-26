@@ -41,7 +41,7 @@
                 <div class="p-field">
                     <label for="tanggal">Pilih tanggal kedatangan</label>
                     <input id="tanggal" type="date" name="tanggal" value="{{ old('tanggal', $lama['tanggal'] ?? $hariIni) }}" min="{{ $hariIni }}" max="{{ $hariIni }}" required aria-describedby="bantu-tanggal @error('tanggal') galat-tanggal @enderror" @error('tanggal') aria-invalid="true" @enderror>
-                    <span class="bantu" id="bantu-tanggal">Tiket hanya dapat dipesan dan digunakan hari ini selama jam operasional. Tiket kedaluwarsa saat jam operasional berakhir. @if (! empty($t['hari_tiket'])) Tarif yang ditampilkan berlaku {{ $t['hari_tiket'] }}.@endif</span>
+                    <span class="bantu" id="bantu-tanggal">@if ($bukaManual)Tiket hanya dapat dipesan dan digunakan hari ini. Jika belum check-in, tiket kedaluwarsa pada akhir hari berikutnya.@else Tiket hanya dapat dipesan dan digunakan hari ini selama jam operasional dan kedaluwarsa saat jam operasional berakhir.@endif @if (! empty($t['hari_tiket'])) Tarif yang ditampilkan berlaku {{ $t['hari_tiket'] }}.@endif</span>
                     @error('tanggal')<span class="galat" id="galat-tanggal">{{ $message }}</span>@enderror
                 </div>
             </section>

@@ -11,9 +11,11 @@ final class TiketKedaluwarsa
         $tanggal = Carbon::parse($pesanan['tanggal'], 'Asia/Jakarta')->startOfDay();
         $tempat = Katalog::get($pesanan['tempat']);
 
-        return $tempat
-            ? Katalog::batasOperasional($tempat, $tanggal)
-            : $tanggal->endOfDay();
+        if ($tempat && StatusOperasional::untuk($pesanan['tempat']) === 'buka') {
+            return $tanggal->copy()->addDay()->endOfDay();
+        }
+
+        return $tempat ? Katalog::batasOperasional($tempat, $tanggal) : $tanggal->endOfDay();
     }
 
     public static function perbarui(array $pesanan, ?Carbon $sekarang = null): array

@@ -25,13 +25,14 @@
     $menuKurator = array_merge($menuKurator, [
         ['admin.ulasan', 'Ulasan', 'ulasan', null],
         ['admin.pesan', 'Pesan pengguna', 'pesan', null],
-        ['admin.tiket', 'Tiket dan transaksi', 'tiket', null], ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
+        ['admin.tiket', 'Tiket dan transaksi', 'tiket', null],
     ]);
     if ($u['peran'] === 'superadmin') {
         $menuKurator = array_merge($menuKurator, [
             ['admin.tempat.daftar', 'Kelola tempat wisata', 'entitas', null],
             ['admin.akun', 'Kelola akun', 'akun', null],
             ['admin.beranda', 'Sampul beranda', 'sampul', null],
+            ['admin.sinkronisasi', 'Sinkronisasi', 'sinkron', null],
         ]);
     }
 @endphp

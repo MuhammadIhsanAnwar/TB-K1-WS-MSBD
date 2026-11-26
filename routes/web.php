@@ -111,7 +111,6 @@ Route::controller(AdminController::class)->middleware('peran:admin,superadmin')-
     Route::delete('/ulasan/{id}', 'hapusUlasan')->name('ulasan.hapus');
     Route::get('/tiket', 'tiket')->name('tiket');
     Route::post('/tiket/validasi', 'validasi')->name('tiket.validasi');
-    Route::get('/sinkronisasi', 'sinkronisasi')->name('sinkronisasi');
     Route::get('/tempat/baru', 'buatTempat')->name('tempat.baru');
     Route::post('/tempat', 'simpanTempat')->name('tempat.simpan');
     Route::delete('/tempat/{slug}', 'hapusTempat')->name('tempat.hapus');
@@ -128,6 +127,7 @@ Route::controller(AdminController::class)->prefix('admin')->name('admin.')->grou
         Route::post('/akun/{id}/tempat', 'tautkanTempat')->name('akun.tempat.tautkan');
         Route::delete('/akun/{id}/tempat/{slug}', 'lepasTempat')->name('akun.tempat.lepas');
         Route::get('/tempat', 'daftarTempat')->name('tempat.daftar');
+        Route::get('/sinkronisasi', 'sinkronisasi')->name('sinkronisasi');
     });
 });
 

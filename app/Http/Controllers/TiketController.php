@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\Katalog;
 use App\Support\Midtrans;
 use App\Support\Penyimpanan;
+use App\Support\StatusOperasional;
 use App\Support\TiketKedaluwarsa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -62,7 +63,7 @@ class TiketController extends Controller
         $t = $this->tempatBertiket($slug);
         $lama = $request->session()->get('pilihan');
         $waktu = now('Asia/Jakarta');
-        $statusOperasional = Katalog::statusMenurutJadwal($t, $waktu);
+        $statusOperasional = Katalog::statusOperasional($t, $waktu);
 
         return view('tiket.pilih', [
             't' => $t,
@@ -70,6 +71,7 @@ class TiketController extends Controller
             'hariIni' => $waktu->toDateString(),
             'jadwalDiketahui' => $statusOperasional !== null,
             'tempatBuka' => $statusOperasional === true,
+            'bukaManual' => StatusOperasional::untuk($slug) === 'buka',
         ]);
     }
 
@@ -90,7 +92,7 @@ class TiketController extends Controller
                 'tanggal' => 'Tiket hanya dapat dipesan untuk hari ini.',
             ]);
         }
-        if (Katalog::statusMenurutJadwal($t, now('Asia/Jakarta')) !== true) {
+        if (Katalog::statusOperasional($t, now('Asia/Jakarta')) !== true) {
             return back()->withInput()->withErrors([
                 'tanggal' => $this->pesanJamPemesanan($t),
             ]);
@@ -131,7 +133,7 @@ class TiketController extends Controller
                 ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
         }
         $t = $this->tempatBertiket($pilihan['tempat']);
-        $statusOperasional = Katalog::statusMenurutJadwal($t, now('Asia/Jakarta'));
+        $statusOperasional = Katalog::statusOperasional($t, now('Asia/Jakarta'));
 
         return view('tiket.checkout', [
             'pilihan' => $pilihan,
@@ -141,6 +143,7 @@ class TiketController extends Controller
             'metode' => self::METODE,
             'jadwalDiketahui' => $statusOperasional !== null,
             'tempatBuka' => $statusOperasional === true,
+            'bukaManual' => StatusOperasional::untuk($t['slug']) === 'buka',
         ]);
     }
 
@@ -155,7 +158,7 @@ class TiketController extends Controller
             return redirect()->route('tiket.pilih', $pilihan['tempat'])
                 ->withErrors(['tanggal' => 'Tiket hanya dapat dipesan untuk hari ini. Silakan pilih ulang.']);
         }
-        if (Katalog::statusMenurutJadwal($t, now('Asia/Jakarta')) !== true) {
+        if (Katalog::statusOperasional($t, now('Asia/Jakarta')) !== true) {
             return redirect()->route('checkout')
                 ->withErrors(['jam_operasional' => $this->pesanJamPemesanan($t)]);
         }
