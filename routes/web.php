@@ -50,13 +50,20 @@ Route::controller(AkunController::class)->middleware('kunjungan')->group(functio
     Route::post('/verifikasi-email/kirim-ulang', 'kirimUlangVerifikasi')->name('verifikasi.kirim');
     Route::post('/keluar', 'keluar')->name('keluar');
 
+    Route::get('/akun/tindakan/{userId}/{token}', 'formulirTindakanAkun')
+        ->whereNumber('userId')
+        ->middleware(['signed', 'throttle:30,1'])
+        ->name('akun.tindakan.link');
+    Route::post('/akun/tindakan/{userId}/{token}', 'prosesTautanTindakanAkun')
+        ->whereNumber('userId')
+        ->middleware(['signed', 'throttle:10,1'])
+        ->name('akun.tindakan.proses');
+
     Route::middleware(['peran', 'kunjungan'])->group(function () {
         Route::get('/akun', 'akun')->name('akun');
         Route::get('/akun/pengaturan', 'pengaturan')->name('akun.pengaturan');
         Route::post('/akun/pengaturan', 'simpanPengaturan');
-        Route::post('/akun/tindakan/kirim-kode', 'kirimKodeTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.kirim');
-        Route::post('/akun/tindakan/verifikasi', 'verifikasiTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.verifikasi');
-        Route::post('/akun/tindakan/batalkan', 'batalkanTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.batalkan');
+        Route::post('/akun/tindakan/kirim-tautan', 'kirimTautanTindakanAkun')->middleware('peran:wisatawan')->name('akun.tindakan.kirim');
         Route::get('/ulasan-saya', 'ulasanSaya')->middleware('peran:wisatawan')->name('ulasan.saya');
         Route::post('/tempat/{slug}/ulasan', 'tulisUlasan')->middleware('peran:wisatawan')->name('ulasan.tulis');
         Route::put('/ulasan-saya/{id}', 'perbaruiUlasanSaya')->middleware('peran:wisatawan')->whereNumber('id')->name('ulasan.perbarui');

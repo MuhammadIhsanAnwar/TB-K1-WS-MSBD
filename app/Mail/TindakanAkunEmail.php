@@ -13,13 +13,13 @@ class TindakanAkunEmail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        public readonly string $kode,
+        public readonly string $url,
         public readonly string $tindakan,
     ) {}
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Kode verifikasi tindakan akun MedanVisit');
+        return new Envelope(subject: 'Konfirmasi tindakan akun MedanVisit');
     }
 
     public function content(): Content

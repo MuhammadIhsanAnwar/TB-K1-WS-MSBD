@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Mail\TindakanAkunEmail;
 use Illuminate\Http\Client\Request;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class AkunTindakanTest extends TestCase
@@ -16,6 +18,7 @@ class AkunTindakanTest extends TestCase
     {
         parent::setUp();
         $this->withHeader('Sec-Fetch-Site', 'same-origin');
+        $this->withoutMiddleware(ThrottleRequests::class);
 
         config([
             'services.supabase.katalog.url' => 'https://katalog.test',
@@ -24,7 +27,7 @@ class AkunTindakanTest extends TestCase
         ]);
     }
 
-    public function test_deactivation_request_sends_a_six_digit_code_and_persists_only_its_hash(): void
+    public function test_deactivation_request_sends_a_signed_link_and_persists_only_its_token_hash(): void
     {
         $user = $this->user();
         $rateLimitKey = hash('sha256', $user['id'].'|127.0.0.1');
@@ -34,61 +37,46 @@ class AkunTindakanTest extends TestCase
         Http::fake(fn () => Http::response([$user]));
 
         $this->from('/akun')->withSession(['pengguna' => $this->sessionUser($user)])
-            ->post('/akun/tindakan/kirim-kode', ['tindakan' => 'nonaktifkan'])
+            ->post('/akun/tindakan/kirim-tautan', ['tindakan' => 'nonaktifkan'])
             ->assertRedirect(route('akun'))
-            ->assertSessionHas('tindakan_akun_pending', [
-                'user_id' => $user['id'],
-                'tindakan' => 'nonaktifkan',
-            ]);
+            ->assertSessionHas('pesan', 'Tautan tindakan akun telah dikirim ke emailmu. Tautan berlaku selama 30 menit.');
 
-        $kode = null;
-        Mail::assertSent(TindakanAkunEmail::class, function (TindakanAkunEmail $mail) use (&$kode): bool {
-            $kode = $mail->kode;
+        $url = null;
+        Mail::assertSent(TindakanAkunEmail::class, function (TindakanAkunEmail $mail) use (&$url): bool {
+            $url = $mail->url;
 
-            return $mail->tindakan === 'nonaktifkan' && preg_match('/^[0-9]{6}$/', $mail->kode) === 1;
+            return $mail->tindakan === 'nonaktifkan'
+                && str_contains($mail->url, 'signature=')
+                && str_contains($mail->url, 'expires=');
         });
-        Http::assertSent(function (Request $request) use ($user, $kode): bool {
+        $token = basename((string) parse_url($url, PHP_URL_PATH));
+        Http::assertSent(function (Request $request) use ($user, $token): bool {
             $payload = json_decode($request->body(), true);
 
             return $request->method() === 'POST'
                 && str_contains($request->url(), '/account_action_otps?')
                 && is_array($payload)
                 && ($payload[0]['user_id'] ?? null) === $user['id']
-                && ($payload[0]['code_hash'] ?? null) === hash('sha256', $kode)
-                && ($payload[0]['code_hash'] ?? null) !== $kode;
+                && ($payload[0]['code_hash'] ?? null) === hash('sha256', $token)
+                && ($payload[0]['code_hash'] ?? null) !== $token;
         });
     }
 
-    public function test_correct_otp_deactivates_account_and_logs_out(): void
+    public function test_correct_password_and_confirmation_deactivate_account(): void
     {
         $user = $this->user();
-        $kode = '004219';
-        $otp = [
-            'user_id' => $user['id'],
-            'tindakan' => 'nonaktifkan',
-            'code_hash' => hash('sha256', $kode),
-            'expires_at' => now()->addMinutes(5)->toDateTimeString(),
-            'attempts' => 0,
-        ];
-        Http::fake(function (Request $request) use ($user, $otp) {
-            if (str_contains($request->url(), '/account_action_otps')) {
-                return $request->method() === 'GET'
-                    ? Http::response([$otp])
-                    : Http::response([], 204);
-            }
-            if ($request->method() === 'PATCH') {
-                return Http::response([array_merge($user, $request->data())]);
-            }
+        $token = 'token-for-deactivation-test';
+        $url = $this->signedActionUrl($user, $token);
+        $user['password'] = Hash::make('Password!9');
+        $this->fakeActionLinkRequests($user, 'nonaktifkan', $token);
 
-            return Http::response([$user]);
-        });
+        $this->get($url)->assertOk()->assertSee('Masukkan password akunmu');
 
-        $this->withSession([
-            'pengguna' => $this->sessionUser($user),
-            'tindakan_akun_pending' => ['user_id' => $user['id'], 'tindakan' => 'nonaktifkan'],
-        ])->post('/akun/tindakan/verifikasi', ['kode' => $kode])
+        $this->post($url, ['pilihan' => 'password', 'password' => 'Password!9'])
+            ->assertRedirect($url);
+        $this->get($url)->assertOk()->assertSee('Apakah anda yakin ingin menonaktifkan akun?');
+        $this->post($url, ['pilihan' => 'ya'])
             ->assertRedirect(route('masuk'))
-            ->assertSessionMissing('pengguna')
             ->assertSessionHas('pesan', 'Akun dinonaktifkan. Masuk kembali dalam 3 bulan untuk mengaktifkannya lagi.');
 
         Http::assertSent(fn (Request $request) => $request->method() === 'PATCH'
@@ -97,40 +85,55 @@ class AkunTindakanTest extends TestCase
             && ! empty($request['hapus_otomatis_pada']));
     }
 
-    public function test_correct_otp_permanently_deletes_the_account_and_logs_out(): void
+    public function test_correct_password_and_confirmation_permanently_delete_account(): void
     {
         $user = $this->user();
-        $kode = '782041';
-        $otp = [
-            'user_id' => $user['id'],
-            'tindakan' => 'hapus',
-            'code_hash' => hash('sha256', $kode),
-            'expires_at' => now()->addMinutes(5)->toDateTimeString(),
-            'attempts' => 0,
-        ];
-        Http::fake(function (Request $request) use ($user, $otp) {
-            if (str_contains($request->url(), '/account_action_otps')) {
-                return $request->method() === 'GET'
-                    ? Http::response([$otp])
-                    : Http::response([], 204);
-            }
-            if ($request->method() === 'DELETE') {
-                return Http::response([$user]);
-            }
+        $token = 'token-for-delete-test';
+        $url = $this->signedActionUrl($user, $token);
+        $user['password'] = Hash::make('Password!9');
+        $this->fakeActionLinkRequests($user, 'hapus', $token);
 
-            return Http::response([$user]);
-        });
-
-        $this->withSession([
-            'pengguna' => $this->sessionUser($user),
-            'tindakan_akun_pending' => ['user_id' => $user['id'], 'tindakan' => 'hapus'],
-        ])->post('/akun/tindakan/verifikasi', ['kode' => $kode])
+        $this->get($url)->assertOk()->assertSee('Masukkan password akunmu');
+        $this->post($url, ['pilihan' => 'password', 'password' => 'Password!9'])
+            ->assertRedirect($url);
+        $this->get($url)->assertOk()->assertSee('Apakah anda yakin ingin menghapus akun secara permanen?');
+        $this->post($url, ['pilihan' => 'ya'])
             ->assertRedirect(route('masuk'))
-            ->assertSessionMissing('pengguna')
             ->assertSessionHas('pesan', 'Akun dan data profil berhasil dihapus permanen.');
 
         Http::assertSent(fn (Request $request) => $request->method() === 'DELETE'
             && str_contains($request->url(), '/users?'));
+        Http::assertNotSent(fn (Request $request) => $request->method() === 'PATCH'
+            && str_contains($request->url(), '/users?'));
+    }
+
+    public function test_choosing_no_cancels_the_action_without_changing_the_account(): void
+    {
+        $user = $this->user(['password' => Hash::make('Password!9')]);
+        $token = 'token-for-cancel-test';
+        $url = $this->signedActionUrl($user, $token);
+        $this->fakeActionLinkRequests($user, 'hapus', $token);
+
+        $this->post($url, ['pilihan' => 'password', 'password' => 'Password!9']);
+        $this->post($url, ['pilihan' => 'tidak'])
+            ->assertRedirect(route('masuk'))
+            ->assertSessionHas('pesan', 'Tindakan akun dibatalkan. Akunmu tidak berubah.');
+
+        Http::assertNotSent(fn (Request $request) => in_array($request->method(), ['PATCH', 'DELETE'], true)
+            && str_contains($request->url(), '/users?'));
+    }
+
+    public function test_wrong_password_does_not_authorize_account_action(): void
+    {
+        $user = $this->user(['password' => Hash::make('Password!9')]);
+        $token = 'token-for-wrong-password-test';
+        $url = $this->signedActionUrl($user, $token);
+        $this->fakeActionLinkRequests($user, 'nonaktifkan', $token);
+
+        $this->post($url, ['pilihan' => 'password', 'password' => 'wrong-password'])
+            ->assertSessionHasErrors('password');
+        $this->post($url, ['pilihan' => 'ya'])->assertForbidden();
+
         Http::assertNotSent(fn (Request $request) => $request->method() === 'PATCH'
             && str_contains($request->url(), '/users?'));
     }
@@ -210,5 +213,35 @@ class AkunTindakanTest extends TestCase
             'peran' => $user['peran'],
             'no_hp' => $user['no_hp'],
         ];
+    }
+
+    private function signedActionUrl(array $user, string $token): string
+    {
+        return URL::temporarySignedRoute('akun.tindakan.link', now()->addMinutes(30), [
+            'userId' => $user['id'],
+            'token' => $token,
+        ]);
+    }
+
+    private function fakeActionLinkRequests(array $user, string $action, string $token): void
+    {
+        $otp = [
+            'user_id' => $user['id'],
+            'tindakan' => $action,
+            'code_hash' => hash('sha256', $token),
+            'expires_at' => now()->addMinutes(20)->toDateTimeString(),
+            'attempts' => 0,
+        ];
+
+        Http::fake(function (Request $request) use ($user, $otp) {
+            if (str_contains($request->url(), '/account_action_otps')) {
+                return Http::response([$otp]);
+            }
+            if (str_contains($request->url(), '/users?') && $request->method() === 'PATCH') {
+                return Http::response([array_merge($user, $request->data())]);
+            }
+
+            return Http::response([$user]);
+        });
     }
 }

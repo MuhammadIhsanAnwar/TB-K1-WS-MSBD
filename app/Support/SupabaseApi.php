@@ -27,6 +27,11 @@ class SupabaseApi
         return $this->getRows('users', ['email' => 'eq.'.strtolower($email)])[0] ?? null;
     }
 
+    public function findUserById(int|string $id): ?array
+    {
+        return $this->getRows('users', ['id' => 'eq.'.$id])[0] ?? null;
+    }
+
     public function users(): array
     {
         return $this->semua('users', 'id,name,email,peran,tanggal_lahir,no_hp,email_verified_at,created_at,ditangguhkan_pada,alasan_tangguh');
@@ -72,7 +77,7 @@ class SupabaseApi
         ]);
     }
 
-    public function simpanOtpTindakanAkun(int|string $userId, array $otp): void
+    public function simpanTautanTindakanAkun(int|string $userId, array $otp): void
     {
         $this->requestForIdempotentWrite()
             ->withHeaders(['Prefer' => 'resolution=merge-duplicates,return=minimal'])
@@ -82,28 +87,12 @@ class SupabaseApi
             ->throw();
     }
 
-    public function otpTindakanAkun(int|string $userId): ?array
+    public function tautanTindakanAkun(int|string $userId): ?array
     {
         return $this->getRows('account_action_otps', ['user_id' => 'eq.'.$userId])[0] ?? null;
     }
 
-    public function tambahPercobaanOtpTindakanAkun(int|string $userId, int $percobaan): void
-    {
-        $rows = $this->request()
-            ->withHeaders(['Prefer' => 'return=representation'])
-            ->patch($this->url('account_action_otps').'?'.http_build_query(['user_id' => 'eq.'.$userId]), [
-                'attempts' => $percobaan,
-                'updated_at' => now()->toDateTimeString(),
-            ])
-            ->throw()
-            ->json();
-
-        if (! $rows) {
-            throw new RuntimeException('Supabase tidak menemukan kode OTP tindakan akun.');
-        }
-    }
-
-    public function hapusOtpTindakanAkun(int|string $userId): void
+    public function hapusTautanTindakanAkun(int|string $userId): void
     {
         $this->request()
             ->delete($this->url('account_action_otps').'?'.http_build_query(['user_id' => 'eq.'.$userId]))

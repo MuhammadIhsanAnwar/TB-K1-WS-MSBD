@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -23,8 +24,7 @@ class AkunController extends Controller
     private const JUMLAH_MAKS_KIRIM_ULANG = 3;
     private const JEDA_KIRIM_ULANG = 60;
     private const BLOKIR_KIRIM_ULANG = 3600;
-    private const MASA_BERLAKU_OTP_TINDAKAN = 600;
-    private const MAKS_PERCOBAAN_OTP_TINDAKAN = 5;
+    private const MASA_BERLAKU_LINK_TINDAKAN = 1800;
 
     private function googleRedirectUri(): string
     {
@@ -658,14 +658,13 @@ class AkunController extends Controller
 
         return view('akun.akun', [
             'u' => $u,
-            'tindakanAkunPending' => $request->session()->get('tindakan_akun_pending'),
             'pesanan' => count(Penyimpanan::pesanan((int) $u['id'], aman: true)),
             'rencana' => count(Penyimpanan::rencana((int) $u['id'], aman: true)),
             'ulasan' => count(Penyimpanan::ulasan(idPengguna: (int) $u['id'], aman: true)),
         ]);
     }
 
-    public function kirimKodeTindakanAkun(Request $request)
+    public function kirimTautanTindakanAkun(Request $request)
     {
         $data = $request->validate([
             'tindakan' => ['required', Rule::in(['nonaktifkan', 'hapus'])],
@@ -684,107 +683,127 @@ class AkunController extends Controller
             return back()->with('galat', 'Tunggu '.RateLimiter::availableIn($kunciJeda).' detik sebelum meminta kode baru.');
         }
         if (RateLimiter::tooManyAttempts($kunciBatas, 3)) {
-            return back()->with('galat', 'Batas 3 permintaan kode tercapai. Coba lagi dalam 1 jam.');
+            return back()->with('galat', 'Batas 3 permintaan tautan tercapai. Coba lagi dalam 1 jam.');
         }
 
         RateLimiter::hit($kunciJeda, 60);
         RateLimiter::hit($kunciBatas, 3600);
 
-        $kode = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $api->simpanOtpTindakanAkun($user['id'], [
+        $token = Str::random(64);
+        $api->simpanTautanTindakanAkun($user['id'], [
             'tindakan' => $data['tindakan'],
-            'code_hash' => hash('sha256', $kode),
-            'expires_at' => now()->addSeconds(self::MASA_BERLAKU_OTP_TINDAKAN)->toDateTimeString(),
+            'code_hash' => hash('sha256', $token),
+            'expires_at' => now()->addSeconds(self::MASA_BERLAKU_LINK_TINDAKAN)->toDateTimeString(),
             'attempts' => 0,
             'created_at' => now()->toDateTimeString(),
             'updated_at' => now()->toDateTimeString(),
         ]);
-        $request->session()->put('tindakan_akun_pending', [
-            'user_id' => $user['id'],
-            'tindakan' => $data['tindakan'],
-        ]);
 
-        Mail::to($user['email'])->send(new TindakanAkunEmail($kode, $data['tindakan']));
+        $url = URL::temporarySignedRoute(
+            'akun.tindakan.link',
+            now()->addSeconds(self::MASA_BERLAKU_LINK_TINDAKAN),
+            ['userId' => $user['id'], 'token' => $token],
+        );
+        Mail::to($user['email'])->send(new TindakanAkunEmail($url, $data['tindakan']));
 
-        return redirect()->route('akun')->with('pesan', 'Kode verifikasi 6 digit telah dikirim ke email akunmu.');
+        return redirect()->route('akun')->with('pesan', 'Tautan tindakan akun telah dikirim ke emailmu. Tautan berlaku selama 30 menit.');
     }
 
-    public function verifikasiTindakanAkun(Request $request)
+    public function formulirTindakanAkun(Request $request, string $userId, string $token)
     {
-        $data = $request->validate([
-            'kode' => ['required', 'regex:/^[0-9]{6}$/'],
-        ], [
-            'kode.regex' => 'Masukkan kode OTP yang terdiri dari 6 angka.',
+        $otp = $this->validasiTautanTindakanAkun($userId, $token);
+        $grant = $request->session()->get('tindakan_akun_password_verified');
+        $terverifikasi = is_array($grant)
+            && (string) ($grant['user_id'] ?? '') === $userId
+            && ($grant['token_hash'] ?? '') === hash('sha256', $token);
+
+        return view('akun.tindakan-akun', [
+            'userId' => $userId,
+            'token' => $token,
+            'tindakan' => $otp['tindakan'],
+            'terverifikasi' => $terverifikasi,
         ]);
+    }
 
-        $pending = $request->session()->get('tindakan_akun_pending');
-        abort_unless(is_array($pending) && isset($pending['user_id'], $pending['tindakan']), 403, 'Tidak ada tindakan akun yang perlu diverifikasi.');
+    public function prosesTautanTindakanAkun(Request $request, string $userId, string $token)
+    {
+        $otp = $this->validasiTautanTindakanAkun($userId, $token);
+        $hashToken = hash('sha256', $token);
+        $grant = $request->session()->get('tindakan_akun_password_verified');
+        $terverifikasi = is_array($grant)
+            && (string) ($grant['user_id'] ?? '') === $userId
+            && ($grant['token_hash'] ?? '') === $hashToken;
+        $pilihan = $request->input('pilihan');
 
-        $u = $this->pengguna($request);
-        abort_unless((string) ($u['id'] ?? '') === (string) $pending['user_id'], 403);
+        if ($pilihan === 'tidak') {
+            (new SupabaseApi)->hapusTautanTindakanAkun($userId);
+            $request->session()->forget('tindakan_akun_password_verified');
 
-        $api = new SupabaseApi;
-        $otp = $api->otpTindakanAkun($pending['user_id']);
-        if (! $otp || $otp['tindakan'] !== $pending['tindakan']
-            || now()->greaterThanOrEqualTo(\Carbon\Carbon::parse($otp['expires_at']))) {
-            $api->hapusOtpTindakanAkun($pending['user_id']);
-            $request->session()->forget('tindakan_akun_pending');
-
-            return redirect()->route('akun')->with('galat', 'Kode OTP sudah kedaluwarsa. Minta kode baru untuk melanjutkan.');
+            return redirect()->route('masuk')->with('pesan', 'Tindakan akun dibatalkan. Akunmu tidak berubah.');
         }
 
-        $percobaan = (int) $otp['attempts'] + 1;
-        if (! hash_equals($otp['code_hash'], hash('sha256', $data['kode']))) {
-            if ($percobaan >= self::MAKS_PERCOBAAN_OTP_TINDAKAN) {
-                $api->hapusOtpTindakanAkun($pending['user_id']);
-                $request->session()->forget('tindakan_akun_pending');
-            } else {
-                $api->tambahPercobaanOtpTindakanAkun($pending['user_id'], $percobaan);
+        if ($pilihan === 'password') {
+            $data = $request->validate(['password' => ['required', 'string']]);
+            $user = (new SupabaseApi)->findUserById($userId);
+            abort_unless($user, 404, 'Akun tidak ditemukan.');
+
+            if (! Hash::check($data['password'], $user['password'])) {
+                return back()->withErrors(['password' => 'Password yang kamu masukkan tidak sesuai.']);
             }
 
-            return redirect()->route('akun')->with('galat', $percobaan >= self::MAKS_PERCOBAAN_OTP_TINDAKAN
-                ? 'Batas percobaan kode tercapai. Minta kode OTP baru.'
-                : 'Kode OTP tidak cocok. Periksa kembali kode di emailmu.');
+            $request->session()->regenerate();
+            $request->session()->put('tindakan_akun_password_verified', [
+                'user_id' => $userId,
+                'token_hash' => $hashToken,
+            ]);
+
+            return redirect()->to($request->fullUrl());
         }
 
-        $user = $api->findUserByEmail($u['email']);
-        abort_unless($user && (string) $user['id'] === (string) $pending['user_id'], 404, 'Akun tidak ditemukan.');
+        abort_unless($pilihan === 'ya' && $terverifikasi, 403, 'Verifikasi password diperlukan sebelum melanjutkan.');
+
+        $user = (new SupabaseApi)->findUserById($userId);
+        abort_unless($user, 404, 'Akun tidak ditemukan.');
 
         try {
-            if ($pending['tindakan'] === 'nonaktifkan') {
-                $api->hapusOtpTindakanAkun($pending['user_id']);
-                $api->updateUser($user['id'], [
+            if ($otp['tindakan'] === 'nonaktifkan') {
+                (new SupabaseApi)->updateUser($user['id'], [
                     'dinonaktifkan_pada' => now()->toDateTimeString(),
                     'hapus_otomatis_pada' => now()->addMonthsNoOverflow(3)->toDateTimeString(),
                 ]);
+                (new SupabaseApi)->hapusTautanTindakanAkun($userId);
             } else {
-                $api->deleteUser($user['id']);
+                (new SupabaseApi)->deleteUser($user['id']);
                 $this->hapusFotoProfil($user['foto_profil'] ?? null);
             }
         } catch (\Illuminate\Http\Client\RequestException|\Illuminate\Http\Client\ConnectionException|\RuntimeException $exception) {
             report($exception);
 
-            return redirect()->route('akun')->with('galat', 'Tindakan akun gagal diproses. Coba lagi atau minta kode OTP baru.');
+            return back()->with('galat', 'Tindakan akun gagal diproses. Coba lagi dari tautan email.');
         }
 
-        $request->session()->forget(['pengguna', 'tindakan_akun_pending']);
+        $request->session()->forget('tindakan_akun_password_verified');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('masuk')->with('pesan', $pending['tindakan'] === 'nonaktifkan'
+        return redirect()->route('masuk')->with('pesan', $otp['tindakan'] === 'nonaktifkan'
             ? 'Akun dinonaktifkan. Masuk kembali dalam 3 bulan untuk mengaktifkannya lagi.'
             : 'Akun dan data profil berhasil dihapus permanen.');
     }
 
-    public function batalkanTindakanAkun(Request $request)
+    private function validasiTautanTindakanAkun(string $userId, string $token): array
     {
-        $pending = $request->session()->get('tindakan_akun_pending');
-        if (is_array($pending) && isset($pending['user_id'])) {
-            (new SupabaseApi)->hapusOtpTindakanAkun($pending['user_id']);
-        }
-        $request->session()->forget('tindakan_akun_pending');
+        $otp = (new SupabaseApi)->tautanTindakanAkun($userId);
+        abort_unless(
+            $otp
+                && in_array($otp['tindakan'] ?? null, ['nonaktifkan', 'hapus'], true)
+                && hash_equals($otp['code_hash'], hash('sha256', $token))
+                && now()->lessThan(\Carbon\Carbon::parse($otp['expires_at'])),
+            410,
+            'Tautan tindakan akun sudah tidak berlaku. Silakan minta tautan baru.'
+        );
 
-        return redirect()->route('akun')->with('pesan', 'Verifikasi tindakan akun dibatalkan.');
+        return $otp;
     }
 
     private function hapusFotoProfil(?string $foto): void

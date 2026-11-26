@@ -44,39 +44,44 @@
         </section>
         <section class="p-panel s6" aria-labelledby="judul-tindakan-akun">
             <header><h2 id="judul-tindakan-akun">Kelola akun</h2></header>
-            <p class="isian__bantuan">Setiap tindakan perlu dikonfirmasi dengan kode 6 digit yang dikirim ke email akunmu.</p>
+            <p class="isian__bantuan">Kami akan mengirim tautan konfirmasi ke email akunmu. Kamu perlu memasukkan password sebelum menyelesaikan tindakan.</p>
             <div class="p-baris">
-                <form method="post" action="{{ route('akun.tindakan.kirim') }}">
-                    @csrf
-                    <input type="hidden" name="tindakan" value="nonaktifkan">
-                    <button class="p-btn" type="submit">Nonaktifkan akun</button>
-                    <p class="isian__bantuan">Akun dapat dipulihkan dengan masuk kembali dalam 3 bulan. Setelah itu, akun dihapus permanen.</p>
-                </form>
-                <form method="post" action="{{ route('akun.tindakan.kirim') }}" onsubmit="return confirm('Akun akan dihapus permanen setelah kode OTP diverifikasi. Tindakan ini tidak dapat dibatalkan. Lanjutkan?')">
-                    @csrf
-                    <input type="hidden" name="tindakan" value="hapus">
-                    <button class="p-btn" type="submit">Hapus akun permanen</button>
-                    <p class="isian__bantuan">Profil dan akunmu akan dihapus permanen setelah verifikasi email.</p>
-                </form>
-            </div>
-            @if ($tindakanAkunPending)
-                <form method="post" action="{{ route('akun.tindakan.verifikasi') }}" class="isian" style="margin-top:20px">
-                    @csrf
-                    <label for="kode-tindakan-akun">Kode OTP untuk {{ $tindakanAkunPending['tindakan'] === 'nonaktifkan' ? 'menonaktifkan' : 'menghapus permanen' }} akun</label>
-                    <input id="kode-tindakan-akun" name="kode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required aria-describedby="bantuan-kode-tindakan">
-                    <p class="isian__bantuan" id="bantuan-kode-tindakan">Kode berlaku selama 10 menit. Maksimal 5 kali percobaan.</p>
-                    @error('kode')<p class="isian__galat">{{ $message }}</p>@enderror
-                    <div style="display:flex;gap:8px;flex-wrap:wrap">
-                        <button class="mv-btn mv-btn--utama" type="submit">Verifikasi tindakan</button>
+                <details>
+                    <summary class="p-btn">Nonaktifkan akun</summary>
+                    <div class="isian" style="margin-top:12px">
+                        <p>Apakah anda yakin ingin menonaktifkan akun?</p>
+                        <p class="isian__bantuan">Akun dapat dipulihkan dengan masuk kembali dalam 3 bulan. Setelah itu, akun dihapus permanen.</p>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <form method="post" action="{{ route('akun.tindakan.kirim') }}">
+                                @csrf
+                                <input type="hidden" name="tindakan" value="nonaktifkan">
+                                <button class="mv-btn mv-btn--utama" type="submit">Ya</button>
+                            </form>
+                            <a class="p-btn" href="{{ route('akun') }}">Tidak</a>
+                        </div>
                     </div>
-                </form>
-                <form method="post" action="{{ route('akun.tindakan.batalkan') }}" style="margin-top:8px">
-                    @csrf
-                    <button class="p-btn" type="submit">Batalkan verifikasi</button>
-                </form>
-            @endif
+                </details>
+                <details>
+                    <summary class="p-btn">Hapus akun permanen</summary>
+                    <div class="isian" style="margin-top:12px">
+                        <p>Apakah anda yakin ingin menghapus akun secara permanen?</p>
+                        <p class="isian__bantuan">Akun dan data profil akan dihapus permanen setelah kamu memasukkan password dan mengonfirmasi kembali melalui email.</p>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <form method="post" action="{{ route('akun.tindakan.kirim') }}">
+                                @csrf
+                                <input type="hidden" name="tindakan" value="hapus">
+                                <button class="mv-btn mv-btn--utama" type="submit">Ya</button>
+                            </form>
+                            <a class="p-btn" href="{{ route('akun') }}">Tidak</a>
+                        </div>
+                    </div>
+                </details>
+            </div>
             @if (session('pesan') || session('galat'))
                 <p role="status" class="isian__bantuan" style="margin-top:12px">{{ session('pesan') ?? session('galat') }}</p>
+            @endif
+            @if ($errors->has('tindakan'))
+                <p class="isian__galat">{{ $errors->first('tindakan') }}</p>
             @endif
         </section>
     </div>
