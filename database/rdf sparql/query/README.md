@@ -9,6 +9,7 @@ dibangun oleh `app/Support/Database3CatalogWriter.php`.
 
 | File | Kegunaan di website | Pemanggil |
 |---|---|---|
+| `00-seluruh-query-website.sparql` | Kumpulan gabungan query baca dan pola update yang diterapkan website, dengan judul dan fungsi tiap query | Referensi lengkap; jalankan satu bagian pada satu waktu |
 | `12-katalog-semua-triple.rq` | Mengambil triple entitas, properti, alamat, penawaran, dan sumber untuk membangun katalog/cache | `Database3Catalog::triples()` |
 | `13-cari-tempat-template.rq` | Mencari dan memaginasi tempat berdasarkan kelas; dapat ditambah filter nama, kecamatan, dan fasilitas | `SparqlService::cariTempat()` |
 | `14-hitung-tempat-template.rq` | Menghitung tempat per kelas wisata untuk jawaban Tanya Mas Nonov | `SparqlService::hitungTempat()` |

@@ -1,0 +1,389 @@
+# Kumpulan query SPARQL yang digunakan oleh website MedanVisit.
+# Sumber acuan data: ../medanvisit-data.ttl
+#
+# Jalankan satu bagian query pada satu waktu, bukan seluruh file sekaligus.
+# Bagian dengan placeholder {{...}} adalah template: ganti dengan nilai yang
+# sudah divalidasi dan serialisasikan sebagai literal atau IRI sebelum dipakai.
+# Prefix mv, schema, geo, dan res mengikuti namespace pada file Turtle.
+
+# ---------------------------------------------------------------------------
+# QUERY 01 - Pemeriksaan koneksi endpoint SPARQL
+# Fungsi: memastikan endpoint dapat menjawab query dan memiliki setidaknya satu triple.
+# Dipakai oleh pemeriksaan kesehatan admin.
+ASK { ?s ?p ?o }
+
+# ---------------------------------------------------------------------------
+# QUERY 02 - Mengambil katalog triple MedanVisit
+# Fungsi: memuat data resource MedanVisit, blank node alamat/penawaran,
+#         tipe, metadata, geografi, dan relasi untuk membangun katalog lokal.
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?s ?p ?o WHERE {
+  ?s ?p ?o .
+  FILTER (
+    STRSTARTS(STR(?s), "https://medanvisit.neoverse.my.id/id/")
+    || isBlank(?s)
+  )
+  FILTER (?p IN (
+    rdf:type, rdf:subject, rdf:predicate, rdf:object, rdfs:label,
+    schema:name, schema:description, schema:address, schema:containedInPlace,
+    schema:image, schema:offers, owl:sameAs, geo:lat, geo:long,
+    schema:isAccessibleForFree, schema:streetAddress, mv:cerita,
+    mv:kelurahan, mv:keteranganJam, mv:jamContoh, mv:radiusCheckin,
+    mv:durasiSinggah, mv:jamBuka, mv:jamTutup, mv:fasilitas,
+    mv:caraMenuju, mv:hargaContoh, mv:koordinatPerkiraan, mv:masa,
+    mv:kalimat, mv:alias, mv:hariTiket, dcterms:source,
+    mv:dibangunOleh, mv:memimpin, mv:terlibatDalam, mv:merepresentasikan,
+    mv:khasDari, mv:dekatDengan, mv:bergaya, mv:bagianDari,
+    mv:berkaitanDengan, mv:memilikiSejarah, mv:menjual, mv:dilayaniOleh,
+    mv:beradaDi, schema:price, schema:priceCurrency
+  ))
+}
+LIMIT 10000
+
+# ---------------------------------------------------------------------------
+# QUERY 03 - Pencarian tempat wisata
+# Fungsi: mengambil nama, kategori, deskripsi, kecamatan, foto, dan koordinat;
+#         mendukung filter nama, kecamatan, fasilitas, kategori, serta paginasi.
+# {{KELAS}} berisi satu atau lebih mv:SitusSejarah, mv:Museum, mv:RumahIbadah,
+# mv:TempatKuliner, mv:RuangPublik, mv:PusatBelanja, mv:RekreasiAir.
+# {{FILTER_PENCARIAN}} dapat berisi filter pencarian opsional, misalnya:
+# FILTER (CONTAINS(LCASE(STR(?nama)), "kata"))
+# FILTER EXISTS {
+#   ?tempat mv:beradaDi ?wilayahFilter .
+#   ?wilayahFilter schema:name ?namaWilayah .
+#   FILTER (CONTAINS(LCASE(STR(?namaWilayah)), "nama kecamatan"))
+# }
+# FILTER EXISTS {
+#   ?tempat mv:fasilitas ?nilaiFasilitas .
+#   FILTER (CONTAINS(LCASE(STR(?nilaiFasilitas)), "nama fasilitas"))
+# }
+# Batas aktual layanan: LIMIT 1..50 dan OFFSET 0..500.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT DISTINCT ?tempat ?kelas ?nama ?deskripsi ?kecamatan ?foto ?lat ?long WHERE {
+  VALUES ?kelas { {{KELAS}} }
+  ?tempat a ?kelas ; schema:name ?nama .
+  OPTIONAL { ?tempat schema:description ?deskripsi }
+  OPTIONAL { ?tempat mv:beradaDi ?wilayah . ?wilayah schema:name ?kecamatan }
+  OPTIONAL { ?tempat schema:image ?foto }
+  OPTIONAL { ?tempat geo:lat ?lat }
+  OPTIONAL { ?tempat geo:long ?long }
+  {{FILTER_PENCARIAN}}
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}
+OFFSET {{OFFSET}}
+
+# ---------------------------------------------------------------------------
+# QUERY 04 - Menghitung tempat wisata per kategori
+# Fungsi: menghasilkan jumlah tempat untuk setiap kelas wisata yang dipilih.
+# {{KELAS}} berisi daftar kelas wisata yang ingin dihitung.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+
+SELECT ?kelas (COUNT(DISTINCT ?tempat) AS ?jumlah) WHERE {
+  VALUES ?kelas { {{KELAS}} }
+  ?tempat a ?kelas ; schema:name ?nama .
+}
+GROUP BY ?kelas
+HAVING (COUNT(DISTINCT ?tempat) > 0)
+ORDER BY DESC(?jumlah)
+
+# ---------------------------------------------------------------------------
+# QUERY 05 - Rekomendasi tempat dalam kecamatan yang sama
+# Fungsi: menemukan tempat wisata lain yang berada di kecamatan asal tempat.
+# {{IRI_TEMPAT}} adalah IRI tempat yang sudah dibentuk dari slug tervalidasi.
+# Kelas wisata yang dicari sama dengan pemetaan kategori di layanan.
+# {{BATAS}} maksimal 30 pada layanan.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT DISTINCT ?tempat ?kelas ?nama ?kecamatan ?lat ?long ?dasar WHERE {
+  {{IRI_TEMPAT}} mv:beradaDi ?wilayah .
+  VALUES ?kelas {
+    mv:SitusSejarah mv:Museum mv:RumahIbadah mv:TempatKuliner
+    mv:RuangPublik mv:PusatBelanja mv:RekreasiAir
+  }
+  ?tempat mv:beradaDi ?wilayah ; a ?kelas ; schema:name ?nama .
+  FILTER (?tempat != {{IRI_TEMPAT}})
+  ?wilayah schema:name ?kecamatan .
+  OPTIONAL { ?tempat geo:lat ?lat }
+  OPTIONAL { ?tempat geo:long ?long }
+  BIND("kecamatan yang sama" AS ?dasar)
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}
+
+# ---------------------------------------------------------------------------
+# QUERY 06 - Audit tempat tanpa deskripsi
+# Fungsi: menemukan tempat wisata yang belum mempunyai schema:description.
+# Memeriksa seluruh kelas wisata; {{BATAS}} maksimal 100 pada layanan.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+
+SELECT DISTINCT ?tempat ?nama WHERE {
+  VALUES ?kelas {
+    mv:SitusSejarah mv:Museum mv:RumahIbadah mv:TempatKuliner
+    mv:RuangPublik mv:PusatBelanja mv:RekreasiAir
+  }
+  ?tempat a ?kelas ; schema:name ?nama .
+  FILTER NOT EXISTS { ?tempat schema:description ?deskripsi }
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}
+
+# ---------------------------------------------------------------------------
+# QUERY 07 - Statistik harga tiket
+# Fungsi: menghitung jumlah, total, rata-rata, minimum, dan maksimum harga
+#         penawaran pada seluruh kelas wisata.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+
+SELECT (COUNT(?harga) AS ?jumlah)
+       (SUM(?harga) AS ?total)
+       (AVG(?harga) AS ?rataRata)
+       (MIN(?harga) AS ?minimum)
+       (MAX(?harga) AS ?maksimum) WHERE {
+  VALUES ?kelas {
+    mv:SitusSejarah mv:Museum mv:RumahIbadah mv:TempatKuliner
+    mv:RuangPublik mv:PusatBelanja mv:RekreasiAir
+  }
+  ?tempat a ?kelas ; schema:offers/schema:price ?harga .
+}
+
+# ---------------------------------------------------------------------------
+# QUERY 08 - Memeriksa keberadaan tempat
+# Fungsi: mengembalikan true jika IRI merupakan resource salah satu kelas wisata.
+# {{IRI_TEMPAT}} adalah IRI tempat yang sudah dibentuk dari slug tervalidasi.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+
+ASK {
+  {{IRI_TEMPAT}} a ?kelas .
+  VALUES ?kelas {
+    mv:SitusSejarah mv:Museum mv:RumahIbadah mv:TempatKuliner
+    mv:RuangPublik mv:PusatBelanja mv:RekreasiAir
+  }
+}
+
+# ---------------------------------------------------------------------------
+# QUERY 09 - Mengambil deskripsi RDF satu tempat
+# Fungsi: meminta graf RDF tentang satu tempat untuk tampilan detail/inspeksi.
+# {{IRI_TEMPAT}} adalah IRI tempat yang sudah dibentuk dari slug tervalidasi.
+DESCRIBE {{IRI_TEMPAT}}
+
+# ---------------------------------------------------------------------------
+# QUERY 10 - Mengambil relasi tempat
+# Fungsi: mencari entitas yang terhubung melalui relasi dekat, berada di,
+#         bagian dari, atau berkaitan dengan, beserta nama tujuannya.
+# {{IRI_TEMPAT}} adalah IRI tempat yang sudah dibentuk dari slug tervalidasi.
+# {{BATAS}} maksimal 100 pada layanan.
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX schema: <https://schema.org/>
+
+SELECT DISTINCT ?tujuan ?nama WHERE {
+  {{IRI_TEMPAT}} (mv:dekatDengan|mv:beradaDi|mv:bagianDari|mv:berkaitanDengan) ?tujuan .
+  ?tujuan schema:name ?nama .
+}
+ORDER BY LCASE(STR(?nama))
+LIMIT {{BATAS}}
+
+# ---------------------------------------------------------------------------
+# QUERY 11 - Membentuk graf satu tempat
+# Fungsi: mengambil triple yang subjeknya atau objeknya adalah tempat terpilih.
+# {{IRI_TEMPAT}} adalah IRI tempat yang sudah dibentuk dari slug tervalidasi.
+# {{BATAS}} maksimal 200 pada layanan.
+CONSTRUCT { ?s ?p ?o } WHERE {
+  { BIND({{IRI_TEMPAT}} AS ?s) ?s ?p ?o }
+  UNION
+  { ?s ?p {{IRI_TEMPAT}} . BIND({{IRI_TEMPAT}} AS ?o) }
+}
+LIMIT {{BATAS}}
+
+# ===========================================================================
+# OPERASI TULIS RDF UNTUK PANEL ADMIN
+# Query di bawah ini dikirim ke endpoint SPARQL Update, bukan endpoint query.
+# Nilai placeholder harus dibentuk dengan serializer di Database3CatalogWriter.
+# ===========================================================================
+
+# Prefix bersama operasi tulis; sertakan pada query update yang dijalankan.
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX mv: <https://medanvisit.neoverse.my.id/ontologi#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX res: <https://medanvisit.neoverse.my.id/id/>
+
+# QUERY 12 - Membuat resource tempat wisata
+# Fungsi: memasukkan tipe dan atribut dasar tempat baru.
+# Opsional: tambahkan mv:beradaDi, schema:image, serta mv:jamBuka/mv:jamTutup
+# hanya jika nilai tersedia dan rentang jam dapat diparsing.
+INSERT DATA {
+  res:{{SLUG}} a {{KELAS}} ;
+    rdfs:label {{NAMA}} ;
+    schema:name {{NAMA}} ;
+    schema:description {{DESKRIPSI}} ;
+    mv:cerita {{DESKRIPSI}} ;
+    geo:lat {{LAT}} ;
+    geo:long {{LONG}} ;
+    schema:address {{ALAMAT}} ;
+    mv:keteranganJam {{JAM}} ;
+    dcterms:source {{SUMBER}} ;
+    schema:isAccessibleForFree {{GRATIS}} .
+  # Opsional: res:{{SLUG}} mv:beradaDi res:{{KECAMATAN}} .
+  # Opsional: res:{{SLUG}} schema:image <{{URL_FOTO}}> .
+  # Opsional:
+  # res:{{SLUG}} mv:jamBuka "{{BUKA}}"^^xsd:time ;
+  #              mv:jamTutup "{{TUTUP}}"^^xsd:time .
+}
+
+# QUERY 13 - Menghapus penawaran tiket lama
+# Fungsi: menghapus relasi schema:offers dan seluruh properti pada node penawaran.
+DELETE {
+  res:{{SLUG}} schema:offers ?offer .
+  ?offer ?offerPredicate ?offerObject .
+}
+WHERE {
+  OPTIONAL {
+    res:{{SLUG}} schema:offers ?offer .
+    ?offer ?offerPredicate ?offerObject
+  }
+}
+
+# QUERY 14 - Menambahkan penawaran tiket
+# Fungsi: menyimpan satu jenis tiket beserta harga dan mata uang IDR.
+# Ulangi pola ini untuk setiap harga valid; jangan kirim jika tidak ada harga.
+INSERT DATA {
+  res:{{SLUG}} schema:offers [
+    a schema:Offer ;
+    schema:name {{JENIS_TIKET}} ;
+    schema:price {{HARGA_INTEGER}} ;
+    schema:priceCurrency "IDR"
+  ] .
+}
+
+# QUERY 15 - Memperbarui jam terstruktur saat keterangan jam berubah
+# Fungsi: mengganti mv:jamBuka dan mv:jamTutup berdasarkan jam yang diparsing.
+# Jika rentang jam baru tidak dapat diparsing, hilangkan bagian INSERT.
+DELETE {
+  res:{{SLUG}} mv:jamBuka ?buka ;
+               mv:jamTutup ?tutup .
+}
+INSERT {
+  res:{{SLUG}} mv:jamBuka "{{JAM_BUKA}}"^^xsd:time ;
+               mv:jamTutup "{{JAM_TUTUP}}"^^xsd:time .
+}
+WHERE {
+  FILTER NOT EXISTS {
+    res:{{SLUG}} mv:keteranganJam ?jamLama .
+    FILTER (STR(?jamLama) = {{JAM_BARU_LITERAL}})
+  }
+  OPTIONAL { res:{{SLUG}} mv:jamBuka ?buka }
+  OPTIONAL { res:{{SLUG}} mv:jamTutup ?tutup }
+}
+
+# QUERY 16 - Memperbarui atribut utama tempat
+# Fungsi: mengganti kelas dan atribut yang dikelola formulir admin.
+# mv:cerita sengaja tidak dihapus atau diganti pada proses update.
+# Sertakan pola schema:image dan mv:beradaDi pada INSERT hanya jika tersedia.
+DELETE {
+  res:{{SLUG}} a mv:SitusSejarah, mv:Museum, mv:RumahIbadah,
+    mv:TempatKuliner, mv:RuangPublik, mv:PusatBelanja, mv:RekreasiAir ;
+    rdfs:label ?label ;
+    schema:name ?name ;
+    schema:description ?description ;
+    geo:lat ?lat ;
+    geo:long ?long ;
+    mv:keteranganJam ?hours ;
+    schema:image ?image ;
+    dcterms:source ?source ;
+    mv:beradaDi ?district ;
+    schema:isAccessibleForFree ?gratis .
+}
+INSERT {
+  res:{{SLUG}} a {{KELAS}} ;
+    rdfs:label {{NAMA}} ;
+    schema:name {{NAMA}} ;
+    schema:description {{DESKRIPSI}} ;
+    geo:lat {{LAT}} ;
+    geo:long {{LONG}} ;
+    mv:keteranganJam {{JAM}} ;
+    dcterms:source {{SUMBER}} ;
+    schema:isAccessibleForFree {{GRATIS}} .
+  # Opsional: res:{{SLUG}} schema:image <{{URL_FOTO}}> .
+  # Opsional: res:{{SLUG}} mv:beradaDi res:{{KECAMATAN}} .
+}
+WHERE {
+  OPTIONAL { res:{{SLUG}} a mv:SitusSejarah }
+  OPTIONAL { res:{{SLUG}} a mv:Museum }
+  OPTIONAL { res:{{SLUG}} a mv:RumahIbadah }
+  OPTIONAL { res:{{SLUG}} a mv:TempatKuliner }
+  OPTIONAL { res:{{SLUG}} a mv:RuangPublik }
+  OPTIONAL { res:{{SLUG}} a mv:PusatBelanja }
+  OPTIONAL { res:{{SLUG}} a mv:RekreasiAir }
+  OPTIONAL { res:{{SLUG}} rdfs:label ?label }
+  OPTIONAL { res:{{SLUG}} schema:name ?name }
+  OPTIONAL { res:{{SLUG}} schema:description ?description }
+  OPTIONAL { res:{{SLUG}} geo:lat ?lat }
+  OPTIONAL { res:{{SLUG}} geo:long ?long }
+  OPTIONAL { res:{{SLUG}} mv:keteranganJam ?hours }
+  OPTIONAL { res:{{SLUG}} schema:image ?image }
+  OPTIONAL { res:{{SLUG}} dcterms:source ?source }
+  OPTIONAL { res:{{SLUG}} mv:beradaDi ?district }
+  OPTIONAL { res:{{SLUG}} schema:isAccessibleForFree ?gratis }
+}
+
+# QUERY 17 - Memperbarui alamat pada node PostalAddress
+# Fungsi: memperbarui schema:streetAddress bila schema:address menunjuk node.
+DELETE { ?alamat schema:streetAddress ?jalan }
+INSERT { ?alamat schema:streetAddress {{ALAMAT}} }
+WHERE {
+  res:{{SLUG}} schema:address ?alamat .
+  FILTER (!isLiteral(?alamat))
+  OPTIONAL { ?alamat schema:streetAddress ?jalan }
+}
+
+# QUERY 18 - Mengganti alamat literal
+# Fungsi: mengganti nilai schema:address lama jika nilainya literal.
+DELETE { res:{{SLUG}} schema:address ?alamat }
+INSERT { res:{{SLUG}} schema:address {{ALAMAT}} }
+WHERE {
+  res:{{SLUG}} schema:address ?alamat .
+  FILTER (isLiteral(?alamat))
+}
+
+# QUERY 19 - Menambahkan alamat yang belum tersedia
+# Fungsi: menambahkan schema:address hanya jika resource belum memilikinya.
+INSERT { res:{{SLUG}} schema:address {{ALAMAT}} }
+WHERE {
+  FILTER NOT EXISTS { res:{{SLUG}} schema:address ?apaPun }
+}
+
+# QUERY 20 - Menghapus tempat wisata
+# Fungsi: menghapus triple keluar/masuk resource dan pernyataan RDF reifikasi
+# yang subjek atau objeknya merujuk ke tempat tersebut.
+DELETE {
+  ?related ?predicate res:{{SLUG}} .
+  res:{{SLUG}} ?outPredicate ?outObject .
+  ?statement ?statementPredicate ?statementObject .
+}
+WHERE {
+  OPTIONAL { ?related ?predicate res:{{SLUG}} }
+  OPTIONAL { res:{{SLUG}} ?outPredicate ?outObject }
+  OPTIONAL {
+    ?statement rdf:type rdf:Statement ;
+      rdf:subject|rdf:object res:{{SLUG}} ;
+      ?statementPredicate ?statementObject
+  }
+}
